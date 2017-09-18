@@ -2,6 +2,7 @@
 #install_github("andrewhaoyu/bc2")
 ###1 represent Icog
 ###2 represent Onco
+###load_all("/Users/zhangh24/GoogleDrive/bc2")
 
 rm(list=ls())
 #commandarg <- commandArgs(trailingOnly=F)
@@ -11,7 +12,7 @@ rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd("/data/zhangh24/breast_cancer/breast_cancer_known_SNPs_data_analysis/")
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/")
 library(readr)
 library(devtools)
 #library(bc2,lib.loc ='/Users/zhangh24/Library/R/3.4/library')
@@ -24,8 +25,11 @@ if(i1<=180){
   ##analysis for Icog
   data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header = T)
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
+ # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,
+                        #data1$ER_status1,data1$HER2_status1)
   #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
-  colnames(y.pheno.mis1) <- c("Behaviour","PR","ER","HER2","Grade")
+ colnames(y.pheno.mis1) <- c("Behaviour","PR","ER","HER2","Grade")
+ # colnames(y.pheno.mis1) <- c("Behaviour","PR","ER","HER2")
   # Grade1.fake <- data1$Grade1
   # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
   # Grade1.fake[data1$Grade1==1] <- 0
@@ -38,25 +42,14 @@ if(i1<=180){
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
     
-  Heter.result.G.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  
-  Heter.result.G.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = NULL,pairwise.interaction = x.all.mis1,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.G.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1 ,pairwise.interaction = NULL,saturated =NULL,missingTumorIndicator = 888)
   
   
-
-  #gene <- as.matrix(x.all.mis1[,1])
-  # colnames(gene) <- "gene"
-  # pc1 <- x.all.mis1[,2:11]
-  # Heter.result.G.Icog = EMmvpoly(y.pheno.mis1,baselineonly = gene,additive = pc1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  # M <- Heter.result.G.Icog[[5]]
-  # Heter.result.G.Icog = EMmvpoly(y.pheno.mis1,baselineonly = gene,additive = NULL,pairwise.interaction = pc1,saturated = NULL,missingTumorIndicator = 888)
-  number.of.tumor <- Heter.result.G.Icog[[6]]
+  number.of.tumor <- 4
   log.odds.icog <- Heter.result.G.Icog[[1]][(M+1):(M+1+number.of.tumor)]
-  info.icog <- Heter.result.G.Icog[[2]]
-  sigma.icog <- solve(info.icog)
+  sigma.icog <- Heter.result.G.Icog[[2]]
   sigma.log.odds.icog <- sigma.icog[(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
-  complete.loglikelihood.icog <- Heter.result.G.Icog[[7]]
-  loglikelihood.for.complete <- Heter.result.G.Icog[[9]]
+  loglikelihood.icog <- Heter.result.G.Icog[[8]]
   
   
   
@@ -78,12 +71,13 @@ if(i1<=180){
   
   
   Heter.result.G.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  M <- Heter.result.G.Onco[[5]]
-  number.of.tumor <- Heter.result.G.Onco[[6]]
+  
+  number.of.tumor <- 4
   log.odds.onco <- Heter.result.G.Onco[[1]][(M+1):(M+1+number.of.tumor)]
-  info.onco <- Heter.result.G.Onco[[2]]
-  sigma.onco <- solve(info.onco)
+  
+  sigma.onco <- Heter.result.G.Onco[[2]]
   sigma.log.odds.onco <- sigma.onco[(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+  loglikelihood.onco <- Heter.result.G.Onco[[8]]
   
   
   meta.result <- LogoddsMetaAnalysis(log.odds.icog,
@@ -93,13 +87,16 @@ if(i1<=180){
   
   logodds <- meta.result[[1]]
   sigma <- meta.result[[2]]
-  
+  loglikelihood.meta <- loglikelihood.icog+loglikelihood.onco
+  AIC <- 2*length(Heter.result.G.Onco[[1]])-2*loglikelihood.meta
   test.result <- DisplayTestResult(logodds,sigma)
   
   heter.result <- list(test.result = test.result,
                        logodds = logodds,
-                       sigma= sigma)
-  save(heter.result,file=paste0("./known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
+                       sigma= sigma,
+                       loglikelihood.meta=loglikelihood.meta,
+                       AIC=AIC)
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
   
   
   
@@ -121,24 +118,32 @@ if(i1<=180){
   
   Heter.result.G.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   
-
-
-  M <- Heter.result.G.Onco[[5]]
-  number.of.tumor <- Heter.result.G.Onco[[6]]
+  number.of.tumor <- 4
   log.odds.onco <- Heter.result.G.Onco[[1]][(M+1):(M+1+number.of.tumor)]
-  info.onco <- Heter.result.G.Onco[[2]]
-  sigma.onco <- solve(info.onco)
+  
+  sigma.onco <- Heter.result.G.Onco[[2]]
   sigma.log.odds.onco <- sigma.onco[(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+  loglikelihood.onco <- Heter.result.G.Onco[[8]]
+  
+  
   
   logodds <- log.odds.onco
   sigma <- sigma.log.odds.onco
   
+  loglikelihood.meta <- loglikelihood.onco
+  AIC <- 2*length(Heter.result.G.Onco[[1]])-2*loglikelihood.meta
   test.result <- DisplayTestResult(logodds,sigma)
   
   heter.result <- list(test.result = test.result,
                        logodds = logodds,
-                       sigma= sigma)
-  save(heter.result,file=paste0("./known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
+                       sigma= sigma,
+                       loglikelihood.meta=loglikelihood.meta,
+                       AIC=AIC)
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
+
+ 
+  
+ 
   
 }
 
