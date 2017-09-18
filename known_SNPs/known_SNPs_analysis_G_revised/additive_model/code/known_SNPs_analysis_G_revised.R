@@ -44,7 +44,7 @@ if(i1<=180){
     
   Heter.result.G.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1 ,pairwise.interaction = NULL,saturated =NULL,missingTumorIndicator = 888)
   
-  
+  M <- 23
   number.of.tumor <- 4
   log.odds.icog <- Heter.result.G.Icog[[1]][(M+1):(M+1+number.of.tumor)]
   sigma.icog <- Heter.result.G.Icog[[2]]
@@ -101,6 +101,7 @@ if(i1<=180){
   
   
 }else{
+  M <- 23
   data2 <- read.csv("./data/Onco_euro_v10_rs554219.csv",header=T)
   #data2 <- read.csv("/data/zhangh20/breast_cancer/known_SNPs_anlysis/Onco_euro_v10_rs554219.csv",1)
   
