@@ -1,4 +1,4 @@
-setwd("./known_SNPs_analysis_G_revised/additive_model/result/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/additive_model/result")
 library(xlsx)
 generate_second_stage_parameter_names = function(tumor_characteristics){
   result = c("baseline effect (95%CI)",
@@ -13,12 +13,15 @@ generate_second_stage_parameter_names = function(tumor_characteristics){
 }
 
 result <-  NULL
-
+loglikelihood <- NULL
+AIC <- NULL
 
 for(i in 1:181){
   print(i)
   load(paste0("heter_result_",i,".Rdata"))
   result <- rbind(result,heter.result[[1]])
+  loglikelihood <- c(loglikelihood,heter.result[[4]])
+  AIC <- c(AIC,heter.result[[5]])
 }
 
 tumor.characteristics <- c("PR","ER","HER2","Grade")
@@ -26,6 +29,6 @@ generate_second_stage_parameter_names(tumor.characteristics)
 
 colnames(result) <- generate_second_stage_parameter_names(tumor.characteristics)
 
-result <- as.data.frame(result)
+result <- data.frame(result,loglikelihood=loglikelihood,AIC=AIC)
 
 write.xlsx(result,file="./meta.xlsx",sheetName="second_stage")
