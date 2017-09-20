@@ -18,6 +18,18 @@ library(devtools)
 #library(bc2,lib.loc ='/Users/zhangh24/Library/R/3.4/library')
 library(bc2)
 
+z.design <- matrix(c(
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+  c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+  c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
+  c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
+),ncol=5)
+colnames(z.design) <- c("Luminial A","Luminal B",
+                        "Luminal B HER2-",
+                        "HER2 Enriched",
+                        "Triple Negative")
+
 
 
 
@@ -42,9 +54,7 @@ if(i1<=180){
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
   
-  Heter.result.G.Icog = EMmvpoly(y.pheno.mis1,baselineonly =NULL ,additive = x.all.mis1 ,pairwise.interaction = NULL,saturated =NULL,missingTumorIndicator = 888)
-  
-  Heter.result.G.Icog = EMmvpoly(y.pheno.mis1,baselineonly = x.all.mis1[,1:2],additive = x.all.mis1[,3:6] ,pairwise.interaction = x.all.mis1[,7:8],saturated =NULL,missingTumorIndicator = 888)
+  Heter.result.G.Icog = EMmvpolySelfDesign(y.pheno.mis1, x= x.all.mis1 ,z.design = z.design,missingTumorIndicator = 888,z.all = NULL)
   
   M <- 23
   number.of.tumor <- 4
@@ -72,7 +82,7 @@ if(i1<=180){
   
   
   
-  Heter.result.G.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.G.Onco = EMmvpolySelfDesign(y.pheno.mis2,x= x.all.mis2 ,z.design = z.design,missingTumorIndicator = 888,z.all = NULL)
   
   number.of.tumor <- 4
   log.odds.onco <- Heter.result.G.Onco[[1]][(M+1):(M+1+number.of.tumor)]
@@ -98,7 +108,7 @@ if(i1<=180){
                        sigma= sigma,
                        loglikelihood.meta=loglikelihood.meta,
                        AIC=AIC)
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes/result/heter_result_",i1,".Rdata"))
   
   
   
@@ -119,7 +129,7 @@ if(i1<=180){
   
   
   
-  Heter.result.G.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.G.Onco = EMmvpolySelfDesign(y.pheno.mis2,x= x.all.mis2 ,z.design = z.design,missingTumorIndicator = 888,z.all = NULL)
   
   number.of.tumor <- 4
   log.odds.onco <- Heter.result.G.Onco[[1]][(M+1):(M+1+number.of.tumor)]
@@ -142,7 +152,7 @@ if(i1<=180){
                        sigma= sigma,
                        loglikelihood.meta=loglikelihood.meta,
                        AIC=AIC)
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes/result/heter_result_",i1,".Rdata"))
   
   
   

@@ -22,6 +22,7 @@ if(i1<=180){
   ##analysis for Icog
   data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
+  colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2")
   # Grade1.fake <- data1$Grade1
   # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
   # Grade1.fake[data1$Grade1==1] <- 0
@@ -32,14 +33,19 @@ if(i1<=180){
   
   x.covar.mis1 <- data1[,5:14]
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
+  colnames(x.all.mis1)[1] <- "gene"
   
   Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  M <- Heter.result.Icog[[5]]
-  number.of.tumor <- Heter.result.Icog[[6]]
+  z.standard <- Heter.result.Icog[[12]]
+  z.additive.design <- as.matrix(cbind(1,z.standard))
+  M <- nrow(z.standard)
+  number.of.tumor <- ncol(z.standard)
   log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
-  info.icog <- Heter.result.Icog[[2]]
-  sigma.icog <- solve(info.icog)
-  sigma.log.odds.icog <- sigma.icog[(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+  
+  sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+  beta.icog <- z.additive.design%*%log.odds.icog
+  beta.sigma.icog <- z.additive.design%*%sigma.log.odds.icog%*%t(z.additive.design)
+  loglikelihood.icog <- Heter.result.Icog[[8]]
   
   
   
@@ -53,20 +59,26 @@ if(i1<=180){
   idxi1 = which(names2==names1[i1])
   y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+  colnames(y.pheno.mis2) = c("Behaviour","PR",
+                             "ER","HER2")
   
   x.test.all.mis2 <- data2[,c(27:212)]
   x.covar.mis2 <- data2[,5:14]
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
+  colnames(x.all.mis2)[1] = "gene"
   
   
   
   Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  M <- Heter.result.Onco[[5]]
-  number.of.tumor <- Heter.result.Onco[[6]]
+  z.standard <- Heter.result.Onco[[12]]
+  M <- nrow(z.standard)
+  number.of.tumor <- ncol(z.standard)
   log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
-  info.onco <- Heter.result.Onco[[2]]
-  sigma.onco <- solve(info.onco)
-  sigma.log.odds.onco <- sigma.onco[(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+  sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+  beta.onco <- z.additive.design%*%log.odds.onco
+  beta.sigma.onco <- z.additive.design%*%sigma.log.odds.onco%*%t(z.additive.design)
+  loglikelihood.onco <- Heter.result.Onco[[8]]
+  
   
   
   meta.result <- LogoddsMetaAnalysis(log.odds.icog,
@@ -77,7 +89,14 @@ if(i1<=180){
   logodds <- meta.result[[1]]
   sigma <- meta.result[[2]]
   
+  
+  
   test.result <- DisplayTestResult(logodds,sigma)
+  
+  meta.result.beta <- LogoddsMetaAnalysis(beta.icog,
+                                          beta.sigma.icog,
+                                          beta.onco,
+                                          beta.sigma.onco)
   
   heter.result <- list(test.result = test.result,
                        logodds = logodds,
