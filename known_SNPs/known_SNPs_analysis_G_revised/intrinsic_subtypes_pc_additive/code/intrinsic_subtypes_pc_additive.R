@@ -54,7 +54,7 @@ if(i1<=180){
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
   
-  Heter.result.G.Icog = EMmvpolySelfDesign(y.pheno.mis1, x= x.all.mis1 ,z.design = z.design,missingTumorIndicator = 888,z.all = NULL)
+  Heter.result.G.Icog = EMmvpolySelfDesign(y.pheno.mis1, x.self.design= x.all.mis1[,1,drop=F] ,z.design = z.design,additive=x.all.mis1[,2:11],missingTumorIndicator = 888,z.all = NULL)
   
   M <- 23
   number.of.tumor <- 4
@@ -69,20 +69,23 @@ if(i1<=180){
   #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
   data2 <- read.csv("./data/Onco_euro_v10_05242017.csv",header=T)
   names1 = colnames(data1)[27:206]
-  rm(data1)
+  
   names2 = colnames(data2)[27:212]
   
   idxi1 = which(names2==names1[i1])
   y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
+  colnames(y.pheno.mis2) <- c("Behaviour","PR","ER","HER2","Grade")
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   
   x.test.all.mis2 <- data2[,c(27:212)]
   x.covar.mis2 <- data2[,5:14]
+  
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
+  colnames(x.all.mis2)[1] <- "gene"
   
   
   
-  Heter.result.G.Onco = EMmvpolySelfDesign(y.pheno.mis2,x= x.all.mis2 ,z.design = z.design,missingTumorIndicator = 888,z.all = NULL)
+  Heter.result.G.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design= x.all.mis2[,1,drop=F] ,z.design = z.design,additive=x.all.mis2[,2:11],missingTumorIndicator = 888,z.all = NULL)
   
   number.of.tumor <- 4
   log.odds.onco <- Heter.result.G.Onco[[1]][(M+1):(M+1+number.of.tumor)]
@@ -152,7 +155,7 @@ if(i1<=180){
                        sigma= sigma,
                        loglikelihood.meta=loglikelihood.meta,
                        AIC=AIC)
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_",i1,".Rdata"))
   
   
   
