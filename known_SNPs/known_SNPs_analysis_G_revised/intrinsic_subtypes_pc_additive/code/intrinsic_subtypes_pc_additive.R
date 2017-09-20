@@ -111,7 +111,8 @@ if(i1<=180){
                        sigma= sigma,
                        loglikelihood.meta=loglikelihood.meta,
                        AIC=AIC)
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_",i1,".Rdata"))
+  
   
   
   
@@ -132,7 +133,8 @@ if(i1<=180){
   
   
   
-  Heter.result.G.Onco = EMmvpolySelfDesign(y.pheno.mis2,x= x.all.mis2 ,z.design = z.design,missingTumorIndicator = 888,z.all = NULL)
+  Heter.result.G.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design= x.all.mis2[,1,drop=F] ,z.design = z.design,additive=x.all.mis2[,2:11],missingTumorIndicator = 888,z.all = NULL)
+  
   
   number.of.tumor <- 4
   log.odds.onco <- Heter.result.G.Onco[[1]][(M+1):(M+1+number.of.tumor)]
