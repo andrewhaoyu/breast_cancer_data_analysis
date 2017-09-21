@@ -1,4 +1,4 @@
-setwd("/data/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes/result")
+setwd("/data/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result")
 library(xlsx)
 # generate_second_stage_parameter_names = function(tumor_characteristics){
 #   result = c("baseline effect (95%CI)",
@@ -15,7 +15,7 @@ library(xlsx)
 result <-  NULL
 loglikelihood <- NULL
 AIC <- NULL
-o
+
 
 for(i in 1:181){
   print(i)
@@ -29,11 +29,11 @@ for(i in 1:181){
 
 colnames(result)  <- c("Luminial A Odds","Luminial A P","Luminal B Odds",
                        "Luminal B P",
-                                            "Luminal B HER2- Odds",
+                       "Luminal B HER2- Odds",
                        "Luminal B HER2- P",
-                                            "HER2 Enriched Odds",
+                       "HER2 Enriched Odds",
                        "HER2 Enriched P",
-                                            "Triple Negative Odds",
+                       "Triple Negative Odds",
                        "Triple Negative P",
                        "global association",
                        "global heterogeneity")

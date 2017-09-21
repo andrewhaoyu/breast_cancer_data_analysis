@@ -1,5 +1,5 @@
 #install_github("andrewhaoyu/bc2", args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
-#install_github("andrewhaoyu/bc2")
+#install_github("andrewhaoyu/bc2",branch="version 0.0.2")
 ###1 represent Icog
 ###2 represent Onco
 ###load_all("/Users/zhangh24/GoogleDrive/bc2")
