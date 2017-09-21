@@ -5,3 +5,4 @@ data/
 .Rproj.user
 /known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes/result
 /known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result
+/stractch/*.csv
