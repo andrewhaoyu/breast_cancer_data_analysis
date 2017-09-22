@@ -10,7 +10,7 @@ rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd("/data/zhangh24/breast_cancer/breast_cancer_known_SNPs_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(bc2)

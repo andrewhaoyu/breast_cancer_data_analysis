@@ -10,7 +10,7 @@ rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd("/data/zhangh24/breast_cancer/breast_cancer_known_SNPs_data_analysis/")
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(CompQuadForm)
@@ -123,7 +123,7 @@ if(i1<=180){
   #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
   data2 <- read.csv("./data/Onco_euro_v10_05242017.csv",header=T)
   names1 = colnames(data1)[27:206]
-  rm(data1)
+  
   names2 = colnames(data2)[27:212]
   
   idxi1 = which(names2==names1[i1])
@@ -256,7 +256,7 @@ if(i1<=180){
   heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,loglikelihood = loglikelihood,AIC=AIC),
                       data.frame(test.result.first.wald))
   
-  save(heter.result,file=paste0("./known_SNPs_analysis_revised/additive_model/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_revised/additive_model/result/heter_result_",i1,".Rdata"))
   
   
   
@@ -397,7 +397,7 @@ if(i1<=180){
   heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,loglikelihood = loglikelihood,AIC=AIC),
                        data.frame(test.result.first.wald))
   
-  save(heter.result,file=paste0("./known_SNPs_analysis_revised/additive_model/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_revised/additive_model/result/heter_result_",i1,".Rdata"))
   
   
  
