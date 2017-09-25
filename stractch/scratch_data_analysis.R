@@ -47,15 +47,15 @@ if(i1<=180){
   beta.sigma.icog <- z.additive.design%*%sigma.log.odds.icog%*%t(z.additive.design)
   loglikelihood.icog <- Heter.result.Icog[[8]]
   
-  score.test.support.icog <- ScoreTestSupport(
+  score.test.support.icog <- ScoreTestSupportMixedModel(
     y.pheno.mis1,
     baselineonly = NULL,
-    additive = x.all.mis1[,2:11],
+    additive = x.all.mis1[,2:3],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
   )
-  score.test<- ScoreTest(y=y.pheno.mis1,
+  score.test<- ScoreTestMixedModel(y=y.pheno.mis1,
                          x=x.all.mis1[,1],
                          second.stage.structure="additive",
                          score.test.support=score.test.support.icog,

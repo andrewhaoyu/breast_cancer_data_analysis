@@ -7,3 +7,9 @@ data/
 /known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result
 /stractch/*.csv
 /known_SNPs/known_SNPs_analysis_revised/intrinsic_subtypes_pc_additive/result
+/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/*
+/whole_genome/ICOG/ERPRHER2_fixed/result/*
+/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/*
+/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/*
+/whole_genome/ONCO/ERPRHER2_fixed/result/*
+/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/*

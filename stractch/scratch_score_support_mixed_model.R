@@ -22,14 +22,30 @@ M <- nrow(z.standard)
 number.of.tumor <- ncol(z.standard)
 
 
-score.test.support.icog <- ScoreTestSupportMixedModel(
+score.test.support.icog.mix <- ScoreTestSupportMixedModel(
   y.pheno.mis1,
+  z.design = 
   baselineonly = NULL,
   additive = x.all.mis1[,2:3],
   pairwise.interaction = NULL,
   saturated = NULL,
   missingTumorIndicator = 888
 )
+ScoreTestMixedModel(y.pheno.mis1,x.all.mis1[,1,drop=F],second.stage.structure = "additive",score.test.support = score.test.support.icog.mix,missingTumorIndicator = 888)
+
+
+
+score.test.support.icog <- ScoreTestSupportMixedModel(
+  y.pheno.mis1,
+  x.self.design = x.all.mis1[,1,drop=F],
+  baselineonly = NULL,
+  additive = x.all.mis1[,2:3],
+  pairwise.interaction = NULL,
+  saturated = NULL,
+  missingTumorIndicator = 888
+)
+ScoreTestMixedModel(y.pheno.mis1,x.all.mis1[,1,drop=F],second.stage.structure = "additive",score.test.support = score.test.support.icog,missingTumorIndicator = 888)
+
 
 
 
