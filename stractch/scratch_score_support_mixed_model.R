@@ -1,3 +1,12 @@
+z.design <- matrix(c(
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+  c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+  c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
+  c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
+),ncol=5)
+
+
 i1 = 1
 library(bc2)
 data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
@@ -31,12 +40,13 @@ score.test.support.icog.mix <- ScoreTestSupportMixedModel(
   saturated = NULL,
   missingTumorIndicator = 888
 )
-ScoreTestMixedModel(y.pheno.mis1,x.all.mis1[,1,drop=F],second.stage.structure = "additive",score.test.support = score.test.support.icog.mix,missingTumorIndicator = 888)
+ScoreTestMixedModel(y.pheno.mis1,x.all.mis1[,1,drop=F],z.standard,score.test.support = score.test.support.icog.mix,missingTumorIndicator = 888)
 
 
 
 score.test.support.icog <- ScoreTestSupportMixedModel(
   y.pheno.mis1,
+  z.design = z.design,
   x.self.design = x.all.mis1[,1,drop=F],
   baselineonly = NULL,
   additive = x.all.mis1[,2:3],
