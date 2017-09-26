@@ -31,5 +31,5 @@ score.test.support.onco.ERPRHER2Grade <- ScoreTestSupport(
   missingTumorIndicator = 888
 )
 
-save(score.test.support.onco.ERPRHER2Grade,file="./whole_genome/ONCO/ERPRHER2Grade_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
+save(score.test.support.onco.ERPRHER2Grade,file="./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 

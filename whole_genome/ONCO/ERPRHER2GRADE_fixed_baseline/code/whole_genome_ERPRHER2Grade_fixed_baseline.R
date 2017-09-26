@@ -25,7 +25,8 @@ load(pheno.file)
 n.sub = nrow(pheno)
 y.pheno.mis2 <- cbind(pheno$Behaviour1,pheno$PR_status1,pheno$ER_status1,pheno$HER2_status1,pheno$Grade)
 colnames(y.pheno.mis2) = c("Behaviour1","PR_status1",
-                           "ER_status1","HER2_status1")
+                           "ER_status1","HER2_status1",
+                           "Grade")
 
 
 idx.fil <- onco.order[,1]%in%pheno$Onc_ID
@@ -34,7 +35,7 @@ snpvalue <- rep(0,n)
 idx.match <- match(pheno$Onc_ID,onco.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
-load("./whole_genome/ONCO/ERPRHER2_fixed/result/score.test.support.onco.ERPRHER2.Rdata")
+load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 
 
 
@@ -65,6 +66,9 @@ score_result <- matrix(0,num,num.of.tumor+1)
 infor_result <- matrix(0,(num.of.tumor+1)*num,num.of.tumor+1)
 snpid_result <- rep("c",num)
 freq.all <- rep(0,num)
+score_result_baseline <- rep(0,num)
+infor_result_baseline <- rep(0,num)
+
 con <- gzfile(geno.file)
 open(con)
 for(i in 1:num){
@@ -101,11 +105,18 @@ for(i in 1:num){
         score.test.onco<- ScoreTest(y=y.pheno.mis2,
                                     x=snpvalue,
                                     second.stage.structure="additive",
-                                    score.test.support=score.test.support.onco.ERPRHER2,
+                                    score.test.support=score.test.support.onco.ERPRHER2Grade,
                                     missingTumorIndicator=888)
         
         score_result[i,]  <- score.test.onco[[1]]
         infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- score.test.onco[[2]]
+        score.test.icog.baseline<- ScoreTest(y=y.pheno.mis2,
+                                             x=snpvalue,
+                                             second.stage.structure="baselineonly",
+                                             score.test.support=score.test.support.onco.ERPRHER2Grade,
+                                             missingTumorIndicator=888)
+        score_result_baseline[i]  <- score.test.icog.baseline[[1]]
+        infor_result_baseline[i] <- score.test.icog.baseline[[2]]
       }
       
     },
@@ -113,6 +124,8 @@ for(i in 1:num){
       
       score_result[i,] <- 0
       infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- 0
+      score_result_baseline[i]  <- 0
+      infor_result_baseline[i] <- 0
     })
   
 }
@@ -121,7 +134,10 @@ if(i !=num){
   snpid_result <- snpid_result[1:i]
   score_result <- score_result[1:i,]
   infor_result <- infor_result[((num.of.tumor+1)*i-(num.of.tumor+1))+(1:(num.of.tumor+1)),]
+  score_result_baseline <- score_result_baseline[1:i]
+  infor_result_baseline <- infor_result_baseline[1:i]
   
 }
-result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./whole_genome/ONCO/ERPRHER2_fixed/result/ERPRHER2_fixed_onco",i1,".Rdata"))
+result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,score_result_baseline = score_result_baseline,
+               infor_result_baseline=infor_result_baseline)
+save(result,file=paste0("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_onco",i1))
