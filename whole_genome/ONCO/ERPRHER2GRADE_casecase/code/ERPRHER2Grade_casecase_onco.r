@@ -38,6 +38,7 @@ library(bc2)
 load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/delta0.onco.Rdata")
 load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
+x.all.covar <- pheno[,2:11]
 
 
 
@@ -69,8 +70,7 @@ score_result <- matrix(0,num,num.of.tumor+1)
 infor_result <- matrix(0,(num.of.tumor+1)*num,num.of.tumor+1)
 snpid_result <- rep("c",num)
 freq.all <- rep(0,num)
-score_result_baseline <- rep(0,num)
-infor_result_baseline <- rep(0,num)
+
 
 con <- gzfile(geno.file)
 open(con)
@@ -105,21 +105,21 @@ for(i in 1:num){
         infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- 0
       }else{
         
-        score.test.onco<- ScoreTest(y=y.pheno.mis2,
-                                    x=snpvalue,
-                                    second.stage.structure="additive",
-                                    score.test.support=score.test.support.onco.ERPRHER2Grade,
-                                    missingTumorIndicator=888)
+        score.test.support.onco.casecae <- ScoreTestSupportMixedModel(y=y.pheno.mis2,
+                                                                      baselineonly = snpvalue,
+                                                                      additive=x.all.covar,
+                                                                      missingTumorIndicator = 888,
+                                                                      delta0=delta0.onco)
+        score.test.onco.casecase<- ScoreTestMixedModel(y=y.pheno.mis2,
+                                                       x=snpvalue,
+                                                       z.design = z.standard,
+                                                       
+                                                       score.test.support= score.test.support.onco.casecae,
+                                                       missingTumorIndicator=888)
         
-        score_result[i,]  <- score.test.onco[[1]]
-        infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- score.test.onco[[2]]
-        score.test.icog.baseline<- ScoreTest(y=y.pheno.mis2,
-                                             x=snpvalue,
-                                             second.stage.structure="baselineonly",
-                                             score.test.support=score.test.support.onco.ERPRHER2Grade,
-                                             missingTumorIndicator=888)
-        score_result_baseline[i]  <- score.test.icog.baseline[[1]]
-        infor_result_baseline[i] <- score.test.icog.baseline[[2]]
+        score_result[i,]  <- score.test.onco.casecase[[1]]
+        infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- score.test.onco.casecase[[2]]
+      
       }
       
     },
@@ -127,8 +127,7 @@ for(i in 1:num){
       
       score_result[i,] <- 0
       infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- 0
-      score_result_baseline[i]  <- 0
-      infor_result_baseline[i] <- 0
+      
     })
   
 }
@@ -136,11 +135,9 @@ close(con)
 if(i !=num){
   snpid_result <- snpid_result[1:i]
   score_result <- score_result[1:i,]
-  infor_result <- infor_result[((num.of.tumor+1)*i-(num.of.tumor+1))+(1:(num.of.tumor+1)),]
-  score_result_baseline <- score_result_baseline[1:i]
-  infor_result_baseline <- infor_result_baseline[1:i]
+  infor_result <- infor_result[1:(4*i),]
+  
   
 }
-result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,score_result_baseline = score_result_baseline,
-               infor_result_baseline=infor_result_baseline)
-save(result,file=paste0("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_onco",i1))
+result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
+save(result,file=paste0("./whole_genome/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco",i1))
