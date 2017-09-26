@@ -27,15 +27,5 @@ score.test.support.icog.ERPRHER2Grade <- ScoreTestSupport(
   missingTumorIndicator = 888
 )
 
-save(score.test.support.icog.ERPRHER2Grade,file="./whole_genome/ICOG/ERPRHER2Grade_fixed/result/score.test.support.icog.ERPRHER2.Rdata")
+save(score.test.support.icog.ERPRHER2Grade,file="./whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/score.test.support.icog.ERPRHER2.Rdata")
 
-##create pheno.file 
-
-pheno <- data1[,c(1,5:14)]
-pheno <- cbind(pheno,data1$Behaviour1,data1$PR_status1,
-               data1$ER_status1,data1$HER2_status1,
-               data1$Grade1)
-colnames(pheno)[12:16] = c("Behaviour1","PR_status1",
-                           "ER_status1","HER2_status1",
-                           "Grade1")
-save(pheno,file="./data/pheno.Icog")
