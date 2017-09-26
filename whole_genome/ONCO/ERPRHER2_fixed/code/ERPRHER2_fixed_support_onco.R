@@ -35,11 +35,11 @@ save(score.test.support.onco.ERPRHER2,file="./whole_genome/ONCO/ERPRHER2_fixed/r
 
 ##create pheno.file 
 
-pheno <- data1[,c(1,5:14)]
-pheno <- cbind(pheno,data1$Behaviour1,data1$PR_status1,
-               data1$ER_status1,data1$HER2_status1,
-               data1$Grade1)
+pheno <- data2[,c(1,5:14)]
+pheno <- cbind(pheno,data2$Behaviour1,data2$PR_status1,
+               data2$ER_status1,data2$HER2_status1,
+               data2$Grade1)
 colnames(pheno)[12:16] = c("Behaviour1","PR_status1",
                            "ER_status1","HER2_status1",
                            "Grade1")
-save(pheno,file="./data/pheno.Icog")
+save(pheno,file="./data/pheno.onco")
