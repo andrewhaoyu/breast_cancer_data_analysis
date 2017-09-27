@@ -66,8 +66,8 @@ num.of.tumor <- ncol(y.pheno.mis2)-1
 
 
 
-score_result <- matrix(0,num,num.of.tumor+1)
-infor_result <- matrix(0,(num.of.tumor+1)*num,num.of.tumor+1)
+score_result <- matrix(0,num,num.of.tumor)
+infor_result <- matrix(0,(num.of.tumor)*num,num.of.tumor)
 snpid_result <- rep("c",num)
 freq.all <- rep(0,num)
 
@@ -102,7 +102,7 @@ for(i in 1:num){
       if(freq<0.005|freq>0.995){
         
         score_result[i,] <- 0
-        infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- 0
+        infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
       }else{
         
         score.test.support.onco.casecae <- ScoreTestSupportMixedModel(y=y.pheno.mis2,
@@ -118,7 +118,7 @@ for(i in 1:num){
                                                        missingTumorIndicator=888)
         
         score_result[i,]  <- score.test.onco.casecase[[1]]
-        infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- score.test.onco.casecase[[2]]
+        infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.onco.casecase[[2]]
       
       }
       
@@ -126,7 +126,7 @@ for(i in 1:num){
     error=function(cond) {
       
       score_result[i,] <- 0
-      infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- 0
+      infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
       
     })
   
@@ -135,7 +135,7 @@ close(con)
 if(i !=num){
   snpid_result <- snpid_result[1:i]
   score_result <- score_result[1:i,]
-  infor_result <- infor_result[1:(4*i),]
+  infor_result <- infor_result[1:(num.of.tumor*i),]
   
   
 }

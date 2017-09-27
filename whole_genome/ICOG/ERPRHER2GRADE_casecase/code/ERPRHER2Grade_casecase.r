@@ -95,7 +95,7 @@ for(i in 1:num){
       if(freq<0.005|freq>0.995){
         
         score_result[i,] <- 0
-        infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- 0
+        infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
       }else{
         score.test.support.icog.casecae <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
                                                                       baselineonly = snpvalue,

@@ -130,7 +130,7 @@ close(con)
 if(i !=num){
   snpid_result <- snpid_result[1:i]
   score_result <- score_result[1:i,]
-  infor_result <- infor_result[(4*i-4)+(1:4),]
+  infor_result <- infor_result[1:((num.of.tumor+1)*i),]
   score_result_baseline <- score_result_baseline[1:i]
   infor_result_baseline <- infor_result_baseline[1:i]
   
