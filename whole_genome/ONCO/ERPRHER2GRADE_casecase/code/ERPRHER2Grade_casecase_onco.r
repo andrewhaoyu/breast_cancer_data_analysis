@@ -76,9 +76,9 @@ freq.all <- rep(0,num)
 con <- gzfile(geno.file)
 open(con)
 for(i in 1:num){
-  #if(i%%500==0){
+  if(i%%500==0){
     print(i)
-  #}
+  }
   oneLine <- readLines(con,n=1)
   myVector <- strsplit(oneLine," ")
   snpid <- as.character(myVector[[1]][2])
