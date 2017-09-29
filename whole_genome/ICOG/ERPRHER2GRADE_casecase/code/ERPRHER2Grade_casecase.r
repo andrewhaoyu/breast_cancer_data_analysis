@@ -25,6 +25,7 @@ Icog.order <- read.table(gzfile(subject.file))
 pheno.file <- "./data/pheno.Icog"
 load(pheno.file)
 n.sub = nrow(pheno)
+
 y.pheno.mis1 <- cbind(pheno$Behaviour1,pheno$PR_status1,pheno$ER_status1,pheno$HER2_status1,pheno$Grade1)
 x.all.covar <- pheno[,2:11]
 colnames(y.pheno.mis1) = c("Behaviour1","PR_status1",
@@ -55,12 +56,13 @@ tryCatch(
 #num = 22349
 #num <- countLines(geno.file)[1];
 #num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+rm(pheno)
 num.of.tumor <- ncol(y.pheno.mis1)-1
 
 
 
-score_result <- matrix(0,num,num.of.tumor)
-infor_result <- matrix(0,(num.of.tumor)*num,num.of.tumor)
+score_result <- matrix(0.1,num,num.of.tumor)
+infor_result <- matrix(0.1,(num.of.tumor)*num,num.of.tumor)
 snpid_result <- rep("c",num)
 
 
@@ -68,9 +70,9 @@ freq.all <- rep(0,num)
 con <- gzfile(geno.file)
 open(con)
 for(i in 1:num){
-#  if(i%%500==0){
+ if(i%%500==0){
   print(i)
- # }
+  }
   oneLine <- readLines(con,n=1)
   myVector <- strsplit(oneLine," ")
   snpid <- as.character(myVector[[1]][2])
@@ -97,7 +99,7 @@ for(i in 1:num){
         score_result[i,] <- 0
         infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
       }else{
-        score.test.support.icog.casecae <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
+        score.test.support.icog.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
                                                                       baselineonly = snpvalue,
                                                                       additive=x.all.covar,
                                                                       missingTumorIndicator = 888,
@@ -106,11 +108,13 @@ for(i in 1:num){
                                     x=snpvalue,
                                     z.design = z.standard,
                                     
-                                    score.test.support= score.test.support.icog.casecae,
+                                    score.test.support= score.test.support.icog.casecase,
                                     missingTumorIndicator=888)
         
         score_result[i,]  <- score.test.icog.casecase[[1]]
         infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.icog.casecase[[2]]
+        rm(score.test.support.icog.casecase)
+        rm(score.test.icog.casecase)
         
         
       }

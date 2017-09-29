@@ -35,7 +35,7 @@ snpvalue <- rep(0,n)
 idx.match <- match(pheno$Onc_ID,onco.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
-load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
+#load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/delta0.onco.Rdata")
 load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
 x.all.covar <- pheno[,2:11]
@@ -62,12 +62,13 @@ tryCatch(
 #num = 22349
 #num <- countLines(geno.file)[1];
 #num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+rm(pheno)
 num.of.tumor <- ncol(y.pheno.mis2)-1
 
 
 
-score_result <- matrix(0,num,num.of.tumor)
-infor_result <- matrix(0,(num.of.tumor)*num,num.of.tumor)
+score_result <- matrix(0.1,num,num.of.tumor)
+infor_result <- matrix(0.1,(num.of.tumor)*num,num.of.tumor)
 snpid_result <- rep("c",num)
 freq.all <- rep(0,num)
 
@@ -119,7 +120,8 @@ for(i in 1:num){
         
         score_result[i,]  <- score.test.onco.casecase[[1]]
         infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.onco.casecase[[2]]
-      
+      rm(score.test.onco.casecase)
+      rm(score.test.onco.casecase)
       }
       
     },
