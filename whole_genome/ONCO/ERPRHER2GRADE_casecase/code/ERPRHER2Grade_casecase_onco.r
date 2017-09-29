@@ -76,9 +76,9 @@ freq.all <- rep(0,num)
 con <- gzfile(geno.file)
 open(con)
 for(i in 1:num){
-  if(i%%500==0){
+  #if(i%%500==0){
     print(i)
-  }
+  #}
   oneLine <- readLines(con,n=1)
   myVector <- strsplit(oneLine," ")
   snpid <- as.character(myVector[[1]][2])
@@ -106,22 +106,22 @@ for(i in 1:num){
         infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
       }else{
         
-        score.test.support.onco.casecae <- ScoreTestSupportMixedModel(y=y.pheno.mis2,
+        score.test.support.onco.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis2,
                                                                       baselineonly = snpvalue,
                                                                       additive=x.all.covar,
                                                                       missingTumorIndicator = 888,
                                                                       delta0=delta0.onco)
         score.test.onco.casecase<- ScoreTestMixedModel(y=y.pheno.mis2,
                                                        x=snpvalue,
-                                                       z.design = z.standard,
-                                                       
-                                                       score.test.support= score.test.support.onco.casecae,
+                                                       z.design = z.standard, 
+                                                       score.test.support= score.test.support.onco.casecase,
                                                        missingTumorIndicator=888)
         
         score_result[i,]  <- score.test.onco.casecase[[1]]
         infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.onco.casecase[[2]]
-      rm(score.test.onco.casecase)
-      rm(score.test.onco.casecase)
+      rm(score.test.support.onco.casecase)
+     rm(score.test.onco.casecase)
+     gc()
       }
       
     },

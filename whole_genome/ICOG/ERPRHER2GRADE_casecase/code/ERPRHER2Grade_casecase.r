@@ -115,6 +115,7 @@ for(i in 1:num){
         infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.icog.casecase[[2]]
         rm(score.test.support.icog.casecase)
         rm(score.test.icog.casecase)
+        gc()
         
         
       }
