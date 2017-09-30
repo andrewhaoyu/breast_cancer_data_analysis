@@ -17,16 +17,24 @@ library(CompQuadForm)
 library(bc2)
 
 z.design <- matrix(c(
-  c(0,1,1,1,0,0,0,0),
+  c(1,1,1,1,1,1,1,1),
   c(0,0,0,0,0,1,1,1),
   c(0,0,0,0,1,0,0,0),
   c(1,0,0,0,0,0,0,0)
 ),ncol=4)
+z.trans <- matrix(c(
+  c(1,1,1,1),
+  c(0,1,0,0),
+  c(0,0,1,0),
+  c(0,0,0,1)
+),ncol=4)
+z.design.score.baseline <- matrix(rep(1,8),ncol=1)
+z.design.score.casecase <- z.design[,2:ncol(z.design)]
 
 colnames(z.design) <- c("Luminial A",
-                        "Luminal B",
-                        "HER2 Enriched",
-                        "Triple Negative")
+                        "Luminal B - Luminal A",
+                        "HER2 Enriched - Luminal A",
+                        "Triple Negative- Luminal A")
 
 
 
@@ -55,8 +63,8 @@ if(i1<=180){
   log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
   
   sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
-  beta.icog <- z.design%*%log.odds.icog
-  beta.sigma.icog <- z.design%*%sigma.log.odds.icog%*%t(z.design)
+  beta.icog <- z.trans%*%log.odds.icog
+  beta.sigma.icog <- z.trans%*%sigma.log.odds.icog%*%t(z.trans)
   loglikelihood.icog <- Heter.result.Icog[[8]]
   
   score.test.support.icog <- ScoreTestSupport(
@@ -76,10 +84,38 @@ if(i1<=180){
                               score.test.support=score.test.support.icog,
                               missingTumorIndicator=888)
   z.design.score.baseline <- matrix(rep(1,8),ncol=1)
-  z.design.score.casecase <-z.standard
-  
+  z.design.score.casecase <- z.design[,2:ncol(z.design)]
   score.icog <- score.test.icog[[1]]
   infor.icog <- score.test.icog[[2]]
+  
+  score.test.icog.baseline <- ScoreTestSelfDesign(y=y.pheno.mis1,
+                                               x=x.all.mis1[,1,drop=F],
+                                               z.design = z.design.score.baseline,
+                                               score.test.support = score.test.support.icog,
+                                               missingTumorIndicator=888
+    )
+  score.icog.baseline <- score.test.icog.baseline[[1]]
+  infor.icog.baseline <- score.test.icog.baseline[[2]]
+  
+  score.test.support.icog.casecase <- ScoreTestSupport(
+    y.pheno.mis1,
+    baselineonly = x.all.mis1[,1,drop=F],
+    additive = x.all.mis1[,2:11],
+    pairwise.interaction = NULL,
+    saturated = NULL,
+    missingTumorIndicator = 888
+  )
+  score.test.icog.casecase<- ScoreTestSelfDesign(y=y.pheno.mis1,
+                                                 x=x.all.mis1[,1,drop=F],
+                                                 z.design=z.design.score.casecase,
+                                                 score.test.support=score.test.support.icog.casecase,
+                                                 missingTumorIndicator=888)
+  
+  score.icog.casecase <- score.test.icog.casecase[[1]]
+  infor.icog.casecase <- score.test.icog.casecase[[2]]
+  
+  
+  
   
   
   
@@ -109,8 +145,8 @@ if(i1<=180){
   number.of.tumor <- ncol(z.standard)
   log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
   sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
-  beta.onco <- z.design%*%log.odds.onco
-  beta.sigma.onco <- z.design%*%sigma.log.odds.onco%*%t(z.design)
+  beta.onco <- z.trans%*%log.odds.onco
+  beta.sigma.onco <- z.trans%*%sigma.log.odds.onco%*%t(z.trans)
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
   
@@ -132,6 +168,34 @@ if(i1<=180){
   score.onco <- score.test.onco[[1]]
   infor.onco <- score.test.onco[[2]]
   
+  score.test.support.onco.baseline <- score.test.support.onco
+  score.test.onco.baseline<- ScoreTestSelfDesign(y=y.pheno.mis2,
+                                                 x=x.all.mis2[,1,drop=F],
+                                                 z.design=z.design.score.baseline,
+                                                 score.test.support=score.test.support.onco.baseline,
+                                                 missingTumorIndicator=888)
+  
+  score.onco.baseline <- score.test.onco.baseline[[1]]
+  infor.onco.baseline <- score.test.onco.baseline[[2]]
+  
+  score.test.support.onco.casecase <- ScoreTestSupport(
+    y.pheno.mis2,
+    baselineonly = x.all.mis2[,1,drop=F],
+    additive = x.all.mis2[,2:11],
+    pairwise.interaction = NULL,
+    saturated = NULL,
+    missingTumorIndicator = 888
+  )
+  score.test.onco.casecase<- ScoreTestSelfDesign(y=y.pheno.mis2,
+                                                 x=x.all.mis2[,1,drop=F],
+                                                 z.design=z.design.score.casecase,
+                                                 score.test.support=score.test.support.onco.casecase,
+                                                 missingTumorIndicator=888)
+  
+  score.onco.casecase <- score.test.onco.casecase[[1]]
+  infor.onco.casecase <- score.test.onco.casecase[[2]]
+  
+  
   
   
   meta.result <- LogoddsMetaAnalysis(log.odds.icog,
@@ -147,8 +211,8 @@ if(i1<=180){
   test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta,self.design=T)
   
   
-  beta.meta <- z.design%*%second.stage.logodds.meta
-  beta.sigma.meta <- z.design%*%second.stage.sigma.meta%*%t(z.design)
+  beta.meta <- z.trans%*%second.stage.logodds.meta
+  beta.sigma.meta <- z.trans%*%second.stage.sigma.meta%*%t(z.trans)
   
   test.result.first.wald <- DisplayFirstStageTestResult(beta.meta,beta.sigma.meta)
   
@@ -157,17 +221,36 @@ if(i1<=180){
   score.meta <- meta.result.score[[1]]
   infor.meta <- meta.result.score[[2]]
   
-  test.result.second.score <- ScoreGlobalMixedTestForAssoc(score.meta,infor.meta)
-  test.result.second.score <- t(test.result.second.score)
+  test.result.second.score <- DisplayFixedScoreTestResult(score.meta,infor.meta)
   
+  meta.result.score.baseline <- ScoreMetaAnalysis(score.icog.baseline,
+                                                  infor.icog.baseline,
+                                                  score.onco.baseline,
+                                                  infor.onco.baseline)
+  score.meta.baseline <- meta.result.score.baseline[[1]]
+  infor.meta.baseline <- meta.result.score.baseline[[2]]
   
-  colnames(test.result.second.score) <- c("fixed effect score test global test for association","random effect model global test for association")
+  meta.result.score.casecase <- ScoreMetaAnalysis(score.icog.casecase,
+                                                  infor.icog.casecase,
+                                                  score.onco.casecase,
+                                                  infor.onco.casecase)
+  score.meta.casecase <- meta.result.score.casecase[[1]]
+  infor.meta.casecase <- meta.result.score.casecase[[2]]
+  test.result.second.mixed <- DisplayMixedScoreTestResult(score.meta.baseline,
+                                                          infor.meta.baseline,
+                                                          score.meta.casecase,
+                                                          infor.meta.casecase)  
+  test.result.second.mixed <- data.frame(t(test.result.second.mixed))
+  
+  colnames(test.result.second.mixed) <- c("mixed model global test for association","mixed model global test for heterogeneity")
   
   loglikelihood <- loglikelihood.icog+loglikelihood.onco
   AIC <- 2*length(Heter.result.Onco[[1]])-2*loglikelihood
   
-  heter.result <- list(data.frame(test.result.second.wald,test.result.second.score,loglikelihood = loglikelihood,AIC=AIC),
+  heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,loglikelihood = loglikelihood,AIC=AIC),
                        data.frame(test.result.first.wald))
+  
+ 
   
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_revised/intrinsic_subtypes_pc_additive/result/heter_result_",i1,".Rdata"))
   
@@ -196,8 +279,8 @@ if(i1<=180){
   number.of.tumor <- ncol(z.standard)
   log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
   sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
-  beta.onco <- z.design%*%log.odds.onco
-  beta.sigma.onco <- z.design%*%sigma.log.odds.onco%*%t(z.design)
+  beta.onco <- z.trans%*%log.odds.onco
+  beta.sigma.onco <- z.trans%*%sigma.log.odds.onco%*%t(z.trans)
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
   
@@ -221,6 +304,36 @@ if(i1<=180){
   
   
   
+  score.test.support.onco.baseline <-  score.test.support.onco
+  score.test.onco.baseline<- ScoreTestSelfDesign(y=y.pheno.mis2,
+                                                 x=x.all.mis2[,1,drop=F],
+                                                 z.design=z.design.score.baseline,
+                                                 score.test.support=score.test.support.onco.baseline,
+                                                 missingTumorIndicator=888)
+  
+  score.onco.baseline <- score.test.onco.baseline[[1]]
+  infor.onco.baseline <- score.test.onco.baseline[[2]]
+  
+  score.test.support.onco.casecase <- ScoreTestSupport(
+    y.pheno.mis2,
+    baselineonly = x.all.mis2[,1,drop=F],
+    additive = x.all.mis2[,2:11],
+    pairwise.interaction = NULL,
+    saturated = NULL,
+    missingTumorIndicator = 888
+  )
+  score.test.onco.casecase<- ScoreTestSelfDesign(y=y.pheno.mis2,
+                                                 x=x.all.mis2[,1,drop=F],
+                                                 z.design=z.design.score.casecase,
+                                                 score.test.support=score.test.support.onco.casecase,
+                                                 missingTumorIndicator=888)
+  
+  
+  
+  score.onco.casecase <- score.test.onco.casecase[[1]]
+  infor.onco.casecase <- score.test.onco.casecase[[2]]
+  
+  
   
   
   second.stage.logodds.meta <-log.odds.onco
@@ -230,12 +343,11 @@ if(i1<=180){
   
   
   
-  test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta,self.design=T)
+  test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
   
-  
-  beta.meta <- z.design%*%second.stage.logodds.meta
-  beta.sigma.meta <- z.design%*%second.stage.sigma.meta%*%t(z.design)
+  beta.meta <- z.trans%*%second.stage.logodds.meta
+  beta.sigma.meta <- z.trans%*%second.stage.sigma.meta%*%t(z.trans)
   
   test.result.first.wald <- DisplayFirstStageTestResult(beta.meta,beta.sigma.meta)
   
@@ -243,24 +355,38 @@ if(i1<=180){
   score.meta <- score.onco
   infor.meta <- infor.onco
   
-  test.result.second.score <- ScoreGlobalMixedTestForAssoc(score.meta,infor.meta)
-  test.result.second.score <- t(test.result.second.score)
-  colnames(test.result.second.score) <- c("fixed effect score test global test for association","random effect model global test for association")
+  test.result.second.score <- DisplayFixedScoreTestResult(score.meta,infor.meta)
   
+  
+  score.meta.baseline <- score.onco.baseline
+  infor.meta.baseline <- infor.onco.baseline
+  
+  score.meta.casecase <- score.onco.casecase
+  infor.meta.casecase <- infor.onco.casecase
+  test.result.second.mixed <- DisplayMixedScoreTestResult(score.meta.baseline,
+                                                          infor.meta.baseline,
+                                                          score.meta.casecase,
+                                                          infor.meta.casecase)  
+  test.result.second.mixed <- data.frame(t(test.result.second.mixed))
+  
+  colnames(test.result.second.mixed) <- c("mixed model global test for association","mixed model global test for heterogeneity")
   
   loglikelihood <- loglikelihood.onco
   AIC <- 2*length(Heter.result.Onco[[1]])-2*loglikelihood
   
-  heter.result <- list(data.frame(test.result.second.wald,test.result.second.score,loglikelihood = loglikelihood,AIC=AIC),
+  heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,loglikelihood = loglikelihood,AIC=AIC),
                        data.frame(test.result.first.wald))
-
   
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_revised/intrinsic_subtypes_pc_additive/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_revised/additive_model/result/heter_result_",i1,".Rdata"))
+  
+  
   
   
   
   
 }
+
+
 
 
 
