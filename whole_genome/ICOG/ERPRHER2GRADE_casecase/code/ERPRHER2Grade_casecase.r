@@ -55,8 +55,8 @@ tryCatch(
     num <- countLines(geno.file)[1]
   }
 )
-
-start.end <- startend(num,100,i2)
+size = 5
+start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
 file.num <- end-start+1
