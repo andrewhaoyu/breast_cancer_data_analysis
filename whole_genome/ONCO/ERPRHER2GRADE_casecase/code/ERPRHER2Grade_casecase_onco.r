@@ -12,9 +12,11 @@ rm(list=ls())
 #print(i)
 #pheno is ICOGS,data2 is onco_array
 arg <- commandArgs(trailingOnly=T)
-i <- as.numeric(arg[[1]])
-i1 <- i
-print(i)
+i1 <- as.numeric(arg[[1]])
+i2 <- as.numeric(arg[[2]])
+print(i1)
+print(i2)
+
 library(R.utils)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
@@ -64,13 +66,19 @@ tryCatch(
 #num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 rm(pheno)
 num.of.tumor <- ncol(y.pheno.mis2)-1
+size = 5
+start.end <- startend(num,size,i2)
+start <- start.end[1]
+end <- start.end[2]
+file.num <- end-start+1
 
 
+score_result <- matrix(0.1,file.num,num.of.tumor)
+infor_result <- matrix(0.1,(num.of.tumor)*file.num,num.of.tumor)
+snpid_result <- rep("c",file.num)
 
-score_result <- matrix(0.1,num,num.of.tumor)
-infor_result <- matrix(0.1,(num.of.tumor)*num,num.of.tumor)
-snpid_result <- rep("c",num)
-freq.all <- rep(0,num)
+freq.all <- rep(0,file.num)
+
 
 
 con <- gzfile(geno.file)
@@ -79,67 +87,68 @@ for(i in 1:num){
   if(i%%500==0){
     print(i)
   }
+
   oneLine <- readLines(con,n=1)
-  myVector <- strsplit(oneLine," ")
-  snpid <- as.character(myVector[[1]][2])
-  snpid_result[i] <- snpid
-  snpvalue <- rep(0,n)
-  
-  
-  snppro <- as.numeric(unlist(myVector)[6:length(myVector[[1]])])
-  if(length(snppro)!=(3*n)){
-    break
-  }
-  
-  snpvalue <- convert(snppro,n)
-  snpvalue <- snpvalue[idx.fil][idx.match]
-  freq <- sum(snpvalue)/(2*n.sub)
-  freq.all[i] <- freq
-  #print(paste0("freq",freq))
-  
-  tryCatch(
-    {
-      
-      if(freq<0.005|freq>0.995){
+  if(i>=start){
+    myVector <- strsplit(oneLine," ")
+    snpid <- as.character(myVector[[1]][2])
+    snpid_result[i] <- snpid
+    snpvalue <- rep(0,n)
+    
+    
+    snppro <- as.numeric(unlist(myVector)[6:length(myVector[[1]])])
+    if(length(snppro)!=(3*n)){
+      break
+    }
+    
+    snpvalue <- convert(snppro,n)
+    snpvalue <- snpvalue[idx.fil][idx.match]
+    freq <- sum(snpvalue)/(2*n.sub)
+    freq.all[i] <- freq
+    #print(paste0("freq",freq))
+    
+    tryCatch(
+      {
+        
+        if(freq<0.005|freq>0.995){
+          
+          score_result[i,] <- 0
+          infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
+        }else{
+          
+          score.test.support.onco.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis2,
+                                                                         baselineonly = snpvalue,
+                                                                         additive=x.all.covar,
+                                                                         missingTumorIndicator = 888,
+                                                                         delta0=delta0.onco)
+          score.test.onco.casecase<- ScoreTestMixedModel(y=y.pheno.mis2,
+                                                         x=snpvalue,
+                                                         z.design = z.standard, 
+                                                         score.test.support= score.test.support.onco.casecase,
+                                                         missingTumorIndicator=888)
+          
+          score_result[i,]  <- score.test.onco.casecase[[1]]
+          infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.onco.casecase[[2]]
+          rm(score.test.support.onco.casecase)
+          rm(score.test.onco.casecase)
+          gc()
+        }
+        
+      },
+      error=function(cond) {
         
         score_result[i,] <- 0
         infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
-      }else{
         
-        score.test.support.onco.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis2,
-                                                                      baselineonly = snpvalue,
-                                                                      additive=x.all.covar,
-                                                                      missingTumorIndicator = 888,
-                                                                      delta0=delta0.onco)
-        score.test.onco.casecase<- ScoreTestMixedModel(y=y.pheno.mis2,
-                                                       x=snpvalue,
-                                                       z.design = z.standard, 
-                                                       score.test.support= score.test.support.onco.casecase,
-                                                       missingTumorIndicator=888)
-        
-        score_result[i,]  <- score.test.onco.casecase[[1]]
-        infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.onco.casecase[[2]]
-      rm(score.test.support.onco.casecase)
-     rm(score.test.onco.casecase)
-     gc()
-      }
-      
-    },
-    error=function(cond) {
-      
-      score_result[i,] <- 0
-      infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
-      
-    })
-  
+      })
+    
+  }
+  if(i==end){
+    break
+  }
+ 
 }
 close(con)
-if(i !=num){
-  snpid_result <- snpid_result[1:i]
-  score_result <- score_result[1:i,]
-  infor_result <- infor_result[1:(num.of.tumor*i),]
-  
-  
-}
+
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 save(result,file=paste0("./whole_genome/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco",i1))
