@@ -1,3 +1,5 @@
+
+
 rm(list=ls())
 #args=(commandArgs(TRUE))
 #for(p in 1:length(args)){
@@ -11,13 +13,16 @@ rm(list=ls())
 #i <- as.numeric(myarg)
 #print(i)
 #pheno is ICOGS,data2 is onco_array
-arg <- commandArgs(trailingOnly=T)
-i1 <- as.numeric(arg[[1]])
-i2 <- as.numeric(arg[[2]])
-print(i1)
-print(i2)
+# arg <- commandArgs(trailingOnly=T)
+# i1 <- as.numeric(arg[[1]])
+# i2 <- as.numeric(arg[[2]])
+# print(i1)
+# print(i2)
+i1= 1
+
 library(R.utils)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+load("./whole_genome/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_test")
 
 n <- 109713
 snpvalue <- rep(0,n)
@@ -55,11 +60,11 @@ tryCatch(
     num <- countLines(geno.file)[1]
   }
 )
-size = 5
-start.end <- startend(num,size,i2)
-start <- start.end[1]
-end <- start.end[2]
-file.num <- end-start+1
+# size = 5
+# start.end <- startend(num,size,i2)
+# start <- start.end[1]
+# end <- start.end[2]
+# file.num <- end-start+1
 #num = 22349
 #num <- countLines(geno.file)[1];
 #num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
@@ -78,12 +83,12 @@ temp <- 0
 con <- gzfile(geno.file)
 open(con)
 for(i in 1:num){
- if(i%%500==0){
-  print(i)
+  if(i%%500==0){
+    print(i)
   }
   oneLine <- readLines(con,n=1)
   
-  if(i>=start){
+ # if(i>=start){
     if(temp%%100==0){
       print(paste0("temp",temp))
     }
@@ -131,8 +136,8 @@ for(i in 1:num){
           score_result[temp,]  <- score.test.icog.casecase[[1]]
           infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.icog.casecase[[2]]
           # print(mem_used())
-          rm(score.test.support.icog.casecase)
-           rm(score.test.icog.casecase)
+          # rm(score.test.support.icog.casecase)
+          rm(score.test.icog.casecase)
            gc()
           # print(memory.profile())
           # print(lsos())
@@ -149,11 +154,11 @@ for(i in 1:num){
         
       })
     
-    if(i==end){
-      break
-    }
+   # if(i==end){
+    #  break
+    #}
     
-  }
+  #}
   
   
   
