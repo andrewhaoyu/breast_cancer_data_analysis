@@ -78,6 +78,7 @@ infor_result <- matrix(0.1,(num.of.tumor)*file.num,num.of.tumor)
 snpid_result <- rep("c",file.num)
 
 freq.all <- rep(0,file.num)
+temp <- 0
 
 
 
@@ -90,6 +91,13 @@ for(i in 1:num){
 
   oneLine <- readLines(con,n=1)
   if(i>=start){
+    if(temp%%100==0){
+      print(paste0("temp",temp))
+    }
+    temp = temp+1
+    if(temp%%100==0){
+      print(paste0("temp",temp))
+    }
     myVector <- strsplit(oneLine," ")
     snpid <- as.character(myVector[[1]][2])
     snpid_result[i] <- snpid
@@ -112,8 +120,8 @@ for(i in 1:num){
         
         if(freq<0.005|freq>0.995){
           
-          score_result[i,] <- 0
-          infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
+          score_result[temp,] <- 0
+          infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*temp),] <- 0
         }else{
           
           score.test.support.onco.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis2,
@@ -127,8 +135,8 @@ for(i in 1:num){
                                                          score.test.support= score.test.support.onco.casecase,
                                                          missingTumorIndicator=888)
           
-          score_result[i,]  <- score.test.onco.casecase[[1]]
-          infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.onco.casecase[[2]]
+          score_result[temp,]  <- score.test.onco.casecase[[1]]
+          infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*temp),] <- score.test.onco.casecase[[2]]
           rm(score.test.support.onco.casecase)
           rm(score.test.onco.casecase)
           gc()
@@ -137,8 +145,8 @@ for(i in 1:num){
       },
       error=function(cond) {
         
-        score_result[i,] <- 0
-        infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
+        score_result[temp,] <- 0
+        infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*temp),] <- 0
         
       })
     

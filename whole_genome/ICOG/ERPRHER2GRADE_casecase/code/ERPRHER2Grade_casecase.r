@@ -74,6 +74,7 @@ snpid_result <- rep("c",file.num)
 
 
 freq.all <- rep(0,file.num)
+temp <- 0
 con <- gzfile(geno.file)
 open(con)
 for(i in 1:num){
@@ -81,8 +82,14 @@ for(i in 1:num){
   print(i)
   }
   oneLine <- readLines(con,n=1)
+  
   if(i>=start){
-    print(i)
+    if(temp%%100==0){
+      print(paste0("temp",temp))
+    }
+    #print(i)
+    temp = temp+1
+    #print(i)
     myVector <- strsplit(oneLine," ")
     snpid <- as.character(myVector[[1]][2])
     snpid_result[i] <- snpid
@@ -105,23 +112,24 @@ for(i in 1:num){
         
         if(freq<0.005|freq>0.995){
           
-          score_result[i,] <- 0
-          infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
+          score_result[temp,] <- 0
+          infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*temp),] <- 0
         }else{
-          score.test.support.icog.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
-                                                                         baselineonly = snpvalue,
-                                                                         additive=x.all.covar,
-                                                                         missingTumorIndicator = 888,
-                                                                         delta0=delta0.icog)
-          score.test.icog.casecase<- ScoreTestMixedModel(y=y.pheno.mis1,
-                                                         x=snpvalue,
-                                                         z.design = z.standard,
-                                                         
-                                                         score.test.support= score.test.support.icog.casecase,
-                                                         missingTumorIndicator=888)
-          
-          score_result[i,]  <- score.test.icog.casecase[[1]]
-          infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.icog.casecase[[2]]
+          # score.test.support.icog.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
+          #                                                                baselineonly = snpvalue,
+          #                                                                additive=x.all.covar,
+          #                                                                missingTumorIndicator = 888,
+          #                                                                delta0=delta0.icog)
+          # 
+          # score.test.icog.casecase<- ScoreTestMixedModel(y=y.pheno.mis1,
+          #                                                x=snpvalue,
+          #                                                z.design = z.standard,
+          #                                                
+          #                                                score.test.support= score.test.support.icog.casecase,
+          #                                                missingTumorIndicator=888)
+          # 
+          # score_result[temp,]  <- score.test.icog.casecase[[1]]
+          # infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.icog.casecase[[2]]
           # print(mem_used())
           # rm(score.test.support.icog.casecase)
           # rm(score.test.icog.casecase)
@@ -135,8 +143,8 @@ for(i in 1:num){
       },
       error=function(cond) {
         
-        score_result[i,] <- 0
-        infor_result[((num.of.tumor)*i-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0
+        score_result[temp,] <- 0
+        infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*temp),] <- 0
         
         
       })
