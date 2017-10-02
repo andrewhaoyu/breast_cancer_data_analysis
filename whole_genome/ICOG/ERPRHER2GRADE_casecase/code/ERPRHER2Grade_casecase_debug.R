@@ -73,9 +73,9 @@ num.of.tumor <- ncol(y.pheno.mis1)-1
 
 
 
-score_result <- matrix(0.1,file.num,num.of.tumor)
-infor_result <- matrix(0.1,(num.of.tumor)*file.num,num.of.tumor)
-snpid_result <- rep("c",file.num)
+score_result <- matrix(0.1,num,num.of.tumor)
+infor_result <- matrix(0.1,(num.of.tumor)*num,num.of.tumor)
+snpid_result <- rep("c",num)
 
 
 freq.all <- rep(0,file.num)
