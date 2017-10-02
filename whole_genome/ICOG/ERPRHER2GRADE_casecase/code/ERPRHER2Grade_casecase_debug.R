@@ -78,7 +78,7 @@ infor_result <- matrix(0.1,(num.of.tumor)*num,num.of.tumor)
 snpid_result <- rep("c",num)
 
 
-freq.all <- rep(0,file.num)
+freq.all <- rep(0,num)
 #temp <- 0
 con <- gzfile(geno.file)
 open(con)
