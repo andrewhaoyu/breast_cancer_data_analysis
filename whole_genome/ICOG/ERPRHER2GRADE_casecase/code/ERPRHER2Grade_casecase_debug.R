@@ -79,7 +79,7 @@ snpid_result <- rep("c",num)
 
 
 freq.all <- rep(0,num)
-#temp <- 0
+temp <- 0
 con <- gzfile(geno.file)
 open(con)
 for(i in 1:num){
@@ -93,7 +93,7 @@ for(i in 1:num){
      # print(paste0("temp",temp))
     #}
     #print(i)
- #   temp = temp+1
+ temp = temp+1
     #print(i)
     myVector <- strsplit(oneLine," ")
     snpid <- as.character(myVector[[1]][2])
@@ -111,7 +111,7 @@ for(i in 1:num){
     freq <- sum(snpvalue)/(2*n.sub)
     freq.all[i] <- freq
     #print(paste0("freq",freq))
-    
+    i
     tryCatch(
       {
         
