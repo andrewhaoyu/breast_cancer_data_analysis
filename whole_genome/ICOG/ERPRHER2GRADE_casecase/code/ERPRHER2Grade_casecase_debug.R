@@ -79,7 +79,7 @@ snpid_result <- rep("c",file.num)
 
 
 freq.all <- rep(0,file.num)
-temp <- 0
+#temp <- 0
 con <- gzfile(geno.file)
 open(con)
 for(i in 1:num){
@@ -89,11 +89,11 @@ for(i in 1:num){
   oneLine <- readLines(con,n=1)
   
  # if(i>=start){
-    if(temp%%100==0){
-      print(paste0("temp",temp))
-    }
+    #if(temp%%100==0){
+     # print(paste0("temp",temp))
+    #}
     #print(i)
-    temp = temp+1
+ #   temp = temp+1
     #print(i)
     myVector <- strsplit(oneLine," ")
     snpid <- as.character(myVector[[1]][2])
@@ -120,11 +120,11 @@ for(i in 1:num){
           score_result[temp,] <- 0
           infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*temp),] <- 0
         }else{
-          score.test.support.icog.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
-                                                                         baselineonly = snpvalue,
-                                                                         additive=x.all.covar,
-                                                                         missingTumorIndicator = 888,
-                                                                         delta0=delta0.icog)
+          # score.test.support.icog.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
+          #                                                                baselineonly = snpvalue,
+          #                                                                additive=x.all.covar,
+          #                                                                missingTumorIndicator = 888,
+          #                                                                delta0=delta0.icog)
 
           score.test.icog.casecase<- ScoreTestMixedModel(y=y.pheno.mis1,
                                                          x=snpvalue,
@@ -175,5 +175,5 @@ close(con)
 #   
 # }
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./whole_genome/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase",i1,"_",i2))
+save(result,file=paste0("./whole_genome/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_debug"))
 
