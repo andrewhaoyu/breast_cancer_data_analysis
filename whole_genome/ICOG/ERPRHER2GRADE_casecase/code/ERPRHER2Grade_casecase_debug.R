@@ -22,7 +22,7 @@ i1= 1
 
 library(R.utils)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-#load("./whole_genome/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_test")
+load("./whole_genome/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_test")
 
 n <- 109713
 snpvalue <- rep(0,n)
@@ -120,24 +120,24 @@ for(i in 1:num){
           score_result[temp,] <- 0
           infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*temp),] <- 0
         }else{
-          score.test.support.icog.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
-                                                                         baselineonly = snpvalue,
-                                                                         additive=x.all.covar,
-                                                                         missingTumorIndicator = 888,
-                                                                         delta0=delta0.icog)
+          # score.test.support.icog.casecase <- ScoreTestSupportMixedModel(y=y.pheno.mis1,
+          #                                                                baselineonly = snpvalue,
+          #                                                                additive=x.all.covar,
+          #                                                                missingTumorIndicator = 888,
+          #                                                                delta0=delta0.icog)
 
-          # score.test.icog.casecase<- ScoreTestMixedModel(y=y.pheno.mis1,
-          #                                                x=snpvalue,
-          #                                                z.design = z.standard,
-          # 
-          #                                                score.test.support= score.test.support.icog.casecase,
-          #                                                missingTumorIndicator=888)
+          score.test.icog.casecase<- ScoreTestMixedModel(y=y.pheno.mis1,
+                                                         x=snpvalue,
+                                                         z.design = z.standard,
 
-          score_result[temp,]  <- 0.1
-          infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*i),] <- 0.1
+                                                         score.test.support= score.test.support.icog.casecase,
+                                                         missingTumorIndicator=888)
+
+          score_result[temp,]  <- score.test.icog.casecase[[1]]
+          infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.icog.casecase[[2]]
           # print(mem_used())
           # rm(score.test.support.icog.casecase)
-          #rm(score.test.icog.casecase)
+          rm(score.test.icog.casecase)
            gc()
           # print(memory.profile())
           # print(lsos())
