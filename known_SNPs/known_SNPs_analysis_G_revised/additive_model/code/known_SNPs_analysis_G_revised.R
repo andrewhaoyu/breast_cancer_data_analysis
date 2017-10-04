@@ -19,7 +19,7 @@ library(bc2)
 
 
 
-if(i1<=180){
+if(i1<=178){
   ##analysis for Icog
   data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
@@ -30,7 +30,7 @@ if(i1<=180){
   #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
   # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
   
-  x.test.all.mis1 <- data1[,c(27:206)]
+  x.test.all.mis1 <- data1[,c(27:204)]
   
   x.covar.mis1 <- data1[,5:14]
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
@@ -122,9 +122,9 @@ if(i1<=180){
   #analysis for Onco Array
   #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
   data2 <- read.csv("./data/Onco_euro_v10_05242017.csv",header=T)
-  names1 = colnames(data1)[27:206]
+  names1 = colnames(data1)[27:204]
   rm(data1)
-  names2 = colnames(data2)[27:212]
+  names2 = colnames(data2)[27:210]
   
   idxi1 = which(names2==names1[i1])
   y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
@@ -132,7 +132,7 @@ if(i1<=180){
   colnames(y.pheno.mis2) = c("Behaviour","PR",
                              "ER","HER2","Grade")
   
-  x.test.all.mis2 <- data2[,c(27:212)]
+  x.test.all.mis2 <- data2[,c(27:210)]
   x.covar.mis2 <- data2[,5:14]
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
