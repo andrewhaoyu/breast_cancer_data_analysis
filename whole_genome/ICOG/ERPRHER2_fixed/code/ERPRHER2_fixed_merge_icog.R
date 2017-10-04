@@ -110,7 +110,8 @@ for(i in 1:22){
   
 }
 
-save(icog_info,file="/data/zhangh20/Icog/gwas_info/icog_info.Rdata")
+
+icog_result <- data.frame(icog_info,score,infor,freq.all)
 
 
 
@@ -118,7 +119,8 @@ save(icog_info,file="/data/zhangh20/Icog/gwas_info/icog_info.Rdata")
 
 
 
-
-
-save(Icog_result,file="/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_gwas/Icog_result.Rdata")
+save(icog_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Icog_result.Rdata")
 print(1)
+
+
+
