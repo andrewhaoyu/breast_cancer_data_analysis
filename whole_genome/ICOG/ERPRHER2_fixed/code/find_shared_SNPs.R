@@ -30,12 +30,62 @@ icog_result_shared = icog_result[idx.icog_shared,]
 idx.icog_match = match(shared_rs_id,icog_result_shared$rs_id)
 icog_result_shared = icog_result_shared[idx.icog_match,]
 
+
+
 idx.onco_shared = which((onco_result$rs_id%in%shared_rs_id2)==T)
 onco_result_shared = onco_result[idx.onco_shared,]
 idx.onco_match = match(shared_rs_id2,onco_result_shared$rs_id)
 onco_result_shared = onco_result_shared[idx.onco_match,]
+
+####take out data_c
+idx.shared_data_c <- which((data_c$SNP.ICOGS%in%shared_rs_id)==T)
+
+data_c_shared <- data_c[idx.icog_shared_data_c,]
+idx.icog_match_data_c <- match(shared_rs_id,data_c_shared$SNP.ICOGS)
+data_c_shared <- data_c_shared[idx.icog_match_data_c]
+
+
+icog_result_shared <- icog_result_shared[,-ncol(icog_result_shared)]
+icog_result_shared <- cbind(icog_result_shared,data_c_shared)
+all.equal(icog_result_shared$rs_id,icog_result_shared$SNP.ICOGS)
+
+
+onco_result_shared <- onco_result_shared[,-ncol(onco_result_shared)]
+onco_result_shared <- cbind(onco_result_shared,data_c_shared)
+all.equal(onco_result_shared$rs_id,onco_result_shared$SNP.ONCO)
+
 save(icog_result_shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
 save(onco_result_shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
+
+
+
+
+idx.filter <- which(icog_result_shared$exp_freq_a1>=0.01&
+                      onco_result_shared$exp_freq_a1>=0.01)
+icog_result_shared_1p <- icog_result_shared[idx.filter,]
+onco_result_shared_1p <- onco_result_shared[idx.filter,]
+
+
+
+
+
+save(icog_result_shared_1p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared_1p.Rdata")
+save(onco_result_shared_1p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared_1p.Rdata")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

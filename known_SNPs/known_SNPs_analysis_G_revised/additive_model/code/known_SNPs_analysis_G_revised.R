@@ -189,7 +189,7 @@ if(i1<=178){
   beta.onco <- z.additive.design%*%log.odds.onco
   beta.sigma.onco <- z.additive.design%*%sigma.log.odds.onco%*%t(z.additive.design)
   loglikelihood.onco <- Heter.result.Onco[[8]]
-  rm(Heter.result.Onco)  
+  #rm(Heter.result.Onco)  
   
   score.test.support.onco <- ScoreTestSupport(
     y.pheno.mis2,
