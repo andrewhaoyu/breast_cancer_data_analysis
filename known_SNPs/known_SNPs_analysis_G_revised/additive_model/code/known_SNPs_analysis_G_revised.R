@@ -212,7 +212,7 @@ if(i1<=178){
   score.onco <- score.test.onco[[1]]
   infor.onco <- score.test.onco[[2]]
   score.test.support.onco.baseline <- score.test.support.onco
-  rm(score.test.support.onco)
+  #rm(score.test.support.onco)
   rm(score.test.onco)
   
   score.test.onco.baseline<- ScoreTestSelfDesign(y=y.pheno.mis2,
@@ -437,7 +437,7 @@ if(i1<=178){
   score.onco <- score.test.onco[[1]]
   infor.onco <- score.test.onco[[2]]
   score.test.support.onco.baseline <- score.test.support.onco
-  rm(score.test.support.onco)
+  #rm(score.test.support.onco)
   rm(score.test.onco)
   score.test.onco.baseline<- ScoreTestSelfDesign(y=y.pheno.mis2,
                                                  x=x.all.mis2[,1,drop=F],
