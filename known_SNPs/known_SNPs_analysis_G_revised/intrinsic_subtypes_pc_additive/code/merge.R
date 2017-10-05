@@ -41,7 +41,7 @@ colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2","Grade")
 #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
 # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
 
-x.test.all.mis1 <- data1[,c(27:206)]
+x.test.all.mis1 <- data1[,c(27:204)]
 
 x.covar.mis1 <- data1[,5:14]
 x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
@@ -92,12 +92,15 @@ generate_self_design_second_stage_parameter_names = function(tumor_characteristi
 result <-  NULL
 first.stage <- NULL
 
-for(i in 1:181){
+for(i in 1:179){
   print(i)
   load(paste0("heter_result_",i,".Rdata"))
   result <- rbind(result,heter.result[[1]])
   first.stage <- rbind(first.stage,heter.result[[2]])
 }
+
+
+
 tumor.characteristics <- c("Luminal A","Luminal B","Luminal B HER2-","HER2 Enriched","Triple Neg")
 
 generate_second_stage_parameter_names(tumor.characteristics)

@@ -42,7 +42,7 @@ MetaPfunction <- function(icog_onco_score_infor_one){
 library(foreach)
 library(doParallel)
 no.cores <- 20
-pvalue <- rep(0,nrow(icog_onco_score_infor))
+#pvalue <- rep(0,nrow(icog_onco_score_infor))
 registerDoParallel(no.cores)
 
 pvalue <- foreach(i=1:nrow(icog_onco_score_infor),

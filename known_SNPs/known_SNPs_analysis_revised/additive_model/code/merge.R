@@ -117,7 +117,7 @@ for(i in 1:179){
 
 
 
-tumor.characteristics <- c("PR","ER","HER2")
+tumor.characteristics <- c("ER","PR","HER2")
 generate_second_stage_parameter_names(tumor.characteristics)
 
 colnames(result) <- generate_second_stage_parameter_names(tumor.characteristics)
