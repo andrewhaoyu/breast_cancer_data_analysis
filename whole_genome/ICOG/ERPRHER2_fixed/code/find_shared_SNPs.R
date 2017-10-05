@@ -57,11 +57,15 @@ all.equal(onco_result_shared$rs_id,onco_result_shared$SNP.ONCO)
 save(icog_result_shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
 save(onco_result_shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
 
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
 
 
 
 idx.filter <- which(icog_result_shared$exp_freq_a1>=0.01&
-                      onco_result_shared$exp_freq_a1>=0.01)
+                      onco_result_shared$exp_freq_a1>=0.01&
+                      icog_result_shared$exp_freq_a1<=0.99&
+                      onco_result_shared$exp_freq_a1<=0.99)
 icog_result_shared_1p <- icog_result_shared[idx.filter,]
 onco_result_shared_1p <- onco_result_shared[idx.filter,]
 
@@ -71,6 +75,8 @@ onco_result_shared_1p <- onco_result_shared[idx.filter,]
 
 save(icog_result_shared_1p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared_1p.Rdata")
 save(onco_result_shared_1p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared_1p.Rdata")
+
+
 
 
 
