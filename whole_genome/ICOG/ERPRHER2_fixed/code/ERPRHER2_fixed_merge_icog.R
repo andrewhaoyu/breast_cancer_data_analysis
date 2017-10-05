@@ -89,7 +89,9 @@ icog_info <- data.frame(snp_id = rep("c",num.total),rs_id = rep("c",num.total),
                         position=rep(0,num.total),exp_freq_a1=rep(0,num.total),info=rep(0,num.total),
                         certainty=rep(0,num.total),type=rep(0,num.total),info_type0=rep(0,num.total),
                         concord_type0=rep(0,num.total),r2_type0=rep(0,num.total),stringsAsFactors=F)
+CHR <- rep(0,num.total)
 num.total <-  0
+
 for(i in 1:22){
   print(i)
   filedir <- paste0("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_info_files/chr",i)
@@ -105,13 +107,14 @@ for(i in 1:22){
     data <- read.table(files[idx[j]],header=T,stringsAsFactors=F)
     temp <- nrow(data)
     icog_info[num.total+(1:temp),] <- data
+    CHR[num.total+(1:temp)] <- i
     num.total <- temp+num.total
   }
   
 }
 
 
-icog_result <- data.frame(icog_info,score,infor,freq.all)
+icog_result <- data.frame(icog_info,score,infor,CHR)
 
 
 

@@ -37,7 +37,7 @@ colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2")
 #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
 # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
 
-x.test.all.mis1 <- data1[,c(27:206)]
+x.test.all.mis1 <- data1[,c(27:204)]
 
 x.covar.mis1 <- data1[,5:14]
 x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
@@ -94,8 +94,10 @@ generate_second_stage_parameter_names = function(tumor_characteristics){
   result = c(result,"Wald global test p value",
              "Wald global heterogneity test p value",
              "Score global test p value",
-             "Mixed Model global test p value",
-             "Mixed Model global heterogeneity test p value",
+             "Mixed Model global test p value (baseline fixed)",
+             "Mixed Model global heterogeneity test p value (baseline fixed)",
+             "Mixed Model global test p value (baseline+ER fixed)",
+             "Mixed Model global heterogeneity test p value (baseline+ER fixed)",
              "loglikelihood",
              "AIC")
   return(result)
@@ -105,7 +107,7 @@ result <-  NULL
 first.stage <- NULL
 
 
-for(i in 1:181){
+for(i in 1:179){
   print(i)
   load(paste0("heter_result_",i,".Rdata"))
   result <- rbind(result,heter.result[[1]])

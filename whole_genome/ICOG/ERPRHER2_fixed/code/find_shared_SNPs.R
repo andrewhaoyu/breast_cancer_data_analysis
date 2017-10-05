@@ -45,20 +45,20 @@ idx.icog_match_data_c <- match(shared_rs_id,data_c_shared$SNP.ICOGS)
 data_c_shared <- data_c_shared[idx.icog_match_data_c]
 
 
-icog_result_shared <- icog_result_shared[,-ncol(icog_result_shared)]
+#icog_result_shared <- icog_result_shared[,-ncol(icog_result_shared)]
 icog_result_shared <- cbind(icog_result_shared,data_c_shared)
 all.equal(icog_result_shared$rs_id,icog_result_shared$SNP.ICOGS)
 
 
-onco_result_shared <- onco_result_shared[,-ncol(onco_result_shared)]
+#onco_result_shared <- onco_result_shared[,-ncol(onco_result_shared)]
 onco_result_shared <- cbind(onco_result_shared,data_c_shared)
 all.equal(onco_result_shared$rs_id,onco_result_shared$SNP.ONCO)
 
 save(icog_result_shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
 save(onco_result_shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
 
 
 
