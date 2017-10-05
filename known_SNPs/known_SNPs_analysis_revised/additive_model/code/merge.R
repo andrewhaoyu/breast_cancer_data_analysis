@@ -29,8 +29,8 @@ i1 = 1
 library(bc2)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
-y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
-colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2")
+y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1)
+colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2")
 # Grade1.fake <- data1$Grade1
 # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
 # Grade1.fake[data1$Grade1==1] <- 0
@@ -114,12 +114,78 @@ for(i in 1:179){
   first.stage <- rbind(first.stage,heter.result[[2]])
 }
 
+
+
+
 tumor.characteristics <- c("PR","ER","HER2")
 generate_second_stage_parameter_names(tumor.characteristics)
 
 colnames(result) <- generate_second_stage_parameter_names(tumor.characteristics)
 
 result <- as.data.frame(result)
+
+p.wald.assoc <- result[,9]
+p.wald.assoc.adjust <- p.adjust(p.wald.assoc,method="BH")
+p.wald.heter <- result[,10]
+p.wald.heter.adjust <- p.adjust(p.wald.heter,method="BH")
+p.score.assoc <- result[,11]
+p.score.assoc.adjust <- p.adjust(p.score.assoc,method="BH")
+p.mixed.assoc.baseline.fixed <- result[,12]
+p.mixed.assoc.baseline.fixed.adjust <- 
+  p.adjust(p.mixed.assoc.baseline.fixed,
+           method="BH")
+p.mixed.heter.baseline.fixed <- result[,13]
+p.mixed.heter.baseline.fixed.adjust <- 
+  p.adjust(p.mixed.heter.baseline.fixed,
+           method="BH")
+p.mixed.assoc.baselineER.fixed <- result[,14]
+p.mixed.assoc.baselineER.fixed.adjust <- 
+  p.adjust(p.mixed.assoc.baselineER.fixed,
+           method="BH")
+p.mixed.heter.baselineER.fixed <- result[,15]
+p.mixed.heter.baselineER.fixed.adjust <- 
+  p.adjust(p.mixed.heter.baselineER.fixed,
+           method="BH")
+
+
+pvalue = data.frame(p.wald.assoc,
+                    p.wald.assoc.adjust,
+                    p.wald.heter,
+                    p.wald.heter.adjust,
+                    p.score.assoc,
+                    p.score.assoc.adjust,
+                    p.mixed.assoc.baseline.fixed,
+                    p.mixed.assoc.baseline.fixed.adjust,
+                    p.mixed.heter.baseline.fixed,
+                    p.mixed.heter.baseline.fixed.adjust,
+                    p.mixed.assoc.baselineER.fixed,
+                    p.mixed.assoc.baselineER.fixed.adjust,
+                    p.mixed.heter.baselineER.fixed,
+                    p.mixed.heter.baselineER.fixed.adjust)
+
+colnames(pvalue) = c("Wald global test p value",
+                     "Wald global test p value (BH adjust)",
+                     "Wald global heterogneity test p value",
+                     "Wald global heterogneity test p value (BH adjust)",
+                     "Score global test p value",
+                     "Score global test p value (BH adjust)",
+                     "Mixed Model global test p value (baseline fixed)",
+                     "Mixed Model global test p value (baseline fixed, BH adjust)",
+                     "Mixed Model global heterogeneity test p value (baseline fixed)",
+                     "Mixed Model global heterogeneity test p value (baseline fixed BH adjust)",
+                     "Mixed Model global test p value (baseline+ER fixed)",
+                     "Mixed Model global test p value (baseline+ER fixed, BH adjust)",
+                     "Mixed Model global heterogeneity test p value (baseline+ER fixed)",
+                     "Mixed Model global heterogeneity test p value (baseline+ER fixed BH adjust)")
+
+result <- result[,-c(9:15)]
+
+result <- cbind(result[1:8],pvalue,result[,9:10])
+
+
+
+
+
 
 colnames(first.stage) = generate_first_stage_parameter_names(tumor.characteristics,z.standard)
 

@@ -40,9 +40,9 @@ onco_result_shared = onco_result_shared[idx.onco_match,]
 ####take out data_c
 idx.shared_data_c <- which((data_c$SNP.ICOGS%in%shared_rs_id)==T)
 
-data_c_shared <- data_c[idx.icog_shared_data_c,]
+data_c_shared <- data_c[idx.shared_data_c,]
 idx.icog_match_data_c <- match(shared_rs_id,data_c_shared$SNP.ICOGS)
-data_c_shared <- data_c_shared[idx.icog_match_data_c]
+data_c_shared <- data_c_shared[idx.icog_match_data_c,]
 
 
 #icog_result_shared <- icog_result_shared[,-ncol(icog_result_shared)]
