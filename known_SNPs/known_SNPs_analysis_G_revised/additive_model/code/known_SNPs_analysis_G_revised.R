@@ -101,6 +101,19 @@ if(i1<=178){
   score.icog.casecase <- score.test.icog.casecase[[1]]
   infor.icog.casecase <- score.test.icog.casecase[[2]]
   
+  z.design.score.baseline.heterER <- z.standard[,1,drop=F]
+  
+  score.test.icog.baseline.heterER <- ScoreTestSelfDesign(y=y.pheno.mis1,
+                                                          x=x.all.mis1[,1,drop=F],
+                                                          z.design=z.design.score.baseline.heterER,
+                                                          score.test.support=score.test.support.icog.casecase,
+                                                          missingTumorIndicator=888)
+  
+  score.icog.baseline.heterER <- score.test.icog.baseline.heterER[[1]]
+  infor.icog.baseline.heterER <- score.test.icog.baseline.heterER[[2]]
+  
+
+  
   rm(score.test.support.icog.casecase)
   rm(score.test.icog.casecase)  
   
@@ -241,6 +254,20 @@ if(i1<=178){
   
   score.onco.casecase <- score.test.onco.casecase[[1]]
   infor.onco.casecase <- score.test.onco.casecase[[2]]
+  z.design.score.baseline.heterER <- z.standard[,1,drop=F]
+  
+  score.test.onco.baseline.heterER <- ScoreTestSelfDesign(y=y.pheno.mis1,
+                                                          x=x.all.mis1[,1,drop=F],
+                                                          z.design=z.design.score.baseline.heterER,
+                                                          score.test.support=score.test.support.onco.casecase,
+                                                          missingTumorIndicator=888)
+  
+  score.onco.baseline.heterER <- score.test.onco.baseline.heterER[[1]]
+  infor.onco.baseline.heterER <- score.test.onco.baseline.heterER[[2]]
+  
+  
+  
+  
   rm(score.test.support.onco.casecase) 
   
   
@@ -321,6 +348,15 @@ if(i1<=178){
   score.meta.casecase <- meta.result.score.casecase[[1]]
   infor.meta.casecase <- meta.result.score.casecase[[2]]
   
+  meta.result.score.baseline.heterER <- 
+    ScoreMetaAnalysis(score.icog.baseline.heterER,
+                      infor.icog.baseline.heterER,
+                      score.onco.baseline.heterER,
+                      infor.onco.baseline.heterER)
+  score.meta.baseline.heterER <- meta.result.score.baseline.heterER[[1]]  
+  infor.meta.baseline.heterER <- meta.result.score.baseline.heterER[[2]]
+  
+  
   meta.result.score.baseline.ER <- ScoreMetaAnalysis(score.icog.baseline.ER,
                                                      infor.icog.baseline.ER,
                                                      score.onco.baseline.ER,
@@ -354,8 +390,8 @@ if(i1<=178){
                                                              infor.meta.casecase.ER)  
   test.result.second.mixed.ER <- data.frame(t(test.result.second.mixed.ER))
   
-  test.result.second.mixed.ER.2 <- DisplayMixedScoreTestResult(score.meta.baseline.ER[2],
-                                                               infor.meta.baseline.ER[2,2],
+  test.result.second.mixed.ER.2 <- DisplayMixedScoreTestResult(score.meta.baseline.heterER,
+                                                               infor.meta.baseline.heterER,
                                                                score.meta.casecase.ER,
                                                                infor.meta.casecase.ER)  
   test.result.second.mixed.ER.2 <- data.frame(t(test.result.second.mixed.ER.2))
@@ -468,6 +504,19 @@ if(i1<=178){
   
   score.onco.casecase <- score.test.onco.casecase[[1]]
   infor.onco.casecase <- score.test.onco.casecase[[2]]
+  
+  z.design.score.baseline.heterER <- z.standard[,1,drop=F]
+  
+  score.test.onco.baseline.heterER <- ScoreTestSelfDesign(y=y.pheno.mis1,
+                                                          x=x.all.mis1[,1,drop=F],
+                                                          z.design=z.design.score.baseline.heterER,
+                                                          score.test.support=score.test.support.onco.casecase,
+                                                          missingTumorIndicator=888)
+  
+  score.onco.baseline.heterER <- score.test.onco.baseline.heterER[[1]]
+  infor.onco.baseline.heterER <- score.test.onco.baseline.heterER[[2]]
+  
+  
   rm(score.test.support.onco.casecase)
   rm(score.test.onco.casecase)
   
@@ -536,6 +585,10 @@ if(i1<=178){
   
   score.meta.casecase <- score.onco.casecase
   infor.meta.casecase <- infor.onco.casecase
+  
+  score.meta.baseline.heterER <- score.onco.baseline.heterER
+  infor.meta.baseline.heterER <- infor.onco.baseline.heterER
+  
   test.result.second.mixed <- DisplayMixedScoreTestResult(score.meta.baseline,
                                                           infor.meta.baseline,
                                                           score.meta.casecase,
@@ -563,8 +616,8 @@ if(i1<=178){
                                                              infor.meta.casecase.ER)  
   test.result.second.mixed.ER <- data.frame(t(test.result.second.mixed.ER))
   
-  test.result.second.mixed.ER.2 <- DisplayMixedScoreTestResult(score.meta.baseline.ER[2],
-                                                               infor.meta.baseline.ER[2,2],
+  test.result.second.mixed.ER.2 <- DisplayMixedScoreTestResult(score.meta.baseline.heterER,
+                                                               infor.meta.baseline.heterER,
                                                                score.meta.casecase.ER,
                                                                infor.meta.casecase.ER)  
   test.result.second.mixed.ER.2 <- data.frame(t(test.result.second.mixed.ER.2))
