@@ -485,7 +485,7 @@ if(i1<=178){
   score.test.support.onco.casecase.ER <- ScoreTestSupportSelfDesign(
     y.pheno.mis2,
     x.self.design  = x.all.mis2[,1,drop=F],
-    z.design = z.design.score.casecase.ER,
+    z.design = z.design.score.baseline.ER,
     additive = x.all.mis2[,2:11],
     pairwise.interaction = NULL,
     saturated = NULL,
