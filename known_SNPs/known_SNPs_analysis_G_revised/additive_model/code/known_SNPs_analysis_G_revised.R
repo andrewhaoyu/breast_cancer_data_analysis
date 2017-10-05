@@ -22,8 +22,8 @@ library(bc2)
 if(i1<=178){
   ##analysis for Icog
   data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
-  y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
-  colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2","Grade")
+  y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
+  colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
   # Grade1.fake <- data1$Grade1
   # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
   # Grade1.fake[data1$Grade1==1] <- 0
@@ -118,7 +118,7 @@ if(i1<=178){
   score.test.support.icog.casecase.ER <- ScoreTestSupportSelfDesign(
     y.pheno.mis1,
     x.self.design  = x.all.mis1[,1,drop=F],
-    z.design = z.design.score.casecase.ER,
+    z.design = z.design.score.baseline.ER,
     additive = x.all.mis1[,2:11],
     pairwise.interaction = NULL,
     saturated = NULL,
@@ -167,10 +167,10 @@ if(i1<=178){
   names2 = colnames(data2)[27:210]
   
   idxi1 = which(names2==names1[i1])
-  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
+  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
-  colnames(y.pheno.mis2) = c("Behaviour","PR",
-                             "ER","HER2","Grade")
+  colnames(y.pheno.mis2) = c("Behaviour","ER",
+                             "PR","HER2","Grade")
   
   x.test.all.mis2 <- data2[,c(27:210)]
   x.covar.mis2 <- data2[,5:14]
@@ -261,7 +261,7 @@ if(i1<=178){
   score.test.support.onco.casecase.ER <- ScoreTestSupportSelfDesign(
     y.pheno.mis2,
     x.self.design  = x.all.mis2[,1,drop=F],
-    z.design = z.design.score.casecase.ER,
+    z.design = z.design.score.baseline.ER,
     additive = x.all.mis2[,2:11],
     pairwise.interaction = NULL,
     saturated = NULL,
@@ -385,8 +385,8 @@ if(i1<=178){
   names2 = colnames(data2)
   
   idxi1 = which(names2=="rs554219")
-  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
-  colnames(y.pheno.mis2) <- c("Bahavior1","PR","ER","HER2","Grade")
+  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+  colnames(y.pheno.mis2) <- c("Bahavior1","ER","PR","HER2","Grade")
   x.test.all.mis2 <- data2
   
   x.covar.mis2 <- data2[,5:14]
@@ -484,7 +484,7 @@ if(i1<=178){
   score.test.support.onco.casecase.ER <- ScoreTestSupportSelfDesign(
     y.pheno.mis2,
     x.self.design  = x.all.mis2[,1,drop=F],
-    z.design = z.design.score.casecase.ER,
+    z.design = z.design.score.baseline.ER,
     additive = x.all.mis2[,2:11],
     pairwise.interaction = NULL,
     saturated = NULL,
