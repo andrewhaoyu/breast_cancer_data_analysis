@@ -183,9 +183,12 @@ colnames(pvalue) = c("Wald global test p value",
 
 result <- result[,-c(11:17)]
 
-result <- cbind(result[1:10],pvalue,result[,11:12])
+names.temp <- colnames(result)
+p.value.names <- colnames(pvalue)
+full.names <- c(names.temp[1:10],p.value.names,names.temp[11:12])
+result <- data.frame(result[1:10],pvalue,result[,11:12])
 
-
+colnames(result) <- full.names
 
 
 
@@ -200,7 +203,7 @@ result <- cbind(result[1:10],pvalue,result[,11:12])
 
 #colnames(first.stage) <- generate_first_stage_parameter_names(tumor.characteristics,z.standard)
 
-result <- data.frame(result)
+#result <- data.frame(result)
 
-write.xlsx(result,file="./additive_model.xlsx",sheetName="additive_model_2nd_stage")
+write.xlsx(result,file="./additive_model_G_new.xlsx",sheetName="additive_model_2nd_stage")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)
