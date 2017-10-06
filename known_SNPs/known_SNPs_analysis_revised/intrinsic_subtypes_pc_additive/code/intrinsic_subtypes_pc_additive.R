@@ -208,7 +208,7 @@ if(i1<=178){
   
   
   
-  test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta,self.design=T)
+  test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
   
   beta.meta <- z.trans%*%second.stage.logodds.meta
