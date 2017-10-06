@@ -42,7 +42,7 @@ MetaPfunction <- function(icog_onco_score_infor_one){
 library(foreach)
 library(doParallel)
 no.cores <- 20
-#pvalue <- rep(0,nrow(icog_onco_score_infor))
+pvalue <- rep(0,nrow(icog_onco_score_infor))
 registerDoParallel(no.cores)
 
 pvalue <- foreach(i=1:nrow(icog_onco_score_infor),
@@ -58,13 +58,14 @@ stopImplicitCluster()
 
 meta_result_shared_1p <- cbind(meta_result_shared_1p,pvalue)
 
-temp <- gsub(":*","",meta_result_shared_1p$rs_id)
+
 
 
 
 save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p.Rdata"))
 
 known_snps <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/known_SNPs_info.csv",header= T)
+
 
 
 
@@ -85,9 +86,9 @@ for(i in 1:nrow(known_snps)){
   idx_cut <- c(idx_cut,idx)
 }
 
-icog_com_filter <- icog_com[-idx_cut,]
+meta_result_shared_1p_filter <- meta_result_shared_1p[-idx_cut,]
 
-save(icog_com_filter,file="/data/zhangh20/Icog/gwas_com/icog_com_filter.Rdata")
+save(meta_result_shared_1p_filter,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p_filter.Rdata")
 
 
 
