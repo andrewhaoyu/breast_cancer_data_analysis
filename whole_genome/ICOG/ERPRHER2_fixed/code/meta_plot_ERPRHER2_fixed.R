@@ -21,7 +21,7 @@ if(i1==1){
   pvalue[idx] <- 1.0e-20
   gwas_result <- data.frame(SNP=as.character(meta_result_shared_1p_filter$rs_id),CHR=meta_result_shared_1p_filter$CHR,BP=meta_result_shared_1p_filter$position,
                             P=pvalue,stringsAsFactors =F)
-  png(paste0("./result/plot/man.png"),width = 7.635,height =4.7175,units = "in",res = 600)
+  png(paste0("./result/plot/man_filter.png"),width = 7.635,height =4.7175,units = "in",res = 600)
   manhattan(gwas_result,suggestiveline = F, cex.axis = 2,main=paste0(" Global Test Association Manhattan Plot"),ylim=c(0,20))
   dev.off()
 }
