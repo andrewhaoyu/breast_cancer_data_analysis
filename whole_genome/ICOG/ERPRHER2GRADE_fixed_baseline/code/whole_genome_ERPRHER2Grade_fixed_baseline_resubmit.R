@@ -11,8 +11,8 @@ rm(list=ls())
 #i <- as.numeric(myarg)
 #print(i)
 #pheno is ICOGS,data2 is onco_array
-arg <- commandArgs(trailingOnly=T)
-i <- as.numeric(arg[[1]])
+#arg <- commandArgs(trailingOnly=T)
+#i <- as.numeric(arg[[1]])
 i1 <- 59
 #print(i)
 library(R.utils)
@@ -61,7 +61,7 @@ num.of.tumor <- ncol(y.pheno.mis1)-1
 library(doParallel)
 library(foreach)
 
-no.cores <- 50
+no.cores <- 30
 registerDoParallel(no.cores)
 
 result.list <- foreach(i2 = 1:size)%dopar%{
