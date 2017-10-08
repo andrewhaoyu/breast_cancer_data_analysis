@@ -11,9 +11,9 @@ rm(list=ls())
 #i <- as.numeric(myarg)
 #print(i)
 #pheno is ICOGS,data2 is onco_array
-#arg <- commandArgs(trailingOnly=T)
-#i <- as.numeric(arg[[1]])
-i1 <- 59
+arg <- commandArgs(trailingOnly=T)
+i1 <- as.numeric(arg[[1]])
+i2 <- as.numeric(arg[[2]])
 #print(i)
 library(R.utils)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
@@ -59,13 +59,13 @@ num.of.tumor <- ncol(y.pheno.mis1)-1
 
 
 library(doParallel)
-library(foreach)
+# library(foreach)
 
-no.cores <- 30
-registerDoParallel(no.cores)
+# no.cores <- 30
+# registerDoParallel(no.cores)
 
-result.list <- foreach(i2 = 1:size)%dopar%{
-  print(i2)
+#result.list <- foreach(i2 = 1:size)%dopar%{
+  #print(i2)
   start.end <- startend(num,size,i2)
   start <- start.end[1]
   end <- start.end[2]
@@ -155,13 +155,13 @@ result.list <- foreach(i2 = 1:size)%dopar%{
   #   infor_result_baseline <- infor_result_baseline[1:i]
   #   
   # }
-  result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,score_result_baseline = score_result_baseline,
+  result.list <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,score_result_baseline = score_result_baseline,
                  infor_result_baseline=infor_result_baseline)
   
   
   
   
-}
+#}
 
 
 
@@ -177,13 +177,13 @@ result.list <- foreach(i2 = 1:size)%dopar%{
 
 
 
-score_result <- matrix(0,num,num.of.tumor+1)
-infor_result <- matrix(0,(num.of.tumor+1)*num,num.of.tumor+1)
-snpid_result <- rep("c",num)
-score_result_baseline <- rep(0,num)
-infor_result_baseline <- rep(0,num)
+# score_result <- matrix(0,num,num.of.tumor+1)
+# infor_result <- matrix(0,(num.of.tumor+1)*num,num.of.tumor+1)
+# snpid_result <- rep("c",num)
+# score_result_baseline <- rep(0,num)
+# infor_result_baseline <- rep(0,num)
+# 
+# freq.all <- rep(0,num)
 
-freq.all <- rep(0,num)
-
-save(result.list,file=paste0("./whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline",i1))
+save(result.list,file=paste0("./whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline_resubmit",i1,"_",i2))
 
