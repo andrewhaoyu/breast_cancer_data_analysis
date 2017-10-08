@@ -11,9 +11,10 @@ rm(list=ls())
 #i <- as.numeric(myarg)
 #print(i)
 #pheno is ICOGS,data2 is onco_array
-#arg <- commandArgs(trailingOnly=T)
-#i <- as.numeric(arg[[1]])
-i1 <- 464
+arg <- commandArgs(trailingOnly=T)
+i1 <- as.numeric(arg[[1]])
+i2 <- as.numeric(arg[[2]])
+#i1 <- 464
 #print(i)
 library(R.utils)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
@@ -66,14 +67,14 @@ rm(pheno)
 
 
 
-library(doParallel)
-library(foreach)
+# library(doParallel)
+# library(foreach)
+# 
+# no.cores <- 20
+# 
+# registerDoParallel(no.cores)
 
-no.cores <- 20
-
-registerDoParallel(no.cores)
-
-result.list <- foreach(i2 = 1:size)%dopar%{
+#result.list <- foreach(i2 = 1:size)%dopar%{
   print(i2)
   start.end <- startend(num,size,i2)
   start <- start.end[1]
@@ -152,12 +153,12 @@ for(i in 1:num){
 }
 
 close(con)
-result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,score_result_baseline = score_result_baseline,
+result.list <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,score_result_baseline = score_result_baseline,
                infor_result_baseline=infor_result_baseline)
 
 
-return(result)
-}
+#return(result)
+#}
   
 
 # if(i !=num){
@@ -170,4 +171,4 @@ return(result)
 # }
 # result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,score_result_baseline = score_result_baseline,
 #                infor_result_baseline=infor_result_baseline)
-save(result.list,file=paste0("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_onco_resubmit.Rdata"))
+save(result.list,file=paste0("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_onco_resubmit.Rdata",i1,"_",i2))
