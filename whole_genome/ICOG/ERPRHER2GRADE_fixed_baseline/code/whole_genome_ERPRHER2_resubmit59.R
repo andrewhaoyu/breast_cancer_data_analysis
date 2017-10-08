@@ -61,7 +61,7 @@ num.of.tumor <- ncol(y.pheno.mis1)-1
 library(doParallel)
 library(foreach)
 
-no.cores <- 30
+no.cores <- 20
 registerDoParallel(no.cores)
 
 result.list <- foreach(i2 = 1:size)%dopar%{
