@@ -14,7 +14,7 @@ rm(list=ls())
 #arg <- commandArgs(trailingOnly=T)
 #i <- as.numeric(arg[[1]])
 i1 <- 464
-print(i)
+#print(i)
 library(R.utils)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
