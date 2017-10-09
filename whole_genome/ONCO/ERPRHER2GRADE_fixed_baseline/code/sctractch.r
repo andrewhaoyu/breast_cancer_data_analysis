@@ -41,6 +41,9 @@ save(result,file=paste0("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result
 
 
 
+
+
+
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result')
 i1 = 58
 second.num <- 5
