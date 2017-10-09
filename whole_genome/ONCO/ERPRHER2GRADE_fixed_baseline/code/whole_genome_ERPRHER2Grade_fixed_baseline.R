@@ -93,8 +93,8 @@ for(i in 1:num){
   freq.all[i] <- freq
   #print(paste0("freq",freq))
   
-  tryCatch(
-    {
+  #tryCatch(
+   # {
       
       if(freq<0.005|freq>0.995){
         
@@ -110,34 +110,34 @@ for(i in 1:num){
         
         score_result[i,]  <- score.test.onco[[1]]
         infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- score.test.onco[[2]]
-        score.test.icog.baseline<- ScoreTest(y=y.pheno.mis2,
-                                             x=snpvalue,
-                                             second.stage.structure="baselineonly",
-                                             score.test.support=score.test.support.onco.ERPRHER2Grade,
-                                             missingTumorIndicator=888)
-        score_result_baseline[i]  <- score.test.icog.baseline[[1]]
-        infor_result_baseline[i] <- score.test.icog.baseline[[2]]
+        # score.test.icog.baseline<- ScoreTest(y=y.pheno.mis2,
+        #                                      x=snpvalue,
+        #                                      second.stage.structure="baselineonly",
+        #                                      score.test.support=score.test.support.onco.ERPRHER2Grade,
+        #                                      missingTumorIndicator=888)
+        score_result_baseline[i]  <- score.test.onco[[1]][1]
+        infor_result_baseline[i] <- score.test.onco[[2]][1,1]
       }
       
-    },
-    error=function(cond) {
-      
-      score_result[i,] <- 0
-      infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- 0
-      score_result_baseline[i]  <- 0
-      infor_result_baseline[i] <- 0
-    })
+    # },
+    # error=function(cond) {
+    #   
+    #   score_result[i,] <- 0
+    #   infor_result[((num.of.tumor+1)*i-(num.of.tumor)):((num.of.tumor+1)*i),] <- 0
+    #   score_result_baseline[i]  <- 0
+    #   infor_result_baseline[i] <- 0
+    # })
   
 }
 close(con)
-if(i !=num){
-  snpid_result <- snpid_result[1:i]
-  score_result <- score_result[1:i,]
-  infor_result <- infor_result[1:((num.of.tumor+1)*i),]
-  score_result_baseline <- score_result_baseline[1:i]
-  infor_result_baseline <- infor_result_baseline[1:i]
-  
-}
+# if(i !=num){
+#   snpid_result <- snpid_result[1:i]
+#   score_result <- score_result[1:i,]
+#   infor_result <- infor_result[1:((num.of.tumor+1)*i),]
+#   score_result_baseline <- score_result_baseline[1:i]
+#   infor_result_baseline <- infor_result_baseline[1:i]
+#   
+# }
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,score_result_baseline = score_result_baseline,
                infor_result_baseline=infor_result_baseline)
 save(result,file=paste0("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_onco",i1))
