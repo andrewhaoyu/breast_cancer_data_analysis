@@ -1,0 +1,2 @@
+"","Luminal A odds ratio(95%CI)","Luminal A P_Value","Luminal B odds ratio(95%CI)","Luminal B P_Value","HER2 Enriched odds ratio(95%CI)","HER2 Enriched P_Value","Triple Neg odds ratio(95%CI)","Triple Neg P_Value","Wald global test p value","Wald global heterogneity test p value","Score global test p value","Mixed Model global test p value","loglikelihood","AIC"
+"1","1.1(1.03-1.17)",0.0037,"1.32(1.15-1.53)",9.29e-05,"1.12(0.9-1.4)",0.321,"0.66(0.55-0.78)",1.48e-06,1.03e-10,1.26e-09,7.15e-11,2.19618246499742e-06,-239707.938337165,479519.87667433
