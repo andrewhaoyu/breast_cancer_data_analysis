@@ -94,7 +94,8 @@ for(i in 1:nrow(known_snps)){
                  meta_result_shared_1p$position<position_high)
   idx_cut <- c(idx_cut,idx)
 }
-
+############duplicate variables won't mater
+idx_cut <- unique(idx_cut)
 meta_result_shared_1p_filter <- meta_result_shared_1p[-idx_cut,]
 
 save(meta_result_shared_1p_filter,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p_filter.Rdata")
