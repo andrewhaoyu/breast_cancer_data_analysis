@@ -78,7 +78,7 @@ known_snps <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/k
 
 
 
-
+position.cut <- 10^6
 
 
 idx_cut <- NULL
@@ -88,8 +88,8 @@ for(i in 1:nrow(known_snps)){
   print(i)
   chr_temp <- known_snps[i,3]
   position_temp <- known_snps[i,4]
-  position_low <- position_temp-0.5*10^6
-  position_high <- position_temp+0.5*10^6
+  position_low <- position_temp-position.cut
+  position_high <- position_temp+position.cut
   idx <- which(meta_result_shared_1p$CHR==chr_temp&meta_result_shared_1p$position>position_low&
                  meta_result_shared_1p$position<position_high)
   idx_cut <- c(idx_cut,idx)
@@ -98,7 +98,43 @@ for(i in 1:nrow(known_snps)){
 idx_cut <- unique(idx_cut)
 meta_result_shared_1p_filter <- meta_result_shared_1p[-idx_cut,]
 
-save(meta_result_shared_1p_filter,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter.Rdata")
+save(meta_result_shared_1p_filter,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M.Rdata")
+
+
+
+
+new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
+new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
+
+idx_cut <- NULL
+
+for(i in 1:nrow(new_filter)){
+  print(i)
+  chr_temp <- new_filter[i,3]
+  position_temp <- new_filter[i,2]
+  position_low <- position_temp-position.cut
+  position_high <- position_temp+position.cut
+  idx <- which(meta_result_shared_1p_filter$CHR==chr_temp&meta_result_shared_1p_filter$position>position_low&
+                 meta_result_shared_1p_filter$position<position_high)
+  idx_cut <- c(idx_cut,idx)
+}
+idx_cut <- unique(idx_cut)
+meta_result_shared_1p_filter_Ju <- meta_result_shared_1p_filter[-idx_cut,]
+
+save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
