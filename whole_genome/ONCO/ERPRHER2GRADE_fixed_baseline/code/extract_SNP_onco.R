@@ -66,7 +66,7 @@ extract.max <- nrow(extract.list)
 
 
 snpid_result <- rep("c",extract.max)
-snpvalue_result <- matrix(0,nrow(y.pheno.mis1),extract.max)
+snpvalue_result <- matrix(0,nrow(y.pheno.mis2),extract.max)
 temp <- 0
 con <- gzfile(geno.file)
 open(con)
