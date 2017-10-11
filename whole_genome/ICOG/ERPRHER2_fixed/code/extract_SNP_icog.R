@@ -89,7 +89,7 @@ for(i in 1:num){
   close(con)
   if(temp!=0){
     snpid_result <- snpid_result[1:temp]
-    snpvalue_result <- snpvalue_result[1:temp,]
+    snpvalue_result <- snpvalue_result[,1:temp]
   }else{
     snpid_result <- NULL
     snpvalue_result <- NULL

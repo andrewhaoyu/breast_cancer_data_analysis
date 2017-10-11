@@ -25,15 +25,15 @@ Icog.order <- read.table(gzfile(subject.file))
 pheno.file <- "./data/pheno.Icog"
 load(pheno.file)
 n.sub = nrow(pheno)
-y.pheno.mis1 <- cbind(pheno$Behaviour1,pheno$PR_status1,pheno$ER_status1,pheno$HER2_status1)
+y.pheno.mis1 <- cbind(pheno$Behaviour1,pheno$PR_status1,pheno$ER_status1,pheno$HER2_status1,pheno$Grade1)
 colnames(y.pheno.mis1) = c("Behaviour1","PR_status1",
-                           "ER_status1","HER2_status1")
+                           "ER_status1","HER2_status1","Grade")
 idx.fil <- Icog.order[,1]%in%pheno$SG_ID
 idx.match <- match(pheno$SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
 #load("./whole_genome/ICOG/ERPRHER2_fixed/result/score.test.support.icog.ERPRHER2.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
 
 
 Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/"
@@ -89,10 +89,10 @@ for(i in 1:num){
 close(con)
 if(temp!=0){
   snpid_result <- snpid_result[1:temp]
-  snpvalue_result <- snpvalue_result[1:temp,]
+  snpvalue_result <- snpvalue_result[,1:temp]
 }else{
   snpid_result <- NULL
   snpvalue_result <- NULL
 }
 result <- list(snpid_reuslt=snpid_result,snpvalue_result=snpvalue_result)
-save(result,file=paste0("./whole_genome/ICOG/ERPRHER2_fixed/result/ERPRHER2_fixed_extracted.Rdata",i1))
+save(result,file=paste0("./whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2GRADE_fixed_extracted.Rdata",i1))
