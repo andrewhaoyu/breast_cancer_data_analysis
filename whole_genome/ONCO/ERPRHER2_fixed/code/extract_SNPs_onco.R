@@ -35,7 +35,7 @@ idx.match <- match(pheno$Onc_ID,onco.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
 #load("./whole_genome/ONCO/ERPRHER2_fixed/result/score.test.support.onco.ERPRHER2.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
 
 
 

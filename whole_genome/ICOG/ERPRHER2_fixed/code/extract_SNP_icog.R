@@ -33,7 +33,7 @@ idx.match <- match(pheno$SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
 #load("./whole_genome/ICOG/ERPRHER2_fixed/result/score.test.support.icog.ERPRHER2.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
 
 
 Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/"
