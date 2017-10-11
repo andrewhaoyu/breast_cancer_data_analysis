@@ -28,10 +28,6 @@ if(i1==1){
   load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
   meta_result_shared_1p_filter <- meta_result_shared_1p_filter_Ju
   
-  new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
-  
-  
-  
   pvalue <- meta_result_shared_1p_filter[,15]
   idx <- which(pvalue<=1.0e-20)
   pvalue[idx] <- 1.0e-20
