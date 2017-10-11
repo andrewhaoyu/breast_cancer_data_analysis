@@ -87,7 +87,12 @@ for(i in 1:num){
   }
 }
   close(con)
-snpid_result <- snpid_result[1:temp]
-snpvalue_result <- snpvalue_result[1:temp,]
+  if(temp!=0){
+    snpid_result <- snpid_result[1:temp]
+    snpvalue_result <- snpvalue_result[1:temp,]
+  }else{
+    snpid_result <- NULL
+    snpvalue_result <- NULL
+  }
 result <- list(snpid_reuslt=snpid_result,snpvalue_result=snpvalue_result)
 save(result,file=paste0("./whole_genome/ICOG/ERPRHER2_fixed/result/ERPRHER2_fixed_extracted.Rdata",i1))

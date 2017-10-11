@@ -98,10 +98,13 @@ for(i in 1:num){
 }
 close(con)
 
+if(temp!=0){
   snpid_result <- snpid_result[1:temp]
-  snpvalue_result <- score_result[1:temp,]
-  
-  
+  snpvalue_result <- snpvalue_result[1:temp,]
+}else{
+  snpid_result <- NULL
+  snpvalue_result <- NULL
+}
 
 result <- list(snpid_reuslt=snpid_result,snpvalue_result)
 save(result,file=paste0("./whole_genome/ONCO/ERPRHER2_fixed/result/ERPRHER2_fixed_onco_extract",i1,".Rdata"))
