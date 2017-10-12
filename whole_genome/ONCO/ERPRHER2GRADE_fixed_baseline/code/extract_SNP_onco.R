@@ -87,7 +87,7 @@ for(i in 1:num){
     snppro <- as.numeric(unlist(myVector)[6:length(myVector[[1]])])
     snpvalue <- convert(snppro,n)
     snpvalue <- snpvalue[idx.fil][idx.match]
-    snpvalue_result[temp,] <- snpvalue
+    snpvalue_result[,temp] <- snpvalue
     
   }
   
