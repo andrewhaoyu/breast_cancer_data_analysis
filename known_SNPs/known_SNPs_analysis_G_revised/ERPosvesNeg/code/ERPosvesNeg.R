@@ -254,7 +254,7 @@ if(i1<=179){
   
   
   
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/ERPosvesNeg/result/heter_result_",i1,".Rdata"))
   
   
   
@@ -287,102 +287,71 @@ if(i1<=179){
   beta.sigma.onco <- z.trans%*%sigma.log.odds.onco%*%t(z.trans)
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
+  Heter.result.PR.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.PR,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  log.odds.PR.Onco <-   Heter.result.PR.Onco[[1]][(M+1):(M+2)]
+  sigma.log.odds.PR.Onco <- Heter.result.PR.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  score.test.support.onco <- ScoreTestSupport(
-    y.pheno.mis2,
-    baselineonly = NULL,
-    additive = x.all.mis2[,2:11],
-    pairwise.interaction = NULL,
-    saturated = NULL,
-    missingTumorIndicator = 888
-  )
+  Heter.result.ER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.ER,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  log.odds.ER.Onco <-   Heter.result.ER.Onco[[1]][(M+1):(M+2)]
+  sigma.log.odds.ER.Onco <- Heter.result.ER.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  score.test.onco<- ScoreTestSelfDesign(y=y.pheno.mis2,
-                                        x=x.all.mis2[,1,drop=F],
-                                        z.design= z.design,
-                                        score.test.support=score.test.support.onco,
-                                        missingTumorIndicator=888)
+  Heter.result.HER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.HER,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  log.odds.HER.Onco <-   Heter.result.HER.Onco[[1]][(M+1):(M+2)]
+  sigma.log.odds.HER.Onco <- Heter.result.HER.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  score.onco <- score.test.onco[[1]]
-  infor.onco <- score.test.onco[[2]]
-  rm(score.test.support.onco)
-  gc()
-  
-  score.test.onco.baseline<- ScoreTestSelfDesign(y=y.pheno.mis2,
-                                                 x=x.all.mis2[,1,drop=F],
-                                                 z.design=z.design.score.baseline,
-                                                 score.test.support=score.test.support.onco,
-                                                 missingTumorIndicator=888)
-  
-  score.onco.baseline <- score.test.onco.baseline[[1]]
-  infor.onco.baseline <- score.test.onco.baseline[[2]]
-  
-  score.test.support.onco.casecase <- ScoreTestSupport(
-    y.pheno.mis2,
-    baselineonly = x.all.mis2[,1,drop=F],
-    additive = x.all.mis2[,2:11],
-    pairwise.interaction = NULL,
-    saturated = NULL,
-    missingTumorIndicator = 888
-  )
-  score.test.onco.casecase<- ScoreTestSelfDesign(y=y.pheno.mis2,
-                                                 x=x.all.mis2[,1,drop=F],
-                                                 z.design=z.design.score.casecase,
-                                                 score.test.support=score.test.support.onco.casecase,
-                                                 missingTumorIndicator=888)
-  
-  
-  
-  score.onco.casecase <- score.test.onco.casecase[[1]]
-  infor.onco.casecase <- score.test.onco.casecase[[2]]
-  
-  
-  
-  
-  second.stage.logodds.meta <-log.odds.onco
-  second.stage.sigma.meta <- sigma.log.odds.onco
+  Heter.result.Grade.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  log.odds.Grade.Onco <-   Heter.result.Grade.Onco[[1]][(M+1):(M+3)]
+  sigma.log.odds.Grade.Onco <- Heter.result.Grade.Onco[[2]][(M+1):(M+3),(M+1):(M+3)]
   
   
   
   
   
-  test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
   
-  beta.meta <- z.trans%*%second.stage.logodds.meta
-  beta.sigma.meta <- z.trans%*%second.stage.sigma.meta%*%t(z.trans)
   
-  test.result.first.wald <- DisplayFirstStageTestResult(beta.meta,beta.sigma.meta)
+
   
+  second.stage.logodds.meta.PR <- log.odds.PR.Onco
+  second.stage.sigma.meta.PR <- sigma.log.odds.PR.Onco
   
-  score.meta <- score.onco
-  infor.meta <- infor.onco
-  
-  test.result.second.score <- DisplayFixedScoreTestResult(score.meta,infor.meta)
+  test.result.second.wald.PR <- DisplaySecondStageTestResult(second.stage.logodds.meta.PR,second.stage.sigma.meta.PR)
   
   
-  score.meta.baseline <- score.onco.baseline
-  infor.meta.baseline <- infor.onco.baseline
+
   
-  score.meta.casecase <- score.onco.casecase
-  infor.meta.casecase <- infor.onco.casecase
-  test.result.second.mixed <- DisplayMixedScoreTestResult(score.meta.baseline,
-                                                          infor.meta.baseline,
-                                                          score.meta.casecase,
-                                                          infor.meta.casecase)  
-  test.result.second.mixed <- data.frame(t(test.result.second.mixed))
+  second.stage.logodds.meta.ER <- log.odds.ER.Onco
+  second.stage.sigma.meta.ER <- sigma.log.odds.ER.Onco
   
-  colnames(test.result.second.mixed) <- c("mixed model global test for association","mixed model global test for heterogeneity")
-  
-  loglikelihood <- loglikelihood.onco
-  AIC <- 2*length(Heter.result.Onco[[1]])-2*loglikelihood
-  
-  heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,loglikelihood = loglikelihood,AIC=AIC),
-                       data.frame(test.result.first.wald))
+  test.result.second.wald.ER <- DisplaySecondStageTestResult(second.stage.logodds.meta.ER,second.stage.sigma.meta.ER)
   
   
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_",i1,".Rdata"))
+
+  second.stage.logodds.meta.HER <-  log.odds.HER.Onco
+  second.stage.sigma.meta.HER <-  sigma.log.odds.HER.Onco
   
+  test.result.second.wald.HER <- DisplaySecondStageTestResult(second.stage.logodds.meta.HER,second.stage.sigma.meta.HER)
+  
+
+  
+  second.stage.logodds.meta.Grade <-  log.odds.Grade.Onco
+  second.stage.sigma.meta.Grade <-  sigma.log.odds.Grade.Onco
+  
+  test.result.second.wald.Grade <- DisplaySecondStageTestResult(second.stage.logodds.meta.Grade,second.stage.sigma.meta.Grade)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+  heter.result <- list(data.frame(test.result.second.wald.PR,test.result.second.wald.ER,test.result.second.wald.HER,test.result.second.wald.Grade))
+  
+  
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/ERPosvesNeg/result/heter_result_",i1,".Rdata")) 
   
   
   
