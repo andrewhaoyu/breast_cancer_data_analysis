@@ -80,16 +80,16 @@ generate_self_design_second_stage_parameter_names = function(tumor_characteristi
   #   result = c(result,paste0(tumor_characteristics[i]," odds ratio(95%CI)"),
   #              paste0(tumor_characteristics[i]," P_Value"))
   # }
-  result = c("PR- OR (95% CI)",
-             "PR- pvalue",
+  result = c("PR+ OR (95% CI)",
+             "PR+ pvalue",
              "PR- OR (95% CI)",
              "PR- pvalue",
+             "ER+ OR (95% CI)",
+             "ER+ pvalue",
              "ER- OR (95% CI)",
              "ER- pvalue",
-             "ER- OR (95% CI)",
-             "ER- pvalue",
-             "HER2- OR (95% CI)",
-             "HER2- pvalue",
+             "HER2+ OR (95% CI)",
+             "HER2+ pvalue",
              "HER2- OR (95% CI)",
              "HER2- pvalue",
              "Grade1 OR (95% CI)",
@@ -126,65 +126,6 @@ colnames(result) <- generate_self_design_second_stage_parameter_names(tumor.char
 result <- as.data.frame(result)
 
 
-p.wald.assoc <- result[,11]
-p.wald.assoc.adjust <- p.adjust(p.wald.assoc,method="BH")
-p.wald.heter <- result[,12]
-p.wald.heter.adjust <- p.adjust(p.wald.heter,method="BH")
-p.score.assoc <- result[,13]
-p.score.assoc.adjust <- p.adjust(p.score.assoc,method="BH")
-p.mixed.assoc <- result[,14]
-p.mixed.assoc.adjust <- 
-  p.adjust(p.mixed.assoc,
-           method="BH")
-p.mixed.heter <- result[,15]
-p.mixed.heter.adjust <- 
-  p.adjust(p.mixed.heter,
-           method="BH")
-
-pvalue = data.frame(p.wald.assoc,
-                    p.wald.assoc.adjust,
-                    p.wald.heter,
-                    p.wald.heter.adjust,
-                    p.score.assoc,
-                    p.score.assoc.adjust,
-                    p.mixed.assoc,
-                    p.mixed.assoc.adjust,
-                    p.mixed.heter,
-                    p.mixed.heter.adjust
-)
-
-colnames(pvalue) = c("Wald global test p value",
-                     "Wald global test p value (BH adjust)",
-                     "Wald global heterogneity test p value",
-                     "Wald global heterogneity test p value (BH adjust)",
-                     "Score global test p value",
-                     "Score global test p value (BH adjust)",
-                     "Mixed Model global test p value ",
-                     "Mixed Model global test p value (BH adjust)",
-                     "Mixed Model global heterogeneity test p value",
-                     "Mixed Model global heterogeneity test p value (BH adjust)")
-
-result <- result[,-c(11:15)]
-
-result <- cbind(result[1:10],pvalue,result[,11:12])
-
-
-
-
-
-generate_self_design_second_stage_parameter_names_2 = function(tumor_characteristics){
-  result = NULL
-  for(i in 1:length(tumor_characteristics)){
-    result = c(result,paste0(tumor_characteristics[i]," odds ratio(95%CI)"),
-               paste0(tumor_characteristics[i]," P_Value"))
-  }
-  return(result)
-}
-
-tumor.characteristics <- c("Luminal A","Luminal B","Luminal B HER2 Neg","HER2 Enriched","Triple Neg")
-generate_self_design_second_stage_parameter_names_2(tumor.characteristics)
-
-colnames(first.stage) = generate_self_design_second_stage_parameter_names_2(tumor.characteristics)
 
 
 
@@ -192,5 +133,5 @@ colnames(first.stage) = generate_self_design_second_stage_parameter_names_2(tumo
 
 
 
-write.xlsx(result,file="./intrinsic_subtypes_model_G.xlsx",sheetName="intrinsic_subtypes_model_G_2nd_stage")
-write.xlsx(first.stage,file="./intrinsic_subtypes_model_G.xlsx",sheetName="intrinsic_subtypes_model_G_1st_stage",append=T)
+
+write.xlsx(result,file="./binary_model.xlsx",sheetName="all binary results")
