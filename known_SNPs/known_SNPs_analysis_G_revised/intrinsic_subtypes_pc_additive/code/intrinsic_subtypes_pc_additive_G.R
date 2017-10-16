@@ -41,7 +41,7 @@ colnames(z.design) <- c("Luminial A","Luminal B",
                         "Triple Negative - Luminal A")
 
 
-if(i1<=179){
+if(i1<=178){
   ##analysis for Icog
   data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
