@@ -1,5 +1,6 @@
 
-
+##########extract list was generated after we filter out all the SNPs with 1M around the known SNPs region###
+##########all the SNPs with pvalue <= 5E-06 was token out
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
 
@@ -81,6 +82,10 @@ snpvalue.result <- snpvalue.result[,1:total]
 
 extract.result <- list(snpid.result,snpvalue.result)
 save(extract.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_result.Rdata")
+
+
+
+
 
 
 
