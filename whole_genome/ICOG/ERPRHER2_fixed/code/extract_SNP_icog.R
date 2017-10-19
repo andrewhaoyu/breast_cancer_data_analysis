@@ -35,64 +35,99 @@ library(bc2)
 #load("./whole_genome/ICOG/ERPRHER2_fixed/result/score.test.support.icog.ERPRHER2.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
 
-
+snp.icogs.extract.id <- extract.list[,(ncol(extract.list)-2),drop=F]
+write.table(snp.icogs.extract.id,file = paste0("./whole_genome/ICOG/ERPRHER2_fixed/result/extract_id_icog.txt"),quote = F,row.names=F)
 Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/"
+
 Files <- dir(Filesdir,pattern="icogs_merged_b1_12.",full.names=T)
 Filesex <- dir(Filesdir,pattern="icogs_merged_b1_12.chr23",full.names=T)
 idx.sex <- Files%in%Filesex
 Files <- Files[!idx.sex]
 geno.file <- Files[i1]
-tryCatch(
-  {
-    num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
-  },
-  error=function(cond){
-    num <- countLines(geno.file)[1]
-  }
-)
-#num = 22349
-#num <- countLines(geno.file)[1];
-#num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
-num.of.tumor <- ncol(y.pheno.mis1)-1
-
-extract.max <- nrow(extract.list)
 
 
-snpid_result <- rep("c",extract.max)
-snpvalue_result <- matrix(0,nrow(y.pheno.mis1),extract.max)
-temp <- 0
+qctool.command <- rep("c",564)
+qctool.command <- data.frame(qctool.command,stringsAsFactors=F)
 
-con <- gzfile(geno.file)
-open(con)
-for(i in 1:num){
-  if(i%%500==0){
-    print(i)
-  }
-  oneLine <- readLines(con,n=1)
-  myVector <- strsplit(oneLine," ")
-  snpid <- as.character(myVector[[1]][2])
+
+for(i in 1:564){
+  geno.file <- Files[i]
+  temp <- paste0("/spin1/users/zhangh24/qctool_v1.4-linux-x86_64/qctool -g ",Files[i]," -incl-rsids /spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_id_icog.txt -og /spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/ERPRHER2_extract",i,".txt")
+  qctool.command[i,1] <- temp
   
-  if(snpid%in%extract.list$SNP.ICOGS){
-    temp <- temp+1
-    snpid_result[temp] <- snpid
-    snpvalue <- rep(0,n)
-    
-    
-    snppro <- as.numeric(unlist(myVector)[6:length(myVector[[1]])])
-    
-    snpvalue <- convert(snppro,n)
-    snpvalue <- snpvalue[idx.fil][idx.match]
-    snpvalue_result[,temp] <- snpvalue
-    
-  }
 }
-  close(con)
-  if(temp!=0){
-    snpid_result <- snpid_result[1:temp]
-    snpvalue_result <- snpvalue_result[,1:temp]
-  }else{
-    snpid_result <- NULL
-    snpvalue_result <- NULL
-  }
-result <- list(snpid_reuslt=snpid_result,snpvalue_result=snpvalue_result)
-save(result,file=paste0("./whole_genome/ICOG/ERPRHER2_fixed/result/ERPRHER2_fixed_extracted.Rdata",i1))
+
+
+write.table(qctool.command,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/code/qc_extract_snp.sh"),col.names = F,row.names = F,quote=F)
+#qctool.command <- as.data.frame(qctool.command,stringsAsFactors=F)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# tryCatch(
+#   {
+#     num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+#   },
+#   error=function(cond){
+#     num <- countLines(geno.file)[1]
+#   }
+# )
+# #num = 22349
+# #num <- countLines(geno.file)[1];
+# #num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+# num.of.tumor <- ncol(y.pheno.mis1)-1
+# 
+# extract.max <- nrow(extract.list)
+# 
+# 
+# snpid_result <- rep("c",extract.max)
+# snpvalue_result <- matrix(0,nrow(y.pheno.mis1),extract.max)
+# temp <- 0
+# 
+# con <- gzfile(geno.file)
+# open(con)
+# for(i in 1:num){
+#   if(i%%500==0){
+#     print(i)
+#   }
+#   oneLine <- readLines(con,n=1)
+#   myVector <- strsplit(oneLine," ")
+#   snpid <- as.character(myVector[[1]][2])
+# 
+#   if(snpid%in%extract.list$SNP.ICOGS){
+#     temp <- temp+1
+#     snpid_result[temp] <- snpid
+#     snpvalue <- rep(0,n)
+# 
+# 
+#     snppro <- as.numeric(unlist(myVector)[6:length(myVector[[1]])])
+# 
+#     snpvalue <- convert(snppro,n)
+#     snpvalue <- snpvalue[idx.fil][idx.match]
+#     snpvalue_result[,temp] <- snpvalue
+# 
+#   }
+# }
+#   close(con)
+#   if(temp!=0){
+#     snpid_result <- snpid_result[1:temp]
+#     snpvalue_result <- snpvalue_result[,1:temp]
+#   }else{
+#     snpid_result <- NULL
+#     snpvalue_result <- NULL
+#   }
+# result <- list(snpid_reuslt=snpid_result,snpvalue_result=snpvalue_result)
+# save(result,file=paste0("./whole_genome/ICOG/ERPRHER2_fixed/result/ERPRHER2_fixed_extracted.Rdata",i1))

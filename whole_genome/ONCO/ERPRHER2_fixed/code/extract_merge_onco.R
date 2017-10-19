@@ -11,7 +11,7 @@ n.snps <- nrow(extract.list)
 extract.result <- matrix(0,n,n.snps)
 snp.id <- rep(0,n.snps)
 total <- 0
-for(i in 1:567){
+for(i in 491:567){
   print(i)
   load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/ERPRHER2_fixed_onco_extract",i,".Rdata"))
   if(is.null(result[[1]])==0){

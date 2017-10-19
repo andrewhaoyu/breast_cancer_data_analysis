@@ -36,8 +36,8 @@ idx.match <- match(pheno$Onc_ID,onco.order[idx.fil,1])
 library(bc2)
 #load("./whole_genome/ONCO/ERPRHER2_fixed/result/score.test.support.onco.ERPRHER2.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
-
-
+snp.onco.extract.id <- extract.list[,(ncol(extract.list)-1),drop=F]
+write.table(snp.onco.extract.id,file = paste0("./whole_genome/ONCO/ERPRHER2_fixed/result/extract_id_onco.txt"),quote = F,row.names=F)
 
 
 
@@ -47,6 +47,35 @@ Filesex <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.chr23",full.nam
 idx.sex <- Files%in%Filesex
 Files <- Files[!idx.sex]
 geno.file <- Files[i1]
+
+qctool.command <- rep("c",567)
+qctool.command <- data.frame(qctool.command,stringsAsFactors=F)
+
+
+for(i in 1:567){
+  geno.file <- Files[i]
+  temp <- paste0("/spin1/users/zhangh24/qctool_v1.4-linux-x86_64/qctool -g ",Files[i]," -incl-rsids /spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/extract_id_onco.txt -og /spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/ERPRHER2_extract",i,".txt")
+  qctool.command[i,1] <- temp
+  
+}
+
+
+write.table(qctool.command,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/code/qc_extract_snp.sh"),col.names = F,row.names = F,quote=F)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 tryCatch(
   {
     num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
@@ -77,24 +106,24 @@ for(i in 1:num){
   oneLine <- readLines(con,n=1)
   myVector <- strsplit(oneLine," ")
   snpid <- as.character(myVector[[1]][2])
-  
-  
-  
+
+
+
   if(snpid%in%extract.list$SNP.ONCO==T){
     temp <- temp+1
-    snpid_result[temp] <- snpid  
+    snpid_result[temp] <- snpid
     snpvalue <- rep(0,n)
     snppro <- as.numeric(unlist(myVector)[6:length(myVector[[1]])])
     snpvalue <- convert(snppro,n)
     snpvalue <- snpvalue[idx.fil][idx.match]
     snpvalue_result[,temp] <- snpvalue
-    
+
   }
-  
-  
+
+
   #print(paste0("freq",freq))
-  
- 
+
+
 }
 close(con)
 
