@@ -1,7 +1,7 @@
 #load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_result.Rdata")
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/extract_result.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result.Rdata")
 
 data2 <- read.csv("./data/ONCO_pruning.csv",header=T)
 x.test.all.mis2 <- data2[,c(27:205)]
@@ -10,7 +10,7 @@ idx.control <- which(data2$Behaviour1==0)
 
 x.test.all.mis2.control <- x.test.all.mis2[idx.control,]
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
 # extract.list <- extract.list[-c(1700,1701,1702,1703,1705,1706,1707),]
 # save(extract.list,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
 #try <- duplicated(extract.list)
@@ -33,7 +33,7 @@ for(i in 1:ncol(extract.result.onco.control)){
       idx.known.ld.flag <- c(idx.known.ld.flag,i)
       break
     }
-      
+    
   }
   
   
@@ -42,7 +42,7 @@ for(i in 1:ncol(extract.result.onco.control)){
 
 extract.list.ld <- extract.list[idx.known.ld.flag,]
 
-save(extract.list.ld,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract.list.ld")
+save(extract.list.ld,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
 
 
 
@@ -53,7 +53,7 @@ save(extract.list.ld,file="/spin1/users/zhangh24/breast_cancer_data_analysis/who
 
 LD.matrix <- cor(extract.result.onco.control)^2
 
-save(LD.matrix,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/LD.matrx.Rdata")
+save(LD.matrix,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD.matrx.Rdata")
 
 
 
@@ -88,7 +88,7 @@ extract.list <- extract.list[-idx.known.ld.flag,]
 
 
 
-new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
+new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
 new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 
 idx_cut <- NULL
@@ -121,6 +121,6 @@ extract.list <- LD_pruning(extract.list,LD.matrix)
 
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_result.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_result.Rdata")
 extract.result.icog <- extract.result[[2]]
 
