@@ -88,7 +88,7 @@ extract.list <- extract.list[-idx.known.ld.flag,]
 
 
 
-new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
+new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
 new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 
 idx_cut <- NULL
@@ -112,6 +112,8 @@ LD.matrix <- LD.matrix[-idx_cut,-idx_cut]
 
 
 extract.list <- LD_pruning(extract.list,LD.matrix)
+
+save(extract.list,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
 
 
 

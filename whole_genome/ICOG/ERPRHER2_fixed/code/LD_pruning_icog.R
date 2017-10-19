@@ -114,6 +114,10 @@ LD.matrix <- LD.matrix[-idx_cut,-idx_cut]
 extract.list <- LD_pruning(extract.list,LD.matrix)
 
 
+save(extract.list,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/LD_pruning.result")
+
+
+
 
 
 
