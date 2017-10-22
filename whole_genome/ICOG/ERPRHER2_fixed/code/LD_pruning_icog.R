@@ -118,6 +118,34 @@ save(extract.list,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_
 
 
 
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/LD_pruning.result")
+top <- extract.list[extract.list$pvalue<=1e-07,]
+
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_result.Rdata")
+extract.result.icog <- extract.result[[2]]
+extract.result.icog.id <- extract.result[[1]]
+
+idx <- which((extract.result.icog.id%in%top$SNP.ICOGS)==T)
+extract.result.icog.top <- extract.result.icog[,idx]
+extract.result.icog.id.top <- extract.result.icog.id[idx]
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/extract_result.Rdata")
+extract.result.onco <- extract.result[[2]]
+extract.result.onco.id <- extract.result[[1]]
+
+idx <- which((extract.result.onco.id%in%top$SNP.ONCO)==T)
+extract.result.onco.top <- extract.result.onco[,idx]
+extract.result.onco.id.top <- extract.result.onco.id[idx]
+
+cbind(extract.result.onco.id.top,extract.result.onco.id.top)
+
+colnames(extract.result.icog.top) <- extract.result.icog.id.top
+colnames(extract.result.onco.top) <- 
+  extract.result.onco.id.top
+save(extract.result.icog.top,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/topsnpvalue.Rdata")
+save(extract.result.onco.top,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/topsnpvalue.Rdata")
+
 
 
 
@@ -126,5 +154,4 @@ save(extract.list,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_
 
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_result.Rdata")
-extract.result.icog <- extract.result[[2]]
 
