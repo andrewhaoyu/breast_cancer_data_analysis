@@ -1,4 +1,6 @@
 data/
+.Rhistory (1)
+.gitignore (1)
 .DS_Store
 /known_SNPs/known_SNPs_analysis_revised/additive_model/result
 /known_SNPs/known_SNPs_analysis_G_revised/additive_model/result
