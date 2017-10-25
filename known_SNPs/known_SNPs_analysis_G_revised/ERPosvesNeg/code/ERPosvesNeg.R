@@ -41,22 +41,27 @@ colnames(z.design) <- c("Luminial A","Luminal B",
                         "Triple Negative - Luminal A")
 
 
-if(i1<=178){
-  ##analysis for Icog
-  data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
-  y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
-  colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2","Grade")
+if(i1<=177){
+  data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
+  data1 <- as.data.frame(data1)
+  y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
+  colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
   # Grade1.fake <- data1$Grade1
   # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
   # Grade1.fake[data1$Grade1==1] <- 0
   #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
   # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
   
-  x.test.all.mis1 <- data1[,c(27:204)]
+  x.test.all.mis1 <- data1[,c(27:203)]
+  ###pc1-10 and age
+  x.covar.mis1 <- data1[,c(5:14,204)]
   
-  x.covar.mis1 <- data1[,5:14]
+  age <- data1[,204]
+  idx.complete <- which(age!=888)
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
+  y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
+  x.all.mis1 <- x.all.mis1[idx.complete,]
   
   Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design,baselineonly = NULL,additive = x.all.mis1[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Icog[[12]]
@@ -137,21 +142,21 @@ if(i1<=178){
   
   #analysis for Onco Array
   #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
-  data2 <- read.csv("./data/Onco_euro_v10_05242017.csv",header=T)
-  
-  
-  names2 = colnames(data2)[27:210]
-  
-  idxi1 = which(names2==names1[i1])
-  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
+  data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+  data2 <- as.data.frame(data2)
+  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
-  colnames(y.pheno.mis2) = c("Behaviour","PR",
-                             "ER","HER2","Grade")
+  colnames(y.pheno.mis2) = c("Behaviour","ER",
+                             "PR","HER2","Grade")
   
-  x.test.all.mis2 <- data2[,c(27:210)]
-  x.covar.mis2 <- data2[,5:14]
-  x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
+  x.test.all.mis2 <- data2[,c(27:203)]
+  x.covar.mis2 <- data2[,c(5:14,204)]
+  ages <- data2[,204]
+  idx.complete <- which(ages!=888)
+  x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
+  y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
+  x.all.mis2 <- x.all.mis2[idx.complete,]
   
   
   Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
@@ -259,20 +264,23 @@ if(i1<=178){
   
   
 }else{
-  data2 <- read.csv("./data/Onco_euro_v10_rs554219.csv",header = T)
-  #data2 <- read.csv("/data/zhangh20/breast_cancer/known_SNPs_anlysis/Onco_euro_v10_rs554219.csv",1)
-  
-  # names1 = colnames(data1)[27:206]
-  #rm(data1)
+  data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+  data2 <- as.data.frame(data2)
   names2 = colnames(data2)
-  
+  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+  #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+  colnames(y.pheno.mis2) = c("Behaviour","ER",
+                             "PR","HER2","Grade")
   idxi1 = which(names2=="rs554219")
-  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
-  x.test.all.mis2 <- data2
-  colnames(y.pheno.mis2) <- c("Behavior","PR","ER","HER2","Grade")
   
-  x.covar.mis2 <- data2[,5:14]
+  x.test.all.mis2 <- data2
+  x.covar.mis2 <- data2[,c(5:14,204)]
+  ages <- data2[,204]
+  idx.complete <- which(ages!=888)
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
+  colnames(x.all.mis2)[1] = "gene"
+  y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
+  x.all.mis2 <- x.all.mis2[idx.complete,]
   
   
   
