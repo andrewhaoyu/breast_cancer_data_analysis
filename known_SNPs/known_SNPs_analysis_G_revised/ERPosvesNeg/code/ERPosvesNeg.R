@@ -15,6 +15,7 @@ library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
+library(data.table)
 
 z.design <- matrix(c(
   c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
