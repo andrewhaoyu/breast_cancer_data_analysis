@@ -31,8 +31,10 @@ library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
+library(data.table)
 i1 = 1
-data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
+data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
+data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 # Grade1.fake <- data1$Grade1
@@ -41,11 +43,16 @@ colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
 # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
 
-x.test.all.mis1 <- data1[,c(27:204)]
+x.test.all.mis1 <- data1[,c(27:203)]
+###pc1-10 and age
+x.covar.mis1 <- data1[,c(5:14,204)]
 
-x.covar.mis1 <- data1[,5:14]
+age <- data1[,204]
+idx.complete <- which(age!=888)
 x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
 colnames(x.all.mis1)[1] <- "gene"
+y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
+x.all.mis1 <- x.all.mis1[idx.complete,]
 
 Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 z.standard <- Heter.result.Icog[[12]]
@@ -114,7 +121,7 @@ generate_second_stage_parameter_names = function(tumor_characteristics){
 result <-  NULL
 first.stage <- NULL
 
-for(i in 1:179){
+for(i in 1:178){
   print(i)
   load(paste0("heter_result_",i,".Rdata"))
   result <- rbind(result,heter.result[[1]])

@@ -328,7 +328,7 @@ if(i1<=177){
   
   score.onco <- score.test.onco[[1]]
   infor.onco <- score.test.onco[[2]]
-  rm(score.test.support.onco)
+  #rm(score.test.support.onco)
   gc()
   
   score.test.onco.baseline<- ScoreTestSelfDesign(y=y.pheno.mis2,
