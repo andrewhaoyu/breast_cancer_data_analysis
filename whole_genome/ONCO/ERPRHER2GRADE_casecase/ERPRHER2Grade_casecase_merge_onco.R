@@ -34,118 +34,54 @@ for(i in 1:length(result_Files)){
 }
 
 
-nu
-
-for(i in 1:567) {
-  print(i)
-  for (j in 1:5) {
-    load(
-      paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco",i,"_",j)
-    )
-  }
-}
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
+num.total <- nrow(onco_result_baseline)
 
 
-
-
-
-
-num.total <- 0
-for(i in 1:length(Files)){
-  print(i)
-  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
-  
-  load(paste0("ERPRHER2Grade_fixed_onco",idx[i]))
-  temp <- length(result[[1]])
-  num.total <- num.total+temp
-}
 
 num <- num.total
-num.total <- 0
-rs_id <- rep("c",num)
+#num.total <- 0
+rs_id <- onco_result_baseline$rs_id
 number.of.tumor <- 4
-score <- matrix(0,nrow=num,ncol = (number.of.tumor+1))
-infor <- matrix(0,nrow = num,ncol = (number.of.tumor+1)^2)
+score <- matrix(0,nrow=num,ncol = (number.of.tumor))
+infor <- matrix(0,nrow = num,ncol = (number.of.tumor)^2)
 freq.all <- rep(0,num)
-score_baseline <- rep(0,num)
-infor_baseline <- rep(0,num)
+#score_baseline <- rep(0,num)
+#infor_baseline <- rep(0,num)
 
 
 
-
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
 num.total <- 0
-num.length <- rep(0,length(Files))
-
-###i is in the right order: ordered by chr and position
-###idx[i] is the default files order got by the dir function in r
-
-for(i in 1:length(Files)){
+for(i in 1:567){
+  
   print(i)
-  
-  load(paste0("ERPRHER2Grade_fixed_onco",idx[i]))
-  
-  temp <- length(result[[1]])
-  print(paste0("temp:",temp))
-  rs_id[num.total+(1:temp)] <- result[[1]]
-  score[num.total+(1:temp),] <- result[[2]]
-  for(j in 1:temp){
-    infor_j <- result[[3]][((number.of.tumor+1)*j-number.of.tumor):((number.of.tumor+1)*j),]
-    infor[num.total+j,] <- as.vector(infor_j)
-  }
-  freq.all[num.total+(1:temp)] <- result[[4]] 
-  score_baseline[num.total+(1:temp)] <- result[[5]]
-  infor_baseline[num.total+(1:temp)] <- result[[6]]
-  num.length[i] <- length(result[[1]])
-  num.total <- temp+num.total
-  
-  
-  
-}
-
-
-
-
-num.length.info <- rep(0,length(Files))
-
-onco_info <- data.frame(snp_id = rep("c",num.total),rs_id = rep("c",num.total),
-                        position=rep(0,num.total),exp_freq_a1=rep(0,num.total),info=rep(0,num.total),
-                        certainty=rep(0,num.total),type=rep(0,num.total),info_type0=rep(0,num.total),
-                        concord_type0=rep(0,num.total),r2_type0=rep(0,num.total),stringsAsFactors=F)
-CHR <- rep(0,num.total)
-num.total <-  0
-temp.j <- 0
-for(i in 1:22){
-  print(i)
-  filedir <- paste0("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_info_files/chr",i)
-  files <- dir(filedir,pattern="txt_info",full.names=T)
-  files_num <- gsub(paste0(filedir,"/OncoArray_chr",i,"_euro15_phased_"),
-                    "",files)
-  files_num <- gsub(".txt_info","",files_num)
-  files_num <- strsplit(files_num,"_")
-  files_num <- as.integer(unlist(files_num)[seq(1,2*length(files_num),2)])
-  idx <- order(files_num)
-  for(j in 1:length(idx)){
-    temp.j <- temp.j +1
-    print(temp.j)
-    #print(j)
-    data <- read.table(files[idx[j]],header=T,stringsAsFactors=F)
-    temp <- nrow(data)
-    num.length.info[temp.j] <- temp
-    onco_info[num.total+(1:temp),1:3] <- data[,1:3]
-    onco_info[num.total+(1:temp),4:10] <- data[,6:12]
-    CHR[num.total+(1:temp)] <- i
+  for (k in 1:5) {
+    load(
+      paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco",idx[i],"_",k)
+    )
+    temp <- nrow(result[[2]])
+    #print(paste0("temp:",temp))
+    #rs_id[num.total+(1:temp)] <- result[[1]]
+    score[num.total+(1:temp),] <- result[[2]]
+    for(j in 1:temp){
+      infor_j <- result[[3]][((number.of.tumor)*j-(number.of.tumor-1)):((number.of.tumor)*j),]
+      infor[num.total+j,] <- as.vector(infor_j)
+    }
+   # freq.all[num.total+(1:temp)] <- result[[4]] 
     num.total <- temp+num.total
-    
   }
+  
+  
   
 }
 
-onco_result <- data.frame(onco_info,score,infor,CHR)
 
-save(onco_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+
+onco_info <- onco_result_baseline[,1:10]
+CHR <- onco_result_baseline[,13]
+
+onco_result_casecase <- data.frame(onco_info,score,infor,CHR)
+
+save(onco_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_casecase/result/onco_result_casecase.Rdata")
 print(1)
-onco_result_baseline <- data.frame(onco_info,score_baseline,infor_baseline,CHR)
-save(onco_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
-print(2)
-
