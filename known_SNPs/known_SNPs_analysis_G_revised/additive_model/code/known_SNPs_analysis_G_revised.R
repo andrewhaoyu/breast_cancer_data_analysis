@@ -17,9 +17,6 @@ library(CompQuadForm)
 library(bc2)
 library(data.table)
 
-
-
-
 if(i1<=177){
   ##analysis for Icog
   data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)

@@ -17,8 +17,6 @@ library(CompQuadForm)
 library(bc2)
 
 
-
-
 if(i1<=178){
   ##analysis for Icog
   data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
