@@ -28,5 +28,5 @@ score.test.support.icog.ERPRHER2Grade <- ScoreTestSupport(
   missingTumorIndicator = 888
 )
 
-save(score.test.support.icog.ERPRHER2Grade,file="./wholge_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/score.test.support.icog.ERPRHER2.Rdata")
+save(score.test.support.icog.ERPRHER2Grade,file="./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/score.test.support.icog.ERPRHER2.Rdata")
 
