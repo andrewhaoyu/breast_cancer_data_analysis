@@ -43,7 +43,7 @@ gc()
 
 library(foreach)
 library(doParallel)
-no.cores <- 7
+no.cores <- 12
 n <- nrow(icog_onco_score_infor)
 #icog_onco_score_infor_temp <- icog_onco_score_infor[1:10^5,]
 #n <- nrow(icog_onco_score_infor_temp)
@@ -67,7 +67,7 @@ pvalue.list <- foreach(i=1:size)%dopar%
   pvalue_sub <- rep(0,end-start+1)
   temp = 1
   for(j in start:end){
-    print(j)
+    #print(j)
     icog_onco_score_infor_oneline <- icog_onco_score_infor[j,]
     icog_onco_score_infor_casecase_oneline <- icog_onco_score_infor_casecase[j,]
     pvalue_sub[temp] <- MetaMixedPfunction_temp(icog_onco_score_infor_oneline,icog_onco_score_infor_casecase_oneline,fixed.second.num,random.second.num)
