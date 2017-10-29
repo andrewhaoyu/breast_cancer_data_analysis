@@ -1,6 +1,4 @@
 data/
-.Rhistory (1)
-.gitignore (1)
 .DS_Store
 /known_SNPs/known_SNPs_analysis_revised/additive_model/result
 /known_SNPs/known_SNPs_analysis_G_revised/additive_model/result
@@ -19,3 +17,10 @@ data/
 /discovery_SNP/tp53/result
 /meeting_presentation/
 /known_SNPs/known_SNPs_analysis_G_revised/ERPosvesNeg/result/
+/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/*
+/whole_genome_age/ICOG/ERPRHER2_fixed/result/*
+/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/*
+/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/*
+/whole_genome_age/ONCO/ERPRHER2_fixed/result/*
+/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/*
+/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/
