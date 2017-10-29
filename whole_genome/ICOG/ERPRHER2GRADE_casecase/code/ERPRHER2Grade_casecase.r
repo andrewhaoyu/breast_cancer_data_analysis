@@ -55,7 +55,7 @@ tryCatch(
     num <- countLines(geno.file)[1]
   }
 )
-size = 5
+size = 20
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
@@ -71,6 +71,17 @@ num.of.tumor <- ncol(y.pheno.mis1)-1
 score_result <- matrix(0.1,file.num,num.of.tumor)
 infor_result <- matrix(0.1,(num.of.tumor)*file.num,num.of.tumor)
 snpid_result <- rep("c",file.num)
+
+
+no.cores <- 2
+library(foreach)
+library(doParallel)
+
+inside.size <- 2
+
+registerDoParallel(no.cores)
+
+
 
 
 freq.all <- rep(0,file.num)
@@ -129,7 +140,7 @@ for(i in 1:num){
                                                          missingTumorIndicator=888)
 
           score_result[temp,]  <- score.test.icog.casecase[[1]]
-          infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*i),] <- score.test.icog.casecase[[2]]
+          infor_result[((num.of.tumor)*temp-(num.of.tumor-1)):((num.of.tumor)*temp),] <- score.test.icog.casecase[[2]]
           # print(mem_used())
           rm(score.test.support.icog.casecase)
            rm(score.test.icog.casecase)

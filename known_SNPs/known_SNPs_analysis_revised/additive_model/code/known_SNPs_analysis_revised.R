@@ -1,4 +1,4 @@
-#install_github("andrewhaoyu/bc2", args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#install_github("andrewhaoyu/bc2", ref='development',args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 ###1 represent Icog
 ###2 represent Onco
 

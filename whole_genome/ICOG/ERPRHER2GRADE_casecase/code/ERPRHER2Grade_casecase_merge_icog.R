@@ -65,8 +65,12 @@ for(i in 1:length(Files)){
       infor_j <- result[[3]][(number.of.tumor*j-(number.of.tumor-1)):((number.of.tumor)*j),]
       infor[num.total+j,] <- as.vector(infor_j)
     }
-    
+    if(num.total< 12327300&(num.total+temp)> 12327300){
+      print(c(i,k))
+    }
     num.total <- temp+num.total
+    
+    
   }
   
 
