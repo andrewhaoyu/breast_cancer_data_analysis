@@ -19,14 +19,24 @@ x.covar.mis1 <- x.covar.mis1[idx.complete,]
 #x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
 #colnames(x.all.mis1)[1] <- "gene"
 
-score.test.support.icog.ERPRHER2Grade <- ScoreTestSupport(
-  y.pheno.mis1,
-  baselineonly = NULL,
-  additive = x.covar.mis1,
-  pairwise.interaction = NULL,
-  saturated = NULL,
-  missingTumorIndicator = 888
-)
 
-save(score.test.support.icog.ERPRHER2Grade,file="./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/score.test.support.icog.ERPRHER2Grade.Rdata")
+Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+number.of.tumor <- 
+z.standard <- Heter.result.Icog[[12]]
+delta0 <- Heter.result.Icog[[1]]
+M <- 23
+delta0 <- c(delta0[1:M],rep(0,2),delta0[(M+1):length(delta0)])
+save(delta0,file="./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/delta0.icog.Rdata")
+#save(z.standard,file="./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
+
+
+
+
+
+
+
+
+
+
+
 

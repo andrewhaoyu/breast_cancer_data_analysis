@@ -12,9 +12,9 @@ rm(list=ls())
 #print(i)
 #pheno is ICOGS,data2 is onco_array
 arg <- commandArgs(trailingOnly=T)
-i <- as.numeric(arg[[1]])
-i1 <- i
-print(i)
+i1 <- as.numeric(arg[[1]])
+
+print(i1)
 library(R.utils)
 library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
@@ -45,7 +45,7 @@ idx.fil <- Icog.order[,1]%in%SG_ID
 idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
-load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/score.test.support.icog.ERPRHER2.Rdata")
+load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/score.test.support.icog.ERPRHER2Grade.Rdata")
 
 
 Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/"
@@ -57,17 +57,10 @@ library(gtools)
 Files <- mixedsort(Files)
 geno.file <- Files[i1]
 
-# tryCatch(
-#   {
-    num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
-#   },
-#   error=function(cond){
-#     num <- countLines(geno.file)[1]
-#   }
-# )
-#num = 22349
-#num <- countLines(geno.file)[1];
-#num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+
+num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+
+
 num.of.tumor <- ncol(y.pheno.mis1)-1
 n.sub <- nrow(y.pheno.mis1)
 idx.control <- which(y.pheno.mis1[,1]==0)
@@ -93,7 +86,7 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
   con <- gzfile(geno.file)
   open(con)
   for(i in 1:num){
-   # if(i%%500==0){
+   #if(i%%500==0){
     print(i)
     #}
     oneLine <- readLines(con,n=1)
@@ -165,7 +158,7 @@ freq.all <- rep(0,num)
 
 total <- 0
 for(i in 1:inner.size){
-  result.temp <- result.list[[1]]
+  result.temp <- result.list[[i]]
   temp <- length(result.temp[[1]])
   snpid_result[total+(1:temp)] <- result.temp[[1]]
   score_result[total+(1:temp),] <- result.temp[[2]]
