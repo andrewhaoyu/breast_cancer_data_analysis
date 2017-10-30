@@ -111,15 +111,15 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   con <- gzfile(geno.file)
   open(con)
   for(i in 1:num){
-   # if(i%%500==0){
+    if(i%%500==0){
       print(i)
-    #}
+    }
     oneLine <- readLines(con,n=1)
     
     if(i>=true.start){
-     # if(temp%%100==0){
+      if(temp%%100==0){
         print(paste0("temp",temp))
-      #}
+      }
       #print(i)
       temp = temp+1
       #print(i)
