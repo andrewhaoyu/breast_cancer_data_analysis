@@ -23,7 +23,10 @@ setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 n <- 109713
 snpvalue <- rep(0,n)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
+
 Icog.order <- read.table(gzfile(subject.file))
+library(data.table)
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -36,6 +39,8 @@ idx.complete <- which(age!=888)
 y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
 x.covar.mis1 <- x.covar.mis1[idx.complete,]
 SG_ID <- SG_ID[idx.complete]
+rm(data1)
+gc()
 
 
 
@@ -45,7 +50,7 @@ idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/delta0.icog.Rdata")
-#load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
+load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
 z.design.support <- cbind(1,z.standard[,1])
 
 Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/"
@@ -120,7 +125,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       #print(i)
       myVector <- strsplit(oneLine," ")
       snpid <- as.character(myVector[[1]][2])
-      snpid_result[i] <- snpid
+      snpid_result[temp] <- snpid
       snpvalue <- rep(0,n)
       
       
@@ -184,8 +189,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 stopImplicitCluster()
 
-score_result <- matrix(0.1,file.num,num.of.tumor)
-infor_result <- matrix(0.1,(num.of.tumor)*file.num,num.of.tumor)
+score_result <- matrix(0.1,file.num,num.of.tumor-1)
+infor_result <- matrix(0.1,file.num,(num.of.tumor-1)^2)
 snpid_result <- rep("c",file.num)
 
 freq.all <- rep(0,file.num)
@@ -198,6 +203,7 @@ for(i in 1:inner.size){
   score_result[total+(1:temp),] <- result.temp[[2]]
   infor_result[total+(1:temp),] <- result.temp[[3]]
   freq.all[total+(1:temp)] <- result.temp[[4]]
+  total <- temp+total
 }
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
