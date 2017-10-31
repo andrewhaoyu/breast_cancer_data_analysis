@@ -145,10 +145,10 @@ if(i1<=177){
   #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
   data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
   data2 <- as.data.frame(data2)
-  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
-  colnames(y.pheno.mis2) = c("Behaviour","ER",
-                             "PR","HER2","Grade")
+  colnames(y.pheno.mis2) = c("Behaviour","PR",
+                             "ER","HER2","Grade")
   
   x.test.all.mis2 <- data2[,c(27:203)]
   x.covar.mis2 <- data2[,c(5:14,204)]
@@ -268,10 +268,10 @@ if(i1<=177){
   data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
   data2 <- as.data.frame(data2)
   names2 = colnames(data2)
-  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
-  colnames(y.pheno.mis2) = c("Behaviour","ER",
-                             "PR","HER2","Grade")
+  colnames(y.pheno.mis2) = c("Behaviour","PR",
+                             "ER","HER2","Grade")
   idxi1 = which(names2=="rs554219")
   
   x.test.all.mis2 <- data2
