@@ -16,6 +16,7 @@ i1 <- as.numeric(arg[[1]])
 #i1 <- i
 print(i1)
 library(R.utils)
+library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
