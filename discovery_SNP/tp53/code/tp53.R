@@ -198,13 +198,14 @@ y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$H
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
-
+#snpvalue <- x.test.all.mis.onco[,i1]
 x.covar.mis2 <- data2[,5:14]
 #x.all.mis2 <- as.matrix(cbind(x.test.all.mis.onco[,idxi1],x.covar.mis2))
+snpvalue <- x.test.all.mis.onco[,idxi1]
 x.all.mis2 <- cbind(snpvalue,x.covar.mis2)
 colnames(x.all.mis2)[1] = "gene"
 
-snpvalue <- x.test.all.mis.onco[,idxi1]
+
 
 
 Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
