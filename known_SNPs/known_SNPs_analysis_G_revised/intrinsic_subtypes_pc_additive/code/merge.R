@@ -119,6 +119,7 @@ result <- as.data.frame(result)
 
 
 p.wald.assoc <- result[,11]
+p.wald.assoc[which(is.na(p.wald.assoc))] <- 0
 p.wald.assoc.adjust <- p.adjust(p.wald.assoc,method="BH")
 p.wald.heter <- result[,12]
 p.wald.heter.adjust <- p.adjust(p.wald.heter,method="BH")
@@ -186,4 +187,5 @@ colnames(first.stage) = generate_self_design_second_stage_parameter_names_2(tumo
 
 write.xlsx(result,file="./intrinsic_subtypes_model_G.xlsx",sheetName="intrinsic_subtypes_model_G_2nd_stage")
 write.xlsx(first.stage,file="./intrinsic_subtypes_model_G.xlsx",sheetName="intrinsic_subtypes_model_G_1st_stage",append=T)
+
 

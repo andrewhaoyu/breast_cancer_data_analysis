@@ -135,6 +135,7 @@ colnames(result) <- generate_second_stage_parameter_names(tumor.characteristics)
 
 
 p.wald.assoc <- result[,11]
+p.wald.assoc[is.na(p.wald.assoc)] <- 0
 p.wald.assoc.adjust <- p.adjust(p.wald.assoc,method="BH")
 p.wald.heter <- result[,12]
 p.wald.heter.adjust <- p.adjust(p.wald.heter,method="BH")
