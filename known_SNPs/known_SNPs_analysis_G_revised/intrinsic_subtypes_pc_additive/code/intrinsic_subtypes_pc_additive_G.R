@@ -64,7 +64,7 @@ if(i1<=177){
   y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
   x.all.mis1 <- x.all.mis1[idx.complete,]
   
-  Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design,baselineonly = NULL,additive = x.all.mis1[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design,baselineonly = NULL,additive = x.all.mis1[,2:ncol(x.all.mis1)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Icog[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
   M <- nrow(z.standard)
@@ -79,7 +79,7 @@ if(i1<=177){
   score.test.support.icog <- ScoreTestSupport(
     y.pheno.mis1,
     baselineonly = NULL,
-    additive = x.all.mis1[,2:11],
+    additive = x.all.mis1[,2:ncol(x.all.mis1)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -110,7 +110,7 @@ if(i1<=177){
   score.test.support.icog.casecase <- ScoreTestSupport(
     y.pheno.mis1,
     baselineonly = x.all.mis1[,1,drop=F],
-    additive = x.all.mis1[,2:11],
+    additive = x.all.mis1[,2:ncol(x.all.mis1)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -156,7 +156,7 @@ if(i1<=177){
   x.all.mis2 <- x.all.mis2[idx.complete,]
   
   
-  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:ncol(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Onco[[12]]
   M <- nrow(z.standard)
   number.of.tumor <- ncol(z.standard)
@@ -171,7 +171,7 @@ if(i1<=177){
   score.test.support.onco <- ScoreTestSupport(
     y.pheno.mis2,
     baselineonly = NULL,
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -201,7 +201,7 @@ if(i1<=177){
   score.test.support.onco.casecase <- ScoreTestSupport(
     y.pheno.mis2,
     baselineonly = x.all.mis2[,1,drop=F],
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -299,7 +299,7 @@ if(i1<=177){
   
   
   
-  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:ncol(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Onco[[12]]
   M <- nrow(z.standard)
   number.of.tumor <- ncol(z.standard)
@@ -314,7 +314,7 @@ if(i1<=177){
   score.test.support.onco <- ScoreTestSupport(
     y.pheno.mis2,
     baselineonly = NULL,
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -343,7 +343,7 @@ if(i1<=177){
   score.test.support.onco.casecase <- ScoreTestSupport(
     y.pheno.mis2,
     baselineonly = x.all.mis2[,1,drop=F],
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888

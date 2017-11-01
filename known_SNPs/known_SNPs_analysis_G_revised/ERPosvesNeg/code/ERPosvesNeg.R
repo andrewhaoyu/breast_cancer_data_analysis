@@ -64,7 +64,7 @@ if(i1<=177){
   y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
   x.all.mis1 <- x.all.mis1[idx.complete,]
   
-  Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design,baselineonly = NULL,additive = x.all.mis1[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design,baselineonly = NULL,additive = x.all.mis1[,2:nocl(x.all.mis1)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Icog[[12]]
   M <- nrow(z.standard)
   z.design.PR <- matrix(0,M,2)
@@ -108,19 +108,19 @@ if(i1<=177){
   beta.sigma.icog <- z.trans%*%sigma.log.odds.icog%*%t(z.trans)
   loglikelihood.icog <- Heter.result.Icog[[8]]
   
-  Heter.result.PR.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.PR,baselineonly = NULL,additive = x.all.mis1[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.PR.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.PR,baselineonly = NULL,additive = x.all.mis1[,2:nocl(x.all.mis1)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.PR.Icog <-   Heter.result.PR.Icog[[1]][(M+1):(M+2)]
   sigma.log.odds.PR.Icog <- Heter.result.PR.Icog[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.ER.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.ER,baselineonly = NULL,additive = x.all.mis1[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.ER.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.ER,baselineonly = NULL,additive = x.all.mis1[,2:nocl(x.all.mis1)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.ER.Icog <-   Heter.result.ER.Icog[[1]][(M+1):(M+2)]
   sigma.log.odds.ER.Icog <- Heter.result.ER.Icog[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.HER.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.HER,baselineonly = NULL,additive = x.all.mis1[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.HER.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.HER,baselineonly = NULL,additive = x.all.mis1[,2:nocl(x.all.mis1)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.HER.Icog <-   Heter.result.HER.Icog[[1]][(M+1):(M+2)]
   sigma.log.odds.HER.Icog <- Heter.result.HER.Icog[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.Grade.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis1[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Grade.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis1[,2:nocl(x.all.mis1)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.Grade.Icog <-   Heter.result.Grade.Icog[[1]][(M+1):(M+3)]
   sigma.log.odds.Grade.Icog <- Heter.result.Grade.Icog[[2]][(M+1):(M+3),(M+1):(M+3)]
   
@@ -160,7 +160,7 @@ if(i1<=177){
   x.all.mis2 <- x.all.mis2[idx.complete,]
   
   
-  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Onco[[12]]
   M <- nrow(z.standard)
   number.of.tumor <- ncol(z.standard)
@@ -172,19 +172,19 @@ if(i1<=177){
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
   
-  Heter.result.PR.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.PR,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.PR.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.PR,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.PR.Onco <-   Heter.result.PR.Onco[[1]][(M+1):(M+2)]
   sigma.log.odds.PR.Onco <- Heter.result.PR.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.ER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.ER,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.ER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.ER,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.ER.Onco <-   Heter.result.ER.Onco[[1]][(M+1):(M+2)]
   sigma.log.odds.ER.Onco <- Heter.result.ER.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.HER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.HER,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.HER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.HER,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.HER.Onco <-   Heter.result.HER.Onco[[1]][(M+1):(M+2)]
   sigma.log.odds.HER.Onco <- Heter.result.HER.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.Grade.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Grade.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.Grade.Onco <-   Heter.result.Grade.Onco[[1]][(M+1):(M+3)]
   sigma.log.odds.Grade.Onco <- Heter.result.Grade.Onco[[2]][(M+1):(M+3),(M+1):(M+3)]
   
@@ -285,7 +285,7 @@ if(i1<=177){
   
   
   
-  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Onco[[12]]
   M <- nrow(z.standard)
   number.of.tumor <- ncol(z.standard)
@@ -296,19 +296,19 @@ if(i1<=177){
   beta.sigma.onco <- z.trans%*%sigma.log.odds.onco%*%t(z.trans)
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
-  Heter.result.PR.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.PR,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.PR.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.PR,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.PR.Onco <-   Heter.result.PR.Onco[[1]][(M+1):(M+2)]
   sigma.log.odds.PR.Onco <- Heter.result.PR.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.ER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.ER,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.ER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.ER,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.ER.Onco <-   Heter.result.ER.Onco[[1]][(M+1):(M+2)]
   sigma.log.odds.ER.Onco <- Heter.result.ER.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.HER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.HER,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.HER.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.HER,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.HER.Onco <-   Heter.result.HER.Onco[[1]][(M+1):(M+2)]
   sigma.log.odds.HER.Onco <- Heter.result.HER.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
-  Heter.result.Grade.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis2[,2:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Grade.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   log.odds.Grade.Onco <-   Heter.result.Grade.Onco[[1]][(M+1):(M+3)]
   sigma.log.odds.Grade.Onco <- Heter.result.Grade.Onco[[2]][(M+1):(M+3),(M+1):(M+3)]
   

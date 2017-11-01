@@ -56,7 +56,7 @@ if(i1<=177){
   score.test.support.icog <- ScoreTestSupport(
     y.pheno.mis1,
     baselineonly = NULL,
-    additive = x.all.mis1[,2:11],
+    additive = x.all.mis1[,2:ncol(x.all.mis1)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -91,7 +91,7 @@ if(i1<=177){
   score.test.support.icog.casecase <- ScoreTestSupport(
     y.pheno.mis1,
     baselineonly = x.all.mis1[,1,drop=F],
-    additive = x.all.mis1[,2:11],
+    additive = x.all.mis1[,2:ncol(x.all.mis1)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -131,7 +131,7 @@ if(i1<=177){
     y.pheno.mis1,
     x.self.design  = x.all.mis1[,1,drop=F],
     z.design = z.design.score.baseline.ER,
-    additive = x.all.mis1[,2:11],
+    additive = x.all.mis1[,2:ncol(x.all.mis1)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -205,7 +205,7 @@ if(i1<=177){
   score.test.support.onco <- ScoreTestSupport(
     y.pheno.mis2,
     baselineonly = NULL,
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -240,7 +240,7 @@ if(i1<=177){
   score.test.support.onco.casecase <- ScoreTestSupport(
     y.pheno.mis2,
     baselineonly = x.all.mis2[,1,drop=F],
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -283,7 +283,7 @@ if(i1<=177){
     y.pheno.mis2,
     x.self.design  = x.all.mis2[,1,drop=F],
     z.design = z.design.score.baseline.ER,
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -453,7 +453,7 @@ if(i1<=177){
   score.test.support.onco <- ScoreTestSupport(
     y.pheno.mis2,
     baselineonly = NULL,
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -487,7 +487,7 @@ if(i1<=177){
   score.test.support.onco.casecase <- ScoreTestSupport(
     y.pheno.mis2,
     baselineonly = x.all.mis2[,1,drop=F],
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888
@@ -527,7 +527,7 @@ if(i1<=177){
     y.pheno.mis2,
     x.self.design  = x.all.mis2[,1,drop=F],
     z.design = z.design.score.baseline.ER,
-    additive = x.all.mis2[,2:11],
+    additive = x.all.mis2[,2:ncol(x.all.mis2)],
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888

@@ -31,11 +31,12 @@ library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
+library(data.table)
 i1 = 1
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
-y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
-colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
+y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
+colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2","Grade")
 # Grade1.fake <- data1$Grade1
 # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
 # Grade1.fake[data1$Grade1==1] <- 0
@@ -185,3 +186,4 @@ colnames(first.stage) = generate_self_design_second_stage_parameter_names_2(tumo
 
 write.xlsx(result,file="./intrinsic_subtypes_model_G.xlsx",sheetName="intrinsic_subtypes_model_G_2nd_stage")
 write.xlsx(first.stage,file="./intrinsic_subtypes_model_G.xlsx",sheetName="intrinsic_subtypes_model_G_1st_stage",append=T)
+
