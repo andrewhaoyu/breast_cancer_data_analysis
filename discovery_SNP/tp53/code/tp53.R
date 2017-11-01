@@ -424,6 +424,6 @@ heter.result <- list(data.frame(test.result.second.wald,test.result.second.score
 
 
 
-save(heter.reuslt,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/tp53/result/heter.result")
+save(heter.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/tp53/result/heter.result")
 
 
