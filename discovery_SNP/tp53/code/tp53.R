@@ -61,6 +61,7 @@ idx.icog <- grep(snpname,SNP.id.icog)
 i1 <- idx.icog
 x.covar.mis1 <- data1[,5:14]
 snpvalue <- x.test.all.mis.icog[,i1]
+x.all.mis1 <- cbind(snpvalue,x.covar.mis1)
 
 Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 z.standard <- Heter.result.Icog[[12]]
@@ -78,7 +79,7 @@ rm(Heter.result.Icog)
 score.test.support.icog <- ScoreTestSupport(
   y.pheno.mis1,
   baselineonly = NULL,
-  additive = x.all.mis1[,2:11],
+  additive = x.all.mis1[,2:ncol(x.all.mis1)],
   pairwise.interaction = NULL,
   saturated = NULL,
   missingTumorIndicator = 888
@@ -113,7 +114,7 @@ gc()
 score.test.support.icog.casecase <- ScoreTestSupport(
   y.pheno.mis1,
   baselineonly = x.all.mis1[,1,drop=F],
-  additive = x.all.mis1[,2:11],
+  additive = x.all.mis1[,2:ncol(x.all.mis1)],
   pairwise.interaction = NULL,
   saturated = NULL,
   missingTumorIndicator = 888
@@ -153,7 +154,7 @@ score.test.support.icog.casecase.ER <- ScoreTestSupportSelfDesign(
   y.pheno.mis1,
   x.self.design  = x.all.mis1[,1,drop=F],
   z.design = z.design.score.baseline.ER,
-  additive = x.all.mis1[,2:11],
+  additive = x.all.mis1[,2:ncol(x.all.mis1)],
   pairwise.interaction = NULL,
   saturated = NULL,
   missingTumorIndicator = 888
@@ -199,10 +200,11 @@ colnames(y.pheno.mis2) = c("Behaviour","ER",
 
 
 x.covar.mis2 <- data2[,5:14]
-x.all.mis2 <- as.matrix(cbind(x.test.all.mis.onco[,idxi1],x.covar.mis2))
+#x.all.mis2 <- as.matrix(cbind(x.test.all.mis.onco[,idxi1],x.covar.mis2))
 colnames(x.all.mis2)[1] = "gene"
 
 snpvalue <- x.test.all.mis.onco[,idxi1]
+x.all.mis2 <- cbind(snpvalue,x.covar.mis2)
 
 Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 z.standard <- Heter.result.Onco[[12]]
@@ -219,7 +221,7 @@ loglikelihood.onco <- Heter.result.Onco[[8]]
 score.test.support.onco <- ScoreTestSupport(
   y.pheno.mis2,
   baselineonly = NULL,
-  additive = x.all.mis2[,2:11],
+  additive = x.all.mis2[,2:ncol(x.all.mis2)],
   pairwise.interaction = NULL,
   saturated = NULL,
   missingTumorIndicator = 888
@@ -254,7 +256,7 @@ gc()
 score.test.support.onco.casecase <- ScoreTestSupport(
   y.pheno.mis2,
   baselineonly = x.all.mis2[,1,drop=F],
-  additive = x.all.mis2[,2:11],
+  additive = x.all.mis2[,2:ncol(x.all.mis2)],
   pairwise.interaction = NULL,
   saturated = NULL,
   missingTumorIndicator = 888
@@ -297,7 +299,7 @@ score.test.support.onco.casecase.ER <- ScoreTestSupportSelfDesign(
   y.pheno.mis2,
   x.self.design  = x.all.mis2[,1,drop=F],
   z.design = z.design.score.baseline.ER,
-  additive = x.all.mis2[,2:11],
+  additive = x.all.mis2[,2:ncol(x.all.mis2)],
   pairwise.interaction = NULL,
   saturated = NULL,
   missingTumorIndicator = 888
