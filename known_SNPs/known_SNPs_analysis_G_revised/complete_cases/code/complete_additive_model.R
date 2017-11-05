@@ -1,4 +1,5 @@
-#install_github("andrewhaoyu/bc2", args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#install_github("andrewhaoyu/bc2",ref='development', args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+install_github("andrewhaoyu/bc2",ref='development')
 ###1 represent Icog
 ###2 represent Onco
 
@@ -25,6 +26,11 @@ if(i1<=177){
   colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
   
   
+  y.pheno.complete1 <- GenerateCompleteYPheno(y.pheno.mis1,missingTumorIndicator)
+  x.all.complete1 <- GenerateCompleteXCovariates(y.pheno.mis1,x.all,missingTumorIndicator)
+  
+  
+  Heter.result.Icog.Complete <- TwoStageModel(y.pheno.complete1,baselineonly = NULL,additive = x.all.complete1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = NULL)
   
   x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
@@ -37,10 +43,13 @@ if(i1<=177){
   y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
   x.all.mis1 <- x.all.mis1[idx.complete,]
   
-  idx.complete <- which(y.pheno.mis1[,1]==0|(y.pheno.mis1[,2]!=888&y.pheno.mis1[,3]!=888&y.pheno.mis1[,3]!=888&y.pheno.mis1[,4]!=888))
+
+  
+  idx.complete <- which(y.pheno.mis1[,1]==0|(y.pheno.mis1[,2]!=888&y.pheno.mis1[,3]!=888&y.pheno.mis1[,3]!=888&y.pheno.mis1[,4]!=888&y.pheno.mis1[,5]!=888))
   y.pheno1 <- y.pheno.mis1[idx.complete,]
-  x.all <- x.all.mis1[idx.complete,]
-  Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = NULL)
+  x.all1<- x.all.mis1[idx.complete,]
+  Heter.result.Icog = TwoStageModel(y.pheno1,baselineonly = NULL,additive = x.all1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = NULL)
+  Heter.result.Icog <- TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Icog[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
   M <- nrow(z.standard)

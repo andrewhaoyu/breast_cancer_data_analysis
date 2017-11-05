@@ -1,4 +1,5 @@
-#install_github("andrewhaoyu/bc2", args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#install_github("andrewhaoyu/bc2",ref='development', args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+install_github("andrewhaoyu/bc2",ref='development')
 ###1 represent Icog
 ###2 represent Onco
 
@@ -23,11 +24,6 @@ if(i1<=177){
   data1 <- as.data.frame(data1)
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
   colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
-  # Grade1.fake <- data1$Grade1
-  # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
-  # Grade1.fake[data1$Grade1==1] <- 0
-  #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
-  # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
   
   x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
@@ -39,7 +35,24 @@ if(i1<=177){
   colnames(x.all.mis1)[1] <- "gene"
   y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
   x.all.mis1 <- x.all.mis1[idx.complete,]
-  Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  
+  
+  
+  y.pheno.complete1 <- GenerateCompleteYPheno(y.pheno.mis1,missingTumorIndicator)
+  x.all.complete1 <- GenerateCompleteXCovariates(y.pheno.mis1,x.all.mis1,missingTumorIndicator)
+  
+  
+  Heter.result.Icog.Complete <- TwoStageModel(y.pheno.complete1,baselineonly = NULL,additive = x.all.complete1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = NULL)
+  
+  score.test.support.icog.complete <- ScoreTestSupport(
+    y.pheno.complete1,
+    baselineonly = NULL,
+    additive = x.all.complete1[,2:ncol(x.all.complete1)],
+    pairwise.interaction = NULL,
+    saturated = NULL,
+    missingTumorIndicator = NULL
+  )
+  
   z.standard <- Heter.result.Icog[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
   M <- nrow(z.standard)
@@ -58,7 +71,7 @@ if(i1<=177){
     additive = x.all.mis1[,2:ncol(x.all.mis1)],
     pairwise.interaction = NULL,
     saturated = NULL,
-    missingTumorIndicator = 888
+    missingTumorIndicator = NULL
   )
   score.test.icog<- ScoreTest(y=y.pheno.mis1,
                               x=x.all.mis1[,1,drop=F],
@@ -106,11 +119,11 @@ if(i1<=177){
   
   z.design.score.baseline.heterER <- z.standard[,1,drop=F]
   
- 
+  
   score.icog.baseline.heterER <- score.icog.casecase[1]
   infor.icog.baseline.heterER <- infor.icog.casecase[1,1]
   
-
+  
   
   rm(score.test.support.icog.casecase)
   rm(score.test.icog.casecase)  
@@ -254,7 +267,7 @@ if(i1<=177){
   infor.onco.casecase <- score.test.onco.casecase[[2]]
   z.design.score.baseline.heterER <- z.standard[,1,drop=F]
   
- 
+  
   score.onco.baseline.heterER <-   score.onco.casecase[1]
   infor.onco.baseline.heterER <- infor.onco.casecase[1,1]
   
@@ -504,7 +517,7 @@ if(i1<=177){
   
   z.design.score.baseline.heterER <- z.standard[,1,drop=F]
   
- 
+  
   score.onco.baseline.heterER <- score.onco.casecase[1]
   infor.onco.baseline.heterER <- infor.onco.casecase[1,1]
   

@@ -39,7 +39,7 @@ if(i1<=177){
   colnames(x.all.mis1)[1] <- "gene"
   y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
   x.all.mis1 <- x.all.mis1[idx.complete,]
-  Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,missingDataAlgorithm="OneStepMLE")
   z.standard <- Heter.result.Icog[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
   M <- nrow(z.standard)
@@ -106,11 +106,11 @@ if(i1<=177){
   
   z.design.score.baseline.heterER <- z.standard[,1,drop=F]
   
- 
+  
   score.icog.baseline.heterER <- score.icog.casecase[1]
   infor.icog.baseline.heterER <- infor.icog.casecase[1,1]
   
-
+  
   
   rm(score.test.support.icog.casecase)
   rm(score.test.icog.casecase)  
@@ -254,7 +254,7 @@ if(i1<=177){
   infor.onco.casecase <- score.test.onco.casecase[[2]]
   z.design.score.baseline.heterER <- z.standard[,1,drop=F]
   
- 
+  
   score.onco.baseline.heterER <-   score.onco.casecase[1]
   infor.onco.baseline.heterER <- infor.onco.casecase[1,1]
   
@@ -504,7 +504,7 @@ if(i1<=177){
   
   z.design.score.baseline.heterER <- z.standard[,1,drop=F]
   
- 
+  
   score.onco.baseline.heterER <- score.onco.casecase[1]
   infor.onco.baseline.heterER <- infor.onco.casecase[1,1]
   
