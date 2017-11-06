@@ -3,6 +3,8 @@ Files <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.",full.names=T)
 Filesex <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.chr23",full.names=T)
 idx.sex <- Files%in%Filesex
 Files <- Files[!idx.sex]
+library(gtools)
+Files <- mixedsort(Files)
 
 Files <- gsub("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_imputed/OncoArray_european_merged_b1_15.","",Files)
 Files <- gsub(".txt.gz","",Files)
@@ -23,7 +25,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
+result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
 result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
 result_Files <- result_Files[1:567]
 result.idx <- rep(0,length(result_Files))
@@ -46,7 +48,7 @@ for(i in 1:length(result_Files)){
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
-  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
+  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
   
   load(paste0("ERPRHER2Grade_fixed_onco",idx[i]))
   temp <- length(result[[1]])
@@ -60,13 +62,12 @@ number.of.tumor <- 4
 score <- matrix(0,nrow=num,ncol = (number.of.tumor+1))
 infor <- matrix(0,nrow = num,ncol = (number.of.tumor+1)^2)
 freq.all <- rep(0,num)
-score_baseline <- rep(0,num)
-infor_baseline <- rep(0,num)
 
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
+
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
 num.total <- 0
 num.length <- rep(0,length(Files))
 
@@ -78,17 +79,13 @@ for(i in 1:length(Files)){
   
   load(paste0("ERPRHER2Grade_fixed_onco",idx[i]))
   
-  temp <- length(result[[1]])
-  print(paste0("temp:",temp))
+  #temp <- length(result[[1]])
+  #print(paste0("temp:",temp))
   rs_id[num.total+(1:temp)] <- result[[1]]
   score[num.total+(1:temp),] <- result[[2]]
-  for(j in 1:temp){
-    infor_j <- result[[3]][((number.of.tumor+1)*j-number.of.tumor):((number.of.tumor+1)*j),]
-    infor[num.total+j,] <- as.vector(infor_j)
-  }
+  infor[num.total+(1:temp),] <- result[[3]]
   freq.all[num.total+(1:temp)] <- result[[4]] 
-  score_baseline[num.total+(1:temp)] <- result[[5]]
-  infor_baseline[num.total+(1:temp)] <- result[[6]]
+  
   num.length[i] <- length(result[[1]])
   num.total <- temp+num.total
   
@@ -99,46 +96,49 @@ for(i in 1:length(Files)){
 
 
 
-num.length.info <- rep(0,length(Files))
+# num.length.info <- rep(0,length(Files))
+# 
+# onco_info <- data.frame(snp_id = rep("c",num.total),rs_id = rep("c",num.total),
+#                         position=rep(0,num.total),exp_freq_a1=rep(0,num.total),info=rep(0,num.total),
+#                         certainty=rep(0,num.total),type=rep(0,num.total),info_type0=rep(0,num.total),
+#                         concord_type0=rep(0,num.total),r2_type0=rep(0,num.total),stringsAsFactors=F)
+# CHR <- rep(0,num.total)
+# num.total <-  0
+# temp.j <- 0
+# for(i in 1:22){
+#   print(i)
+#   filedir <- paste0("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_info_files/chr",i)
+#   files <- dir(filedir,pattern="txt_info",full.names=T)
+#   files_num <- gsub(paste0(filedir,"/OncoArray_chr",i,"_euro15_phased_"),
+#                     "",files)
+#   files_num <- gsub(".txt_info","",files_num)
+#   files_num <- strsplit(files_num,"_")
+#   files_num <- as.integer(unlist(files_num)[seq(1,2*length(files_num),2)])
+#   idx <- order(files_num)
+#   for(j in 1:length(idx)){
+#     temp.j <- temp.j +1
+#     print(temp.j)
+#     #print(j)
+#     data <- read.table(files[idx[j]],header=T,stringsAsFactors=F)
+#     temp <- nrow(data)
+#     num.length.info[temp.j] <- temp
+#     onco_info[num.total+(1:temp),1:3] <- data[,1:3]
+#     onco_info[num.total+(1:temp),4:10] <- data[,6:12]
+#     CHR[num.total+(1:temp)] <- i
+#     num.total <- temp+num.total
+#    
+#   }
+#   
+# }
 
-onco_info <- data.frame(snp_id = rep("c",num.total),rs_id = rep("c",num.total),
-                        position=rep(0,num.total),exp_freq_a1=rep(0,num.total),info=rep(0,num.total),
-                        certainty=rep(0,num.total),type=rep(0,num.total),info_type0=rep(0,num.total),
-                        concord_type0=rep(0,num.total),r2_type0=rep(0,num.total),stringsAsFactors=F)
-CHR <- rep(0,num.total)
-num.total <-  0
-temp.j <- 0
-for(i in 1:22){
-  print(i)
-  filedir <- paste0("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_info_files/chr",i)
-  files <- dir(filedir,pattern="txt_info",full.names=T)
-  files_num <- gsub(paste0(filedir,"/OncoArray_chr",i,"_euro15_phased_"),
-                    "",files)
-  files_num <- gsub(".txt_info","",files_num)
-  files_num <- strsplit(files_num,"_")
-  files_num <- as.integer(unlist(files_num)[seq(1,2*length(files_num),2)])
-  idx <- order(files_num)
-  for(j in 1:length(idx)){
-    temp.j <- temp.j +1
-    print(temp.j)
-    #print(j)
-    data <- read.table(files[idx[j]],header=T,stringsAsFactors=F)
-    temp <- nrow(data)
-    num.length.info[temp.j] <- temp
-    onco_info[num.total+(1:temp),1:3] <- data[,1:3]
-    onco_info[num.total+(1:temp),4:10] <- data[,6:12]
-    CHR[num.total+(1:temp)] <- i
-    num.total <- temp+num.total
-   
-  }
-  
-}
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+
 
 onco_result <- data.frame(onco_info,score,infor,CHR)
 
-save(onco_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+save(onco_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
 print(1)
-onco_result_baseline <- data.frame(onco_info,score_baseline,infor_baseline,CHR)
-save(onco_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
-print(2)
+# onco_result_baseline <- data.frame(onco_info,score_baseline,infor_baseline,CHR)
+# save(onco_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/wholge_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
+# print(2)
 

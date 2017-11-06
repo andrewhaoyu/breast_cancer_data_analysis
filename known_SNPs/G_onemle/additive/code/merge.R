@@ -98,8 +98,27 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/additive_model/result")
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/G_onemle/additive/result")
 library(xlsx)
+# generate_second_stage_parameter_names = function(tumor_characteristics){
+#   result = c("baseline effect (95%CI)",
+#              "P_value for baseline effect")
+#   for(i in 1:length(tumor_characteristics)){
+#     result = c(result,paste0(tumor_characteristics[i]," main effect(95%CI)"),
+#                paste0(tumor_characteristics[i]," main effect P_Value"))
+#   }
+#   result = c(result,"Wald global test p value",
+#              "Wald global heterogneity test p value",
+#              "Score global test p value",
+#              "Mixed Model global test p value (baseline fixed)",
+#              "Mixed Model global heterogeneity test p value (baseline fixed)",
+#              "Mixed Model global test p value (baseline+ER fixed)",
+#              "Mixed Model global heterogeneity test p value (baseline+ER fixed)",
+#              "loglikelihood",
+#              "AIC")
+#   return(result)
+# }
+
 generate_second_stage_parameter_names = function(tumor_characteristics){
   result = c("baseline effect (95%CI)",
              "P_value for baseline effect")
@@ -108,30 +127,30 @@ generate_second_stage_parameter_names = function(tumor_characteristics){
                paste0(tumor_characteristics[i]," main effect P_Value"))
   }
   result = c(result,"Wald global test p value",
-             "Wald global heterogneity test p value",
-             "Score global test p value",
-             "Mixed Model global test p value (baseline fixed)",
-             "Mixed Model global heterogeneity test p value (baseline fixed)",
-             "Mixed Model global test p value (baseline+ER fixed)",
-             "Mixed Model global heterogeneity test p value (baseline+ER fixed)",
-             "loglikelihood",
-             "AIC")
+             "Wald global heterogneity test p value")
   return(result)
 }
 
 result <-  NULL
-first.stage <- NULL
+#first.stage <- NULL
 
 for(i in 1:178){
   print(i)
   load(paste0("heter_result_",i,".Rdata"))
   result <- rbind(result,heter.result[[1]])
-  first.stage <- rbind(first.stage,heter.result[[2]])
+  #first.stage <- rbind(first.stage,heter.result[[2]])
 }
 
 tumor.characteristics <- c("ER","PR","HER2","Grade")
 generate_second_stage_parameter_names(tumor.characteristics)
 colnames(result) <- generate_second_stage_parameter_names(tumor.characteristics)
+
+
+
+
+result.temp <- result
+
+p.value.onestepmle <- result.temp[,]
 
 
 

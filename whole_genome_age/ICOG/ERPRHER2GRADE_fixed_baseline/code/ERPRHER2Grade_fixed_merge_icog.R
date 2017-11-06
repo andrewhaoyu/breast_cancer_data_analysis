@@ -5,7 +5,7 @@ idx.sex <- Files%in%Filesex
 Files <- Files[!idx.sex]
 library(gtools)
 Files <- mixedsort(Files)
-geno.file <- Files[i1]
+
 Files <- gsub("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/icogs_merged_b1_12.","",Files)
 Files <- gsub(".txt.gz","",Files)
 
@@ -128,12 +128,18 @@ for(i in 1:length(Files)){
 # save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+# icog_info <- cbind(icog_info,CHR)
+# save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+CHR <- icog_info[,11]
+icog_info <- icog_info[,1:10]
+
+
 icog_result <- data.frame(icog_info,score,infor,CHR)
 
 
+# CHR <- icog_result_baseline[,13]
 
-
-
+icog_result[,41] <- CHR
 
 
 save(icog_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result.Rdata")
