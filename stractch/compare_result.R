@@ -56,6 +56,10 @@ x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
 
 Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,
                                   missingDataAlgorithm = "EM")
+
+Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,
+                                  missingDataAlgorithm = "OneStepMLE")
+
 z.standard <- Heter.result.Icog[[12]]
 generate_first_stage_parameter_names = function(tumor_characteristics,z_standard){
   max.z_standard = apply(z_standard,2,max)
@@ -296,8 +300,9 @@ temp.result <- temp.result[-c(108:109),]
 log10.p.value.em <- -log10(p.value.em)
 log10.p.value.onestepmle <- -log10(p.value.onestepmle)
 cbind(log10.p.value.em,log10.p.value.onestepmle)
+log
 plot(log10.p.value.em,log10.p.value.onestepmle,xlab="EM algorithm -log10(p)",
-     ylab="one step mle -log10(p)",main="compare onestepmle to EM")
+     ylab="one step mle -log10(p)",main="compare onestepmle to EM",xlim=c(0,10),ylim=c(0,10))
 abline(a=0,b=1,color="red")
 
 model1 <- lm(log10.p.value.onestepmle~log10.p.value.em)
