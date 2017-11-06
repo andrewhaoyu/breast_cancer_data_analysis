@@ -1,4 +1,6 @@
 #install_github("andrewhaoyu/bc2",ref='development', args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#
+
 install_github("andrewhaoyu/bc2",ref='development')
 ###1 represent Icog
 ###2 represent Onco
@@ -8,17 +10,16 @@ rm(list=ls())
 #myarg <- commandarg[length(commandarg)]
 #myarg <- sub("-","",myarg)
 #i1 <- as.numeric(myarg)
-args = commandArgs(trailingOnly = T)
-i1 = as.numeric(args[[1]])
+i1 = 1
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+
 library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
 
-if(i1<=177){
+
   ##analysis for Icog
   data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
   data1 <- as.data.frame(data1)
@@ -27,14 +28,14 @@ if(i1<=177){
   
   x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
-  x.covar.mis1 <- data1[,c(5:14,204)]
+  x.covar.mis1 <- data1[,c(5:14)]
   
-  age <- data1[,204]
-  idx.complete <- which(age!=888)
+  
+  
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
-  colnames(x.all.mis1)[1] <- "gene"
-  y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
-  x.all.mis1 <- x.all.mis1[idx.complete,]
+  
+  
+  
   
   
   
@@ -52,6 +53,16 @@ if(i1<=177){
     saturated = NULL,
     missingTumorIndicator = NULL
   )
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   z.standard <- Heter.result.Icog[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))

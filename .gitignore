@@ -24,3 +24,5 @@ data/
 /whole_genome_age/ONCO/ERPRHER2_fixed/result/*
 /whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/*
 /whole_genome/ICOG/ERPRHER2GRADE_casecase/result/
+/known_SNPs/G_onemle/additive/result
+
