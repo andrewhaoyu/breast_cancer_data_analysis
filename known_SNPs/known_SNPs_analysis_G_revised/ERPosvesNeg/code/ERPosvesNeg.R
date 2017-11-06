@@ -55,14 +55,14 @@ if(i1<=177){
   
   x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
-  x.covar.mis1 <- data1[,c(5:14,204)]
+  x.covar.mis1 <- data1[,c(5:14)]
   
-  age <- data1[,204]
-  idx.complete <- which(age!=888)
+  
+  
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
-  y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
-  x.all.mis1 <- x.all.mis1[idx.complete,]
+  
+  
   
   Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design,baselineonly = NULL,additive = x.all.mis1[,2:nocl(x.all.mis1)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Icog[[12]]
@@ -152,12 +152,12 @@ if(i1<=177){
   
   x.test.all.mis2 <- data2[,c(27:203)]
   x.covar.mis2 <- data2[,c(5:14,204)]
-  ages <- data2[,204]
-  idx.complete <- which(ages!=888)
+  
+  
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
-  y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
-  x.all.mis2 <- x.all.mis2[idx.complete,]
+  
+  
   
   
   Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:nocl(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
@@ -275,13 +275,13 @@ if(i1<=177){
   idxi1 = which(names2=="rs554219")
   
   x.test.all.mis2 <- data2
-  x.covar.mis2 <- data2[,c(5:14,204)]
-  ages <- data2[,204]
-  idx.complete <- which(ages!=888)
+  x.covar.mis2 <- data2[,c(5:14)]
+  
+  
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
-  y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
-  x.all.mis2 <- x.all.mis2[idx.complete,]
+  
+  
   
   
   

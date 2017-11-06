@@ -418,7 +418,7 @@ if(i1<=177){
   x.test.all.mis2 <- data2
   x.covar.mis2 <- data2[,c(5:14)]
   
-  idx.complete <- which(ages!=888)
+  
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
  
