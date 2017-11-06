@@ -31,15 +31,15 @@ if(i1<=177){
   
   x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
-  x.covar.mis1 <- data1[,c(5:14,204)]
+  x.covar.mis1 <- data1[,c(5:14)]
   
-  age <- data1[,204]
-  idx.complete <- which(age!=888)
+  
+  
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
-  y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
-  x.all.mis1 <- x.all.mis1[idx.complete,]
-  Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  
+  
+  Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Icog[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
   M <- nrow(z.standard)
@@ -180,16 +180,16 @@ if(i1<=177){
                              "PR","HER2","Grade")
   
   x.test.all.mis2 <- data2[,c(27:203)]
-  x.covar.mis2 <- data2[,c(5:14,204)]
-  ages <- data2[,204]
-  idx.complete <- which(ages!=888)
+  x.covar.mis2 <- data2[,c(5:14)]
+  
+  
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
-  y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
-  x.all.mis2 <- x.all.mis2[idx.complete,]
   
   
-  Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  
+  
+  Heter.result.Onco = TwoStageModel(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,missingDataAlgorithm = "EM")
   z.standard <- Heter.result.Onco[[12]]
   M <- nrow(z.standard)
   number.of.tumor <- ncol(z.standard)
@@ -416,18 +416,16 @@ if(i1<=177){
   idxi1 = which(names2=="rs554219")
   
   x.test.all.mis2 <- data2
-  x.covar.mis2 <- data2[,c(5:14,204)]
-  ages <- data2[,204]
+  x.covar.mis2 <- data2[,c(5:14)]
+  
   idx.complete <- which(ages!=888)
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
-  y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
-  x.all.mis2 <- x.all.mis2[idx.complete,]
+ 
   
   
   
-  
-  Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+    Heter.result.Onco = TwoStageModel(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,missingDataAlgorithm = "EM")
   z.standard <- Heter.result.Onco[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
   M <- nrow(z.standard)
