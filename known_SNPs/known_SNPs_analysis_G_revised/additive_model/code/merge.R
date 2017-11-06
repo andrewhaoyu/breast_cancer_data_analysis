@@ -45,16 +45,17 @@ colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 
 x.test.all.mis1 <- data1[,c(27:203)]
 ###pc1-10 and age
-x.covar.mis1 <- data1[,c(5:14,204)]
+x.covar.mis1 <- data1[,c(5:14)]
 
-age <- data1[,204]
-idx.complete <- which(age!=888)
+
+
 x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
-colnames(x.all.mis1)[1] <- "gene"
-y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
-x.all.mis1 <- x.all.mis1[idx.complete,]
 
-Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+
+
+
+Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,
+                                  missingDataAlgorithm = "EM")
 z.standard <- Heter.result.Icog[[12]]
 generate_first_stage_parameter_names = function(tumor_characteristics,z_standard){
   max.z_standard = apply(z_standard,2,max)
@@ -215,3 +216,4 @@ colnames(result) <- full.names
 
 write.xlsx(result,file="./additive_model_G_new.xlsx",sheetName="additive_model_2nd_stage")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)
+
