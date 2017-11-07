@@ -34,6 +34,15 @@ library(data.table)
   
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   
+  Heter.result.Icog <- TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = NULL,missingDataAlgorithm = "OneStepMLE")
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   

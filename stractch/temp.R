@@ -5,11 +5,14 @@
 #                        saturated,
 #                        missingTumorIndicator){
 #                        
-i1 = 1
 library(devtools)
+#install_github("andrewhaoyu/bc2", ref='development',args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+i1 = 1
+
 install_github("andrewhaoyu/bc2",ref='development')
 library(bc2)
 library(data.table)
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -23,179 +26,184 @@ colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 
 x.test.all.mis1 <- data1[,c(27:203)]
 ###pc1-10 and age
-x.covar.mis1 <- data1[,c(5:14,204)]
+x.covar.mis1 <- data1[,c(5:14)]
 
-age <- data1[,204]
-idx.complete <- which(age!=888)
+
+
 x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
-colnames(x.all.mis1)[1] <- "gene"
-y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
-x.all.mis1 <- x.all.mis1[idx.complete,]
+
+
+y <- y.pheno.mis1
+baselineonly=NULL
+additive=x.all.mis1
+pairwise.interaction=NULL
+saturated=NULL
+missingTumorIndicator = 888
+
+missing.data.vec <- GenerateMissingPosition(y,missingTumorIndicator)
+y.pheno.complete <- y[-missing.data.vec,]
+x.all.complete <- x.all[-missing.data.vec,]
+initial.set <- InitialSetup(y.pheno.complete,
+                            baselineonly,
+                            additive,
+                            pairwise.interaction,
+                            saturated
+)
+###z standard matrix means the additive model z design matrix without baseline effect
+###z standard matrix is used to match the missing tumor characteristics to the complete subtypes
+
+delta0 = initial.set$delta0
+z.all = initial.set$z.all
+z.standard = initial.set$z.standard
+z.deisign.baselineonly = initial.set$z.design.baseline.only
+z.design.additive = initial.set$z.design.additive
+z.design.pairwise.interaction = initial.set$z.design.pairwise.interaction
+z.design.saturated = initial.set$z.design.saturated
+x.all <- as.matrix(GenerateXAll(y,baselineonly,additive,pairwise.interaction,saturated))
+covar.names <- initial.set$covar.names
+x.all.complete <- x.all[-missing.data.vec,]
+
+
+prob.fit.result <- ProbFitting(delta0,y.pheno.complete,x.all.complete,z.standard,z.all,missingTumorIndicator=NULL)
+y.fit.complete <- prob.fit.result[[1]]
+M <- as.integer(nrow(z.standard))
+p.main <- ncol(z.standard)+1
+
+tol <- as.numeric(1e-04)
+
+
+delta_old <- delta0
+
+N <- as.integer(nrow(x.all.complete))
+
+M <- as.integer(nrow(z.standard))
+
+NCOV   <- as.integer(ncol(x.all.complete))
+NM     <- N*M
+nparm  <- as.integer(length(delta0))
+deltai <- as.numeric(delta0)
+
+NITER  <- as.integer(500)
+Y <- as.numeric(as.vector(y.fit.complete))
+X <- as.numeric(as.vector(x.all.complete))
+ZallVec = as.numeric(as.vector(z.all))
+Znr = as.integer(nrow(z.all))
+Znc = as.integer(ncol(z.all))
+debug     <- as.integer(1)
+ret_rc    <- as.integer(1)
+ret_delta <- as.numeric(rep(-9999, nparm))
+ret_info <- as.numeric(rep(-9999,nparm^2))
+ret_p <- as.numeric(rep(0,NM))
+ret_lxx <- as.numeric(rep(0,NM))
+loglikelihood <- as.numeric(-1);
 
 
 
+temp <- .C("Mvpoly_complete",deltai, nparm, Y=Y, X, ZallVec,Znr,Znc, N, M, NCOV, NITER, tol,
+           debug, ret_rc=ret_rc, ret_delta=ret_delta,ret_info=ret_info,ret_p=ret_p,loglikelihood = loglikelihood)
+
+
+delta0 <- temp$ret_delta
+
+
+prob.fit.result <- ProbFitting(delta0,y,x.all,z.standard,z.all,missingTumorIndicator)
+y.fit <- prob.fit.result[[1]]
+
+missing.vec <- as.numeric(as.vector(prob.fit.result[[2]]))
+missing.mat <- prob.fit.result[[3]]
+missing.mat.vec <- as.numeric(as.vector(missing.mat))
+missing.number <- as.integer(length(missing.vec))
+complete.vec <- prob.fit.result[[4]]
+
+N <- as.integer(nrow(x.all))
+NM     <- N*M
+
+deltai <- as.numeric(delta0)
 
 
 
+Y <- as.numeric(as.vector(y.fit))
+X <- as.numeric(as.vector(x.all))
+ret_p <- as.numeric(rep(0,NM))
+ret_lxx <- as.numeric(rep(0,NM))
 
 
 
+temp <- .C("OneStepMLE",deltai, nparm, Y=Y, X, ZallVec,Znr,Znc, N, M, NCOV, NITER, tol,
+           debug, ret_rc=ret_rc, ret_delta=ret_delta,ret_info=ret_info,ret_p=ret_p,missing.vec,
+           missing.mat.vec,missing.number,loglikelihood = loglikelihood)
 
 
+info <- matrix(unlist(temp$ret_info),nparm,nparm)
+result <- list(temp$ret_delta,info,
+               temp$ret_p)
+y_em <- matrix(unlist(temp$Y),N,M)
 
+# infor_mis_c <- infor_mis(y_em,x.all,z.all)
+#infor_obs <- result[[2]]-infor_mis_c
+delta=result[[1]]
+infor_obs=result[[2]]
+p=result[[3]]
+loglikelihood = temp$loglikelihood
+AIC = 2*nparm - 2*loglikelihood
 
+OneStep.result <- list(delta=delta,
+                       infor_obs=infor_obs,
+                       p=p,y_em=y_em,
+                       M=M,
+                       NumberofTumor=ncol(z.standard),
+                       loglikelihood = loglikelihood,
+                       AIC = AIC
+)
 
-
-missingTumorIndicator <- 888
-y.pheno.complete <- GenerateCompleteYPheno(y.pheno.mis1,missingTumorIndicator)
-x.all.complete1 <- GenerateCompleteXCovariates(y.pheno.mis1,x.all.mis1,missingTumorIndicator)
-  
-  y <- y.pheno.complete
-  baselineonly <- NULL
-  additive <- x.all.complete1
-  pairwise.interaction <- NULL
-  saturated <- NULL
-  
-  
-  
-  tumor.number <- ncol(y)-1
-  y.case.control <- y[,1]
-  y.tumor <- y[,2:(tumor.number+1)]
-  y.pheno.complete <- GenerateCompleteYPheno(y,missingTumorIndicator)
-  
-  y <- as.matrix(y)
-  tumor.number <- ncol(y)-1
-  y.case.control <- y[,1]
-  y.tumor <- y[,2:(tumor.number+1)]
-  y.pheno.complete <- y
-  freq.subtypes <- GenerateFreqTable(y.pheno.complete)
-  if(CheckControlTumor(y.case.control,y.tumor)==1){
-    return(print("ERROR:The tumor characteristics for control subtypes should put as NA"))
-  }
-  tumor.names <- colnames(y.tumor)
-  if(is.null(tumor.names)){
-    tumor.names <- paste0(c(1:tumor.number))
-  }
-  tumor.character.cat = GenerateTumorCharacterCat(y.pheno.complete)
-  z.design.baselineonly <- GenerateZDesignBaselineonly(tumor.character.cat,
-                                                       tumor.number,
-                                                       tumor.names,
-                                                       freq.subtypes)
-  z.design.additive <- GenerateZDesignAdditive(tumor.character.cat,
-                                               tumor.number,
-                                               tumor.names,
-                                               freq.subtypes)
-  z.design.pairwise.interaction <- GenerateZDesignPairwiseInteraction(tumor.character.cat,
-                                                                      tumor.number,
-                                                                      tumor.names,
-                                                                      freq.subtypes)
-  z.design.saturated <- GenerateZDesignSaturated(tumor.character.cat,
-                                                 tumor.number,
-                                                 tumor.names,
-                                                 freq.subtypes)
-  z.all <- ZDesigntoZall(baselineonly,
+covariance.delta <- solve(OneStep.result$infor_obs)
+loglikelihood <- OneStep.result$loglikelihood
+AIC <- OneStep.result$AIC
+second.stage.mat <-
+  GenerateSecondStageMat(baselineonly,
                          additive,
                          pairwise.interaction,
                          saturated,
-                         z.design.baselineonly,
+                         M,
+                         full.second.stage.names,
+                         covar.names,
+                         delta,
                          z.design.additive,
                          z.design.pairwise.interaction,
                          z.design.saturated)
-  delta0 <-StartValueFunction(freq.subtypes,y.case.control,z.all)
-  #x.all has no intercept yet
-  #we will add the intercept in C code
-  x.all <- GenerateXAll(y,baselineonly,additive,pairwise.interaction,saturated)
-  ###z standard matrix means the additive model z design matrix without baseline effect
-  ###z standard matrix is used to match the missing tumor characteristics to the complete subtypes
-  
-  z.standard <- z.design.additive[,-1]
-  
-  tol <- as.numeric(1e-04)
-  
-  #delta_old <- rep(0,length(delta0))
-  delta_old <- delta0
-  ##EM algorithm
-  ##first E step
-  #print(paste0("Begin EM algorithm"))
-  #print(paste0("EM round: 1"))
-  y.fit <- ProbFitting(delta0,y,x.all,z.standard,z.all,missingTumorIndicator=NULL)[[1]]
-  
-  # sof <- "try5.so"
-  # dyn.load(sof)
-  
-  N <- as.integer(nrow(x.all))
-  #x <- cbind(1,x)
-  #p <- ncol(x)
-  M <- as.integer(nrow(z.standard))
-  
-  NCOV   <- as.integer(ncol(x.all))
-  NM     <- N*M
-  nparm  <- as.integer(length(delta0))
-  deltai <- as.numeric(delta0)
-  
-  NITER  <- as.integer(500)
-  Y <- as.numeric(as.vector(y.fit))
-  X <- as.numeric(as.vector(x.all))
-  ZallVec = as.numeric(as.vector(z.all))
-  Znr = as.integer(nrow(z.all))
-  Znc = as.integer(ncol(z.all))
-  debug     <- as.integer(1)
-  ret_rc    <- as.integer(1)
-  ret_delta <- as.numeric(rep(-9999, nparm))
-  ret_info <- as.numeric(rep(-9999,nparm^2))
-  ret_p <- as.numeric(rep(0,NM))
-  ret_Inv_info_vec <- as.numeric(as.vector(matrix(0,Znc,Znc)))
-  YminusP <- Y
-  W_obs <- as.numeric(rep(0,N*M*M))
-  WXZ_vec <- as.numeric(rep(0,N*M*Znc))
-  WX_vec <- as.numeric(rep(0,N*M*Znr))
-  
-  
-  temp <- .C("CompleteCasesScoreTestSupport",
-             deltai,
-             nparm,
-             Y=Y,
-             X,
-             ZallVec,
-             Znr,Znc, N, M, NCOV, NITER,
-             tol,
-             debug,
-             ret_rc=ret_rc,
-             ret_delta=ret_delta,
-             ret_info=ret_info,
-             ret_p=ret_p,
-             ret_Inv_info_vec=ret_Inv_info_vec,
-             YminusP=YminusP,
-             W_obs = W_obs,
-             WXZ_vec = WXZ_vec,
-             WX_vec = WX_vec)
-  
-  inv_info_vec <- temp$ret_Inv_info_vec
-  YminusP <- temp$YminusP
-  W_obs <- temp$W_obs
-  WXZ_vec <- temp$WXZ_vec
-  WX_vec <- temp$WX_vec
-  
-  
-  result <- list(inv_info_vec=inv_info_vec,YminusP=YminusP,W_obs=W_obs,WXZ_vec = WXZ_vec,zc=z.all)
-  
-  
-  # score_support_result <- score_support(pxx,x.all,baselineonly,z.all,z.standard,y_em)
-  #score_test_mis <- score_test_mis(y_em,baselineonly,score_support_result)
-  #return(list(score_c=score_test_mis$score_c,infor_c = score_test_mis$infor_c))
-  
-  result[[6]] <- z.design.baselineonly
-  result[[7]] <- z.design.additive
-  result[[8]] <- z.design.pairwise.interaction
-  result[[9]] <- z.design.saturated
-  result[[10]] <- z.standard
+##take out the intercept from second stage parameters
+
+takeout.intercept.result <- TakeoutIntercept(delta,covariance.delta,
+                                             M,
+                                             tumor.names,
+                                             z.all,covar.names)
+beta <- takeout.intercept.result$beta
+covariance.beta <- takeout.intercept.result$covariance.beta
+delta.no.inter <- takeout.intercept.result$delta.no.inter
+covariance.delta.no.inter <-
+  takeout.intercept.result$covariance.delta.no.inter
+beta.no.inter <- takeout.intercept.result$beta.no.inter
+covariance.beta.no.inter <- takeout.intercept.result$covariance.beta.no.inter
 
 
 
+second.stage.test <- SecondStageTest(delta.no.inter,covariance.delta.no.inter,M,second.stage.mat)
+global.test <- GenerateGlobalTest(delta.no.inter,
+                                  covariance.delta.no.inter,
+                                  M,
+                                  second.stage.mat)
+##beta represent first stage parameters
 
+subtypes.names <- GenerateSubtypesName(z.design.additive,M,
+                                       tumor.names)
+first.stage.mat <- GenerateFirstStageMat(beta,
+                                         covar.names,
+                                         subtypes.names)
 
-
-
+first.stage.test <- FirstStageTest(beta.no.inter,
+                                   covariance.beta.no.inter,
+                                   M,
+                                   first.stage.mat)
 
 
 

@@ -79,7 +79,7 @@ for(i in 1:length(Files)){
   
   load(paste0("ERPRHER2Grade_fixed_onco",idx[i]))
   
-  #temp <- length(result[[1]])
+  temp <- length(result[[1]])
   #print(paste0("temp:",temp))
   rs_id[num.total+(1:temp)] <- result[[1]]
   score[num.total+(1:temp),] <- result[[2]]
@@ -131,7 +131,17 @@ for(i in 1:length(Files)){
 #   
 # }
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+# 
+# 
+# onco_info <- onco_result[,1:10]
+# CHR <- onco_result[,41]
+# onco_info <- cbind(onco_info,CHR)
+# save(onco_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+CHR <- onco_info[,11]
+onco_info <- onco_info[,1:10]
 
 
 onco_result <- data.frame(onco_info,score,infor,CHR)
