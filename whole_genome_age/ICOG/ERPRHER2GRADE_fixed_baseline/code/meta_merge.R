@@ -11,7 +11,7 @@ meta_result_shared_1p_onco_only <- onco_result_only_shared_1p[,c(1:10,(ncol(icog
 
 meta_result_shared_1p_no_pvalue <- rbind(meta_result_shared_1p,meta_result_shared_1p_icog_only,meta_result_shared_1p_onco_only)
 
- meta_result_shared_1p_no_pvalue <-meta_result_shared_1p_final
+
  save(meta_result_shared_1p_no_pvalue,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_no_pvalue.Rdata")
  
  

@@ -126,6 +126,7 @@ for(i in 1:length(Files)){
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
 # icog_info <- cbind(icog_info,CHR)
 # save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+all.equal(icog_info$rs_id,rs_id)
 CHR <- icog_info[,11]
 icog_info <- icog_info[,1:10]
 

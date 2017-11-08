@@ -140,6 +140,7 @@ for(i in 1:length(Files)){
 # save(onco_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+all.equal(onco_info$rs_id,rs_id)
 CHR <- onco_info[,11]
 onco_info <- onco_info[,1:10]
 
