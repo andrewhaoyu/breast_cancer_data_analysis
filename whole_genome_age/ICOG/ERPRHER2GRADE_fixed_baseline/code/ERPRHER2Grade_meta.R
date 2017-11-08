@@ -35,6 +35,10 @@ icog_onco_score_infor_onco_only <- cbind(icog_score_infor_onco_only_sudo,onco_sc
 
 icog_onco_score_infor_final <- rbind(icog_onco_score_infor,icog_onco_score_infor_icog_only,icog_onco_score_infor_onco_only)
 icog_onco_score_infor <- icog_onco_score_infor_final
+##debug one snp. put the p value as 1
+
+
+
 # meta_result_shared_1p_no_pvalue <- rbind(meta_result_shared_1p,meta_result_shared_1p_icog_only,meta_result_shared_1p_onco_only)
 
 # meta_result_shared_1p_no_pvalue <-meta_result_shared_1p_final 
@@ -49,6 +53,15 @@ gc()
 # library(doParallel)
 # no.cores <- 5
 n <- nrow(icog_onco_score_infor)
+debug.one.line <- c(rep(0,second.num),as.vector(diag(second.num)),rep(0,second.num),as.vector(diag(second.num)))
+debug.idx <- c(9649548,9650051)
+
+for(k in 1:length(debug.idx)){
+print(k)
+    icog_onco_score_infor[debug.idx[k],] <- debug.one.line  
+}
+
+
 #icog_onco_score_infor_temp <- icog_onco_score_infor[1:10^5,]
 #n <- nrow(icog_onco_score_infor_temp)
 #pvalue <- rep(0,n)
@@ -68,9 +81,9 @@ end <- start.end[2]
 pvalue_sub <- rep(0,end-start+1)
 temp = 1
 for(j in start:end){
-  #print(j)
+  print(j)
+  
   icog_onco_score_infor_oneline <- icog_onco_score_infor[j,]
- 
   pvalue_sub[temp] <- MetaPfunction(icog_onco_score_infor_oneline,second.num)
   temp = temp+1
 }
