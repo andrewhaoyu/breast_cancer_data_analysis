@@ -1,8 +1,10 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/icog_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_casecase/result/onco_result_shared_1p.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/icog_result_shared_1p.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_shared_1p.Rdata")
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/icog_result_only_shared_1p.Rdata")
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_only_shared_1p.Rdata")
 
 icog_result_shared_1p_casecase <- icog_result_shared_1p
 onco_result_shared_1p_casecase <- onco_result_shared_1p
@@ -11,8 +13,9 @@ onco_result_shared_1p_casecase <- onco_result_shared_1p
 
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_shared_1p.Rdata")
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_shared_1p.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_shared_1p.Rdata")
 
 
 
@@ -25,11 +28,11 @@ second.num <- 5
 icog_score_infor <- icog_result_shared_1p[,11:(11+second.num+second.num^2-1)]
 onco_score_infor <- onco_result_shared_1p[,11:(11+second.num+second.num^2-1)]
 
-icog_score_infor <- icog_score_infor[,c(1,6)]
-onco_score_infor <- onco_score_infor[,c(1,6)]
+icog_score_infor <- icog_score_infor[,c(1,2,6,7,11,12)]
+onco_score_infor <- onco_score_infor[,c(1,2,6,7,11,12)]
 
 
-casecase.num <- 4
+casecase.num <- 3
 icog_score_infor_casecase <- icog_result_shared_1p_casecase[,11:(11+casecase.num+casecase.num^2-1)]
 onco_score_infor_casecase <- onco_result_shared_1p_casecase[,11:(11+casecase.num+casecase.num^2-1)]
 
@@ -55,8 +58,8 @@ size <- 1000
 #n <- nrow(icog_onco_score_infor)
 
 
-fixed.second.num <- 1
-random.second.num <- 4
+fixed.second.num <- 2
+random.second.num <- 3
 #registerDoParallel(no.cores)
 #pvalue <- rep(0,nrow(icog_onco_score_infor))
 
@@ -97,7 +100,7 @@ random.second.num <- 4
 
 #meta_result_shared_1p <- cbind(meta_result_shared_1p,pvalue)
 
-save(pvalue_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/p_value_sub",i1,".Rdata"))
+save(pvalue_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/p_value_sub",i1,".Rdata"))
 
 
 

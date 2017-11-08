@@ -134,9 +134,9 @@ shared_rs_id_onco_only = intersect(data_onco_only$SNP.ONCO,onco_result$rs_id)
 
 
 
-idx.onco_only_shared = which((onco_result$rs_id%in%shared_rs_id_onco_only)==T)
+idx.onco.only_shared = which((onco_result$rs_id%in%shared_rs_id_onco_only)==T)
 onco_result_only_shared = onco_result[idx.onco.only_shared,]
-idx.onco.only_match_shared = match(shared_rs_id_onco_only,onco_result_only$rs_id)
+idx.onco.only_match_shared = match(shared_rs_id_onco_only,onco_result_only_shared$rs_id)
 onco_result_only_shared = onco_result_only_shared[idx.onco.only_match_shared,]
 
 ####take out data_c
