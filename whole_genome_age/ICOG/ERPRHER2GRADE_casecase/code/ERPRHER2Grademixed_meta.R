@@ -12,6 +12,10 @@ onco_result_shared_1p_casecase <- onco_result_shared_1p
 icog_result_only_shared_1p_casecase <- icog_result_only_shared_1p
 onco_result_only_shared_1p_casecase <- onco_result_only_shared_1p
 
+
+icog_score_infor_casecase <- icog_result_shared_1p_casecase[,11:(11+second.num+second.num^2-1)]
+onco_score_infor_casecase <- onco_result_shared_1p_casecase[,11:(11+second.num+second.num^2-1)]
+
 icog_score_infor_icog_only_casecase <- icog_result_only_shared_1p_casecase[,11:(11+second.num+second.num^2-1)]
 
 onco_score_infor_icog_only_sudo_casecase <- icog_score_infor_icog_only_casecase
@@ -22,7 +26,7 @@ icog_score_infor_onco_only_sudo_casecase[] <- 0
 
 
 
-icog_onco_score_infor_casecase <- cbind(icog_score_infor_case,onco_score_infor_case)
+icog_onco_score_infor_casecase <- cbind(icog_score_infor_casecase,onco_score_infor_casecase)
 icog_onco_score_infor_icog_only_casecase <- cbind(icog_score_infor_icog_only_casecase,onco_score_infor_icog_only_sudo_casecase)
 icog_onco_score_infor_onco_only_casecase <- cbind(icog_score_infor_onco_only_sudo_casecase,onco_score_infor_onco_only_casecase)
 
@@ -32,7 +36,10 @@ icog_onco_score_infor_casecase <- icog_onco_score_infor_final_casecase
 n <- nrow(icog_onco_score_infor_casecase)
 debug.one.line <- c(rep(0,second.num),as.vector(diag(second.num)),rep(0,second.num),as.vector(diag(second.num)))
 debug.idx <- c(9649548,9650051)
-
+for(k in 1:length(debug.idx)){
+  print(k)
+  icog_onco_score_infor_casecase[debug.idx[k],] <- debug.one.line  
+}
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_shared_1p.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_shared_1p.Rdata")
@@ -81,12 +88,17 @@ icog_onco_score_infor_icog_only <- cbind(icog_score_infor_icog_only,onco_score_i
 icog_onco_score_infor_onco_only <- cbind(icog_score_infor_onco_only_sudo,onco_score_infor_onco_only)
 
 
-
+second.num <- 2
 
 n <- nrow(icog_onco_score_infor_casecase)
 debug.one.line <- c(rep(0,second.num),as.vector(diag(second.num)),rep(0,second.num),as.vector(diag(second.num)))
 debug.idx <- c(9649548,9650051)
 
+
+for(k in 1:length(debug.idx)){
+  print(k)
+  icog_onco_score_infor[debug.idx[k],] <- debug.one.line  
+}
 
 
 
