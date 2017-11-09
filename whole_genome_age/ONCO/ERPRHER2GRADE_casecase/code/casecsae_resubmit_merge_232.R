@@ -1,6 +1,6 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 num.total <- 0
-for(i1 in 1){
+for(i1 in 232){
   for(i2 in 1:1000){
     print(i2)
     load(paste0("./whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco_resubmit",i1,"_",i2))
@@ -14,7 +14,7 @@ score <- matrix(0,num.total,3)
 infor <- matrix(0,num.total,9)
 freq <- rep(0,num.total)
 num.total <- 0
-for(i1 in 1){
+for(i1 in 232){
   for(i2 in 1:1000){
     print(i2)
     load(paste0("./whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco_resubmit",i1,"_",i2))

@@ -95,6 +95,8 @@ library(doParallel)
 
 inner.size <- 2
 
+try <- fread(geno.file,header = F)
+
 registerDoParallel(no.cores)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
