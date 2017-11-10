@@ -86,11 +86,12 @@ icog_score_infor_onco_only_sudo[] <- 0
 icog_onco_score_infor <- cbind(icog_score_infor,onco_score_infor)
 icog_onco_score_infor_icog_only <- cbind(icog_score_infor_icog_only,onco_score_infor_icog_only_sudo)
 icog_onco_score_infor_onco_only <- cbind(icog_score_infor_onco_only_sudo,onco_score_infor_onco_only)
-
+icog_onco_score_infor_final <- rbind(icog_onco_score_infor,icog_onco_score_infor_icog_only,icog_onco_score_infor_onco_only)
+icog_onco_score_infor <- icog_onco_score_infor_final
 
 second.num <- 2
 
-n <- nrow(icog_onco_score_infor_casecase)
+n <- nrow(icog_onco_score_infor)
 debug.one.line <- c(rep(0,second.num),as.vector(diag(second.num)),rep(0,second.num),as.vector(diag(second.num)))
 debug.idx <- c(9649548,9650051)
 
