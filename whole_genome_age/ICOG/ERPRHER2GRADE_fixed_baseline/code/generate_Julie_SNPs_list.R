@@ -10,12 +10,13 @@ idx <- which((meta_result_shared_1p$position%in%new_filter$position)&
 
 Julie_snp <- meta_result_shared_1p[idx,]
 
+save(Julie_snp,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_snp_name_match.Rdata"))
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 snp.icogs.extract.id <- Julie_snp$SNP.ICOGS
 write.table(snp.icogs.extract.id,file = paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_id_icog_Julie.txt"),quote = F,row.names=F)
 snp.onco.extract.id <- Julie_snp$SNP.ONCO
-write.table(snp.icogs.extract.id,file = paste0("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_id_onco_Julie.txt"),quote = F,row.names=F)
+write.table(snp.onco.extract.id,file = paste0("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_id_onco_Julie.txt"),quote = F,row.names=F)
 
 
 
