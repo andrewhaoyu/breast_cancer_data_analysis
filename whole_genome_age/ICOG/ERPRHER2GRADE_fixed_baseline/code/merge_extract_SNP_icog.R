@@ -2,7 +2,7 @@
 ##########extract list was generated after we filter out all the SNPs with 1M around the known SNPs region###
 ##########all the SNPs with pvalue <= 5E-06 was token out
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
@@ -18,8 +18,8 @@ colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 #x.test.all.mis1 <- data1[,c(27:206)]
 SG_ID <- data1$SG_ID
 x.covar.mis1 <- data1[,c(5:14,204)]
-idx.fil <- Icog.order[,1]%in%pheno$SG_ID
-idx.match <- match(pheno$SG_ID,Icog.order[idx.fil,1])
+idx.fil <- Icog.order[,1]%in%SG_ID
+idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
 
@@ -36,7 +36,7 @@ total <- 0
 for(i in 1:564){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_Icog",i,".txt"
+  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2_extract",i,".txt"
 )
   num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
   
@@ -83,8 +83,30 @@ for(i in 1:564){
 snpid.result <- snpid.result[1:total]
 snpvalue.result <- snpvalue.result[,1:total]
 
+
+
+
+########## five snps only exists in ONCO array
+ 
+extract.list.shared <- extract.list[1:total,]
+
+save(extract.list.shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list_shared.Rdata")
+extract.list.onco.only <- extract.list[(total+1):1799,]
+save(extract.list.onco.only,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list_onco_only.Rdata")
+
+
+##########
+idx.match <- match(extract.list.shared$SNP.ICOGS,snpid.result)
+snpid.result <- snpid.result[idx.match]
+all.equal(snpid.result,extract.list.shared$SNP.ICOGS)
+snpvalue.result <- snpvalue.result[,idx.match]
 extract.result <- list(snpid.result,snpvalue.result)
-save(extract.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_result.Rdata")
+colnames(snpvalue.result) <- snpid.result
+
+
+
+extract.result <- list(snpid.result,snpvalue.result)
+save(extract.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
 
 
 
