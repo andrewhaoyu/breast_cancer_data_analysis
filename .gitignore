@@ -25,7 +25,7 @@ data/
 /whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/*
 /whole_genome/ICOG/ERPRHER2GRADE_casecase/result/
 /known_SNPs/G_onemle/additive/result
-/breast_cancer_discovery_paper
 /whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/
-
+/breast_cancer_paper_writing
+/breast_cancer_data_analysis/discovery_SNP/result
 

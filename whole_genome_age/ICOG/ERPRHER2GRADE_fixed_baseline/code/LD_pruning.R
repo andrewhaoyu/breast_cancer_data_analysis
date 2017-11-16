@@ -31,6 +31,7 @@ x.test.Julie.control <- x.test.Julie[idx.control,]
 idx.julie.ld.flag <- NULL
 
 
+
 idx.known.ld.flag <- NULL
 
 for(i in 1:ncol(extract.result.onco.control)){
@@ -59,6 +60,9 @@ for(i in 1:ncol(extract.result.onco.control)){
 
 
 
+
+
+
 # idx.extract.id <- c(idx.known.ld.flag,idx.julie.ld.flag)
 # idx.extract.id <- unique(idx.extract.id)
 
@@ -67,14 +71,18 @@ extract.list.ld <- extract.list[idx.known.ld.flag,]
 
 save(extract.list.ld,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
 
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
 
-
+save(idx.known.ld.flag,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/idx.known.ld.flag")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/idx.known.ld.flag")
 
 
 
 LD.matrix <- cor(extract.result.onco.control)^2
 
-save(LD.matrix,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD.matrx.Rdata")
+#save(LD.matrix,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD.matrx.Rdata")
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD.matrx.Rdata")
 
 
 
@@ -89,9 +97,10 @@ LD_pruning = function(sig_SNPs,LD2){
     filter_result = rbind(filter_result,sig_SNPs_temp[idx,])
     LD2.single = LD2.temp[idx,]
     idx.cut = which( LD2.single>=0.1)
-    position.range <- 10^6
+    position.range <- 500*10^3
     filter_result_position = sig_SNPs_temp$position[idx]
-    idx.cut2 <- which((sig_SNPs_temp$position>=filter_result_position-position.range)&(sig_SNPs_temp$position<=filter_result_position+position.range))
+    filter_CHR = sig_SNPs_temp$CHR[idx]
+    idx.cut2 <- which((sig_SNPs_temp$position>=filter_result_position-position.range)&(sig_SNPs_temp$position<=filter_result_position+position.range)&(sig_SNPs_temp$CHR==filter_CHR ))
     idx.cut <- c(idx.cut,idx.cut2)
     idx.cut <- unique(idx.cut)
     LD2.temp = LD2.temp[-idx.cut,-idx.cut]
@@ -116,9 +125,16 @@ extract.list <- extract.list[-idx.known.ld.flag,]
 
 
 
-extract.list <- LD_pruning(extract.list,LD.matrix)
 
-save(extract.list,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
+
+
+
+
+extract.list.ld.pruning.result <- LD_pruning(extract.list,LD.matrix)
+
+save(extract.list.ld.pruning.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
+
+write.csv(extract.list.ld.pruning.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.csv",quote=F)
 
 
 
