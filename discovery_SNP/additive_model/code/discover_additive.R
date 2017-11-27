@@ -23,8 +23,8 @@ discovery.snp.icog <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/d
 onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
 onco.julie <- onco.julie[,-1]
 discovery.snp.onco <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
-x.test.all.mis1 <- cbind(icog.julie,discovery.snp.icog)
-x.test.all.mis2 <- cbind(onco.julie,discovery.snp.onco)
+x.test.all.mis1 <- as.data.frame(cbind(icog.julie,discovery.snp.icog))
+x.test.all.mis2 <- as.data.frame(cbind(onco.julie,discovery.snp.onco))
 
 
 
