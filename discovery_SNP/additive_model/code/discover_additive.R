@@ -28,7 +28,7 @@ library(CompQuadForm)
 library(bc2)
 library(data.table)
 
-if(i1<=29){
+if(i1<=28){
   ##analysis for Icog
   data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
   data1 <- as.data.frame(data1)
