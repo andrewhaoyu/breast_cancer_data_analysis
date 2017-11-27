@@ -410,7 +410,7 @@ if(i1<=29){
   
   heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,test.result.second.mixed.ER,loglikelihood = loglikelihood,AIC=AIC),
                        data.frame(test.result.first.wald))
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./discovery_SNP/additive_model/result/heter_result_",i1,".Rdata"))
   
   
   
@@ -640,7 +640,7 @@ if(i1<=29){
   heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,test.result.second.mixed.ER,loglikelihood = loglikelihood,AIC=AIC),
                        data.frame(test.result.first.wald))
   
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./discovery_SNP/additive_model/result/heter_result_",i1,".Rdata"))
   
   
   
