@@ -130,7 +130,7 @@ write.csv(extract.list.ld.pruning.result,file="/spin1/users/zhangh24/breast_canc
 
 
 
-
+#extract.list.ld.pruning.result <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/LD_pruning_casecase.csv")
 
 
 
