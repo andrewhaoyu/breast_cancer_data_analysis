@@ -12,6 +12,11 @@ i1 = as.numeric(args[[1]])
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
+library(readr)
+library(devtools)
+library(CompQuadForm)
+library(bc2)
+library(data.table)
 icog.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
 icog.julie <- icog.julie[,-1]
 discovery.snp.icog <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
@@ -22,11 +27,7 @@ x.test.all.mis1 <- cbind(icog.julie,discovery.snp.icog)
 x.test.all.mis2 <- cbind(onco.julie,discovery.snp.onco)
 
 
-library(readr)
-library(devtools)
-library(CompQuadForm)
-library(bc2)
-library(data.table)
+
 
 if(i1<=28){
   ##analysis for Icog
