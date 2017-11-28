@@ -214,6 +214,6 @@ colnames(result) <- full.names
 
 #result <- data.frame(result)
 
-write.xlsx(result,file="./additive_model_G.xlsx",sheetName="additive_model_2nd_stage")
+write.xlsx(result,file="./additive_model_G_age.xlsx",sheetName="additive_model_2nd_stage_age")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)
 

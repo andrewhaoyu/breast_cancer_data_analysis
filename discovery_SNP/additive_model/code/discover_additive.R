@@ -44,7 +44,7 @@ if(i1<=28){
   #x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
   x.covar.mis1 <- data1[,c(5:14)]
-  
+   
   
   
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
@@ -436,19 +436,13 @@ if(i1<=28){
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   colnames(y.pheno.mis2) = c("Behaviour","ER",
                              "PR","HER2","Grade")
-  idxi1 = 30
+  idxi1 = 29
   
-  x.test.all.mis2 <- data2
+  #x.test.all.mis2 <- data2
   x.covar.mis2 <- data2[,c(5:14)]
   
   
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
-  ages <- data2[,204]
-  idx.complete <- which(ages!=888)
-  
-  y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
-  x.all.mis2 <- x.all.mis2[idx.complete,]
-  
   colnames(x.all.mis2)[1] = "gene"
   
   
