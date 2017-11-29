@@ -445,6 +445,11 @@ if(i1<=28){
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
   
+  ages <- data2[,204]
+  idx.complete <- which(ages!=888)
+  
+  y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
+  x.all.mis2 <- x.all.mis2[idx.complete,]
   
   
   
