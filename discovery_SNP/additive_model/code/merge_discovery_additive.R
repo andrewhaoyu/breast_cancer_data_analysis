@@ -200,7 +200,7 @@ result <- data.frame(result[1:10],pvalue,result[,11:12])
 colnames(result) <- full.names
 
 
-
+result <- result[,-c(12,14,15:16,17:20,22,24)]
 
 
 

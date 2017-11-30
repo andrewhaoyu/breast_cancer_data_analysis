@@ -465,15 +465,7 @@ if(i1<=28){
   beta.sigma.onco <- z.additive.design%*%sigma.log.odds.onco%*%t(z.additive.design)
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
-  
-  M <- nrow(z.standard)
-  number.of.tumor <- ncol(z.standard)
-  log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
-  sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
-  beta.onco <- z.additive.design%*%log.odds.onco
-  beta.sigma.onco <- z.additive.design%*%sigma.log.odds.onco%*%t(z.additive.design)
-  loglikelihood.onco <- Heter.result.Onco[[8]]
-  
+
   
   score.test.support.onco <- ScoreTestSupport(
     y.pheno.mis2,

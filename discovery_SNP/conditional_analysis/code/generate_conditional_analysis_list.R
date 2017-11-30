@@ -89,20 +89,14 @@ fine_mapping_snp_names <- meta_result_shared_1p[idx.fine,]
 known.flag <- NULL
 
 
-for(i in 1:nrow(fine_mapping)){
-  print(i)
-  chr_temp <- CHR[i]
-  start_temp <- start[i]
-  end_temp <- end[i]
-  idx <- which(meta_result_shared_1p$CHR==chr_temp&meta_result_shared_1p$position>=start_temp&
-                 meta_result_shared_1p$position<=end_temp)
-  temp.known.flag <- rep(i,length(idx))
-  idx_cut <- c(idx_cut,idx)
-  known.flag <- c(known.flag,temp.known.flag)
-}
+library(bc2)
+idx.temp <- get_fine_mapping_id(meta_result_shared_1p,fine_mapping)
 
+all.known.region.snps <- meta_result_shared_1p[idx_cut,]
 
-all.known.region.snps <- meta_result_shared_1p[known.flag,]
+library(dplyr)
+
+ test <- all.known.region.snps%>%filter(p.value <= 1e-04)
 
 
 
