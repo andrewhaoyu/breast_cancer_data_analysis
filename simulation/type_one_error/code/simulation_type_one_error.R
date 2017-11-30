@@ -8,7 +8,7 @@ i1 <- as.numeric(args[[1]])
 
 set.seed(i1)
 
-n.simulation <- 100
+n.simulation <- 1000
 p.value.simulation <- matrix(0,n.simulation,6)
 for(i.simu in 1:n.simulation){
   a <- c(0,1)
@@ -44,7 +44,7 @@ for(i.simu in 1:n.simulation){
   K <- ncol(z_design)
   
   # z <- kronecker(diag(2),z)
-  theta_intercept <- runif(M,-3,-1)
+  theta_intercept <- rep(-2,M)
   theta_test <- rep(0,K)
   theta_covar <- rep(0.2,K*(p_col-1))
   
@@ -56,7 +56,7 @@ for(i.simu in 1:n.simulation){
   beta <- matrix(beta,nrow=p_col+1)
   #alpha <- c(0,rep(1,length(beta)-1))
   
-  n <- 100000
+  n <- 120000
   x <-  matrix(rnorm(p_col*n),nrow = n)
   x_test <- x[,1]
   x_covar <- x[,2:ncol(x)]
