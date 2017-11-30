@@ -7,8 +7,8 @@ args <- commandArgs(trailingOnly = T)
 i1 <- as.numeric(args[[1]])
 
 set.seed(i1)
-time <- proc.time()
-n.simulation <- 10
+
+n.simulation <- 100
 p.value.simulation <- matrix(0,n.simulation,6)
 for(i.simu in 1:n.simulation){
   a <- c(0,1)
@@ -108,7 +108,7 @@ for(i.simu in 1:n.simulation){
   p.value.simulation[i.simu,] <- p.value
 }
 
-
+save(p.value.simulation,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result/pvalue",i1,"Rdata"))
 
 
 # #result <- Mvpoly(delta0,y,x,z_design)
