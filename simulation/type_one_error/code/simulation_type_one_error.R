@@ -108,7 +108,7 @@ for(i.simu in 1:n.simulation){
   p.value.simulation[i.simu,] <- p.value
 }
 
-save(p.value.simulation,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result/pvalue",i1,"Rdata"))
+save(p.value.simulation,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result/pvalue",i1,".Rdata"))
 
 
 # #result <- Mvpoly(delta0,y,x,z_design)
