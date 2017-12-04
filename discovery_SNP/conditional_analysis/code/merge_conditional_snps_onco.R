@@ -84,7 +84,7 @@ for(i in start:end){
     
   }
   
-  
+  gc()
 }
 
 snpid.result <- snpid.result[1:total]
