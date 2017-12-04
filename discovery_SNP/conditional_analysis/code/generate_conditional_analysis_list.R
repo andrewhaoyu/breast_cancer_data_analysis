@@ -59,45 +59,75 @@ for(i in 1:ncol(extract.result.onco.control)){
   
 }
 
-ld.known.data <- data.frame(idx.known.ld.flag,ld.known.id,extract.result[[1]][idx.known.ld.flag],stringsAsFactors = F)
+ld.known.data <- data.frame(idx.known.ld.flag,ld.known.id,extract.list[idx.known.ld.flag,13:14],stringsAsFactors = F)
+
+head(ld.known.data)
+
+
+
+
+
+
+
+
+
+
 
 
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
 
-fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_regions.csv",header= T)
+fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
+                         stringsAsFactors = F)
 
 idx_cut <- NULL
 start <- fine_mapping$start
 end <- fine_mapping$end
-CHR <- fine_mapping$V3
-position <- fine_mapping$V4
-
-all.info <- data.frame(meta_result_shared_1p$CHR,
-                  meta_result_shared_1p$position,
-                  stringsAsFactors = F)
-colnames(all.info) <- c("CHR","position")
-fine.info <- data.frame(CHR,position,
-                        stringsAsFactors = F)
+CHR <- fine_mapping$CHR
+position <- fine_mapping$position
 
 
+# fine.info <- data.frame(CHR,position,
+#                         stringsAsFactors = F)
+# 
+# 
+# 
+# 
+# idx.fine <- which((do.call(paste0,all.info)%in%do.call(paste0,fine.info))==T)
+# fine_mapping_snp_names <- meta_result_shared_1p[idx.fine,]
 
 
-idx.fine <- which((do.call(paste0,all.info)%in%do.call(paste0,fine.info))==T)
-fine_mapping_snp_names <- meta_result_shared_1p[idx.fine,]
+all <- meta_result_shared_1p
 
-known.flag <- NULL
+
+
 
 
 library(bc2)
 idx.temp <- get_fine_mapping_id(meta_result_shared_1p,fine_mapping)
+idx.cut <- idx.temp[[1]]
 
-all.known.region.snps <- meta_result_shared_1p[idx_cut,]
-
+known.flag <- idx.temp[[2]]
+all.known.region.snps <- meta_result_shared_1p[idx.cut,]
+all.known.region.snps <- cbind(all.known.region.snps,known.flag)
 library(dplyr)
 
- test <- all.known.region.snps%>%filter(p.value <= 1e-04)
+ all.known.region.snps <- all.known.region.snps%>%filter(p.value <= 1e-04)
 
+all.known.region.snps <- all.known.region.snps[,c(13,14,16)]
+
+ld.known.data <- ld.known.data[,c(3,4,2)]
+colnames(ld.known.data) <- colnames(all.known.region.snps)
+
+all.known.region.snps <- rbind(all.known.region.snps,ld.known.data)
+
+
+save(all.known.region.snps,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.known.region.snps.Rdata")
+
+known.region.snps.icogs <- all.known.region.snps$SNP.ICOGS
+known.region.snps.onco <- all.known.region.snps$SNP.ONCO
+write.table(known.region.snps.icogs,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/known.region.icog.txt",quote=F,row.names=F)
+write.table(known.region.snps.onco,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/known.region.onco.txt",quote=F,row.names=F)
 
 
 
