@@ -1,3 +1,5 @@
+args = commandArgs(trailingOnly = T)
+i1 <- as.numeric(args[[1]])
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 
@@ -35,11 +37,15 @@ snpid.result <- rep("c",extract.num)
 n.sub <- nrow(data2)
 snpvalue.result <- matrix(0,n.sub,extract.num)
 
+start.end <- startend(567,110,i1)
+start <- start.end[1]
+end <- start.end[2]
+
 
 
 total <- 0
 
-for(i in 1:567){
+for(i in start:end){
   
   print(i)  
   geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_onco",i,".txt")
@@ -86,6 +92,6 @@ snpvalue.result <- snpvalue.result[,1:total]
 
 
 conditional.snp.list.onco <- list(snpid.result,snpvalue.result)
-save(conditional.snp.list.onco,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.Rdata")
+save(conditional.snp.list.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco",i1,".Rdata"))
 
 
