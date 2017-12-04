@@ -129,30 +129,22 @@ known.region.snps.onco <- all.known.region.snps$SNP.ONCO
 write.table(known.region.snps.icogs,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/known.region.icog.txt",quote=F,row.names=F)
 write.table(known.region.snps.onco,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/known.region.onco.txt",quote=F,row.names=F)
 
+discovery.info <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snps_annotated_clean.csv",header=T,stringsAsFactors = F)
 
 
+idx.temp <- get_fine_mapping_id(meta_result_shared_1p,discovery.info)
+idx.cut <- idx.temp[[1]]
 
-new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
-new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
+dis.flag <- idx.temp[[2]]
+all.dis.region.snps <- meta_result_shared_1p[idx.cut,]
+all.dis.region.snps <- cbind(all.dis.region.snps,dis.flag)
+library(dplyr)
 
-idx_cut <- NULL
+all.dis.region.snps <- all.dis.region.snps%>%filter(p.value <= 1e-04)
 
-position.cut <- 500*10^3
+all.dis.region.snps <- all.dis.region.snps[,c(13,14,16)]
 
-for(i in 1:nrow(new_filter)){
-  print(i)
-  chr_temp <- new_filter[i,3]
-  position_temp <- new_filter[i,2]
-  position_low <- position_temp-position.cut
-  position_high <- position_temp+position.cut
-  idx <- which(meta_result_shared_1p_filter$CHR==chr_temp&meta_result_shared_1p_filter$position>position_low&
-                 meta_result_shared_1p_filter$position<position_high)
-  idx_cut <- c(idx_cut,idx)
-}
-idx_cut <- unique(idx_cut)
-meta_result_shared_1p_filter_Ju <- meta_result_shared_1p_filter[-idx_cut,]
-
-save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+save(all.known.region.snps,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.known.region.snps.Rdata")
 
 
 
@@ -160,31 +152,35 @@ save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_d
 
 
 
+dis.region.snps.icogs <- all.dis.region.snps$SNP.ICOGS
+dis.region.snps.onco <- all.dis.region.snps$SNP.ONCO
+write.table(dis.region.snps.icogs,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/dis.region.icog.txt",quote=F,row.names=F)
+write.table(dis.region.snps.onco,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/dis.region.onco.txt",quote=F,row.names=F)
+
+
+
+
+test.1 <- which(all.dis.region.snps$SNP.ICOGS%in%all.known.region.snps$SNP.ICOGS==F)
 
 
 
 
 
+dis.region.snps <- all.dis.region.snps[test,]
+dis.region.snps$dis.flag <- dis.region.snps$dis.flag+178
+
+colnames(dis.region.snps) <- colnames(all.known.region.snps)
+all.conditional.snps <- rbind(all.known.region.snps,dis.region.snps)
+save(all.conditional.snps,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
+
+all.conditional.snps.icogs <- all.conditional.snps$SNP.ICOGS
+all.conditional.snps.onco <- all.conditional.snps$SNP.ONCO
+write.table(all.conditional.snps.icogs,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.icogs.txt",quote=F,row.names=F)
+write.table(all.conditional.snps.onco,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.onco.txt",quote=F,row.names=F)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+which(is.na(new$SNP.ONCO)==T)
 
