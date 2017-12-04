@@ -3,7 +3,7 @@
 ##########all the SNPs with pvalue <= 5E-06 was token out
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
-
+library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 n.raw <- 109713
