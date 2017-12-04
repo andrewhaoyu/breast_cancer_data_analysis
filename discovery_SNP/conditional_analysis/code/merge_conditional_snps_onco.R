@@ -84,17 +84,8 @@ for(i in 1:567){
 snpid.result <- snpid.result[1:total]
 snpvalue.result <- snpvalue.result[,1:total]
 
-extract.list.shared <- extract.list[1:total,]
-idx.match <- match(extract.list.shared$SNP.ONCO,snpid.result)
-snpid.result <- snpid.result[idx.match]
-all.equal(snpid.result,extract.list.shared$SNP.ONCO)
-snpvalue.result <- snpvalue.result[,idx.match]
-extract.result <- list(snpid.result,snpvalue.result)
-colnames(snpvalue.result) <- snpid.result
 
-
-
-extract.result <- list(snpid.result,snpvalue.result)
-save(extract.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
+conditional.snp.list.onco <- list(snpid.result,snpvalue.result)
+save(conditional.snp.list.onco,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.Rdata")
 
 
