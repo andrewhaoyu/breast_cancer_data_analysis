@@ -1,6 +1,25 @@
 #install_github("andrewhaoyu/bc2",ref='development', args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 ###1 represent Icog
 ###2 represent Onco
+# Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+# z.standard <- Heter.result.Icog[[12]]
+# 
+# z.additive.design <- as.matrix(cbind(1,z.standard))
+# M <- nrow(z.standard)
+# number.of.tumor <- ncol(z.standard)
+# z.design.score.baseline <- matrix(rep(1,M),ncol=1)
+# z.design.score.casecase <-z.standard
+# z.design.score.baseline.ER <- cbind(z.design.score.baseline,z.standard[,1])
+# z.design.score.casecase.ER <- z.standard[,2:ncol(z.standard)]
+# log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
+# sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+
+#support.matrix <- list(z.standard,z.additive.design,M,number.of.tumor,
+                       z.design.score.baseline,z.design.score.casecase,
+                       z.design.score.baseline.ER,
+                       z.design.score.casecase.ER)
+#save(support.matrix,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
+
 
 rm(list=ls())
 #commandarg <- commandArgs(trailingOnly=F)
@@ -27,6 +46,15 @@ library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
+z.standard <- support.matrix[[1]]
+z.additive.design <- support.matrix[[2]]
+M <- support.matrix[[3]]
+number.of.tumor <- support.matrix[[4]]
+z.design.score.baseline <- support.matrix[[5]]
+z.design.score.casecase <- support.matrix[[6]]
+z.design.score.baseline.ER <- support.matrix[[7]]
+z.design.score.casecase.ER <- support.matrix[[8]]
 
 
 
@@ -122,13 +150,18 @@ for(i2 in 1:(end-start+1)){
                            snp.onco,
                            known.flag,
                            known.all.mis1,
-                           known.all.mis2)
+                           known.all.mis2,
+                           z.standard,
+                           z.additive.design,
+                           M,
+                           number.of.tumor,
+                           z.design.score.baseline,
+                           z.design.score.casecase,
+                           z.design.score.baseline.ER,
+                           z.design.score.casecase.ER
+  )
   
   
 }
-
-
-
-
 
 

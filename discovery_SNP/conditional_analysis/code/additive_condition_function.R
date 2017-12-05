@@ -8,7 +8,15 @@ condition_additive_model <- function(y.pheno.mis1,
                                      snp.onco,
                                      known.flag,
                                      known.all.mis1,
-                                     known.all.mis2){
+                                     known.all.mis2,
+                                     z.standard,
+                                     z.additive.design,
+                                     M,
+                                     number.of.tumor,
+                                     z.design.score.baseline,
+                                     z.design.score.casecase,
+                                     z.design.score.baseline.ER,
+                                     z.design.score.casecase.ER){
   if(is.na(snp.name.icog)&is.na(snp.name.onco)){
     p.value <- 1  
     return(p.value)
@@ -29,18 +37,7 @@ condition_additive_model <- function(y.pheno.mis1,
                           x.covar.mis1)
       x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
                           x.covar.mis2)
-      Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-      z.standard <- Heter.result.Icog[[12]]
       
-      z.additive.design <- as.matrix(cbind(1,z.standard))
-      M <- nrow(z.standard)
-      number.of.tumor <- ncol(z.standard)
-      z.design.score.baseline <- matrix(rep(1,M),ncol=1)
-      z.design.score.casecase <-z.standard
-      z.design.score.baseline.ER <- cbind(z.design.score.baseline,z.standard[,1])
-      z.design.score.casecase.ER <- z.standard[,2:ncol(z.standard)]
-      log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
-      sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
       score.test.support.icog <- ScoreTestSupport(
         y.pheno.mis1,
         baselineonly = NULL,
@@ -105,19 +102,10 @@ condition_additive_model <- function(y.pheno.mis1,
                           x.covar.mis2)
       
       
-      Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-      z.standard <- Heter.result.Onco[[12]]
-      M <- nrow(z.standard)
-      number.of.tumor <- ncol(z.standard)
-      z.additive.design <- as.matrix(cbind(1,z.standard))
-      z.design.score.baseline <- matrix(rep(1,M),ncol=1)
-      z.design.score.casecase <-z.standard
-      z.design.score.baseline.ER <- cbind(z.design.score.baseline,z.standard[,1])
-      z.design.score.casecase.ER <- z.standard[,2:ncol(z.standard)]
       
-      log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
-      nparm <- length(Heter.result.Onco)
-      sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+      
+      
+      
       score.test.support.onco <- ScoreTestSupport(
         y.pheno.mis2,
         baselineonly = NULL,
@@ -126,10 +114,6 @@ condition_additive_model <- function(y.pheno.mis1,
         saturated = NULL,
         missingTumorIndicator = 888
       )
-      z.design.score.baseline <- matrix(rep(1,M),ncol=1)
-      z.design.score.casecase <-z.standard
-      z.design.score.baseline.ER <- cbind(z.design.score.baseline,z.standard[,1])
-      z.design.score.casecase.ER <- z.standard[,2:ncol(z.standard)]
       
       score.test.onco.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis2,
                                                         x=x.all.mis2[,1,drop=F],
@@ -188,18 +172,6 @@ condition_additive_model <- function(y.pheno.mis1,
                           x.covar.mis1)
       x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
                           x.covar.mis2)
-      Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-      z.standard <- Heter.result.Icog[[12]]
-      
-      z.additive.design <- as.matrix(cbind(1,z.standard))
-      M <- nrow(z.standard)
-      number.of.tumor <- ncol(z.standard)
-      z.design.score.baseline <- matrix(rep(1,M),ncol=1)
-      z.design.score.casecase <-z.standard
-      z.design.score.baseline.ER <- cbind(z.design.score.baseline,z.standard[,1])
-      z.design.score.casecase.ER <- z.standard[,2:ncol(z.standard)]
-      log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
-      sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
       score.test.support.icog <- ScoreTestSupport(
         y.pheno.mis1,
         baselineonly = NULL,
@@ -237,13 +209,6 @@ condition_additive_model <- function(y.pheno.mis1,
       
       
       
-      Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-      z.standard <- Heter.result.Onco[[12]]
-      M <- nrow(z.standard)
-      number.of.tumor <- ncol(z.standard)
-      log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
-      nparm <- length(Heter.result.Onco)
-      sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
       score.test.support.onco <- ScoreTestSupport(
         y.pheno.mis2,
         baselineonly = NULL,
@@ -293,6 +258,10 @@ condition_additive_model <- function(y.pheno.mis1,
       second.stage.logodds.meta <- meta.result[[1]]
       second.stage.sigma.meta <- meta.result[[2]]
       test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
+      meta.result.score.baseline.ER <- ScoreMetaAnalysis(score.icog.baseline.ER,
+                                                         infor.icog.baseline.ER,
+                                                         score.onco.baseline.ER,
+                                                         infor.onco.baseline.ER)
       score.meta.baseline.ER <-   meta.result.score.baseline.ER[[1]]
       infor.meta.baseline.ER <- meta.result.score.baseline.ER[[2]]
       
