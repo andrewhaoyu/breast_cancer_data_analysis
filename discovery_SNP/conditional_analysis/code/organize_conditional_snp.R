@@ -20,3 +20,28 @@ conditional.snp.list.onco.clean <- list(test.onco,
                                         test.onco.value)
 save(conditional.snp.list.icog.clean,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.Rdata")
 save(conditional.snp.list.onco.clean,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.Rdata")
+
+
+
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
+
+
+
+n.condition <- nrow(all.conditional.snps)
+library(bc2)
+
+
+for(i in 1:1000){
+  print(i)
+  start.end <- startend(n.condition,1000,i)
+  start <- start.end[1]
+  end <- start.end[2]
+  conditional.snp.list.icog.clean.sub <- list(conditional.snp.list.icog.clean[[1]][start:end],conditional.snp.list.icog.clean[[2]][,start:end])
+  conditional.snp.list.onco.clean.sub <- list(conditional.snp.list.onco.clean[[1]][start:end],
+                                              conditional.snp.list.onco.clean[[2]][,start:end])
+  save(conditional.snp.list.icog.clean.sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.sub",i,".Rdata"))
+  save(conditional.snp.list.onco.clean.sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.sub",i,".Rdata"))
+}
