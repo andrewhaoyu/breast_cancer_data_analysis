@@ -60,7 +60,7 @@ z.design.score.casecase.ER <- support.matrix[[8]]
 
 n.condition <- nrow(all.conditional.snps)
 
-start.end <- startend(n.condition,3000,i1)
+start.end <- startend(n.condition,1000,i1)
 start <- start.end[1]
 end <- start.end[2]
 
