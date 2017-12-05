@@ -176,7 +176,7 @@ condition_additive_model <- function(y.pheno.mis1,
     idx.control <- which(y.pheno.mis2[,1]==0)
     known.snp.value.onco <- known.all.mis2[,known.flag]
     known.snp.value.onco.control <- known.snp.value.onco[idx.control]
-    snp.onco.control <- snp.onco.control[idx.control]
+    snp.onco.control <- snp.onco[idx.control]
     
     if(cor(snp.onco.control,known.snp.value.onco.control)^2>=0.8){
       p.value <- 1

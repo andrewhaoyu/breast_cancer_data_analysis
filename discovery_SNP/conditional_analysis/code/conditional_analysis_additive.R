@@ -11,6 +11,11 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
 
+
+
+
+source("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/code/additive_condition_function.R")
+
 load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.sub",i1,".Rdata"))
 
 load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.sub",i1,".Rdata"))
@@ -48,7 +53,7 @@ known.all.mis1 <- data1[,c(27:203)]
 x.covar.mis1 <- data1[,c(5:14)]
 snp.name.all.icog <- conditional.snp.list.icog.clean.sub[[1]]
 x.test.all.mis1 <- conditional.snp.list.icog.clean.sub[[2]]
-x.all.mis1 <- as.matrix(cbind(snp.icog,x.covar.mis1))
+
 
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
@@ -65,8 +70,8 @@ x.test.all.mis2 <- conditional.snp.list.onco.clean.sub[[2]]
 snp.name.all.onco <- conditional.snp.list.onco.clean.sub[[1]]
 x.covar.mis2 <- data2[,c(5:14)]
 
-x.all.mis2 <- as.matrix(cbind(snp.onco,x.covar.mis2))
-colnames(x.all.mis2)[1] = "gene"
+
+
 icog.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
 icog.julie <- icog.julie[,-1]
 discovery.snp.icog <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
@@ -97,7 +102,7 @@ known.all.mis2 <- known.all.mis2[idx.complete2,]
 
 known.flag.all <- all.conditional.snps$known.flag
 
-
+p.value.all <- rep(0,end-start+1)
 
 for(i2 in 1:(end-start+1)){
   snp.name.icog <- snp.name.all.icog[i2]
@@ -107,7 +112,17 @@ for(i2 in 1:(end-start+1)){
   snp.icog <- snp.icog[idx.complete1]
   snp.onco <- snp.onco[idx.complete2]
   known.flag <- known.flag.all[start+i2-1]
-    
+  p.value.all[i2] <- condition_additive_model(y.pheno.mis1,
+                           x.covar.mis1,
+                           snp.name.icog,
+                           snp.icog,
+                           y.pheno.mis2,
+                           x.covar.mis2,
+                           snp.name.onco,
+                           snp.onco,
+                           known.flag,
+                           known.all.mis1,
+                           known.all.mis2)
   
   
 }
