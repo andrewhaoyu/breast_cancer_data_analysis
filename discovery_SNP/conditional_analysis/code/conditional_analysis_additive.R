@@ -14,10 +14,10 @@
 # log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
 # sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
 
-#support.matrix <- list(z.standard,z.additive.design,M,number.of.tumor,
-                       z.design.score.baseline,z.design.score.casecase,
-                       z.design.score.baseline.ER,
-                       z.design.score.casecase.ER)
+# support.matrix <- list(z.standard,z.additive.design,M,number.of.tumor,
+#                        z.design.score.baseline,z.design.score.casecase,
+#                        z.design.score.baseline.ER,
+#                        z.design.score.casecase.ER)
 #save(support.matrix,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
 
 
@@ -60,7 +60,7 @@ z.design.score.casecase.ER <- support.matrix[[8]]
 
 n.condition <- nrow(all.conditional.snps)
 
-start.end <- startend(n.condition,1000,i1)
+start.end <- startend(n.condition,3000,i1)
 start <- start.end[1]
 end <- start.end[2]
 
@@ -133,6 +133,7 @@ known.flag.all <- all.conditional.snps$known.flag
 p.value.all <- rep(0,end-start+1)
 
 for(i2 in 1:(end-start+1)){
+  print(i2)
   snp.name.icog <- snp.name.all.icog[i2]
   snp.icog <- x.test.all.mis1[,i2]
   snp.onco <- x.test.all.mis2[,i2]
@@ -164,4 +165,6 @@ for(i2 in 1:(end-start+1)){
   
 }
 
+
+save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/",i1,".Rdata"))
 

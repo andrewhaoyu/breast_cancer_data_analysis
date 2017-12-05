@@ -250,14 +250,6 @@ condition_additive_model <- function(y.pheno.mis1,
       score.onco.casecase.ER <- score.test.onco.casecase.ER[[1]]
       infor.onco.casecase.ER <- score.test.onco.casecase.ER[[2]]
       
-      meta.result <- LogoddsMetaAnalysis(log.odds.icog,
-                                         sigma.log.odds.icog,
-                                         log.odds.onco,
-                                         sigma.log.odds.onco)
-      
-      second.stage.logodds.meta <- meta.result[[1]]
-      second.stage.sigma.meta <- meta.result[[2]]
-      test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
       meta.result.score.baseline.ER <- ScoreMetaAnalysis(score.icog.baseline.ER,
                                                          infor.icog.baseline.ER,
                                                          score.onco.baseline.ER,
