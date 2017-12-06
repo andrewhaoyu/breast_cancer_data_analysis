@@ -166,5 +166,5 @@ for(i2 in 1:(end-start+1)){
 }
 
 
-save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/",i1,".Rdata"))
+save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub",i1,".Rdata"))
 

@@ -27,7 +27,7 @@ condition_additive_model <- function(y.pheno.mis1,
     
     snp.icog.control <- snp.icog[idx.control]
     
-    if(cor(snp.icog.control,known.snp.value.icog.control)^2>=0.8){
+    if(cor(snp.icog.control,known.snp.value.icog.control)^2>=0.64){
       p.value <- 1
       return(p.value)
     }else{

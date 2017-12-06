@@ -33,9 +33,9 @@ colnames(z.design) <- c("Luminial A","Luminal B",
 
 
 
-if(i1<=180){
+if(i1<=177){
   ##analysis for Icog
-  data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header = T)
+  data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
   # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,
   #data1$ER_status1,data1$HER2_status1)
@@ -67,7 +67,7 @@ if(i1<=180){
   
   #analysis for Onco Array
   #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
-  data2 <- read.csv("./data/Onco_euro_v10_05242017.csv",header=T)
+  data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
   names1 = colnames(data1)[27:206]
   rm(data1)
   names2 = colnames(data2)[27:212]
@@ -114,7 +114,7 @@ if(i1<=180){
   
 }else{
   M <- 23
-  data2 <- read.csv("./data/Onco_euro_v10_rs554219.csv",header=T)
+  data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
   #data2 <- read.csv("/data/zhangh20/breast_cancer/known_SNPs_anlysis/Onco_euro_v10_rs554219.csv",1)
   
   # names1 = colnames(data1)[27:206]
