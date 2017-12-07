@@ -20,41 +20,25 @@ load("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/z.standar
 library(tidyverse)
 colnames(z.standard) <- c("ER","PR","HER2","Grade")
 
+third <- rep(0,nrow(z.standard))
+third[c(1,8,16)] <- 1
 z.new.design <- z.standard %>% mutate(
   ER = 1-ER,
   PR = 1-PR,
-  HER2 = 1-HER2,
-  third = 0
+  HER2 = 1-HER2
 ) %>% mutate(
-  
+  third = third
 )
 
-z.new.design <- cbind(1,z.new.design,)
+z.new.design <- cbind(1,z.new.design)
 
 
-z.design <- matrix(c(
-  c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
-  c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
-  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
-  c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
-  c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
-),ncol=5)
-z.design.score.baseline <- z.design[,1,drop=F]
-z.design.score.casecase <- z.design[,2:ncol(z.design)]
-z.trans <- matrix(c(
-  c(1,1,1,1,1),
-  c(0,1,0,0,0),
-  c(0,0,1,0,0),
-  c(0,0,0,1,0),
-  c(0,0,0,0,1)
-),ncol = 5
-)
+z.design <- z.new.design
 
-
-colnames(z.design) <- c("Luminial A","Luminal B",
-                        "Luminal B HER2Neg - Luminal A",
-                        "HER2 Enriched - Luminal A",
-                        "Triple Negative - Luminal A")
+colnames(z.design) <- c("Baseline","ER","PR",
+                        "HER2",
+                        "Grade",
+                        "Third")
 
 
 if(i1<=177){
@@ -83,7 +67,7 @@ if(i1<=177){
   z.standard <- Heter.result.Icog[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
   M <- nrow(z.standard)
-  number.of.tumor <- ncol(z.standard)
+  number.of.tumor <- ncol(z.standard)+1
   log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
   nparm <- length(Heter.result.Icog[[1]])  
   sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
