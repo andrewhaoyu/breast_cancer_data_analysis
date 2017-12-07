@@ -111,8 +111,9 @@ known.flag <- idx.temp[[2]]
 all.known.region.snps <- meta_result_shared_1p[idx.cut,]
 all.known.region.snps <- cbind(all.known.region.snps,known.flag)
 library(dplyr)
+dim(all.known.region.snps)
+#all.known.region.snps <- all.known.region.snps%>%filter(p.value<=0.05)
 
-#all.known.region.snps <- all.known.region.snps%>%filter(p.value <= 0.5)
 
 all.known.region.snps <- all.known.region.snps[,c(13,14,16)]
 
@@ -139,7 +140,7 @@ dis.flag <- idx.temp[[2]]
 all.dis.region.snps <- meta_result_shared_1p[idx.cut,]
 all.dis.region.snps <- cbind(all.dis.region.snps,dis.flag)
 library(dplyr)
-
+dim(all.dis.region.snps)
 #all.dis.region.snps <- all.dis.region.snps%>%filter(p.value <= 1e-04)
 
 all.dis.region.snps <- all.dis.region.snps[,c(13,14,16)]
@@ -163,8 +164,8 @@ write.table(dis.region.snps.onco,file="/spin1/users/zhangh24/breast_cancer_data_
 test <- which(all.dis.region.snps$SNP.ICOGS%in%all.known.region.snps$SNP.ICOGS==F)
 
 
-test.1 <- which(dis.region.snps$SNP.ICOGS%in%all.known.region.snps$SNP.ICOGS==F)
-
+test.1 <- which(all.dis.region.snps$SNP.ICOGS%in%all.known.region.snps$SNP.ICOGS==T)
+length(test.1)
 
 
 dis.region.snps <- all.dis.region.snps[test,]
@@ -183,5 +184,5 @@ write.table(all.conditional.snps.onco,file="/spin1/users/zhangh24/breast_cancer_
 
 
 
-which(is.na(new$SNP.ONCO)==T)
+#which(is.na(new$SNP.ONCO)==T)
 

@@ -27,7 +27,8 @@ library(bc2)
 extract.num <- nrow(all.conditional.snps)
 snpid.result <- rep("c",extract.num)
 n.sub <- 72411
-snpvalue.result <- matrix(0,n.sub,extract.num)
+library(bigmemory)
+snpvalue.result <- big.matrix(n.sub,extract.num,init=0)
 
 
 
