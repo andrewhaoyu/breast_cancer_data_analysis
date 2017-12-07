@@ -48,7 +48,8 @@ if(extract.num==0){
   
 }else{
   snpvalue.result <- big.matrix(n.sub,extract.num,init=0)
-    for(i in i1:i1){
+  total <- 0  
+  for(i in i1:i1){
     
     print(i)  
     geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_onco",i,".txt")
