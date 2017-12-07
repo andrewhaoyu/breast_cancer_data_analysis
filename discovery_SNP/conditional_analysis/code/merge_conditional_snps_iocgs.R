@@ -1,6 +1,6 @@
+args = commandArgs(trailingOnly = T)
+i1 <- as.numeric(args[[1]])
 
-##########extract list was generated after we filter out all the SNPs with 1M around the known SNPs region###
-##########all the SNPs with pvalue <= 5E-06 was token out
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
 library(data.table)
@@ -28,65 +28,78 @@ extract.num <- nrow(all.conditional.snps)
 snpid.result <- rep("c",extract.num)
 n.sub <- 72411
 library(bigmemory)
-snpvalue.result <- big.matrix(n.sub,extract.num,init=0)
 
 
 
-total <- 0
 
-for(i in 1:564){
+
+text <- system(paste0("cat | wc -l /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i1,".txt"),intern=T)
+extract.num <- as.integer(gsub(paste0(" /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i1,".txt"),"",text))
+
+if(extract.num==0){
+  conditional.snp.list.icog <- NULL
+  save(conditional.snp.list.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog",i1,".Rdata"))
+}else{
+  snpvalue.result <- big.matrix(n.sub,extract.num,init= 0)
   
-  print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i,".txt"
-  )
-  num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
+  total <- 0
   
-  if(num!=0){
+  for(i in i1:i1){
     
+    print(i)  
+    geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i,".txt"
+    )
+    num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
     
-    con <- file(geno.file)
-    temp <- 0
-    open(con)
-    for(i in 1:num){
-      
-      oneLine <- readLines(con,n=1)
-      myVector <- strsplit(oneLine," ")
-      snpid <- as.character(myVector[[1]][3])
+    if(num!=0){
       
       
-      temp <- temp+1
-      snpid.result[temp+total] <- snpid
-      #snpvalue <- rep(0,n)
+      con <- file(geno.file)
+      temp <- 0
+      open(con)
+      for(i in 1:num){
+        
+        oneLine <- readLines(con,n=1)
+        myVector <- strsplit(oneLine," ")
+        snpid <- as.character(myVector[[1]][3])
+        
+        
+        temp <- temp+1
+        snpid.result[temp+total] <- snpid
+        #snpvalue <- rep(0,n)
+        
+        
+        snppro <- as.numeric(unlist(myVector)[7:length(myVector[[1]])])
+        
+        snpvalue <- convert(snppro,n.raw)
+        snpvalue <- snpvalue[idx.fil][idx.match]
+        snpvalue.result[,temp+total] <- snpvalue
+        
+        
+      }
+      close(con)
       
-      
-      snppro <- as.numeric(unlist(myVector)[7:length(myVector[[1]])])
-      
-      snpvalue <- convert(snppro,n.raw)
-      snpvalue <- snpvalue[idx.fil][idx.match]
-      snpvalue.result[,temp+total] <- snpvalue
+      total <- total+num
       
       
     }
-    close(con)
     
-    total <- total+num
-    
-    
+    # if(is.null(result[[1]])==0){
+    #   temp <- length(result[[1]])
+    #   snpid.result[total+(1:temp)] <- result[[1]]
+    #   snpvalue.result[,total+(1:temp)] <- result[[2]]
+    #   total <- temp+total
+    # }
   }
+  snpid.result <- snpid.result[1:total]
+  snpvalue.result <- snpvalue.result[,1:total]
   
-  # if(is.null(result[[1]])==0){
-  #   temp <- length(result[[1]])
-  #   snpid.result[total+(1:temp)] <- result[[1]]
-  #   snpvalue.result[,total+(1:temp)] <- result[[2]]
-  #   total <- temp+total
-  # }
+  
+  conditional.snp.list.icog <- list(snpid.result,snpvalue.result)
+  save(conditional.snp.list.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog",i1,".Rdata"))
+  
 }
-snpid.result <- snpid.result[1:total]
-snpvalue.result <- snpvalue.result[,1:total]
 
-
-conditional.snp.list.icog <- list(snpid.result,snpvalue.result)
-save(conditional.snp.list.icog,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.Rdata")
 
 # ########## five snps only exists in ONCO array
 # 
