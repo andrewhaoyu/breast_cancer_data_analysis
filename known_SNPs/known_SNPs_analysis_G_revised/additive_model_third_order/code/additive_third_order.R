@@ -1,4 +1,4 @@
-#install_github("andrewhaoyu/bc2", args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#install_github("andrewhaoyu/bc2", ref='development',args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 ###1 represent Icog
 ###2 represent Onco
 
@@ -44,8 +44,8 @@ colnames(z.design) <- c("Baseline","ER","PR",
 if(i1<=177){
   data1 <- as.data.frame(fread("./data/iCOGS_euro_v10_10232017.csv",header=T))
   data1 <- as.data.frame(data1)
-  y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
-  colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2","Grade")
+  y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
+  colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
   # Grade1.fake <- data1$Grade1
   # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
   # Grade1.fake[data1$Grade1==1] <- 0
