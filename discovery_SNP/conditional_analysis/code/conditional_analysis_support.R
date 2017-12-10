@@ -115,7 +115,7 @@ if(i1 ==178|i1==207){
   
 }else{
   snp.icog <- known.snp.value.icog <- known.all.mis1[,i1]
-  snp.onco <- known.snp.value.onco <- known.all.mis2[,i2]
+  snp.onco <- known.snp.value.onco <- known.all.mis2[,i1]
   
   x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
                       x.covar.mis1)
