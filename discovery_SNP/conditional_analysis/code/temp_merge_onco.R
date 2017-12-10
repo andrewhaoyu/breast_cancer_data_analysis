@@ -8,7 +8,7 @@ library(bc2)
 extract.num <- nrow(all.conditional.snps)
 snpid.result <- rep("c",extract.num)
 library(bigmemory)
-snpvalue.result <- big.matrix(n.sub,extract.num,init=0)
+snpvalue.result <- matrix(0,n.sub,extract.num)
 
 
 total <- 0
@@ -26,6 +26,6 @@ print(i1)
 }
 
 snpid.result <- snpid.result[1:total]
-snpvalue.result <- sub.big.matrix(snpvalue.result,firstCol = 1,lastCol=total)
+snpvalue.result <- snpvalue.result[,1:total]
 conditional.snp.list.onco <- list(snpid.result,snpvalue.result)
 save(conditional.snp.list.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.Rdata"))
