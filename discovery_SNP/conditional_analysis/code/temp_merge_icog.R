@@ -27,4 +27,4 @@ for(i1 in 1:564){
 snpid.result <- snpid.result[1:total]
 snpvalue.result <- sub.big.matrix(snpvalue.result,firstCol=1,lastCol=total)
 conditional.snp.list.icog <- list(snpid.result,snpvalue.result)
-#save(conditional.snp.list.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.Rdata"))
+save(conditional.snp.list.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.Rdata"))

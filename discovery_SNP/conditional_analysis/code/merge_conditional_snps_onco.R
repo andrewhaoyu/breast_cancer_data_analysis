@@ -47,7 +47,7 @@ if(extract.num==0){
   save(conditional.snp.list.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco",i1,".Rdata"))
   
 }else{
-  snpvalue.result <- big.matrix(n.sub,extract.num,init=0)
+  snpvalue.result <- matrix(0,n.sub,extract.num)
   total <- 0  
   for(i in i1:i1){
     

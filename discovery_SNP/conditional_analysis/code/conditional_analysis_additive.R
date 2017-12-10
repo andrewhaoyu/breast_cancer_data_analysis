@@ -1,31 +1,4 @@
-#install_github("andrewhaoyu/bc2",ref='development', args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
-###1 represent Icog
-###2 represent Onco
-# Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-# z.standard <- Heter.result.Icog[[12]]
-# 
-# z.additive.design <- as.matrix(cbind(1,z.standard))
-# M <- nrow(z.standard)
-# number.of.tumor <- ncol(z.standard)
-# z.design.score.baseline <- matrix(rep(1,M),ncol=1)
-# z.design.score.casecase <-z.standard
-# z.design.score.baseline.ER <- cbind(z.design.score.baseline,z.standard[,1])
-# z.design.score.casecase.ER <- z.standard[,2:ncol(z.standard)]
-# log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
-# sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
-
-# support.matrix <- list(z.standard,z.additive.design,M,number.of.tumor,
-#                        z.design.score.baseline,z.design.score.casecase,
-#                        z.design.score.baseline.ER,
-#                        z.design.score.casecase.ER)
-#save(support.matrix,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
-
-
 rm(list=ls())
-#commandarg <- commandArgs(trailingOnly=F)
-#myarg <- commandarg[length(commandarg)]
-#myarg <- sub("-","",myarg)
-#i1 <- as.numeric(myarg)
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
@@ -35,9 +8,9 @@ i1 = as.numeric(args[[1]])
 
 source("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/code/additive_condition_function.R")
 
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.sub",i1,".Rdata"))
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.Rdata"))
 
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.sub",i1,".Rdata"))
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.Rdata"))
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
@@ -46,6 +19,7 @@ library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
+library(bigmemory)
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
 z.standard <- support.matrix[[1]]
 z.additive.design <- support.matrix[[2]]
@@ -79,8 +53,12 @@ known.all.mis1 <- data1[,c(27:203)]
 
 
 x.covar.mis1 <- data1[,c(5:14)]
-snp.name.all.icog <- conditional.snp.list.icog.clean.sub[[1]]
-x.test.all.mis1 <- conditional.snp.list.icog.clean.sub[[2]]
+snp.name.all.icog <- conditional.snp.list.icog.clean[[1]]
+snp.match.icog <- conditional.snp.list.icog.clean[[3]]
+snp.value.all.icog <- conditional.snp.list.icog.clean[[2]]
+rm(conditional.snp.list.icog.clean)
+gc()
+#x.test.all.mis1 <- conditional.snp.list.icog.clean.sub[[2]]
 
 
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
@@ -94,8 +72,12 @@ known.all.mis2 <- data2[,c(27:203,205)]
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
-x.test.all.mis2 <- conditional.snp.list.onco.clean.sub[[2]]
-snp.name.all.onco <- conditional.snp.list.onco.clean.sub[[1]]
+
+snp.name.all.onco <- conditional.snp.list.onco.clean[[1]]
+snp.match.onco <- conditional.snp.list.onco.clean[[3]]
+snp.value.all.onco <- conditional.snp.list.onco.clean[[2]]
+rm(conditional.snp.list.onco.clean)
+gc()
 x.covar.mis2 <- data2[,c(5:14)]
 
 
@@ -130,12 +112,16 @@ known.all.mis2 <- known.all.mis2[idx.complete2,]
 
 known.flag.all <- all.conditional.snps$known.flag
 
+
+
 p.value.all <- rep(0,end-start+1)
 
 for(i2 in 1:(end-start+1)){
   print(i2)
   snp.name.icog <- snp.name.all.icog[i2]
-  snp.icog <- x.test.all.mis1[,i2]
+  
+  snp.icog <- snp.value.all.icog[,snp.match.icog[i2]]
+    x.test.all.mis1[,i2]
   snp.onco <- x.test.all.mis2[,i2]
   snp.name.onco <- snp.name.all.onco[i2]
   snp.icog <- snp.icog[idx.complete1]

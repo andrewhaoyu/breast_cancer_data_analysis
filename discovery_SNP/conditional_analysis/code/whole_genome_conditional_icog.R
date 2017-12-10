@@ -24,10 +24,7 @@ idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 library(bc2)
 
 
-extract.num <- nrow(all.conditional.snps)
-snpid.result <- rep("c",extract.num)
-n.sub <- 72411
-#library(bigmemory)
+
 
 
 
@@ -36,17 +33,81 @@ n.sub <- 72411
 
 text <- system(paste0("cat | wc -l /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i1,".txt"),intern=T)
 extract.num <- as.integer(gsub(paste0(" /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i1,".txt"),"",text))
-#snpvalue.result <- matrix(0,n.sub,extract.num)
 
 if(extract.num==0){
-  conditional.snp.list.icog <- NULL
-  save(conditional.snp.list.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog",i1,".Rdata"))
+  conditional.analysis.icog <- NULL
+  save(conditional.analysis.icog,paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.analysis.icog",i1,".Rdata"))
+  
 }else{
-  snpvalue.result <- matrix(0,n.sub,extract.num)
+  snpid.result <- rep("c",extract.num)
+  score.result.icog <- 
+  load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
+  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+  library(readr)
+  library(devtools)
+  library(CompQuadForm)
+  library(bc2)
+  library(data.table)
+  library(bigmemory)
+  load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
+  z.standard <- support.matrix[[1]]
+  z.additive.design <- support.matrix[[2]]
+  M <- support.matrix[[3]]
+  number.of.tumor <- support.matrix[[4]]
+  z.design.score.baseline <- support.matrix[[5]]
+  z.design.score.casecase <- support.matrix[[6]]
+  z.design.score.baseline.ER <- support.matrix[[7]]
+  z.design.score.casecase.ER <- support.matrix[[8]]
+  n.condition <- nrow(all.conditional.snps)
+  
+  data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
+  data1 <- as.data.frame(data1)
+  age1 <- data1[,204]
+  idx.complete1 <- which(age1!=888)
+  age1 <- age1[idx.complete1]
+  
+  y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
+  colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
+  
+  known.all.mis1 <- data1[,c(27:203)]
+  ###fake the onco array only snp
+  
+  
+  
+  x.covar.mis1 <- data1[,c(5:14)]
+  
+  icog.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
+  icog.julie <- icog.julie[,-1]
+  discovery.snp.icog <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
+  onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
+  onco.julie <- onco.julie[,-1]
+  discovery.snp.onco <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
+  x.discovery.mis1 <- as.data.frame(cbind(icog.julie,discovery.snp.icog))
+  x.discovery.mis2 <- as.data.frame(cbind(onco.julie,discovery.snp.onco))
+  ###two snps onco array only
+  sudo.icog.na <- rep(NA,nrow(data1))
+  
+  known.all.mis1 <- cbind(known.all.mis1,sudo.icog.na,x.discovery.mis1)
+  known.all.mis2 <- cbind(known.all.mis2,x.discovery.mis2)
+  
+  y.pheno.mis1 <- y.pheno.mis1[idx.complete1,]
+  x.covar.mis1 <- x.covar.mis1[idx.complete1,]
+  x.covar.mis1 <- cbind(x.covar.mis1,age1)
+  
+  known.all.mis1 <- known.all.mis1[idx.complete1,]
+  y.pheno.mis2 <- y.pheno.mis2[idx.complete2,]
+  x.covar.mis2 <- x.covar.mis2[idx.complete2,]
+  x.covar.mis2 <- cbind(x.covar.mis2,age2)
+  
+  known.all.mis2 <- known.all.mis2[idx.complete2,]
+  
+  known.flag.all <- all.conditional.snps$known.flag
+  
   
   total <- 0
   
   for(i in i1:i1){
+    
     
     print(i)  
     geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i,".txt"

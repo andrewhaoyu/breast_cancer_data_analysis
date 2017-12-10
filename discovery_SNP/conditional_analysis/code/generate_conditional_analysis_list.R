@@ -112,7 +112,7 @@ all.known.region.snps <- meta_result_shared_1p[idx.cut,]
 all.known.region.snps <- cbind(all.known.region.snps,known.flag)
 library(dplyr)
 dim(all.known.region.snps)
-#all.known.region.snps <- all.known.region.snps%>%filter(p.value<=0.05)
+all.known.region.snps <- all.known.region.snps%>%filter(p.value<=0.01)
 
 
 all.known.region.snps <- all.known.region.snps[,c(13,14,16)]
@@ -141,8 +141,8 @@ all.dis.region.snps <- meta_result_shared_1p[idx.cut,]
 all.dis.region.snps <- cbind(all.dis.region.snps,dis.flag)
 library(dplyr)
 dim(all.dis.region.snps)
-#all.dis.region.snps <- all.dis.region.snps%>%filter(p.value <= 1e-04)
-
+all.dis.region.snps <- all.dis.region.snps%>%filter(p.value <= 0.01)
+dim(all.dis.region.snps)
 all.dis.region.snps <- all.dis.region.snps[,c(13,14,16)]
 
 save(all.known.region.snps,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.known.region.snps.Rdata")
