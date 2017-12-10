@@ -22,7 +22,7 @@ z.design.score.casecase.ER <- support.matrix[[8]]
 
 
 
-n.condition <- nrow(all.conditional.snps)
+
 
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
@@ -84,7 +84,7 @@ x.covar.mis2 <- cbind(x.covar.mis2,age2)
 
 known.all.mis2 <- known.all.mis2[idx.complete2,]
 
-known.flag.all <- all.conditional.snps$known.flag
+
 
 
 if(i1 ==178|i1==207){
@@ -134,13 +134,4 @@ if(i1 ==178|i1==207){
 
 
 
-
-
-
-
-
-
-
-
-save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub",i1,".Rdata"))
 
