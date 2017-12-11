@@ -104,10 +104,10 @@ all <- meta_result_shared_1p
 
 
 library(bc2)
-idx.temp <- get_fine_mapping_id(meta_result_shared_1p,fine_mapping)
-idx.cut <- idx.temp[[1]]
+idx.temp.known <- get_fine_mapping_id(meta_result_shared_1p,fine_mapping)
+idx.cut <- idx.temp.known[[1]]
 
-known.flag <- idx.temp[[2]]
+known.flag <- idx.temp.known[[2]]
 all.known.region.snps <- meta_result_shared_1p[idx.cut,]
 all.known.region.snps <- cbind(all.known.region.snps,known.flag)
 library(dplyr)
@@ -133,10 +133,10 @@ write.table(known.region.snps.onco,file="/spin1/users/zhangh24/breast_cancer_dat
 discovery.info <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snps_annotated_clean.csv",header=T,stringsAsFactors = F)
 
 
-idx.temp <- get_fine_mapping_id(meta_result_shared_1p,discovery.info)
-idx.cut <- idx.temp[[1]]
+idx.temp.dis <- get_fine_mapping_id(meta_result_shared_1p,discovery.info)
+idx.cut <- idx.temp.dis[[1]]
 
-dis.flag <- idx.temp[[2]]
+dis.flag <- idx.temp.dis[[2]]
 all.dis.region.snps <- meta_result_shared_1p[idx.cut,]
 all.dis.region.snps <- cbind(all.dis.region.snps,dis.flag)
 library(dplyr)
