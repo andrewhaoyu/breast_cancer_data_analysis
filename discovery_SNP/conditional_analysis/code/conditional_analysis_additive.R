@@ -3,14 +3,13 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
 
-
-
-
 source("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/code/additive_condition_function.R")
 
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.Rdata"))
 
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.Rdata"))
+
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.sub",i1,".Rdata"))
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.sub",i1,".Rdata"))
+
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
@@ -34,7 +33,7 @@ z.design.score.casecase.ER <- support.matrix[[8]]
 
 n.condition <- nrow(all.conditional.snps)
 
-start.end <- startend(n.condition,1000,i1)
+start.end <- startend(n.condition,3000,i1)
 start <- start.end[1]
 end <- start.end[2]
 
@@ -53,11 +52,8 @@ known.all.mis1 <- data1[,c(27:203)]
 
 
 x.covar.mis1 <- data1[,c(5:14)]
-snp.name.all.icog <- conditional.snp.list.icog.clean[[1]]
-snp.match.icog <- conditional.snp.list.icog.clean[[3]]
-snp.value.all.icog <- conditional.snp.list.icog.clean[[2]]
-rm(conditional.snp.list.icog.clean)
-gc()
+snp.name.all.icog <- conditional.snp.list.icog.clean.sub[[1]]
+x.test.all.mis1 <- conditional.snp.list.icog.clean.sub[[2]]
 #x.test.all.mis1 <- conditional.snp.list.icog.clean.sub[[2]]
 
 
@@ -73,11 +69,8 @@ colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
 
-snp.name.all.onco <- conditional.snp.list.onco.clean[[1]]
-snp.match.onco <- conditional.snp.list.onco.clean[[3]]
-snp.value.all.onco <- conditional.snp.list.onco.clean[[2]]
-rm(conditional.snp.list.onco.clean)
-gc()
+snp.name.all.onco <- conditional.snp.list.onco.clean.sub[[1]]
+x.test.all.mis2 <- conditional.snp.list.onco.clean.sub[[2]]
 x.covar.mis2 <- data2[,c(5:14)]
 
 
@@ -116,17 +109,26 @@ known.flag.all <- all.conditional.snps$known.flag
 
 p.value.all <- rep(0,end-start+1)
 
+known.flag.last <- 999
+known.flag.new <- 999
+
 for(i2 in 1:(end-start+1)){
   print(i2)
   snp.name.icog <- snp.name.all.icog[i2]
   
-  snp.icog <- snp.value.all.icog[,snp.match.icog[i2]]
-    x.test.all.mis1[,i2]
+  snp.icog <- x.test.all.mis1[,i2]
   snp.onco <- x.test.all.mis2[,i2]
   snp.name.onco <- snp.name.all.onco[i2]
   snp.icog <- snp.icog[idx.complete1]
   snp.onco <- snp.onco[idx.complete2]
   known.flag <- known.flag.all[start+i2-1]
+  known.flag.new<- known.flag
+  if(known.flag.new!=known.flag.last){
+    load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",known.flag,".Rdata"))
+    load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",i1,".Rdata"))
+    known.flag.last <- known.flag.new
+  }
+  
   p.value.all[i2] <- condition_additive_model(y.pheno.mis1,
                            x.covar.mis1,
                            snp.name.icog,
@@ -145,7 +147,10 @@ for(i2 in 1:(end-start+1)){
                            z.design.score.baseline,
                            z.design.score.casecase,
                            z.design.score.baseline.ER,
-                           z.design.score.casecase.ER
+                           z.design.score.casecase.ER,
+                           score.test.support.icog = score.test.support.icog,
+                           score.test.support.onco = score.test.support.onco
+                           
   )
   
   

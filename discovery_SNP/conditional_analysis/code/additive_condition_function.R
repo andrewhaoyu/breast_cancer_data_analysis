@@ -124,32 +124,6 @@ condition_additive_model <- function(y.pheno.mis1,
                                                      missingTumorIndicator=888)
       
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      score.test.support.onco.casecase.ER <- ScoreTestSupportSelfDesign(
-        y.pheno.mis2,
-        x.self.design  = x.all.mis2[,1,drop=F],
-        z.design = z.design.score.baseline.ER,
-        additive = x.all.mis2[,2:ncol(x.all.mis2)],
-        pairwise.interaction = NULL,
-        saturated = NULL,
-        missingTumorIndicator = 888
-      )
-      
-      score.test.onco.casecase.ER<- ScoreTestSelfDesign(y=y.pheno.mis2,
-                                                        x=x.all.mis2[,1,drop=F],
-                                                        z.design=z.design.score.casecase.ER,
-                                                        score.test.support=score.test.support.onco.casecase.ER,
-                                                        missingTumorIndicator=888)
-      
       score.onco.casecase.ER <- score.test.onco.casecase.ER[[1]]
       infor.onco.casecase.ER <- score.test.onco.casecase.ER[[2]]
       
@@ -217,20 +191,17 @@ condition_additive_model <- function(y.pheno.mis1,
       score.onco.baseline.ER <- score.test.onco.baseline.ER[[1]]
       infor.onco.baseline.ER <- score.test.onco.baseline.ER[[2]]
       
-      score.test.support.onco.casecase.ER <- ScoreTestSupportSelfDesign(
-        y.pheno.mis2,
-        x.self.design  = x.all.mis2[,1,drop=F],
-        z.design = z.design.score.baseline.ER,
-        additive = x.all.mis2[,2:ncol(x.all.mis2)],
-        pairwise.interaction = NULL,
-        saturated = NULL,
-        missingTumorIndicator = 888
-      )
+      score.test.support.onco.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis2,
+                                                                               x.self.design = x.all.mis2[,1,drop=F],
+                                                                               z.design = z.design.score.baseline.ER,
+                                                                               additive=x.all.mis2[,2:ncol(x.all.mis2)],
+                                                                               missingTumorIndicator = 888)
       
-      score.test.onco.casecase.ER<- ScoreTestSelfDesign(y=y.pheno.mis2,
+      score.test.onco.casecase.ER<- ScoreTestMixedModel(y=y.pheno.mis2,
                                                         x=x.all.mis2[,1,drop=F],
-                                                        z.design=z.design.score.casecase.ER,
-                                                        score.test.support=score.test.support.onco.casecase.ER,
+                                                        z.design = z.design.score.casecase.ER,
+                                                        
+                                                        score.test.support= score.test.support.onco.casecase,
                                                         missingTumorIndicator=888)
       
       
