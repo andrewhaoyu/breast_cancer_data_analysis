@@ -1,4 +1,4 @@
-condition_additive_model <- function(y.pheno.mis1,
+condition_additive_model_update <- function(y.pheno.mis1,
                                      x.covar.mis1,
                                      snp.name.icog,
                                      snp.icog,
@@ -18,8 +18,10 @@ condition_additive_model <- function(y.pheno.mis1,
                                      z.design.score.baseline.ER,
                                      z.design.score.casecase.ER,
                                      score.test.support.icog = NULL,
-                                     score.test.support.onco = NULL
-                                     ){
+                                     score.test.support.onco = NULL,
+                                     conditional.snps.icog,
+                                     conditional.snps.onco
+){
   if(is.na(snp.name.icog)&is.na(snp.name.onco)){
     p.value <- 1  
     return(p.value)
@@ -29,8 +31,12 @@ condition_additive_model <- function(y.pheno.mis1,
     known.snp.value.icog.control <- known.snp.value.icog[idx.control]
     
     snp.icog.control <- snp.icog[idx.control]
+    conditional.snp.icog <- as.matrix(conditional.snp.icog)
+    conditional.snps.icog.control <- conditional.snp.icog[idx.control,]
+    cor.icog.control <- cor(snp.icog.control,conditional.snps.icog.control)
+    cor.max <- max(cor.icog.control)
     
-    if(cor(snp.icog.control,known.snp.value.icog.control)^2>=0.8){
+    if(cor(snp.icog.control,known.snp.value.icog.control)^2>=0.8|cor.max>=0.8){
       p.value <- 1
       return(p.value)
     }else{
@@ -60,11 +66,11 @@ condition_additive_model <- function(y.pheno.mis1,
                                                                                missingTumorIndicator = 888)
       
       score.test.icog.casecase.ER<- ScoreTestMixedModel(y=y.pheno.mis1,
-                                                     x=x.all.mis1[,1,drop=F],
-                                                     z.design = z.design.score.casecase.ER,
-                                                     
-                                                     score.test.support= score.test.support.icog.casecase,
-                                                     missingTumorIndicator=888)
+                                                        x=x.all.mis1[,1,drop=F],
+                                                        z.design = z.design.score.casecase.ER,
+                                                        
+                                                        score.test.support= score.test.support.icog.casecase,
+                                                        missingTumorIndicator=888)
       score.icog.casecase.ER <- score.test.icog.casecase.ER[[1]]
       infor.icog.casecase.ER <- score.test.icog.casecase.ER[[2]]
       
@@ -117,11 +123,11 @@ condition_additive_model <- function(y.pheno.mis1,
                                                                                missingTumorIndicator = 888)
       
       score.test.onco.casecase.ER<- ScoreTestMixedModel(y=y.pheno.mis2,
-                                                     x=x.all.mis2[,1,drop=F],
-                                                     z.design = z.design.score.casecase.ER,
-                                                     
-                                                     score.test.support= score.test.support.onco.casecase,
-                                                     missingTumorIndicator=888)
+                                                        x=x.all.mis2[,1,drop=F],
+                                                        z.design = z.design.score.casecase.ER,
+                                                        
+                                                        score.test.support= score.test.support.onco.casecase,
+                                                        missingTumorIndicator=888)
       
       
       score.onco.casecase.ER <- score.test.onco.casecase.ER[[1]]
