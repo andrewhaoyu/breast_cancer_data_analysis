@@ -98,7 +98,7 @@ onco.first.snpvalue <- onco.first[[2]][idx.complete2,]
 n.first <- nrow(conditional.results.first)
 first.known.flag <- conditional.results.first$known.flag
 if(i1 %in%first.known.flag){
-  if(i1 ==178|i1==207|i1=172){
+  if(i1 ==178|i1==207|i1==172){
     
     idx.first <- which(i1==first.known.flag)
     
