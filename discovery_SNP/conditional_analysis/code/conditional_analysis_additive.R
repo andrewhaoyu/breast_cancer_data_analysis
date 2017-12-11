@@ -125,7 +125,7 @@ for(i2 in 1:(end-start+1)){
   known.flag.new<- known.flag
   if(known.flag.new!=known.flag.last){
     load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",known.flag,".Rdata"))
-    load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",i1,".Rdata"))
+    load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",known.flag,".Rdata"))
     known.flag.last <- known.flag.new
   }
   
