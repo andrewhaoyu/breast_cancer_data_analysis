@@ -122,8 +122,8 @@ if(i1 %in%first.known.flag){
       saturated = NULL,
       missingTumorIndicator = 888
     )
-    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",i1,".Rdata"))
-    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",i1,".Rdata"))
+    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.2nd",i1,".Rdata"))
+    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.2nd",i1,".Rdata"))
     
     
   }else{
@@ -160,8 +160,8 @@ if(i1 %in%first.known.flag){
       saturated = NULL,
       missingTumorIndicator = 888
     )
-    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",i1,".Rdata"))
-    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",i1,".Rdata"))
+    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.2nd",i1,".Rdata"))
+    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.2nd",i1,".Rdata"))
     
     
   }
