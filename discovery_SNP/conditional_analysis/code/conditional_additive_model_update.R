@@ -36,15 +36,17 @@ condition_additive_model_update <- function(y.pheno.mis1,
     cor.icog.control <- cor(snp.icog.control,conditional.snps.icog.control)
     cor.max <- max(cor.icog.control)
     
-    if(cor(snp.icog.control,known.snp.value.icog.control)^2>=0.8|cor.max>=0.8){
+    if(cor(snp.icog.control,known.snp.value.icog.control)^2>=0.8|cor.max^2>=0.8){
       p.value <- 1
       return(p.value)
     }else{
       known.snp.value.icog <- known.all.mis1[,known.flag]
       known.snp.value.onco <- known.all.mis2[,known.flag]
       x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
+                          conditional.snps.icog,
                           x.covar.mis1)
       x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
+                          conditional.snps.onco,
                           x.covar.mis2)
       
       score.test.icog.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis1,
@@ -90,22 +92,34 @@ condition_additive_model_update <- function(y.pheno.mis1,
     
     
     
-  }else if(((is.na(snp.name.icog)==T)&(is.na(snp.name.onco)==F))|known.flag==178|known.flag==207){
+  }else if(((is.na(snp.name.icog)==T)&(is.na(snp.name.onco)==F))|known.flag==178|known.flag==207|known.flag==172){
     
     idx.control <- which(y.pheno.mis2[,1]==0)
     known.snp.value.onco <- known.all.mis2[,known.flag]
     known.snp.value.onco.control <- known.snp.value.onco[idx.control]
     
+   
     snp.onco.control <- snp.onco[idx.control]
-    if(cor(snp.onco.control,known.snp.value.onco.control)^2>=0.8){
+    
+    conditional.snp.onco <- as.matrix(conditional.snp.onco)
+    conditional.snps.onco.control <- conditional.snp.onco[idx.control,]
+    
+    
+    cor.onco.control <- cor(snp.onco.control,conditional.snps.onco.control)
+    cor.max <- max(cor.onco.control)
+    
+    if(cor(snp.onco.control,known.snp.value.onco.control)^2>=0.8|cor.max^2>=0.8){
       p.value <- 1
       return(p.value)
     }else{
       
       known.snp.value.onco <- known.all.mis2[,known.flag]
+      x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
+                          conditional.snps.icog,
+                          x.covar.mis1)
       x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
-                          x.covar.mis2)
-      
+                          conditional.snps.onco,
+                          x.covar.mis2) 
       score.test.onco.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis2,
                                                         x=x.all.mis2[,1,drop=F],
                                                         z.design=z.design.score.baseline.ER,
@@ -152,17 +166,29 @@ condition_additive_model_update <- function(y.pheno.mis1,
     known.snp.value.onco.control <- known.snp.value.onco[idx.control]
     snp.onco.control <- snp.onco[idx.control]
     
-    if(cor(snp.onco.control,known.snp.value.onco.control)^2>=0.8){
+
+    
+    conditional.snp.onco <- as.matrix(conditional.snp.onco)
+    conditional.snps.onco.control <- conditional.snp.onco[idx.control,]
+    
+    
+    cor.onco.control <- cor(snp.onco.control,conditional.snps.onco.control)
+    cor.max <- max(cor.onco.control)
+    
+    
+    
+    if(cor(snp.onco.control,known.snp.value.onco.control)^2>=0.8|cor.max^2>=0.8){
       p.value <- 1
       return(p.value)
     }else{
       known.snp.value.icog <- known.all.mis1[,known.flag]
       known.snp.value.onco <- known.all.mis2[,known.flag]
       x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
+                          conditional.snps.icog,
                           x.covar.mis1)
       x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
+                          conditional.snps.onco,
                           x.covar.mis2)
-      
       score.test.icog.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis1,
                                                         x=x.all.mis1[,1,drop=F],
                                                         z.design=z.design.score.baseline.ER,
