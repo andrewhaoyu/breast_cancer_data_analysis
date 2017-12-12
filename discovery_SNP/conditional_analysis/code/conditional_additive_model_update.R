@@ -101,7 +101,7 @@ condition_additive_model_update <- function(y.pheno.mis1,
    
     snp.onco.control <- snp.onco[idx.control]
     
-    conditional.snps.onco <- as.matrix(conditional.snp.onco)
+    conditional.snps.onco <- as.matrix( conditional.snps.onco)
     conditional.snps.onco.control <- conditional.snps.onco[idx.control,]
     
     
@@ -168,7 +168,7 @@ condition_additive_model_update <- function(y.pheno.mis1,
     
 
     
-    conditional.snps.onco <- as.matrix(conditional.snp.onco)
+    conditional.snps.onco <- as.matrix( conditional.snps.onco)
     conditional.snps.onco.control <- conditional.snps.onco[idx.control,]
     
     
