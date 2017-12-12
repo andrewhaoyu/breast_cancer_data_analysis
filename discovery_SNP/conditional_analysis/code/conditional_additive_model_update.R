@@ -112,7 +112,7 @@ condition_additive_model_update <- function(y.pheno.mis1,
       p.value <- 1
       return(p.value)
     }else{
-      
+      known.snp.value.icog <- known.all.mis1[,known.flag]
       known.snp.value.onco <- known.all.mis2[,known.flag]
       x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
                           conditional.snps.icog,
@@ -162,6 +162,7 @@ condition_additive_model_update <- function(y.pheno.mis1,
     
   }else{
     idx.control <- which(y.pheno.mis2[,1]==0)
+    known.snp.value.icog <- known.all.mis1[,known.flag]
     known.snp.value.onco <- known.all.mis2[,known.flag]
     known.snp.value.onco.control <- known.snp.value.onco[idx.control]
     snp.onco.control <- snp.onco[idx.control]
