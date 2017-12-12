@@ -185,5 +185,5 @@ load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/con
 }
 
 
-save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub",i1,".Rdata"))
+save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.2nd",i1,".Rdata"))
 
