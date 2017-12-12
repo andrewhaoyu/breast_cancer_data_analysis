@@ -3,7 +3,7 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
 
-source("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/code/additive_condition_function.R")
+source("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/code/conditional_additive_model_update.R")
 
 
 
@@ -112,8 +112,7 @@ p.value.all <- rep(0,end-start+1)
 known.flag.last <- 999
 known.flag.new <- 999
 
-save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.2nd",i1,".Rdata"))
-save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.2nd",i1,".Rdata"))
+
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.first.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.first.Rdata")
@@ -142,8 +141,9 @@ for(i2 in 1:(end-start+1)){
   if(known.flag%in%first.known.flag){
     known.flag.new<- known.flag
     if(known.flag.new!=known.flag.last){
-      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",known.flag,".Rdata"))
-      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",known.flag,".Rdata"))
+      
+      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.2nd",known.flag,".Rdata"))
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.2nd",known.flag,".Rdata"))
       known.flag.last <- known.flag.new
     }
     
@@ -173,10 +173,8 @@ for(i2 in 1:(end-start+1)){
                                                 z.design.score.casecase.ER,
                                                 score.test.support.icog = score.test.support.icog,
                                                 score.test.support.onco = score.test.support.onco,
-                                                conditional.snps.icog,
-                                                conditional.snps.onco
-                                                
-    )
+                                                conditional.snps.icog=conditional.snps.icog,
+                                                conditional.snps.onco=conditional.snps.onco)
     
   }else{
     p.value.all[i2] <- 1

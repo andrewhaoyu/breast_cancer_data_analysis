@@ -19,8 +19,8 @@ condition_additive_model_update <- function(y.pheno.mis1,
                                      z.design.score.casecase.ER,
                                      score.test.support.icog = NULL,
                                      score.test.support.onco = NULL,
-                                     conditional.snps.icog,
-                                     conditional.snps.onco
+                                     conditional.snps.icog = NULL,
+                                     conditional.snps.onco = NULL
 ){
   if(is.na(snp.name.icog)&is.na(snp.name.onco)){
     p.value <- 1  
@@ -101,8 +101,8 @@ condition_additive_model_update <- function(y.pheno.mis1,
    
     snp.onco.control <- snp.onco[idx.control]
     
-    conditional.snp.onco <- as.matrix(conditional.snp.onco)
-    conditional.snps.onco.control <- conditional.snp.onco[idx.control,]
+    conditional.snps.onco <- as.matrix(conditional.snp.onco)
+    conditional.snps.onco.control <- conditional.snps.onco[idx.control,]
     
     
     cor.onco.control <- cor(snp.onco.control,conditional.snps.onco.control)
@@ -168,8 +168,8 @@ condition_additive_model_update <- function(y.pheno.mis1,
     
 
     
-    conditional.snp.onco <- as.matrix(conditional.snp.onco)
-    conditional.snps.onco.control <- conditional.snp.onco[idx.control,]
+    conditional.snps.onco <- as.matrix(conditional.snp.onco)
+    conditional.snps.onco.control <- conditional.snps.onco[idx.control,]
     
     
     cor.onco.control <- cor(snp.onco.control,conditional.snps.onco.control)
