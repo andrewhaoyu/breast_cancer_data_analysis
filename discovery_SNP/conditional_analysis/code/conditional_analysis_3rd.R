@@ -132,7 +132,7 @@ onco.2nd.snpvalue <- onco.2nd[[2]][idx.complete2,]
 
 
 n.first <- nrow(conditional.results.first)
-first.known.flag <- conditional.results.first$known.flag
+known.flag.first <- conditional.results.first$known.flag
 n.2nd <- nrow(conditional.results.2nd)
 known.flag.2nd <- conditional.results.2nd$known.flag
 
@@ -141,10 +141,10 @@ library(doParallel)
 
 no.cores <- 2
 
-registerDoParallel(no.cores)
 
+(end-start+1)
 
-result.list <- foreach(i2 = 1:(end-start+1))%dopar%{
+for(i2 in 1:2){
   print(i2)
   snp.name.icog <- snp.name.all.icog[i2]
   snp.icog <- x.test.all.mis1[,i2]
@@ -173,11 +173,11 @@ result.list <- foreach(i2 = 1:(end-start+1))%dopar%{
     
     conditional.snps.icog.2nd <- icog.2nd.snpvalue[,idx.condition.2nd]
     conditional.snps.onco.2nd <- onco.2nd.snpvalue[,idx.condition.2nd]
-    conditional.snps.icog <- cbind(conditional.snp.first,conditional.snp.2nd)
+    conditional.snps.icog <- cbind(conditional.snps.icog.first,conditional.snps.icog.2nd)
     conditional.snps.onco <- cbind(conditional.snps.onco.first,conditional.snps.onco.2nd)
     
     
-     p.value<-  condition_additive_model_update(y.pheno.mis1,
+     p.value.all[i2]<-  condition_additive_model_update(y.pheno.mis1,
                                                        x.covar.mis1,
                                                        snp.name.icog,
                                                        snp.icog,
@@ -201,23 +201,19 @@ result.list <- foreach(i2 = 1:(end-start+1))%dopar%{
                                                        conditional.snps.icog=conditional.snps.icog,
                                                        conditional.snps.onco=conditional.snps.onco
                       )
-     return(p.value)
+
     
   }else{
-p.value <- 1
-return(p.value)
+p.value.all[i2] <- 1
+
   }
   
   
   
 }
 
-stopImplicitCluster()
 
 
-for(i in 1:(end-start+1)){
-  p.value.all[i] <- result.list[[i]]
-}
 
 save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.3nd",i1,".Rdata"))
 
