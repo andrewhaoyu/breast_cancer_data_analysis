@@ -131,7 +131,7 @@ first.known.flag <- conditional.results.first$known.flag
 
 #for(i2 in 1:(end-start+1)){
   print(i2)
-  i2 = start+i2-1
+  
   snp.name.icog <- snp.name.all.icog[i2]
   snp.icog <- x.test.all.mis1[,i2]
   snp.onco <- x.test.all.mis2[,i2]
