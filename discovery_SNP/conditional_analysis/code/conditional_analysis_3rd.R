@@ -142,9 +142,9 @@ library(doParallel)
 no.cores <- 2
 
 
-(end-start+1)
 
-for(i2 in 1:2){
+
+for(i2 in 1:(end-start+1)){
   print(i2)
   snp.name.icog <- snp.name.all.icog[i2]
   snp.icog <- x.test.all.mis1[,i2]
