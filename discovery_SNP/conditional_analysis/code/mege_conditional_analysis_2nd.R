@@ -10,12 +10,12 @@ for(i1 in 1:3000){
   total <- total + temp
 }
 
-conditional.results.first.all <- cbind(all.conditional.snps,p.value)
+conditional.results.2nd.all <- cbind(all.conditional.snps,p.value)
 
 
 
-known.flag.all <- conditional.results.first.all$known.flag
-conditional.results.first <- NULL
+known.flag.all <- conditional.results.2nd.all$known.flag
+conditional.results.2nd <- NULL
 for(i in 1:207){
   print(i)
   idx <- which(known.flag.all==i)
@@ -24,23 +24,23 @@ for(i in 1:207){
   p.value.min <- min(p.value.temp)
   if(p.value.min<=1E-05){
     idx.min <- which.min(p.value.temp)
-    conditional.results.first <- rbind(conditional.results.first,
-                                       conditional.results.first.all[idx,][idx.min,]               )
+    conditional.results.2nd <- rbind(conditional.results.2nd,
+                                       conditional.results.2nd.all[idx,][idx.min,]               )
   }
   
 }
 
 
 library(tidyverse)
-conditional.results.first <- mutate(conditional.results.first,
+conditional.results.2nd <- mutate(conditional.results.2nd,
                                     cat.known.flag = ifelse(known.flag%in%1:178,1,
                                                             ifelse(known.flag%in%179:188,2,3))
 )
-table(conditional.results.first$cat.known.flag)
+table(conditional.results.2nd$cat.known.flag)
 
 
 
-save(conditional.results.first,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.first.Rdata")
+save(conditional.results.2nd,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.2nd.Rdata")
 
 
 
