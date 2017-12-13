@@ -118,17 +118,33 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditiona
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.first.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.first")
 
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.2nd.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.2nd.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.2nd")
+
 icog.first.snpvalue <- icog.first[[2]][idx.complete1,]
 onco.first.snpvalue <- onco.first[[2]][idx.complete2,]
+
+icog.2nd.snpvalue <- icog.2nd[[2]][idx.complete1,]
+onco.2nd.snpvalue <- onco.2nd[[2]][idx.complete2,]
 
 
 
 
 n.first <- nrow(conditional.results.first)
 first.known.flag <- conditional.results.first$known.flag
+n.2nd <- nrow(conditional.results.2nd)
+known.flag.2nd <- conditional.results.2nd$known.flag
+
+library(foreach)
+library(doParallel)
+
+no.cores <- 2
+
+registerDoParallel(no.cores)
 
 
-for(i2 in 1:(end-start+1)){
+result.list <- foreach(i2 = 1:(end-start+1))%dopar%{
   print(i2)
   snp.name.icog <- snp.name.all.icog[i2]
   snp.icog <- x.test.all.mis1[,i2]
@@ -138,21 +154,30 @@ for(i2 in 1:(end-start+1)){
   snp.onco <- snp.onco[idx.complete2]
   known.flag <- known.flag.all[start+i2-1]
   
-  if(known.flag%in%first.known.flag){
+  if(known.flag%in%known.flag.2nd){
     known.flag.new<- known.flag
     if(known.flag.new!=known.flag.last){
+      
       
       load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.2nd",known.flag,".Rdata"))
       load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.2nd",known.flag,".Rdata"))
       known.flag.last <- known.flag.new
     }
     
-    idx.condition <- which(first.known.flag==known.flag)
+    idx.condition.first <- which(known.flag.first==known.flag)
     
-    conditional.snps.icog <- icog.first.snpvalue[,idx.condition]
-    conditional.snps.onco <- onco.first.snpvalue[,idx.condition]
+    conditional.snps.icog.first <- icog.first.snpvalue[,idx.condition.first]
+    conditional.snps.onco.first <- onco.first.snpvalue[,idx.condition.first]
     
-    p.value.all[i2] <- condition_additive_model_update(y.pheno.mis1,
+    idx.condition.2nd <- which(known.flag.2nd==known.flag)
+    
+    conditional.snps.icog.2nd <- icog.2nd.snpvalue[,idx.condition.2nd]
+    conditional.snps.onco.2nd <- onco.2nd.snpvalue[,idx.condition.2nd]
+    conditional.snps.icog <- cbind(conditional.snp.first,conditional.snp.2nd)
+    conditional.snps.onco <- cbind(conditional.snps.onco.first,conditional.snps.onco.2nd)
+    
+    
+     p.value<-  condition_additive_model_update(y.pheno.mis1,
                                                        x.covar.mis1,
                                                        snp.name.icog,
                                                        snp.icog,
@@ -174,16 +199,25 @@ for(i2 in 1:(end-start+1)){
                                                        score.test.support.icog = score.test.support.icog,
                                                        score.test.support.onco = score.test.support.onco,
                                                        conditional.snps.icog=conditional.snps.icog,
-                                                       conditional.snps.onco=conditional.snps.onco)
+                                                       conditional.snps.onco=conditional.snps.onco
+                      )
+     return(p.value)
     
   }else{
-    p.value.all[i2] <- 1
+p.value <- 1
+return(p.value)
   }
   
   
   
 }
 
+stopImplicitCluster()
 
-save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.2nd",i1,".Rdata"))
+
+for(i in 1:(end-start+1)){
+  p.value.all[i] <- result.list[[i]]
+}
+
+save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.3nd",i1,".Rdata"))
 
