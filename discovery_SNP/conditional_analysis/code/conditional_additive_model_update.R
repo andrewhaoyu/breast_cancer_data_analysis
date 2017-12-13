@@ -31,8 +31,8 @@ condition_additive_model_update <- function(y.pheno.mis1,
     known.snp.value.icog.control <- known.snp.value.icog[idx.control]
     
     snp.icog.control <- snp.icog[idx.control]
-    conditional.snp.icog <- as.matrix(conditional.snp.icog)
-    conditional.snps.icog.control <- conditional.snp.icog[idx.control,]
+    conditional.snps.icog <- as.matrix(conditional.snps.icog)
+    conditional.snps.icog.control <- conditional.snps.icog[idx.control,]
     cor.icog.control <- cor(snp.icog.control,conditional.snps.icog.control)
     cor.max <- max(cor.icog.control)
     
