@@ -1,7 +1,7 @@
 rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
-
+print(i1)
 
 source("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/code/conditional_additive_model_update.R")
 
