@@ -188,10 +188,9 @@ first.known.flag <- conditional.results.first$known.flag
 
 
 save(p.value,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.2nd",i2,"_temp.Rdata"))
-
-p.value.all <- rep(0,end-start+1)
-
-for(i in 1:26){
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.2nd",i,"_temp.Rdata"))
-  p.value.all[i] <- p.value
-}
+# p.value.all <- rep(0,end-start+1)
+# 
+# for(i in 1:26){
+#   load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.2nd",i,"_temp.Rdata"))
+#   p.value.all[i] <- p.value
+# }
