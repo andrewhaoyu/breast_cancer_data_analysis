@@ -29,7 +29,7 @@ condition_additive_model <- function(y.pheno.mis1,
     idx.known <- which(region.all==region.all[known.flag])  
     
     known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
-    known.snp.value.icog.control <- known.snp.value.icog[idx.control]
+    known.snp.value.icog.control <- known.snp.value.icog[idx.control,]
     
     snp.icog.control <- snp.icog[idx.control]
     
@@ -92,7 +92,7 @@ condition_additive_model <- function(y.pheno.mis1,
     idx.control <- which(y.pheno.mis2[,1]==0)
     idx.known <- which(region.all==region.all[known.flag])  
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
-    known.snp.value.onco.control <- known.snp.value.onco[idx.control]
+    known.snp.value.onco.control <- known.snp.value.onco[idx.control,]
     snp.onco.control <- snp.onco[idx.control]
     if(max(cor(snp.onco.control,known.snp.value.onco.control)^2)>=0.8){
       p.value <- 1
@@ -149,14 +149,14 @@ condition_additive_model <- function(y.pheno.mis1,
     idx.control <- which(y.pheno.mis2[,1]==0)
     idx.known <- which(region.all==region.all[known.flag])  
     
-    
+ 
     
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     
-    known.snp.value.onco.control <- known.snp.value.onco[idx.control]
+    known.snp.value.onco.control <- known.snp.value.onco[idx.control,]
     snp.onco.control <- snp.onco[idx.control]
     
-    if(cor(snp.onco.control,known.snp.value.onco.control)^2>=0.8){
+    if(max(cor(snp.onco.control,known.snp.value.onco.control)^2)>=0.8){
       p.value <- 1
       return(p.value)
     }else{
