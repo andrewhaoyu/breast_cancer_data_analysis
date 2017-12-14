@@ -121,6 +121,13 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditiona
 icog.first.snpvalue <- icog.first[[2]][idx.complete1,]
 onco.first.snpvalue <- onco.first[[2]][idx.complete2,]
 
+fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
+                         stringsAsFactors = F)
+
+
+region.all <- fine_mapping$region.idx
+new.region <- c(179:207)
+region.all <- c(region.all,new.region)
 
 
 
@@ -174,7 +181,8 @@ load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/con
                                                 score.test.support.icog = score.test.support.icog,
                                                 score.test.support.onco = score.test.support.onco,
                                                 conditional.snps.icog=conditional.snps.icog,
-                                                conditional.snps.onco=conditional.snps.onco)
+                                                conditional.snps.onco=conditional.snps.onco,
+                                                region.all = region.all)
     
   }else{
     p.value.all[i2] <- 1
