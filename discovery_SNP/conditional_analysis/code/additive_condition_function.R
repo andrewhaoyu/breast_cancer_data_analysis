@@ -25,62 +25,73 @@ condition_additive_model <- function(y.pheno.mis1,
     p.value <- 1  
     return(p.value)
   }else if((is.na(snp.name.icog)==F)&(is.na(snp.name.onco)==T)){
-    idx.control <- which(y.pheno.mis1[,1]==0)
-    idx.known <- which(region.all==region.all[known.flag])  
-    
-    known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
-    known.snp.value.icog.control <- known.snp.value.icog[idx.control,]
-    
-    snp.icog.control <- snp.icog[idx.control]
-    
-    if(max(cor(snp.icog.control,known.snp.value.icog.control)^2)>=0.8){
+    if(known.flag==178|known.flag==207|known.flag==122){
       p.value <- 1
       return(p.value)
     }else{
+    
+      
+      idx.control <- which(y.pheno.mis1[,1]==0)
       idx.known <- which(region.all==region.all[known.flag])  
       
       known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
+      known.snp.value.icog.control <- known.snp.value.icog[idx.control,]
       
-      x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
-                          x.covar.mis1)
+      snp.icog.control <- snp.icog[idx.control]
       
-      score.test.icog.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis1,
-                                                        x=x.all.mis1[,1,drop=F],
-                                                        z.design=z.design.score.baseline.ER,
-                                                        score.test.support=score.test.support.icog,
-                                                        missingTumorIndicator=888)
-      score.icog.baseline.ER <- score.test.icog.baseline.ER[[1]]
-      infor.icog.baseline.ER <- score.test.icog.baseline.ER[[2]]
+      if(max(cor(snp.icog.control,known.snp.value.icog.control)^2)>=0.8){
+        p.value <- 1
+        return(p.value)
+      }else{
+        idx.known <- which(region.all==region.all[known.flag])  
+        
+        known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
+        
+        x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
+                            x.covar.mis1)
+        
+        score.test.icog.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis1,
+                                                          x=x.all.mis1[,1,drop=F],
+                                                          z.design=z.design.score.baseline.ER,
+                                                          score.test.support=score.test.support.icog,
+                                                          missingTumorIndicator=888)
+        score.icog.baseline.ER <- score.test.icog.baseline.ER[[1]]
+        infor.icog.baseline.ER <- score.test.icog.baseline.ER[[2]]
+        
+        
+        
+        
+        
+        score.test.support.icog.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis1,
+                                                                                 x.self.design = x.all.mis1[,1,drop=F],
+                                                                                 z.design = z.design.score.baseline.ER,
+                                                                                 additive=x.all.mis1[,2:ncol(x.all.mis1)],
+                                                                                 missingTumorIndicator = 888)
+        
+        score.test.icog.casecase.ER<- ScoreTestMixedModel(y=y.pheno.mis1,
+                                                          x=x.all.mis1[,1,drop=F],
+                                                          z.design = z.design.score.casecase.ER,
+                                                          
+                                                          score.test.support= score.test.support.icog.casecase,
+                                                          missingTumorIndicator=888)
+        score.icog.casecase.ER <- score.test.icog.casecase.ER[[1]]
+        infor.icog.casecase.ER <- score.test.icog.casecase.ER[[2]]
+        
+        
+        mixed.baseline.er <- DisplayMixedScoreTestResult(score.icog.baseline.ER,
+                                                         infor.icog.baseline.ER,
+                                                         score.icog.casecase.ER,
+                                                         infor.icog.casecase.ER)  
+        
+        
+        p.value <- mixed.baseline.er[1]
+        return(p.value)
+      }
       
       
-      
-      
-      
-      score.test.support.icog.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis1,
-                                                                               x.self.design = x.all.mis1[,1,drop=F],
-                                                                               z.design = z.design.score.baseline.ER,
-                                                                               additive=x.all.mis1[,2:ncol(x.all.mis1)],
-                                                                               missingTumorIndicator = 888)
-      
-      score.test.icog.casecase.ER<- ScoreTestMixedModel(y=y.pheno.mis1,
-                                                     x=x.all.mis1[,1,drop=F],
-                                                     z.design = z.design.score.casecase.ER,
-                                                     
-                                                     score.test.support= score.test.support.icog.casecase,
-                                                     missingTumorIndicator=888)
-      score.icog.casecase.ER <- score.test.icog.casecase.ER[[1]]
-      infor.icog.casecase.ER <- score.test.icog.casecase.ER[[2]]
-      
-      
-      mixed.baseline.er <- DisplayMixedScoreTestResult(score.icog.baseline.ER,
-                                                       infor.icog.baseline.ER,
-                                                       score.icog.casecase.ER,
-                                                       infor.icog.casecase.ER)  
-      
-      
-      p.value <- mixed.baseline.er[1]
-      return(p.value)
+        
     }
+    
     
     
     
@@ -145,9 +156,6 @@ condition_additive_model <- function(y.pheno.mis1,
     
     
     
-  }else if(((is.na(snp.name.icog)==F)&(is.na(snp.name.onco)==T))&(known.flag==178|known.flag==207|known.flag==122)){
-    p.value <- 1
-    return(p.value)
   }else{
     idx.control <- which(y.pheno.mis2[,1]==0)
     idx.known <- which(region.all==region.all[known.flag])  
