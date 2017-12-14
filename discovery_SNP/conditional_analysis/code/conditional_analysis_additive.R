@@ -105,6 +105,13 @@ known.all.mis2 <- known.all.mis2[idx.complete2,]
 
 known.flag.all <- all.conditional.snps$known.flag
 
+fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
+                         stringsAsFactors = F)
+
+
+region.all <- fine_mapping$region.idx
+new.region <- c(179:207)
+region.all <- c(region.all,new.region)
 
 
 p.value.all <- rep(0,end-start+1)
@@ -149,8 +156,8 @@ for(i2 in 1:(end-start+1)){
                            z.design.score.baseline.ER,
                            z.design.score.casecase.ER,
                            score.test.support.icog = score.test.support.icog,
-                           score.test.support.onco = score.test.support.onco
-                           
+                           score.test.support.onco = score.test.support.onco,
+                           region.all = region.all
   )
   
   

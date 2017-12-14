@@ -18,28 +18,31 @@ condition_additive_model <- function(y.pheno.mis1,
                                      z.design.score.baseline.ER,
                                      z.design.score.casecase.ER,
                                      score.test.support.icog = NULL,
-                                     score.test.support.onco = NULL
+                                     score.test.support.onco = NULL,
+                                     region.all
                                      ){
   if(is.na(snp.name.icog)&is.na(snp.name.onco)){
     p.value <- 1  
     return(p.value)
   }else if((is.na(snp.name.icog)==F)&(is.na(snp.name.onco)==T)){
     idx.control <- which(y.pheno.mis1[,1]==0)
-    known.snp.value.icog <- known.all.mis1[,known.flag]
+    idx.known <- which(region.all==region.all[known.flag])  
+    
+    known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
     known.snp.value.icog.control <- known.snp.value.icog[idx.control]
     
     snp.icog.control <- snp.icog[idx.control]
     
-    if(cor(snp.icog.control,known.snp.value.icog.control)^2>=0.8){
+    if(max(cor(snp.icog.control,known.snp.value.icog.control)^2)>=0.8){
       p.value <- 1
       return(p.value)
     }else{
-      known.snp.value.icog <- known.all.mis1[,known.flag]
-      known.snp.value.onco <- known.all.mis2[,known.flag]
+      idx.known <- which(region.all==region.all[known.flag])  
+      
+      known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
+      
       x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
                           x.covar.mis1)
-      x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
-                          x.covar.mis2)
       
       score.test.icog.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis1,
                                                         x=x.all.mis1[,1,drop=F],
@@ -87,16 +90,18 @@ condition_additive_model <- function(y.pheno.mis1,
   }else if(((is.na(snp.name.icog)==T)&(is.na(snp.name.onco)==F))|known.flag==178|known.flag==207){
     
     idx.control <- which(y.pheno.mis2[,1]==0)
-    known.snp.value.onco <- known.all.mis2[,known.flag]
+    idx.known <- which(region.all==region.all[known.flag])  
+    known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     known.snp.value.onco.control <- known.snp.value.onco[idx.control]
-    
     snp.onco.control <- snp.onco[idx.control]
-    if(cor(snp.onco.control,known.snp.value.onco.control)^2>=0.8){
+    if(max(cor(snp.onco.control,known.snp.value.onco.control)^2)>=0.8){
       p.value <- 1
       return(p.value)
     }else{
       
-      known.snp.value.onco <- known.all.mis2[,known.flag]
+      idx.known <- which(region.all==region.all[known.flag])  
+      known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
+      
       x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
                           x.covar.mis2)
       
@@ -142,7 +147,12 @@ condition_additive_model <- function(y.pheno.mis1,
     
   }else{
     idx.control <- which(y.pheno.mis2[,1]==0)
-    known.snp.value.onco <- known.all.mis2[,known.flag]
+    idx.known <- which(region.all==region.all[known.flag])  
+    
+    
+    
+    known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
+    
     known.snp.value.onco.control <- known.snp.value.onco[idx.control]
     snp.onco.control <- snp.onco[idx.control]
     
@@ -150,8 +160,12 @@ condition_additive_model <- function(y.pheno.mis1,
       p.value <- 1
       return(p.value)
     }else{
-      known.snp.value.icog <- known.all.mis1[,known.flag]
-      known.snp.value.onco <- known.all.mis2[,known.flag]
+      idx.known <- which(region.all==region.all[known.flag])  
+      
+      known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
+      
+      known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
+        
       x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
                           x.covar.mis1)
       x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
