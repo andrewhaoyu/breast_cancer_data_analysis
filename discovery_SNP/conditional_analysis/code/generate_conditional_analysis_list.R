@@ -80,6 +80,19 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ER
 fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
                          stringsAsFactors = F)
 
+#unique.region <- unique(fine_mapping$Fine.Mapping.Intervals)
+
+#region.idx <- rep(0,178)
+#for(i in 1:nrow(fine_mapping)){
+ # idx <- which(unique.region==fine_mapping$Fine.Mapping.Intervals[i])
+  #region.idx[i] <- idx
+#}
+
+#fine_mapping <- cbind(fine_mapping,region.idx)
+
+#write.csv(fine_mapping,file="/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",row.names=F,quote=F)
+
+
 idx_cut <- NULL
 start <- fine_mapping$start
 end <- fine_mapping$end
@@ -102,12 +115,12 @@ all <- meta_result_shared_1p
 
 
 
-
 library(bc2)
 idx.temp.known <- get_fine_mapping_id(meta_result_shared_1p,fine_mapping)
 idx.cut <- idx.temp.known[[1]]
 
 known.flag <- idx.temp.known[[2]]
+
 all.known.region.snps <- meta_result_shared_1p[idx.cut,]
 all.known.region.snps <- cbind(all.known.region.snps,known.flag)
 library(dplyr)

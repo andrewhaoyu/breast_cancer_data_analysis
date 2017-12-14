@@ -84,14 +84,20 @@ x.covar.mis2 <- cbind(x.covar.mis2,age2)
 
 known.all.mis2 <- known.all.mis2[idx.complete2,]
 
+fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
+                         stringsAsFactors = F)
 
 
-
-if(i1 ==178|i1==207){
+region.all <- fine_mapping$region.idx
+new.region <- c(179:207)
+region.all <- c(region.all,new.region)
+if(i1 ==178|i1==207|i1==122){
   
+idx.known <- which(region.all==region.all[i1])  
   
-  snp.onco <- known.snp.value.onco <- known.all.mis2[,i1]
-  
+  known.snp.value.onco <- known.all.mis2[,idx.known]
+  #create sudo snp.onco for programming convenience
+  snp.onco <- known.snp.value.onco[,1]
   x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
                       x.covar.mis2)
   
@@ -114,9 +120,12 @@ if(i1 ==178|i1==207){
   
   
 }else{
-  snp.icog <- known.snp.value.icog <- known.all.mis1[,i1]
-  snp.onco <- known.snp.value.onco <- known.all.mis2[,i1]
+  idx.known <- which(region.all==region.all[i1])  
   
+   known.snp.value.icog <- known.all.mis1[,idx.known]
+   snp.icog <- known.snp.value.icog[,1]
+    known.snp.value.onco <- known.all.mis2[,idx.known]
+    snp.onco <-   known.snp.value.onco[,1]
   x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
                       x.covar.mis1)
   x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
