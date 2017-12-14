@@ -34,7 +34,7 @@ n.condition <- nrow(all.conditional.snps)
 library(bc2)
 
 
-for(i in 2882:3000){
+for(i in 1:3000){
   print(i)
   start.end <- startend(n.condition,3000,i)
   start <- start.end[1]

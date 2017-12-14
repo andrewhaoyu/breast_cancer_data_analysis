@@ -97,13 +97,23 @@ onco.first.snpvalue <- onco.first[[2]][idx.complete2,]
 
 n.first <- nrow(conditional.results.first)
 first.known.flag <- conditional.results.first$known.flag
+fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
+                         stringsAsFactors = F)
+
+
+region.all <- fine_mapping$region.idx
+new.region <- c(179:207)
+region.all <- c(region.all,new.region)
+
 if(i1 %in%first.known.flag){
-  if(i1 ==178|i1==207|i1==172){
-    
+  if(i1 ==178|i1==207|i1==172|i1==122){
+    idx.known <- which(region.all==region.all[i1])      
     idx.first <- which(i1==first.known.flag)
     
     first.snp.value.onco <- onco.first.snpvalue[,idx.first]
-    snp.onco <- known.snp.value.onco <- known.all.mis2[,i1]
+    known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
+    #create sudo snp.onco for programming convenience
+    snp.onco <- known.snp.value.onco[,1]
     
     x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
                         first.snp.value.onco,x.covar.mis2)
@@ -134,9 +144,12 @@ if(i1 %in%first.known.flag){
     
     first.snp.value.onco <- onco.first.snpvalue[,idx.first]
    
+    idx.known <- which(region.all==region.all[i1])  
     
-    snp.icog <- known.snp.value.icog <- known.all.mis1[,i1]
-    snp.onco <- known.snp.value.onco <- known.all.mis2[,i1]
+    known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
+    snp.icog <- known.snp.value.icog[,1]
+    known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
+    snp.onco <-   known.snp.value.onco[,1]
     
     x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,first.snp.value.icog,
                         x.covar.mis1)

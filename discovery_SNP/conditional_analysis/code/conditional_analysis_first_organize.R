@@ -7,7 +7,7 @@ n.first <- nrow(conditional.results.first)
 idx.first <- rep(0,n.first)
 
 for(i in 1:n.first){
-  if(i!=58){
+  if(i!=56){
     print(i)
     idx <- which(all.conditional.snps$SNP.ICOGS==conditional.results.first$SNP.ICOGS[i]&
                    all.conditional.snps$SNP.ONCO==conditional.results.first$SNP.ONCO[i])
