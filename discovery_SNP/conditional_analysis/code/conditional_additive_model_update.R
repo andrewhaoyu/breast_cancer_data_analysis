@@ -127,9 +127,7 @@ condition_additive_model_update <- function(y.pheno.mis1,
     }else{
       idx.known <- which(region.all==region.all[known.flag])  
       known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
-      x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
-                          conditional.snps.icog,
-                          x.covar.mis1)
+     
       x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
                           conditional.snps.onco,
                           x.covar.mis2) 

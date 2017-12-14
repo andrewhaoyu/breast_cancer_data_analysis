@@ -181,7 +181,7 @@ load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/con
                                                 score.test.support.icog = score.test.support.icog,
                                                 score.test.support.onco = score.test.support.onco,
                                                 conditional.snps.icog=conditional.snps.icog,
-                                                conditional.snps.onco=conditional.snps.onco,
+                                                  conditional.snps.onco=conditional.snps.onco,
                                                 region.all = region.all)
     
   }else{
