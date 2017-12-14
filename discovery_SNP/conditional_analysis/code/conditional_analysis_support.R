@@ -95,7 +95,7 @@ if(i1 ==178|i1==207|i1==122){
   
 idx.known <- which(region.all==region.all[i1])  
   
-  known.snp.value.onco <- known.all.mis2[,idx.known]
+  known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
   #create sudo snp.onco for programming convenience
   snp.onco <- known.snp.value.onco[,1]
   x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
@@ -122,9 +122,9 @@ idx.known <- which(region.all==region.all[i1])
 }else{
   idx.known <- which(region.all==region.all[i1])  
   
-   known.snp.value.icog <- known.all.mis1[,idx.known]
+   known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
    snp.icog <- known.snp.value.icog[,1]
-    known.snp.value.onco <- known.all.mis2[,idx.known]
+    known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     snp.onco <-   known.snp.value.onco[,1]
   x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,
                       x.covar.mis1)
