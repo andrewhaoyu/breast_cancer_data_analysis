@@ -87,7 +87,7 @@ condition_additive_model <- function(y.pheno.mis1,
     
     
     
-  }else if(((is.na(snp.name.icog)==T)&(is.na(snp.name.onco)==F))|known.flag==178|known.flag==207|known.flag==122){
+  }else if(((is.na(snp.name.icog)==T)&(is.na(snp.name.onco)==F))|(known.flag==178&is.na(snp.name.onco)==F)|(known.flag==207&is.na(snp.name.onco)==F)|(known.flag==122&is.na(snp.name.onco)==F)){
     
     idx.control <- which(y.pheno.mis2[,1]==0)
     idx.known <- which(region.all==region.all[known.flag])  
@@ -145,6 +145,9 @@ condition_additive_model <- function(y.pheno.mis1,
     
     
     
+  }else if(((is.na(snp.name.icog)==F)&(is.na(snp.name.onco)==T))&(known.flag==178|known.flag==207|known.flag==122)){
+    p.value <- 1
+    return(p.value)
   }else{
     idx.control <- which(y.pheno.mis2[,1]==0)
     idx.known <- which(region.all==region.all[known.flag])  
