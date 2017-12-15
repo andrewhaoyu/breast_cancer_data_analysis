@@ -128,6 +128,15 @@ onco.first.snpvalue <- onco.first[[2]][idx.complete2,]
 icog.2nd.snpvalue <- icog.2nd[[2]][idx.complete1,]
 onco.2nd.snpvalue <- onco.2nd[[2]][idx.complete2,]
 
+fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
+                         stringsAsFactors = F)
+
+
+region.all <- fine_mapping$region.idx
+new.region <- c(179:207)
+region.all <- c(region.all,new.region)
+
+
 
 
 
@@ -159,8 +168,8 @@ for(i2 in 1:(end-start+1)){
     if(known.flag.new!=known.flag.last){
       
       
-      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.2nd",known.flag,".Rdata"))
-      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.2nd",known.flag,".Rdata"))
+      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.3rd",known.flag,".Rdata"))
+      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.3rd",known.flag,".Rdata"))
       known.flag.last <- known.flag.new
     }
     
@@ -199,7 +208,8 @@ for(i2 in 1:(end-start+1)){
                                                        score.test.support.icog = score.test.support.icog,
                                                        score.test.support.onco = score.test.support.onco,
                                                        conditional.snps.icog=conditional.snps.icog,
-                                                       conditional.snps.onco=conditional.snps.onco
+                                                       conditional.snps.onco=conditional.snps.onco,
+                                                       region.all=region.all
                       )
 
     
