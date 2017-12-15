@@ -37,7 +37,7 @@ condition_additive_model_update <- function(y.pheno.mis1,
       known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
       
       
-      known.snp.value.icog.control <- known.snp.value.icog[idx.control]
+      known.snp.value.icog.control <- known.snp.value.icog[idx.control,]
       
       snp.icog.control <- snp.icog[idx.control]
       conditional.snps.icog <- as.matrix(conditional.snps.icog)
@@ -109,7 +109,7 @@ condition_additive_model_update <- function(y.pheno.mis1,
     idx.known <- which(region.all==region.all[known.flag])  
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     
-    known.snp.value.onco.control <- known.snp.value.onco[idx.control]
+    known.snp.value.onco.control <- known.snp.value.onco[idx.control,]
     
    
     snp.onco.control <- snp.onco[idx.control]
@@ -180,7 +180,7 @@ condition_additive_model_update <- function(y.pheno.mis1,
     
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     
-    known.snp.value.onco.control <- known.snp.value.onco[idx.control]
+    known.snp.value.onco.control <- known.snp.value.onco[idx.control,]
     snp.onco.control <- snp.onco[idx.control]
     
 
