@@ -193,6 +193,10 @@ for(i2 in 1:(end-start+1)){
     conditional.snps.icog.2nd <- icog.2nd.snpvalue[,idx.condition.2nd]
     conditional.snps.onco.2nd <- onco.2nd.snpvalue[,idx.condition.2nd]
     
+    idx.condition.3rd <- which(known.flag.3rd==known.flag)
+    conditional.snps.icog.3rd <- icog.3rd.snpvalue[,idx.condition.3rd]
+    conditional.snps.onco.3rd <- onco.3rd.snpvalue[,idx.condition.3rd]
+    
     
     conditional.snps.icog <- cbind(conditional.snps.icog.first,conditional.snps.icog.2nd)
     conditional.snps.onco <- cbind(conditional.snps.onco.first,conditional.snps.onco.2nd)
