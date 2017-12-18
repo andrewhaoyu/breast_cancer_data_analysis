@@ -192,10 +192,10 @@ if(i1 %in%known.flag.3rd){
     
     
     x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,first.snp.value.icog,
-                        snp.value.icog.2nd,
+                        snp.value.icog.2nd,snp.value.icog.3rd,
                         x.covar.mis1)
     x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,first.snp.value.onco,
-                        snp.value.onco.2nd,
+                        snp.value.onco.2nd,snp.value.onco.3rd,
                         x.covar.mis2)
     
     
