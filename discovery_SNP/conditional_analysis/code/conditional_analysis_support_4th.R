@@ -137,15 +137,18 @@ if(i1 %in%known.flag.3rd){
     
     idx.first <- which(i1==first.known.flag)
     idx.2nd <- which(i1==known.flag.2nd)
-    snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
+    idx.3rd <- which(i1==known.flag.3rd)
     
     first.snp.value.onco <- onco.first.snpvalue[,idx.first]
+    snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
+    snp.value.onco.3rd <- onco.3rd.snpvalue[,idx.3rd]
+    
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     #create sudo snp.onco for programming convenience
     snp.onco <- known.snp.value.onco[,1]
     
     x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
-                        first.snp.value.onco,snp.value.onco.2nd,x.covar.mis2)
+                        first.snp.value.onco,snp.value.onco.2nd,snp.value.onco.3rd,x.covar.mis2)
     
     
     
@@ -183,6 +186,9 @@ if(i1 %in%known.flag.3rd){
     idx.2nd <- which(i1==known.flag.2nd)
     snp.value.icog.2nd <- icog.2nd.snpvalue[,idx.2nd]
     snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
+    idx.3rd <- which(i1==known.flag.3rd)
+    snp.value.icog.3rd <- icog.3rd.snpvalue[,idx.3rd]
+    snp.value.onco.3rd <- onco.3rd.snpvalue[,idx.3rd]
     
     
     x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,first.snp.value.icog,
