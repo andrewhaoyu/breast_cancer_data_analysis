@@ -198,7 +198,7 @@ for(i2 in 1:(end-start+1)){
     conditional.snps.onco.3rd <- onco.3rd.snpvalue[,idx.condition.3rd]
     
     
-    conditional.snps.icog <- cbind(conditional.snps.icog.first,conditional.snps.icog.2nd,conditionalsnps.icog.3rd)
+    conditional.snps.icog <- cbind(conditional.snps.icog.first,conditional.snps.icog.2nd,conditional.snps.icog.3rd)
     conditional.snps.onco <- cbind(conditional.snps.onco.first,conditional.snps.onco.2nd,conditional.snps.onco.3rd)
     
     
@@ -241,5 +241,5 @@ for(i2 in 1:(end-start+1)){
 
 
 
-save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.3nd",i1,".Rdata"))
+save(p.value.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.4th",i1,".Rdata"))
 
