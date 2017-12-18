@@ -93,11 +93,22 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditiona
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.2nd.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.2nd")
 
+
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.3rd.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.3rd.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd")
+
+
 icog.first.snpvalue <- icog.first[[2]][idx.complete1,]
 onco.first.snpvalue <- onco.first[[2]][idx.complete2,]
 
 icog.2nd.snpvalue <- icog.2nd[[2]][idx.complete1,]
 onco.2nd.snpvalue <- onco.2nd[[2]][idx.complete2,]
+
+icog.3rd.snpvalue <- icog.3rd[[2]][idx.complete1,]
+onco.3rd.snpvalue <- onco.3rd[[2]][idx.complete2,]
+
 
 
 
@@ -107,6 +118,9 @@ n.first <- nrow(conditional.results.first)
 first.known.flag <- conditional.results.first$known.flag
 n.2nd <- nrow(conditional.results.2nd)
 known.flag.2nd <- conditional.results.2nd$known.flag
+
+n.3rd <- nrow(conditional.results.3rd)
+known.flag.3rd <- conditional.results.3rd$known.flag
 
 fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
                          stringsAsFactors = F)
@@ -195,8 +209,8 @@ if(i1 %in%known.flag.3rd){
       saturated = NULL,
       missingTumorIndicator = 888
     )
-    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.3rd",i1,".Rdata"))
-    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.3rd",i1,".Rdata"))
+    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.4th",i1,".Rdata"))
+    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.4th",i1,".Rdata"))
     
     
   }
