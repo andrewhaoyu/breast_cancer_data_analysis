@@ -41,7 +41,8 @@ table(conditional.results.2nd$cat.known.flag)
 
 
 save(conditional.results.2nd,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.2nd.Rdata")
-
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.2nd.Rdata")
+write.csv(conditional.results.2nd,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.2nd.csv",row.names=F,quote = F)
 
 
 

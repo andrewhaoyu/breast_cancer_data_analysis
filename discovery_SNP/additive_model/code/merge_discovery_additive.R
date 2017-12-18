@@ -1,4 +1,5 @@
-
+library(bc2)
+places <- 2
 change_binary_to_negative_positive = function(x){
   if(x==0){
     return("-")
@@ -214,6 +215,6 @@ result <- result[,-c(12,14,15:16,17:20,22,24)]
 
 #result <- data.frame(result)
 
-write.xlsx(result,file="./additive_model_G_age.xlsx",sheetName="additive_model_2nd_stage_age")
+write.xlsx(result,file="./additive_model_G_age_2des.xlsx",sheetName="additive_model_2nd_stage_age")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)
 

@@ -30,6 +30,7 @@ data/
 /breast_cancer_data_analysis/discovery_SNP/result
 /core_results_summary/
 /discovery_SNP/result/
+/discovery_SNP/conditional_analysis/result
 /discovery_SNP/additive_model/result/
 /simulation/type_one_error/result
 /Icon?

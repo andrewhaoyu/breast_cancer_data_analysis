@@ -45,6 +45,8 @@ save(conditional.results.first,file="/spin1/users/zhangh24/breast_cancer_data_an
 
 
 
+write.csv(conditional.results.first,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.first.csv",quote=F,row.names = F)
+
 
 #conditional.results.first <- conditional.results.first[1:207,]
 #conditional.results.first[,1] <- NA
