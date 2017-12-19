@@ -228,7 +228,7 @@ if(i1 %in%known.flag.5th){
                         x.covar.mis1)
     x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,first.snp.value.onco,
                         snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,
-                        snp.value.icog.5th,
+                        snp.value.onco.5th,
                         x.covar.mis2)
     
     
