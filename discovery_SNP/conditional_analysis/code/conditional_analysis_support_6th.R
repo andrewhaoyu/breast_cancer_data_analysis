@@ -104,6 +104,10 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditiona
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.4th.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.4th")
 
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.5th.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.5th.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.5th")
+
 
 
 icog.first.snpvalue <- icog.first[[2]][idx.complete1,]
@@ -117,6 +121,9 @@ onco.3rd.snpvalue <- onco.3rd[[2]][idx.complete2,]
 
 icog.4th.snpvalue <- icog.4th[[2]][idx.complete1,]
 onco.4th.snpvalue <- onco.4th[[2]][idx.complete2,]
+
+icog.5th.snpvalue <- icog.5th[[2]][idx.complete1,]
+onco.5th.snpvalue <- onco.5th[[2]][idx.complete2,]
 
 
 
@@ -133,6 +140,9 @@ known.flag.3rd <- conditional.results.3rd$known.flag
 n.4th <- nrow(conditional.results.4th)
 known.flag.4th <- conditional.results.4th$known.flag
 
+n.5th <- nrow(conditional.results.5th)
+known.flag.5th <- conditional.results.5th$known.flag
+
 
 fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
                          stringsAsFactors = F)
@@ -143,7 +153,7 @@ new.region <- c(179:207)
 region.all <- c(region.all,new.region)
 
 
-if(i1 %in%known.flag.4th){
+if(i1 %in%known.flag.5th){
   if(i1 ==178|i1==207|i1==172|i1==122){
     idx.known <- which(region.all==region.all[i1])      
     
@@ -151,18 +161,20 @@ if(i1 %in%known.flag.4th){
     idx.2nd <- which(i1==known.flag.2nd)
     idx.3rd <- which(i1==known.flag.3rd)
     idx.4th <- which(i1==known.flag.4th)
+    idx.5th <- which(i1==known.flag.5th)
     
     first.snp.value.onco <- onco.first.snpvalue[,idx.first]
     snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
     snp.value.onco.3rd <- onco.3rd.snpvalue[,idx.3rd]
     snp.value.onco.4th <- onco.4th.snpvalue[,idx.4th]
+    snp.value.onco.5th <- onco.5th.snpvalue[,idx.5th]
     
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     #create sudo snp.onco for programming convenience
     snp.onco <- known.snp.value.onco[,1]
     
     x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,
-                        first.snp.value.onco,snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,x.covar.mis2)
+                        first.snp.value.onco,snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,snp.value.onco.5th,x.covar.mis2)
     
     
     
@@ -178,8 +190,8 @@ if(i1 %in%known.flag.4th){
       saturated = NULL,
       missingTumorIndicator = 888
     )
-    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.5th",i1,".Rdata"))
-    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.5th",i1,".Rdata"))
+    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.6th",i1,".Rdata"))
+    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.6th",i1,".Rdata"))
     
     
   }else{
@@ -206,13 +218,17 @@ if(i1 %in%known.flag.4th){
     idx.4th <- which(i1==known.flag.4th)
     snp.value.icog.4th <- icog.4th.snpvalue[,idx.4th]
     snp.value.onco.4th <- onco.4th.snpvalue[,idx.4th]
+    idx.5th <- which(i1==known.flag.5th)
+    snp.value.icog.5th <- icog.5th.snpvalue[,idx.5th]
+    snp.value.onco.5th <- onco.5th.snpvalue[,idx.5th]
     
     
     x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,first.snp.value.icog,
-                        snp.value.icog.2nd,snp.value.icog.3rd,snp.value.icog.4th,
+                        snp.value.icog.2nd,snp.value.icog.3rd,snp.value.icog.4th,snp.value.icog.5th,
                         x.covar.mis1)
     x.all.mis2 <- cbind(snp.onco,known.snp.value.onco,first.snp.value.onco,
                         snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,
+                        snp.value.icog.5th,
                         x.covar.mis2)
     
     
@@ -232,8 +248,8 @@ if(i1 %in%known.flag.4th){
       saturated = NULL,
       missingTumorIndicator = 888
     )
-    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.5th",i1,".Rdata"))
-    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.5th",i1,".Rdata"))
+    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.6th",i1,".Rdata"))
+    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.6th",i1,".Rdata"))
     
     
   }
