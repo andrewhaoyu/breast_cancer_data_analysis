@@ -91,6 +91,7 @@ fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data
 region.all <- fine_mapping$region.idx
 new.region <- c(179:207)
 region.all <- c(region.all,new.region)
+
 if(i1 ==178|i1==207|i1==122){
   
 idx.known <- which(region.all==region.all[i1])  
