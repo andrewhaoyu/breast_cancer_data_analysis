@@ -202,8 +202,8 @@ for(i2 in 1:(end-start+1)){
     if(known.flag.new!=known.flag.last){
       
       
-      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.5th",known.flag,".Rdata"))
-      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.5th",known.flag,".Rdata"))
+      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.6th",known.flag,".Rdata"))
+      load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.6th",known.flag,".Rdata"))
       known.flag.last <- known.flag.new
     }
     

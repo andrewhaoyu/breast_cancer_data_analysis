@@ -538,6 +538,8 @@ if(i1%in%known.flag.5th){
 x.all.mis1.support <- x.all.mis1[,c(1:7,9:ncol(x.all.mis1))]
 x.all.mis2.support <- x.all.mis2[,c(1:7,9:ncol(x.all.mis2))]
 
+snp.icog <- x.all.mis1[,8,drop=F]
+snp.onco <- x.all.mis2[,8,drop=F]
 
 score.test.support.icog <- ScoreTestSupport(
   y.pheno.mis1,
@@ -558,11 +560,81 @@ score.test.support.onco <- ScoreTestSupport(
 
 
 
+score.test.icog.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis1,
+                                                  x=snp.icog,
+                                                  z.design=z.design.score.baseline.ER,
+                                                  score.test.support=score.test.support.icog,
+                                                  missingTumorIndicator=888)
+score.icog.baseline.ER <- score.test.icog.baseline.ER[[1]]
+infor.icog.baseline.ER <- score.test.icog.baseline.ER[[2]]
 
 
 
 
 
+score.test.support.icog.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis1,
+                                                                         x.self.design = snp.icog,
+                                                                         z.design = z.design.score.baseline.ER,
+                                                                         additive=x.all.mis1.support,
+                                                                         missingTumorIndicator = 888)
+
+score.test.icog.casecase.ER<- ScoreTestMixedModel(y=y.pheno.mis1,
+                                                  x=snp.icog,
+                                                  z.design = z.design.score.casecase.ER,
+                                                  
+                                                  score.test.support= score.test.support.icog.casecase,
+                                                  missingTumorIndicator=888)
+score.icog.casecase.ER <- score.test.icog.casecase.ER[[1]]
+infor.icog.casecase.ER <- score.test.icog.casecase.ER[[2]]
+
+
+
+score.test.onco.baseline.ER<- ScoreTestSelfDesign(y=y.pheno.mis2,
+                                                  x=snp.onco,
+                                                  z.design=z.design.score.baseline.ER,
+                                                  score.test.support=score.test.support.onco,
+                                                  missingTumorIndicator=888)
+
+score.onco.baseline.ER <- score.test.onco.baseline.ER[[1]]
+infor.onco.baseline.ER <- score.test.onco.baseline.ER[[2]]
+
+score.test.support.onco.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis2,
+                                                                         x.self.design = snp.onco,
+                                                                         z.design = z.design.score.baseline.ER,
+                                                                         additive=x.all.mis2.support,
+                                                                         missingTumorIndicator = 888)
+
+score.test.onco.casecase.ER<- ScoreTestMixedModel(y=y.pheno.mis2,
+                                                  x=snp.onco,
+                                                  z.design = z.design.score.casecase.ER,
+                                                  
+                                                  score.test.support= score.test.support.onco.casecase,
+                                                  missingTumorIndicator=888)
+
+
+score.onco.casecase.ER <- score.test.onco.casecase.ER[[1]]
+infor.onco.casecase.ER <- score.test.onco.casecase.ER[[2]]
+
+meta.result.score.baseline.ER <- ScoreMetaAnalysis(score.icog.baseline.ER,
+                                                   infor.icog.baseline.ER,
+                                                   score.onco.baseline.ER,
+                                                   infor.onco.baseline.ER)
+score.meta.baseline.ER <-   meta.result.score.baseline.ER[[1]]
+infor.meta.baseline.ER <- meta.result.score.baseline.ER[[2]]
+
+meta.result.score.casecase.ER <- ScoreMetaAnalysis(score.icog.casecase.ER,
+                                                   infor.icog.casecase.ER,
+                                                   score.onco.casecase.ER,
+                                                   infor.onco.casecase.ER)
+score.meta.casecase.ER <-   meta.result.score.casecase.ER[[1]]
+infor.meta.casecase.ER <- meta.result.score.casecase.ER[[2]]
+test.result.second.mixed.ER <- DisplayMixedScoreTestResult(score.meta.baseline.ER,
+                                                           infor.meta.baseline.ER,
+                                                           score.meta.casecase.ER,
+                                                           infor.meta.casecase.ER)  
+test.result.second.mixed.ER <- data.frame(t(test.result.second.mixed.ER))
+
+p.value <- as.numeric(test.result.second.mixed.ER[1])
 
 
 
