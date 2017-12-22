@@ -148,8 +148,8 @@ onco.3rd.snpvalue <- onco.3rd[[2]][idx.complete2,]
 icog.4th.snpvalue <- icog.4th[[2]][idx.complete1,]
 onco.4th.snpvalue <- onco.4th[[2]][idx.complete2,]
 
-icog.5th.snpvalue <- icog.5th[[2]][idx.complete1,]
-onco.5th.snpvalue <- onco.5th[[2]][idx.complete2,]
+icog.5th.snpvalue <- icog.5th[[2]]
+onco.5th.snpvalue <- onco.5th[[2]]
 
 
 fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
@@ -226,8 +226,8 @@ for(i2 in 1:(end-start+1)){
     conditional.snps.onco.4th <- onco.4th.snpvalue[,idx.condition.4th]
     
     idx.condition.5th <- which(known.flag.5th==known.flag)
-    conditional.snps.icog.5th <- icog.5th.snpvalue[,idx.condition.5th]
-    conditional.snps.onco.5th <- onco.5th.snpvalue[,idx.condition.5th]
+    conditional.snps.icog.5th <- icog.5th.snpvalue
+    conditional.snps.onco.5th <- onco.5th.snpvalue
     
     
     conditional.snps.icog <- cbind(conditional.snps.icog.first,conditional.snps.icog.2nd,conditional.snps.icog.3rd,conditional.snps.icog.4th,conditional.snps.icog.5th)
