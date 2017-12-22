@@ -122,8 +122,8 @@ onco.3rd.snpvalue <- onco.3rd[[2]][idx.complete2,]
 icog.4th.snpvalue <- icog.4th[[2]][idx.complete1,]
 onco.4th.snpvalue <- onco.4th[[2]][idx.complete2,]
 
-icog.5th.snpvalue <- icog.5th[[2]][idx.complete1,]
-onco.5th.snpvalue <- onco.5th[[2]][idx.complete2,]
+icog.5th.snpvalue <- icog.5th[[2]][idx.complete1]
+onco.5th.snpvalue <- onco.5th[[2]][idx.complete2]
 
 
 
@@ -219,8 +219,8 @@ if(i1 %in%known.flag.5th){
     snp.value.icog.4th <- icog.4th.snpvalue[,idx.4th]
     snp.value.onco.4th <- onco.4th.snpvalue[,idx.4th]
     idx.5th <- which(i1==known.flag.5th)
-    snp.value.icog.5th <- icog.5th.snpvalue[,idx.5th]
-    snp.value.onco.5th <- onco.5th.snpvalue[,idx.5th]
+    snp.value.icog.5th <- icog.5th.snpvalue
+    snp.value.onco.5th <- onco.5th.snpvalue
     
     
     x.all.mis1 <- cbind(snp.icog,known.snp.value.icog,first.snp.value.icog,
