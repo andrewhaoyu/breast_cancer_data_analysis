@@ -5,6 +5,7 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 library(tidyverse)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+
 library(readr)
 library(devtools)
 library(CompQuadForm)
@@ -122,8 +123,8 @@ onco.3rd.snpvalue <- onco.3rd[[2]][idx.complete2,]
 icog.4th.snpvalue <- icog.4th[[2]][idx.complete1,]
 onco.4th.snpvalue <- onco.4th[[2]][idx.complete2,]
 
-icog.5th.snpvalue <- icog.5th[[2]][idx.complete1,]
-onco.5th.snpvalue <- onco.5th[[2]][idx.complete2,]
+icog.5th.snpvalue <- icog.5th[[2]][idx.complete1]
+onco.5th.snpvalue <- onco.5th[[2]][idx.complete2]
 
 
 
@@ -177,122 +178,38 @@ if(i1%in%known.flag.5th){
   snp.value.icog.4th <- icog.4th.snpvalue[,idx.4th]
   snp.value.onco.4th <- onco.4th.snpvalue[,idx.4th]
   idx.5th <- which(i1==known.flag.5th)
-  snp.value.icog.5th <- icog.5th.snpvalue[,idx.5th]
-  snp.value.onco.5th <- onco.5th.snpvalue[,idx.5th]
+  snp.value.icog.5th <- icog.5th.snpvalue
+  snp.value.onco.5th <- onco.5th.snpvalue
   all.idx <- list(idx.first,idx.2nd,idx.3rd,idx.4th,idx.5th)
   
   x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,snp.value.icog.2nd,snp.value.icog.3rd,snp.value.icog.4th,snp.value.icog.5th,x.covar.mis1)
   x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,snp.value.onco.5th,x.covar.mis2)
-  Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  z.standard <- Heter.result.Icog[[12]]
-  M <- nrow(z.standard)
-  number.of.tumor <- ncol(z.standard)
-  Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  result.all <- NULL
-  for(i in 1:length(idx.known)){
-    log.odds.icog <- Heter.result.Icog[[1]][M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)]
-    sigma.log.odds.icog <- Heter.result.Icog[[2]][M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor),M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)]
-    log.odds.onco <- Heter.result.Onco[[1]][M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)]
-    sigma.log.odds.onco <- Heter.result.Onco[[2]][M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor),M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)]
-    meta.result <- LogoddsMetaAnalysis(log.odds.icog,
-                                       sigma.log.odds.icog,
-                                       log.odds.onco,
-                                       sigma.log.odds.onco)
-    
-    second.stage.logodds.meta <- meta.result[[1]]
-    second.stage.sigma.meta <- meta.result[[2]]
-    
-    
-    test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
-    snp.infor <- fine_mapping[idx.known[i],c(1,3,4,5,6)]
-    known.flag <- idx.known[i]
-    mark <- "known snp"
-    conditional.p.value <- NA
-    result <- data.frame(snp.infor,conditional.p.value,test.result.second.wald,known.flag,mark)
-    colnames(result) <- c("rs id","CHR","position","Alleles","MAF","conditional p value","Baseline OR(95% CI)","Baseline P",
-      "ER OR(95% CI)","ER P",
-                                                               "PR OR(95% CI)","PR P",
-                                                               "HER2 OR(95% CI)","HER2 P",
-                                                               "Grade OR(95% CI)","Grade P",
-                                                               "Global Association P",
-                                                               "Global Heterogeneity P",
-      "known flag",
-      "mark")
-    result.all <- rbind(result.all,result)
-  }
   
   conditional.round <- 5
-  for(i in 1:conditional.round){
-    log.odds.icog <- Heter.result.Icog[[1]][M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)+length(idx.known)*(1+number.of.tumor)]
-    sigma.log.odds.icog <- Heter.result.Icog[[2]][M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)+length(idx.known)*(1+number.of.tumor),M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)+length(idx.known)*(1+number.of.tumor)]
-    log.odds.onco <- Heter.result.Onco[[1]][M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)+length(idx.known)*(1+number.of.tumor)]
-    sigma.log.odds.onco <- Heter.result.Onco[[2]][M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)+length(idx.known)*(1+number.of.tumor),M+(1:(1+number.of.tumor))+(i-1)*(1+number.of.tumor)+length(idx.known)*(1+number.of.tumor)]
-    meta.result <- LogoddsMetaAnalysis(log.odds.icog,
-                                       sigma.log.odds.icog,
-                                       log.odds.onco,
-                                       sigma.log.odds.onco)
-    
-    second.stage.logodds.meta <- meta.result[[1]]
-    second.stage.sigma.meta <- meta.result[[2]]
-    
-    
-    test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
-    
-    idx.temp <- all.idx[[i]]
-    conditional.results.temp <- all.condition.results[[i]]
-    
-    SNP.ICOGS.temp <- conditional.results.temp[idx.temp,1] 
-    SNP.ONCO.temp <-  conditional.results.temp[idx.temp,2]  
-    
-    
-    snp.infor <- meta_result_shared_1p%>%filter(SNP.ICOGS==SNP.ICOGS.temp&
-                                     SNP.ONCO==SNP.ONCO.temp)
-    snp.infor <- snp.infor[,c(1,11,3,2,4)]
-    conditional.p.value <- conditional.results.temp[idx.temp,4]
-    known.flag <- conditional.results.temp[idx.temp,3]
-    mark <- paste0("condition analysis ",i," round")
-    
-    result <- data.frame(snp.infor,conditional.p.value,test.result.second.wald,known.flag,mark)
-    colnames(result) <- c("rs id","CHR","position","Alleles","MAF","conditional p value","Baseline OR(95% CI)","Baseline P",
-                          "ER OR(95% CI)","ER P",
-                          "PR OR(95% CI)","PR P",
-                          "HER2 OR(95% CI)","HER2 P",
-                          "Grade OR(95% CI)","Grade P",
-                          "Global Association P",
-                          "Global Heterogeneity P",
-                          "known flag",
-                          "mark")
-    result.all <- rbind(result.all,result)
-    
-  }
+  
+  result.all <- all_additive_support(y.pheno.mis1,
+                                   y.pheno.mis2,
+                                   x.all.mis1,
+                                   x.all.mis2,
+                                   idx.known,
+                                   conditional.round,
+                                   all.idx)
+ 
+save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
   
   
-  meta.result <- LogoddsMetaAnalysis(log.odds.icog,
-                                     sigma.log.odds.icog,
-                                     log.odds.onco,
-                                     sigma.log.odds.onco)
   
-  second.stage.logodds.meta <- meta.result[[1]]
-  second.stage.sigma.meta <- meta.result[[2]]
-  
-  
-  test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
-  
+ 
   
 }else if(i1%in%known.flag.4th){
+  
   idx.first <- which(i1==first.known.flag)
-  
   first.snp.value.icog <- icog.first.snpvalue[,idx.first]
-  
   first.snp.value.onco <- onco.first.snpvalue[,idx.first]
-  
-  
   idx.known <- which(region.all==region.all[i1])  
-  
   known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
   snp.icog <- known.snp.value.icog[,1]
   known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
-  
   snp.onco <-   known.snp.value.onco[,1]
   idx.2nd <- which(i1==known.flag.2nd)
   snp.value.icog.2nd <- icog.2nd.snpvalue[,idx.2nd]
@@ -303,29 +220,35 @@ if(i1%in%known.flag.5th){
   idx.4th <- which(i1==known.flag.4th)
   snp.value.icog.4th <- icog.4th.snpvalue[,idx.4th]
   snp.value.onco.4th <- onco.4th.snpvalue[,idx.4th]
+ 
+  all.idx <- list(idx.first,idx.2nd,idx.3rd,idx.4th)
+  
+  x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,snp.value.icog.2nd,snp.value.icog.3rd,snp.value.icog.4th,x.covar.mis1)
+  x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,x.covar.mis2)
+  conditional.round <- 4
+  
+  result.all <- all_additive_support(y.pheno.mis1,
+                                     y.pheno.mis2,
+                                     x.all.mis1,
+                                     x.all.mis2,
+                                     idx.known,
+                                     conditional.round,
+                                     all.idx)
   
   
-  x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,
-                      snp.value.icog.2nd,snp.value.icog.3rd,snp.value.icog.4th,
-                      x.covar.mis1)
-  x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,
-                      snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,
-                      x.covar.mis2)
   
-}else if(i1 %in% knwon.flag.3rd){
+  save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+  
+  
+}else if(i1 %in% known.flag.3rd){
+  
   idx.first <- which(i1==first.known.flag)
-  
   first.snp.value.icog <- icog.first.snpvalue[,idx.first]
-  
   first.snp.value.onco <- onco.first.snpvalue[,idx.first]
-  
-  
   idx.known <- which(region.all==region.all[i1])  
-  
   known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
   snp.icog <- known.snp.value.icog[,1]
   known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
-  
   snp.onco <-   known.snp.value.onco[,1]
   idx.2nd <- which(i1==known.flag.2nd)
   snp.value.icog.2nd <- icog.2nd.snpvalue[,idx.2nd]
@@ -334,192 +257,139 @@ if(i1%in%known.flag.5th){
   snp.value.icog.3rd <- icog.3rd.snpvalue[,idx.3rd]
   snp.value.onco.3rd <- onco.3rd.snpvalue[,idx.3rd]
   
-  x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,
-                      snp.value.icog.2nd,snp.value.icog.3rd,
-                      x.covar.mis1)
-  x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,
-                      snp.value.onco.2nd,snp.value.onco.3rd,
-                      x.covar.mis2)
+  all.idx <- list(idx.first,idx.2nd,idx.3rd)
   
-}else if(i1 %in% known.flag.2nd){
+  x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,snp.value.icog.2nd,snp.value.icog.3rd,x.covar.mis1)
+  x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,snp.value.onco.2nd,snp.value.onco.3rd,x.covar.mis2)
+  conditional.round <- 3
+  
+  result.all <- all_additive_support(y.pheno.mis1,
+                                     y.pheno.mis2,
+                                     x.all.mis1,
+                                     x.all.mis2,
+                                     idx.known,
+                                     conditional.round,
+                                     all.idx)
+  save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+  
+  
+}else if(i1 %in%known.flag.2nd){
   if(i1 ==178|i1==207|i1==172|i1==122){
-    idx.known <- which(region.all==region.all[i1])      
-    
     idx.first <- which(i1==first.known.flag)
-    idx.2nd <- which(i1==known.flag.2nd)
-    
     first.snp.value.onco <- onco.first.snpvalue[,idx.first]
-    snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
-    
-    known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
-    #create sudo snp.onco for programming convenience
-    snp.onco <- known.snp.value.onco[,1]
-    
-    x.all.mis2 <- cbind(known.snp.value.onco,
-                        first.snp.value.onco,snp.value.onco.2nd,x.covar.mis2)
-    
-    
-    
-    
-   
-    
-    
-  }else{
-    
-    idx.first <- which(i1==first.known.flag)
-    
-    first.snp.value.icog <- icog.first.snpvalue[,idx.first]
-    
-    first.snp.value.onco <- onco.first.snpvalue[,idx.first]
-    
-    
     idx.known <- which(region.all==region.all[i1])  
     
-    known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
-    snp.icog <- known.snp.value.icog[,1]
-    known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     
+    known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     snp.onco <-   known.snp.value.onco[,1]
     idx.2nd <- which(i1==known.flag.2nd)
-    snp.value.icog.2nd <- icog.2nd.snpvalue[,idx.2nd]
+    
     snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
     
-    
-    x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,
-                        snp.value.icog.2nd,
-                        x.covar.mis1)
-    x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,
-                        snp.value.onco.2nd,
-                        x.covar.mis2)
+    all.idx <- list(idx.first,idx.2nd)
     
     
-    score.test.support.icog <- ScoreTestSupport(
-      y.pheno.mis1,
-      baselineonly = NULL,
-      additive = x.all.mis1[,2:ncol(x.all.mis1)],
-      pairwise.interaction = NULL,
-      saturated = NULL,
-      missingTumorIndicator = 888
-    )
-    score.test.support.onco <- ScoreTestSupport(
-      y.pheno.mis2,
-      baselineonly = NULL,
-      additive = x.all.mis2[,2:ncol(x.all.mis2)],
-      pairwise.interaction = NULL,
-      saturated = NULL,
-      missingTumorIndicator = 888
-    )
-    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.6th",i1,".Rdata"))
-    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.6th",i1,".Rdata"))
+    x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,snp.value.onco.2nd,x.covar.mis2)
+    conditional.round <- 2
     
+    result.all <- all_additive_support_onco(y.pheno.mis2,
+                                       x.all.mis2,
+                                       idx.known,
+                                       conditional.round,
+                                       all.idx)
+    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
     
+    }else{
+      idx.first <- which(i1==first.known.flag)
+      first.snp.value.icog <- icog.first.snpvalue[,idx.first]
+      first.snp.value.onco <- onco.first.snpvalue[,idx.first]
+      idx.known <- which(region.all==region.all[i1])  
+      known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
+      snp.icog <- known.snp.value.icog[,1]
+      known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
+      snp.onco <-   known.snp.value.onco[,1]
+      idx.2nd <- which(i1==known.flag.2nd)
+      snp.value.icog.2nd <- icog.2nd.snpvalue[,idx.2nd]
+      snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
+      
+      all.idx <- list(idx.first,idx.2nd)
+      
+      x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,snp.value.icog.2nd,x.covar.mis1)
+      x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,snp.value.onco.2nd,x.covar.mis2)
+      conditional.round <- 2
+      
+      result.all <- all_additive_support(y.pheno.mis1,
+                                         y.pheno.mis2,
+                                         x.all.mis1,
+                                         x.all.mis2,
+                                         idx.known,
+                                         conditional.round,
+                                         all.idx)
+      
+      save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+      
   }
-  
   
 }else if(i1 %in%first.known.flag){
   if(i1 ==178|i1==207|i1==172|i1==122){
-    idx.known <- which(region.all==region.all[i1])      
-    
     idx.first <- which(i1==first.known.flag)
-    idx.2nd <- which(i1==known.flag.2nd)
-    idx.3rd <- which(i1==known.flag.3rd)
-    idx.4th <- which(i1==known.flag.4th)
-    idx.5th <- which(i1==known.flag.5th)
-    
     first.snp.value.onco <- onco.first.snpvalue[,idx.first]
-    snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
-    snp.value.onco.3rd <- onco.3rd.snpvalue[,idx.3rd]
-    snp.value.onco.4th <- onco.4th.snpvalue[,idx.4th]
-    snp.value.onco.5th <- onco.5th.snpvalue[,idx.5th]
+    idx.known <- which(region.all==region.all[i1])  
+    
     
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
-    #create sudo snp.onco for programming convenience
-    snp.onco <- known.snp.value.onco[,1]
-    
-    x.all.mis2 <- cbind(known.snp.value.onco,
-                        first.snp.value.onco,snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,snp.value.onco.5th,x.covar.mis2)
+    snp.onco <-   known.snp.value.onco[,1]
+    all.idx <- list(idx.first)
     
     
+    x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,x.covar.mis2)
+    conditional.round <- 2
     
-    
-    score.test.support.icog <- NULL
-    
-    
-    score.test.support.onco <- ScoreTestSupport(
-      y.pheno.mis2,
-      baselineonly = NULL,
-      additive = x.all.mis2[,2:ncol(x.all.mis2)],
-      pairwise.interaction = NULL,
-      saturated = NULL,
-      missingTumorIndicator = 888
-    )
-    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.6th",i1,".Rdata"))
-    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.6th",i1,".Rdata"))
+    result.all <- all_additive_support_onco(y.pheno.mis2,
+                                            x.all.mis2,
+                                            idx.known,
+                                            conditional.round,
+                                            all.idx)
+    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
     
     
   }else{
     
     idx.first <- which(i1==first.known.flag)
-    
     first.snp.value.icog <- icog.first.snpvalue[,idx.first]
-    
     first.snp.value.onco <- onco.first.snpvalue[,idx.first]
-    
-    
     idx.known <- which(region.all==region.all[i1])  
-    
     known.snp.value.icog <- as.matrix(known.all.mis1[,idx.known])
     snp.icog <- known.snp.value.icog[,1]
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
-    
     snp.onco <-   known.snp.value.onco[,1]
     idx.2nd <- which(i1==known.flag.2nd)
     snp.value.icog.2nd <- icog.2nd.snpvalue[,idx.2nd]
     snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
-    idx.3rd <- which(i1==known.flag.3rd)
-    snp.value.icog.3rd <- icog.3rd.snpvalue[,idx.3rd]
-    snp.value.onco.3rd <- onco.3rd.snpvalue[,idx.3rd]
-    idx.4th <- which(i1==known.flag.4th)
-    snp.value.icog.4th <- icog.4th.snpvalue[,idx.4th]
-    snp.value.onco.4th <- onco.4th.snpvalue[,idx.4th]
-    idx.5th <- which(i1==known.flag.5th)
-    snp.value.icog.5th <- icog.5th.snpvalue[,idx.5th]
-    snp.value.onco.5th <- onco.5th.snpvalue[,idx.5th]
     
+    all.idx <- list(idx.first,idx.2nd)
     
-    x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,
-                        snp.value.icog.2nd,snp.value.icog.3rd,snp.value.icog.4th,snp.value.icog.5th,
-                        x.covar.mis1)
-    x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,
-                        snp.value.onco.2nd,snp.value.onco.3rd,snp.value.onco.4th,
-                        snp.value.onco.5th,
-                        x.covar.mis2)
+    x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,snp.value.icog.2nd,x.covar.mis1)
+    x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,snp.value.onco.2nd,x.covar.mis2)
+    conditional.round <- 2
     
+    result.all <- all_additive_support(y.pheno.mis1,
+                                       y.pheno.mis2,
+                                       x.all.mis1,
+                                       x.all.mis2,
+                                       idx.known,
+                                       conditional.round,
+                                       all.idx)
     
-    score.test.support.icog <- ScoreTestSupport(
-      y.pheno.mis1,
-      baselineonly = NULL,
-      additive = x.all.mis1[,2:ncol(x.all.mis1)],
-      pairwise.interaction = NULL,
-      saturated = NULL,
-      missingTumorIndicator = 888
-    )
-    score.test.support.onco <- ScoreTestSupport(
-      y.pheno.mis2,
-      baselineonly = NULL,
-      additive = x.all.mis2[,2:ncol(x.all.mis2)],
-      pairwise.interaction = NULL,
-      saturated = NULL,
-      missingTumorIndicator = 888
-    )
-    save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog.6th",i1,".Rdata"))
-    save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco.6th",i1,".Rdata"))
+    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
     
     
   }
   
 }else{
-  
+result.all <- NULL
+save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+
 }
 
 
