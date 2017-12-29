@@ -5,6 +5,7 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 library(tidyverse)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+source("./discovery_SNP/conditional_analysis/code/all_additive_support_fun.R")
 
 library(readr)
 library(devtools)
@@ -363,14 +364,11 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
     snp.icog <- known.snp.value.icog[,1]
     known.snp.value.onco <- as.matrix(known.all.mis2[,idx.known])
     snp.onco <-   known.snp.value.onco[,1]
-    idx.2nd <- which(i1==known.flag.2nd)
-    snp.value.icog.2nd <- icog.2nd.snpvalue[,idx.2nd]
-    snp.value.onco.2nd <- onco.2nd.snpvalue[,idx.2nd]
     
-    all.idx <- list(idx.first,idx.2nd)
+    all.idx <- list(idx.first)
     
-    x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,snp.value.icog.2nd,x.covar.mis1)
-    x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,snp.value.onco.2nd,x.covar.mis2)
+    x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,x.covar.mis1)
+    x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,x.covar.mis2)
     conditional.round <- 2
     
     result.all <- all_additive_support(y.pheno.mis1,
