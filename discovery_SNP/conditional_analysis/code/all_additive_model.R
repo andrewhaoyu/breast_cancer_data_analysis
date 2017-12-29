@@ -342,7 +342,7 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
     
     
     x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,x.covar.mis2)
-    conditional.round <- 2
+    conditional.round <- 1
     
     result.all <- all_additive_support_onco(y.pheno.mis2,
                                             x.all.mis2,
@@ -367,7 +367,7 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
     
     x.all.mis1 <- cbind(known.snp.value.icog,first.snp.value.icog,x.covar.mis1)
     x.all.mis2 <- cbind(known.snp.value.onco,first.snp.value.onco,x.covar.mis2)
-    conditional.round <- 2
+    conditional.round <- 1
     
     result.all <- all_additive_support(y.pheno.mis1,
                                        y.pheno.mis2,
