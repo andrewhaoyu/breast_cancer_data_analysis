@@ -148,8 +148,8 @@ onco.3rd.snpvalue <- onco.3rd[[2]][idx.complete2,]
 icog.4th.snpvalue <- icog.4th[[2]][idx.complete1,]
 onco.4th.snpvalue <- onco.4th[[2]][idx.complete2,]
 
-icog.5th.snpvalue <- icog.5th[[2]]
-onco.5th.snpvalue <- onco.5th[[2]]
+icog.5th.snpvalue <- icog.5th[[2]][idx.complete1]
+onco.5th.snpvalue <- onco.5th[[2]][idx.complete2]
 
 
 fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
