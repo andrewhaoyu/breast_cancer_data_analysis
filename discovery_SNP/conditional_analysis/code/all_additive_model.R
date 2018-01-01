@@ -194,7 +194,7 @@ if(i1%in%known.flag.5th){
                                    conditional.round,
                                    all.idx)
  
-save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result.all",i1,".Rdata"))
   
   
   
@@ -236,7 +236,7 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
   
   
   
-  save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+  save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result.all",i1,".Rdata"))
   
   
 }else if(i1 %in% known.flag.3rd){
@@ -269,7 +269,7 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
                                      idx.known,
                                      conditional.round,
                                      all.idx)
-  save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+  save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result.all",i1,".Rdata"))
   
   
 }else if(i1 %in%known.flag.2nd){
@@ -296,7 +296,7 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
                                        idx.known,
                                        conditional.round,
                                        all.idx)
-    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result.all",i1,".Rdata"))
     
     }else{
       idx.first <- which(i1==first.known.flag)
@@ -325,7 +325,7 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
                                          conditional.round,
                                          all.idx)
       
-      save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+      save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result.all",i1,".Rdata"))
       
   }
   
@@ -349,7 +349,7 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
                                             idx.known,
                                             conditional.round,
                                             all.idx)
-    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result.all",i1,".Rdata"))
     
     
   }else{
@@ -377,14 +377,14 @@ save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/d
                                        conditional.round,
                                        all.idx)
     
-    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+    save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result.all",i1,".Rdata"))
     
     
   }
   
 }else{
 result.all <- NULL
-save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result",i1,".Rdata"))
+save(result.all,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result.all",i1,".Rdata"))
 
 }
 

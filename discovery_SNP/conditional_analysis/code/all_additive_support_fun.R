@@ -100,7 +100,7 @@ all_additive_support_onco <- function(y.pheno.mis2,
                                  all.idx){
 
   Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  z.standard <- Heter.result.Icog[[12]]
+  z.standard <- Heter.result.Onco[[12]]
   M <- nrow(z.standard)
   number.of.tumor <- ncol(z.standard)
   
@@ -111,7 +111,7 @@ all_additive_support_onco <- function(y.pheno.mis2,
      
     
     
-    test.result.second.wald <- DisplaySecondStageTestResult(og.odds.onco, sigma.log.odds.onco)
+    test.result.second.wald <- DisplaySecondStageTestResult(log.odds.onco, sigma.log.odds.onco)
     snp.infor <- fine_mapping[idx.known[i],c(1,3,4,5,6)]
     known.flag <- idx.known[i]
     mark <- "known snp"
