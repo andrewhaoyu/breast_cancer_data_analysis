@@ -146,6 +146,12 @@ known.flag.5th <- conditional.results.5th$known.flag
 
 fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
                          stringsAsFactors = F)
+
+
+region.all <- fine_mapping$region.idx
+new.region <- c(179:207)
+region.all <- c(region.all,new.region)
+
 fine_mapping_dis <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snps_annotated_clean.csv",header= T,
                              stringsAsFactors = F)
 sudo.na <- rep(NA,29)
@@ -154,9 +160,8 @@ fine_mapping_dis_new <- cbind(fine_mapping_dis[,1],sudo.na,fine_mapping_dis[,3],
 colnames(fine_mapping_dis_new) <- colnames(fine_mapping)
 fine_mapping <- rbind(fine_mapping,fine_mapping_dis_new)
 
-region.all <- fine_mapping$region.idx
-new.region <- c(179:207)
-region.all <- c(region.all,new.region)
+
+
 
 all.condition.results <- list(conditional.results.first,
                               conditional.results.2nd,
