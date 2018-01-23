@@ -64,8 +64,9 @@ discovery.snp.onco.complete <- discovery.snp.onco[idx.complete2,]
 
 
 
-n.coun <- length(all.counries)
+
 all.countries <- unique(c(data1$StudyCountry,data2$StudyCountry))
+n.coun <- length(all.countries)
 for(i2 in 1:n.coun){
 i2 = i2+1
   idx.icog <- which(data1.com$StudyCountry==all.countries[i2])
@@ -74,7 +75,8 @@ i2 = i2+1
   x.covar.mis1.sub <- x.covar.mis1[idx.icog,]
   discovery.snp.icog.sub <- discovery.snp.icog.complete[idx.icog,i1]
   x.all.mis1.sub <- cbind(discovery.snp.icog.sub,x.covar.mis1.sub)
-  Heter.result.Icog = TwoStageModel(y.pheno.complete,baselineonly = NULL,additive = x.all.mis1.sub.complete,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = NULL)
+  
+  Heter.result.Icog = EMmvpoly(y.pheno.mis1.sub,baselineonly = NULL,additive = x.all.mis1.sub,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   
   delta0 <- Heter.result.Icog[[1]]
   Heter.result.Icog = EMmvpoly(y.pheno.mis1.sub,baselineonly = NULL,additive = x.all.mis1.sub,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,delta0=delta0)
