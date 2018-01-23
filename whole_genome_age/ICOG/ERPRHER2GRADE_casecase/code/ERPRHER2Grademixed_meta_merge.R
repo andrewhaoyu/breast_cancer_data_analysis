@@ -85,6 +85,28 @@ meta_result_shared_1p_filter_Ju <- meta_result_shared_1p_filter[-idx_cut,]
 save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
 
 
+idx <- which.min(meta_result_shared_1p_filter_Ju$p.value)
+
+meta_result_shared_1p_filter_Ju[idx,]
+
+
+# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+# 
+# idx <- which(meta_result_shared_1p_filter_Ju$CHR==1&meta_result_shared_1p_filter_Ju$position== 120485335)
+# meta_result_shared_1p_filter_Ju[idx,]
+# 
+# idx <- which(meta_result_shared_1p_filter_Ju$CHR==2&meta_result_shared_1p_filter_Ju$position== 67902524)
+# meta_result_shared_1p_filter_Ju[idx,]
+# idx <- which(meta_result_shared_1p_filter_Ju$CHR==11&meta_result_shared_1p_filter_Ju$position== 120233626)
+# meta_result_shared_1p_filter_Ju[idx,]
+# idx <- which(meta_result_shared_1p_filter_Ju$CHR==18&meta_result_shared_1p_filter_Ju$position== 10354649)
+# meta_result_shared_1p_filter_Ju[idx,]
+# 
+# 
+
+
+
+
 
 
 

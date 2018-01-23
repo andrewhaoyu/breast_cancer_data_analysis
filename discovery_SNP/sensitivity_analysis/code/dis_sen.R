@@ -6,7 +6,7 @@ i2 = as.numeric(args[[2]])
 
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-library(readr)
+#library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
