@@ -95,14 +95,14 @@ save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_d
 
 # load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
 # 
-# meta_result_shared_1p_filter_Ju_fix <- meta_result_shared_1p_filter_Ju
-# 
-# idx <- which(meta_result_shared_1p_filter_Ju_fix$CHR==2&meta_result_shared_1p_filter_Ju_fix$position== 67902524)
-# meta_result_shared_1p_filter_Ju_fix[idx,]
-# idx <- which(meta_result_shared_1p_filter_Ju_fix$CHR==11&meta_result_shared_1p_filter_Ju_fix$position== 120233626)
-# meta_result_shared_1p_filter_Ju_fix[idx,]
-# idx <- which(meta_result_shared_1p_filter_Ju_fix$CHR==18&meta_result_shared_1p_filter_Ju_fix$position== 10354649)
-# meta_result_shared_1p_filter_Ju_fix[idx,]
+meta_result_shared_1p_filter_Ju_fix <- meta_result_shared_1p_filter_Ju
+
+idx <- which(meta_result_shared_1p_filter_Ju_fix$CHR==2&meta_result_shared_1p_filter_Ju_fix$position== 67902524)
+meta_result_shared_1p_filter_Ju_fix[idx,]
+idx <- which(meta_result_shared_1p_filter_Ju_fix$CHR==11&meta_result_shared_1p_filter_Ju_fix$position== 120233626)
+meta_result_shared_1p_filter_Ju_fix[idx,]
+idx <- which(meta_result_shared_1p_filter_Ju_fix$CHR==18&meta_result_shared_1p_filter_Ju_fix$position== 10354649)
+meta_result_shared_1p_filter_Ju_fix[idx,]
  
 
 

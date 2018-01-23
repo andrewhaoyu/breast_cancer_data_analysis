@@ -76,7 +76,7 @@ n.coun <- length(all.countries)
   discovery.snp.icog.sub <- discovery.snp.icog.complete[idx.icog,i1]
   x.all.mis1.sub <- cbind(discovery.snp.icog.sub,x.covar.mis1.sub)
   # x.all.mis1 <- cbind(discovery.snp.icog.complete[,i1],x.covar.mis1)
-  Heter.result.Icog = EMmvpoly(y.pheno.mis1.sub,baselineonly = NULL,additive = x.all.mis1.sub,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,delta0=delta0)
+  Heter.result.Icog = EMmvpoly(y.pheno.mis1.sub,baselineonly = NULL,additive = x.all.mis1.sub,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Icog[[12]]
   M <- nrow(z.standard)
   log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
