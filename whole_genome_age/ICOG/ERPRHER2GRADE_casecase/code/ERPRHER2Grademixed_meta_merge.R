@@ -85,9 +85,26 @@ meta_result_shared_1p_filter_Ju <- meta_result_shared_1p_filter[-idx_cut,]
 save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
 
 
-idx <- which.min(meta_result_shared_1p_filter_Ju$p.value)
 
-meta_result_shared_1p_filter_Ju[idx,]
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata"))
+
+
+
+meta_result_shared_1p <- meta_result_shared_1p[,c(2,11,3,15)]
+write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_mixed.txt"),row.names = F,quote = F)
+
+
+
+
+
+
+
+# idx <- which.min(meta_result_shared_1p_filter_Ju$p.value)
+# 
+# meta_result_shared_1p_filter_Ju[idx,]
+
+
+
 
 
 # load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")

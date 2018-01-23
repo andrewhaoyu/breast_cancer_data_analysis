@@ -105,7 +105,10 @@ idx <- which(meta_result_shared_1p_filter_Ju_fix$CHR==18&meta_result_shared_1p_f
 meta_result_shared_1p_filter_Ju_fix[idx,]
  
 
-
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata"))
+meta_result_shared_1p <- meta_result_shared_1p[,c(2,11,3,15)]
+write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt"),row.names = F,
+            quote=F)
 
 
 
