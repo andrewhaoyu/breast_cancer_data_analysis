@@ -72,31 +72,33 @@ if(i1<=177){
   idx.PR.pos <- which(z.standard[,1]==1)
   z.design.PR[idx.PR.pos,1] <- 1
   idx.PR.neg <- which(z.standard[,1]==0)
-  z.design.PR[idx.PR.neg,2] <- 1
+  z.design.PR[,2] <- 1
   colnames(z.design.PR) <- c("PRPos","PRNeg")
   
   z.design.ER <- matrix(0,M,2)
   idx.ER.pos <- which(z.standard[,2]==1)
   z.design.ER[idx.ER.pos,1] <- 1
   idx.ER.neg <- which(z.standard[,2]==0)
-  z.design.ER[idx.ER.neg,2] <- 1
+  z.design.ER[,2] <- 1
   colnames(z.design.ER) <- c("ERPos","ERNeg")
   
   z.design.HER <- matrix(0,M,2)
   idx.HER.pos <- which(z.standard[,3]==1)
   z.design.HER[idx.HER.pos,1] <- 1
   idx.HER.neg <- which(z.standard[,3]==0)
-  z.design.HER[idx.HER.neg,2] <- 1
+  z.design.HER[,2] <- 1
   colnames(z.design.HER) <- c("HERPos","HERNeg")
   
-  z.design.Grade <- matrix(0,M,3)
+  z.design.Grade <- matrix(0,M,2)
+  z.design.Grade[,1] <- 1
   idx.Grade1 <- which(z.standard[,4]==1)
-  z.design.Grade[idx.Grade1,1] <- 1
+  
+  z.design.Grade[idx.Grade1,2] = 1
   idx.Grade2 <- which(z.standard[,4]==2)
-  z.design.Grade[idx.Grade2,2] <- 1
+  z.design.Grade[idx.Grade2,2] <- 2
   idx.Grade3 <- which(z.standard[,4]==3)
-  z.design.Grade[idx.Grade3,3] <- 1
-  colnames(z.design.Grade) <- c("Grade1","Grade2","Grade3")
+  z.design.Grade[idx.Grade3,2] <- 3
+  colnames(z.design.Grade) <- c("Grade1","Grade2case")
   
   
   z.additive.design <- as.matrix(cbind(1,z.standard))
@@ -122,8 +124,8 @@ if(i1<=177){
   sigma.log.odds.HER.Icog <- Heter.result.HER.Icog[[2]][(M+1):(M+2),(M+1):(M+2)]
   
   Heter.result.Grade.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = x.all.mis1[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis1[,2:ncol(x.all.mis1)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  log.odds.Grade.Icog <-   Heter.result.Grade.Icog[[1]][(M+1):(M+3)]
-  sigma.log.odds.Grade.Icog <- Heter.result.Grade.Icog[[2]][(M+1):(M+3),(M+1):(M+3)]
+  log.odds.Grade.Icog <-   Heter.result.Grade.Icog[[1]][(M+1):(M+2)]
+  sigma.log.odds.Grade.Icog <- Heter.result.Grade.Icog[[2]][(M+1):(M+2),(M+1):(M+2)]
   
   
   
@@ -368,3 +370,6 @@ if(i1<=177){
   
   
 }
+
+
+
