@@ -23,13 +23,19 @@ bcac <- cbind(meta_result_shared_1p$SNP.ICOGS,
               meta_result_shared_1p$CHR,
               meta_result_shared_1p$position,
               bcac.chr.bp.uni)
+colnames(bcac) <- c("SNP.ICOGS","SNP.ONCO",
+                    "CHR","position","chr.pos")
+
+shared.data <- merge(hap3,bcac,by.x="chr.pos",by.y="chr.pos")
+
+idx.match <- match(shared.data$SNP,hap3$SNP)
 
 
+length(idx.match)
+dim(shared.data)
+shared.data <- shared.data[idx.match,]
 
-
-
-
-
+save(shared.data,file="./genetic_correlation/result/hapmap3list.Rdata")
 
 
 
