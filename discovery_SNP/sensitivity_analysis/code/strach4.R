@@ -28,3 +28,5 @@ plot2 <- df %>%
 grid.newpage()
 grid.draw(rbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "last"))
 
+p <- ggplot(mpg, aes(displ, cty)) + geom_point()
+p + facet_grid(. ~ cyl)
