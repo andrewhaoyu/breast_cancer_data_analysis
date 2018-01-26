@@ -189,8 +189,8 @@ if(i1<=177){
   sigma.log.odds.HER.Onco <- Heter.result.HER.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
   Heter.result.Grade.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis2[,2:ncol(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  log.odds.Grade.Onco <-   Heter.result.Grade.Onco[[1]][(M+1):(M+3)]
-  sigma.log.odds.Grade.Onco <- Heter.result.Grade.Onco[[2]][(M+1):(M+3),(M+1):(M+3)]
+  log.odds.Grade.Onco <-   Heter.result.Grade.Onco[[1]][(M+1):(M+2)]
+  sigma.log.odds.Grade.Onco <- Heter.result.Grade.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
   
   
@@ -264,7 +264,7 @@ if(i1<=177){
   
   
   
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/ERPosvesNeg/result/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/ERNegwithcasecase/result/heter_result_",i1,".Rdata"))
   
   
   
@@ -313,8 +313,8 @@ if(i1<=177){
   sigma.log.odds.HER.Onco <- Heter.result.HER.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
   Heter.result.Grade.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design=z.design.Grade,baselineonly = NULL,additive = x.all.mis2[,2:ncol(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  log.odds.Grade.Onco <-   Heter.result.Grade.Onco[[1]][(M+1):(M+3)]
-  sigma.log.odds.Grade.Onco <- Heter.result.Grade.Onco[[2]][(M+1):(M+3),(M+1):(M+3)]
+  log.odds.Grade.Onco <-   Heter.result.Grade.Onco[[1]][(M+1):(M+2)]
+  sigma.log.odds.Grade.Onco <- Heter.result.Grade.Onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   
   
   
@@ -364,7 +364,7 @@ if(i1<=177){
   heter.result <- list(data.frame(test.result.second.wald.PR,test.result.second.wald.ER,test.result.second.wald.HER,test.result.second.wald.Grade))
   
   
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/ERPosvesNeg/result/heter_result_",i1,".Rdata")) 
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/ERNegwithcasecase/result/heter_result_",i1,".Rdata")) 
   
   
   
