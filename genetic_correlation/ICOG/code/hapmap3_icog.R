@@ -179,6 +179,7 @@ if(num!=0){
   
   
   
+  
   result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
   save(result,file=paste0("./genetic_correlation/ICOG/result/intrinsic_i1",i1))
   
