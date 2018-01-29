@@ -239,7 +239,7 @@ if(i1<=177){
   log.odds.Grade.onco <-   Heter.result.Grade.onco[[1]][(M+1):(M+2)]
   sigma.log.odds.Grade.onco <- Heter.result.Grade.onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   beta.grade.onco <- z.design.Grade%*%log.odds.Grade.onco
-  beta.sigma.onco <- z.design.Grade%*%sigma.log.odds.Grade.onco%*%t(z.design.Grade)
+  beta.sigma.grade.onco <- z.design.Grade%*%sigma.log.odds.Grade.onco%*%t(z.design.Grade)
   
   p.grade <- c(1,8,16)
   beta.grade.onco <- beta.grade.onco[p.grade]  
@@ -446,7 +446,7 @@ if(i1<=177){
   log.odds.Grade.onco <-   Heter.result.Grade.onco[[1]][(M+1):(M+2)]
   sigma.log.odds.Grade.onco <- Heter.result.Grade.onco[[2]][(M+1):(M+2),(M+1):(M+2)]
   beta.grade.onco <- z.design.Grade%*%log.odds.Grade.onco
-  beta.sigma.onco <- z.design.Grade%*%sigma.log.odds.Grade.onco%*%t(z.design.Grade)
+  beta.sigma.grade.onco <- z.design.Grade%*%sigma.log.odds.Grade.onco%*%t(z.design.Grade)
   
   p.grade <- c(1,8,16)
   beta.grade.onco <- beta.grade.onco[p.grade]  
