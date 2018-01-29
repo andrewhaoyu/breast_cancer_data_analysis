@@ -312,10 +312,10 @@ if(i1<=177){
   
   second.stage.logodds.meta.Grade <- meta.result.Grade[[1]]
   second.stage.sigma.meta.Grade <- meta.result.Grade[[2]]
-  meta.result.Grade.first <- LogoddsMetaAnalysis(beta.Grade.icog,
-                                               beta.sigma.Grade.icog,
-                                               beta.Grade.onco,
-                                               beta.sigma.Grade.onco)
+  meta.result.Grade.first <- LogoddsMetaAnalysis(beta.grade.icog,
+                                               beta.sigma.grade.icog,
+                                               beta.grade.onco,
+                                               beta.sigma.grade.onco)
   first.stage.logodds.meta.Grade <- meta.result.Grade.first[[1]]
   first.stage.sigma.meta.Grade <- meta.result.Grade.first[[2]]
   
@@ -454,7 +454,7 @@ if(i1<=177){
   
   
   second.stage.logodds.meta.PR <- log.odds.PR.onco
-  second.stage.sigma.meta.ER <- beta.sigma.PR.onco
+  second.stage.sigma.meta.PR <- sigma.log.odds.PR.onco
   first.stage.logodds.meta.PR <- beta.PR.onco
   first.stage.sigma.meta.PR <- beta.sigma.PR.onco
   
@@ -464,7 +464,7 @@ if(i1<=177){
   
   
   second.stage.logodds.meta.ER <- log.odds.ER.onco
-  second.stage.sigma.meta.ER <- beta.sigma.ER.onco
+  second.stage.sigma.meta.ER <- sigma.log.odds.ER.onco
   first.stage.logodds.meta.ER <- beta.ER.onco
   first.stage.sigma.meta.ER <- beta.sigma.ER.onco
   
@@ -474,7 +474,7 @@ if(i1<=177){
   
   
   second.stage.logodds.meta.HER <- log.odds.HER.onco
-  second.stage.sigma.meta.HER <- beta.sigma.HER.onco
+  second.stage.sigma.meta.HER <- sigma.log.odds.HER.onco
   first.stage.logodds.meta.HER <- beta.HER.onco
   first.stage.sigma.meta.HER <- beta.sigma.HER.onco
   
@@ -484,9 +484,9 @@ if(i1<=177){
   
   
   second.stage.logodds.meta.Grade <- log.odds.Grade.onco
-  second.stage.sigma.meta.Grade <- beta.sigma.Grade.onco
-  first.stage.logodds.meta.Grade <- beta.Grade.onco
-  first.stage.sigma.meta.Grade <- beta.sigma.Grade.onco
+  second.stage.sigma.meta.Grade <- sigma.log.odds.Grade.onco
+  first.stage.logodds.meta.Grade <- beta.grade.onco
+  first.stage.sigma.meta.Grade <- beta.sigma.grade.onco
   
   test.result.second.wald.Grade <- DisplaySecondStageTestResult(second.stage.logodds.meta.Grade,second.stage.sigma.meta.Grade)
   test.result.first.wald.Grade <- DisplayFirstStageTestResult(first.stage.logodds.meta.Grade,
