@@ -114,7 +114,7 @@ if(i1<=177){
   beta.PR.icog <- z.design.PR%*%log.odds.PR.icog
   beta.sigma.PR.icog <- z.design.PR%*%sigma.log.odds.PR.icog%*%t(z.design.PR)
   
-  p.PR <- c(1,2)
+  p.PR <- c(2,1)
   beta.PR.icog <- beta.PR.icog[p.PR]  
   beta.sigma.PR.icog <- beta.sigma.PR.icog[p.PR,p.PR]  
   
@@ -208,7 +208,7 @@ if(i1<=177){
   beta.PR.onco <- z.design.PR%*%log.odds.PR.onco
   beta.sigma.PR.onco <- z.design.PR%*%sigma.log.odds.PR.onco%*%t(z.design.PR)
   
-   p.PR <- c(1,2)
+   p.PR <- c(2,1)
   beta.PR.onco <- beta.PR.onco[p.PR]  
   beta.sigma.PR.onco <- beta.sigma.PR.onco[p.PR,p.PR]  
   
@@ -220,7 +220,7 @@ if(i1<=177){
   beta.ER.onco <- z.design.ER%*%log.odds.ER.onco
   beta.sigma.ER.onco <- z.design.ER%*%sigma.log.odds.ER.onco%*%t(z.design.ER)
   
-  p.ER <- c(1,3)
+  p.ER <- c(3,1)
   beta.ER.onco <- beta.ER.onco[p.ER]  
   beta.sigma.ER.onco <- beta.sigma.ER.onco[p.ER,p.ER]  
   
@@ -231,7 +231,7 @@ if(i1<=177){
   beta.HER.onco <- z.design.HER%*%log.odds.HER.onco
   beta.sigma.HER.onco <- z.design.HER%*%sigma.log.odds.HER.onco%*%t(z.design.HER)
   
-  p.HER <- c(1,12)
+  p.HER <- c(12,1)
   beta.HER.onco <- beta.HER.onco[p.HER]  
   beta.sigma.HER.onco <- beta.sigma.HER.onco[p.HER,p.HER]  
   
@@ -312,12 +312,17 @@ if(i1<=177){
   
   second.stage.logodds.meta.Grade <- meta.result.Grade[[1]]
   second.stage.sigma.meta.Grade <- meta.result.Grade[[2]]
-  meta.result.Grade.first <- LogoddsMetaAnalysis(beta.grade.icog,
-                                               beta.sigma.grade.icog,
-                                               beta.grade.onco,
-                                               beta.sigma.grade.onco)
-  first.stage.logodds.meta.Grade <- meta.result.Grade.first[[1]]
-  first.stage.sigma.meta.Grade <- meta.result.Grade.first[[2]]
+  
+  
+  first.stage.logodds.meta.Grade <- z.design.Grade%*%second.stage.logodds.meta.Grade
+  first.stage.sigma.meta.Grade <- z.design.Grade%*%second.stage.sigma.meta.Grade%*%t(z.design.Grade)
+  
+  p.grade <- c(1,8,16)
+  first.stage.logodds.meta.Grade <-  first.stage.logodds.meta.Grade[p.grade]  
+  first.stage.sigma.meta.Grade<- first.stage.sigma.meta.Grade[p.grade,p.grade]  
+  
+  
+  
   
   
   test.result.second.wald.Grade <- DisplaySecondStageTestResult(second.stage.logodds.meta.Grade,second.stage.sigma.meta.Grade)
@@ -427,7 +432,7 @@ if(i1<=177){
   beta.ER.onco <- z.design.ER%*%log.odds.ER.onco
   beta.sigma.ER.onco <- z.design.ER%*%sigma.log.odds.ER.onco%*%t(z.design.ER)
   
-  p.ER <- c(1,3)
+  p.ER <- c(3,1)
   beta.ER.onco <- beta.ER.onco[p.ER]  
   beta.sigma.ER.onco <- beta.sigma.ER.onco[p.ER,p.ER]  
   
@@ -438,7 +443,7 @@ if(i1<=177){
   beta.HER.onco <- z.design.HER%*%log.odds.HER.onco
   beta.sigma.HER.onco <- z.design.HER%*%sigma.log.odds.HER.onco%*%t(z.design.HER)
   
-  p.HER <- c(1,12)
+  p.HER <- c(12,1)
   beta.HER.onco <- beta.HER.onco[p.HER]  
   beta.sigma.HER.onco <- beta.sigma.HER.onco[p.HER,p.HER]  
   
@@ -485,14 +490,28 @@ if(i1<=177){
   
   second.stage.logodds.meta.Grade <- log.odds.Grade.onco
   second.stage.sigma.meta.Grade <- sigma.log.odds.Grade.onco
-  first.stage.logodds.meta.Grade <- beta.grade.onco
-  first.stage.sigma.meta.Grade <- beta.sigma.grade.onco
+  
+  
+  first.stage.logodds.meta.Grade <- z.design.Grade%*%second.stage.logodds.meta.Grade
+  first.stage.sigma.meta.Grade <- z.design.Grade%*%second.stage.sigma.meta.Grade%*%t(z.design.Grade)
+  
+  p.grade <- c(1,8,16)
+  first.stage.logodds.meta.Grade <-  first.stage.logodds.meta.Grade[p.grade]  
+  first.stage.sigma.meta.Grade<- first.stage.sigma.meta.Grade[p.grade,p.grade]  
+  
+  
+  
+  
   
   test.result.second.wald.Grade <- DisplaySecondStageTestResult(second.stage.logodds.meta.Grade,second.stage.sigma.meta.Grade)
   test.result.first.wald.Grade <- DisplayFirstStageTestResult(first.stage.logodds.meta.Grade,
-                                                            first.stage.sigma.meta.Grade)
+                                                              first.stage.sigma.meta.Grade)
   
   
+  
+  
+  
+ 
   
   
   
