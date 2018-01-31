@@ -28,7 +28,8 @@ end <- start.end[2]
 
 result.sub <- matrix(0,(end-start+1),30)
 for(i in start:end){
-  logodds <- as.numeric(as.vector(ICOG.result.clean[i,11:15]))
+print(i)
+    logodds <- as.numeric(as.vector(ICOG.result.clean[i,11:15]))
   sigma <- matrix(as.numeric(ICOG.result.clean[i,16:40]),5,5)  
   result.sub[i,] <- transfunction(logodds,sigma)
 }
