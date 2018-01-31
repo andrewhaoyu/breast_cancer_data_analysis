@@ -137,7 +137,7 @@ if(i1<=177){
   beta.HER.icog <- z.design.HER%*%log.odds.HER.icog
   beta.sigma.HER.icog <- z.design.HER%*%sigma.log.odds.HER.icog%*%t(z.design.HER)
   
-  p.HER <- c(1,12)
+  p.HER <- c(12,1)
   beta.HER.icog <- beta.HER.icog[p.HER]  
   beta.sigma.HER.icog <- beta.sigma.HER.icog[p.HER,p.HER]  
   
