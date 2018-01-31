@@ -1,5 +1,6 @@
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
+print(i1)
 z.design <- matrix(c(
   c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
@@ -26,12 +27,14 @@ start.end<- startend(n,size,i1)
 start <- start.end[1]
 end <- start.end[2]
 
-result.sub <- matrix(0,(end-start+1),30)
+result.sub <- matrix(0,end-start+1,30)
+total <- 0
 for(i in start:end){
 print(i)
     logodds <- as.numeric(as.vector(ICOG.result.clean[i,11:15]))
   sigma <- matrix(as.numeric(ICOG.result.clean[i,16:40]),5,5)  
-  result.sub[i,] <- transfunction(logodds,sigma)
+  total <- total+1
+  result.sub[total,] <- transfunction(logodds,sigma)
 }
 
 save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub",i1,".Rdata"))
