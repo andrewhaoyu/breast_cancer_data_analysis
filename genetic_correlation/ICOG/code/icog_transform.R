@@ -7,7 +7,7 @@ z.design <- matrix(c(
   c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
-
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 load("./genetic_correlation/result/ICOG.result.clean.Rdata")
 n <- nrow(ICOG.result.clean)
 library(bc2)
