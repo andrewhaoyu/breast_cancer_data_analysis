@@ -7,7 +7,17 @@ z.design <- matrix(c(
   c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
+
+transfunction <- function(lododds,sigma){
+  beta <- z.design%*%logodds
+  beta.sigma <- z.design%*%sigma%*%t(z.design)
+  p <- c(1,2,5,6,19)
+  beta <- beta[p]
+  beta.sigma <- beta.sigma[p,p]
+  return(c(beta,as.vector(beta.sigma)))
+}
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+
 load("./genetic_correlation/result/ICOG.result.clean.Rdata")
 n <- nrow(ICOG.result.clean)
 library(bc2)
@@ -23,5 +33,6 @@ for(i in start:end){
   result.sub[i,] <- transfunction(logodds,sigma)
 }
 
-
 save(result.sub,paste0("./genetic_correlation/ICOG/result.sub",i1,".Rdata"))
+
+
