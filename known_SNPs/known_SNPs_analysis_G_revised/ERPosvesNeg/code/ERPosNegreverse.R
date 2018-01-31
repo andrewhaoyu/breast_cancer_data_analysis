@@ -180,7 +180,7 @@ if(i1<=177){
                              "ER","HER2","Grade")
   
   x.test.all.mis2 <- data2[,c(27:203)]
-  x.test.all.mis2 <- 2-x.test.all.mis2
+  x.test.all.mis2 <- x.test.all.mis2
   x.covar.mis2 <- data2[,c(5:14,204)]
   
   
