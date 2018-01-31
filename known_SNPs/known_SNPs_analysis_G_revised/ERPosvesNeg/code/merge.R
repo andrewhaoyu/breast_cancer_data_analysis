@@ -85,10 +85,13 @@ generate_self_design_second_stage_parameter_names = function(tumor_characteristi
   #   result = c(result,paste0(tumor_characteristics[i]," odds ratio(95%CI)"),
   #              paste0(tumor_characteristics[i]," P_Value"))
   # }
-  result = c("PR+ OR (95% CI)",
-             "PR+ pvalue",
+  result = c("PR casecase OR (95% CI)",
+             "PR casecase pvalue",
              "PR- OR (95% CI)",
              "PR- pvalue",
+            "PR+ OR (95% CI)",
+             "PR+ pvalue",
+            
              "ER+ OR (95% CI)",
              "ER+ pvalue",
              "ER- OR (95% CI)",
@@ -113,7 +116,12 @@ first.stage <- NULL
 for(i in 1:178){
   print(i)
   load(paste0("heter_result_",i,".Rdata"))
-  result.temp <- heter.result[[1]][c(1:4,7:10,13:16,19:24)]
+  result.temp <- c(heter.result[[1]][c(1:4)],
+                  heter.result[[2]]][c(1:2)],
+                  heter.result[[1]][c(7:10)],
+                  heter.result[[2]]][c(1:2)],)
+    
+    heter.result[[1]][c(1:4,7:10,13:16,19:24)]
   result <- rbind(result,result.temp)
   #first.stage <- rbind(first.stage,heter.result[[2]])
 }
