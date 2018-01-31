@@ -34,6 +34,6 @@ print(i)
   result.sub[i,] <- transfunction(logodds,sigma)
 }
 
-save(result.sub,paste0("./genetic_correlation/ICOG/result.sub",i1,".Rdata"))
+save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub",i1,".Rdata"))
 
 
