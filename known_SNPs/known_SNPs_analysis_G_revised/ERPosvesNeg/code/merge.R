@@ -31,6 +31,7 @@ library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
+library(data.table)
 i1 = 1
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
@@ -128,7 +129,7 @@ for(i in 1:178){
                   heter.result[[1]][c(13:16)],
                   heter.result[[2]][c(9:10)],
                   heter.result[[1]][c(21:22)],
-                  heter.result[[2]][c(11:16)]
+                  heter.result[[2]][c(13:18)]
   )
     
   result <- rbind(result,result.temp)

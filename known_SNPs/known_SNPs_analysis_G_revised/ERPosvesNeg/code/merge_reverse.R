@@ -128,7 +128,7 @@ for(i in 1:178){
                    heter.result[[1]][c(13:16)],
                    heter.result[[2]][c(9:10)],
                    heter.result[[1]][c(21:22)],
-                   heter.result[[2]][c(11:16)]
+                   heter.result[[2]][c(13:18)]
   )
   
   result <- rbind(result,result.temp)
