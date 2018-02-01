@@ -420,7 +420,7 @@ if(i1<=177){
   beta.PR.onco <- z.design.PR%*%log.odds.PR.onco
   beta.sigma.PR.onco <- z.design.PR%*%sigma.log.odds.PR.onco%*%t(z.design.PR)
   
-  p.PR <- c(2,1)
+  p.PR <- c(2,1L)
   beta.PR.onco <- beta.PR.onco[p.PR]  
   beta.sigma.PR.onco <- beta.sigma.PR.onco[p.PR,p.PR]  
   
