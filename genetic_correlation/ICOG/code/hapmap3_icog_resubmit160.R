@@ -103,8 +103,8 @@ if(num!=0){
     inner.file.num <- end-start+1
     true.start <- start
     true.end <- end
-    score_result <- matrix(0,inner.file.num,num.of.tumor-1)
-    infor_result <- matrix(0,inner.file.num,(num.of.tumor-1)^2)
+    score_result <- matrix(0,inner.file.num,num.of.tumor+1)
+    infor_result <- matrix(0,inner.file.num,(num.of.tumor+1)^2)
     snpid_result <- rep("c",inner.file.num)
     freq.all <- rep(0,inner.file.num)
     temp <- 0
@@ -195,27 +195,27 @@ if(num!=0){
   
   
   
-  score_result <- matrix(0,num,num.of.tumor+1)
-  infor_result <- matrix(0,num,(num.of.tumor+1)^2)
-  snpid_result <- rep("c",num)
-  freq.all <- rep(0,num)
+  # score_result <- matrix(0,num,num.of.tumor+1)
+  # infor_result <- matrix(0,num,(num.of.tumor+1)^2)
+  # snpid_result <- rep("c",num)
+  # freq.all <- rep(0,num)
+  # 
+  # total <- 0
+  # for(i in 1:inner.size){
+  #   result.temp <- result.list[[i]]
+  #   temp <- length(result.temp[[1]])
+  #   snpid_result[total+(1:temp)] <- result.temp[[1]]
+  #   score_result[total+(1:temp),] <- result.temp[[2]]
+  #   infor_result[total+(1:temp),] <- result.temp[[3]]
+  #   freq.all[total+(1:temp)] <- result.temp[[4]]
+  #   total <- total+temp
+  # }
+  # 
+  # 
+  # 
   
-  total <- 0
-  for(i in 1:inner.size){
-    result.temp <- result.list[[i]]
-    temp <- length(result.temp[[1]])
-    snpid_result[total+(1:temp)] <- result.temp[[1]]
-    score_result[total+(1:temp),] <- result.temp[[2]]
-    infor_result[total+(1:temp),] <- result.temp[[3]]
-    freq.all[total+(1:temp)] <- result.temp[[4]]
-    total <- total+temp
-  }
   
-  
-  
-  
-  
-  result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
+ # result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
   save(result,file=paste0("./genetic_correlation/ICOG/result/intrinsic_i1",i1,"_",i2))
   
   
