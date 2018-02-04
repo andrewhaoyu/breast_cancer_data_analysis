@@ -1,14 +1,14 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 total <- 0
-sig <- c(1:564)
+sig <- c(1:567)
 
 
 
 
 for(i1 in sig){
   print(i1)
-  load(paste0("./genetic_correlation/ICOG/result/intrinsic_i1",i1))  
+  load(paste0("./genetic_correlation/ONCO/result/intrinsic_i1",i1))  
   total <- total+length(result[[1]])
 }
 
@@ -18,7 +18,7 @@ snpid <- rep("c",total)
 total <- 0
 for(i1 in sig){
   print(i1)
-  load(paste0("./genetic_correlation/ICOG/result/intrinsic_i1",i1))   
+  load(paste0("./genetic_correlation/ONCO/result/intrinsic_i1",i1))   
   temp <- length(result[[1]])
   snpid[total+(1:temp)] <- result[[1]]
   logodds[total+(1:temp),] <- result[[2]]
@@ -29,13 +29,13 @@ for(i1 in sig){
 
 load("./genetic_correlation/result/hapmap3list.Rdata")
 
-ICOG.result <- data.frame(SNP.ICOGS=snpid,logodds,sigma)
+ONCO.result <- data.frame(SNP.ONCO=snpid,logodds,sigma)
 
 
-ICOG.result.clean <- merge(shared.data,ICOG.result,by.x="SNP.ICOGS",
-                           by.y = "SNP.ICOGS")
+ONCO.result.clean <- merge(shared.data,ONCO.result,by.x="SNP.ONCO",
+                           by.y = "SNP.ONCO")
 
-save(ICOG.result.clean,file= "./genetic_correlation/result/ICOG.result.clean.Rdata")
+save(ONCO.result.clean,file= "./genetic_correlation/ONCO/result/result.clean.Rdata")
 
 #load("./genetic_correlation/result/hapmap3list.Rdata")
 

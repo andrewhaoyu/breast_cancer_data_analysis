@@ -111,50 +111,73 @@ if(num!=0){
     con <- gzfile(geno.file)
     open(con)
     for(i in 1:num){
+      #print(i)
       if(i%%500==0){
         print(i)
       }
       oneLine <- readLines(con,n=1)
       
       if(i>=true.start){
-        if(temp%%100==0){
-          print(paste0("temp",temp))
+        if(i==399){
+          temp = temp+1
+          score_result[temp,]  <- rep(NA,5)
+          infor_result[temp,] <- rep(NA,25)
+          
+          
+        }else{
+          if(temp%%100==0){
+            print(paste0("temp",temp))
+          }
+          #print(i)
+          temp = temp+1
+          #print(i)
+          myVector <- strsplit(oneLine," ")
+          snpid <- as.character(myVector[[1]][3])
+          snpid_result[temp] <- snpid
+          snpvalue <- rep(0,n)
+          
+          
+          snppro <- as.numeric(unlist(myVector)[7:length(myVector[[1]])])
+          if(length(snppro)!=(3*n)){
+            break
+          }
+          
+          snpvalue <- convert(snppro,n)
+          snpvalue <- snpvalue[idx.fil][idx.match]
+          snpvalue.control <- snpvalue[idx.control]
+          freq <- sum(snpvalue.control)/(2*n.control)
+          freq.all[temp] <- freq
+          #print(paste0("freq",freq))
+          
+          # tryCatch(
+          #   {
+          
+          
+          Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+          z.standard <- Heter.result.Icog[[12]]
+          M <- nrow(z.standard)
+          number.of.tumor <- ncol(z.standard)
+          log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
+          nparm <- length(Heter.result.Icog[[1]])  
+          sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+          
+          score_result[temp,]  <- log.odds.icog
+          infor_result[temp,] <- as.vector(sigma.log.odds.icog)
+          
+          
+          
+          
+          
+          
+          
+          
         }
-        #print(i)
-        temp = temp+1
-        #print(i)
-        myVector <- strsplit(oneLine," ")
-        snpid <- as.character(myVector[[1]][3])
-        snpid_result[temp] <- snpid
-        snpvalue <- rep(0,n)
         
         
-        snppro <- as.numeric(unlist(myVector)[7:length(myVector[[1]])])
-        if(length(snppro)!=(3*n)){
+        if(i==true.end){
           break
         }
         
-        snpvalue <- convert(snppro,n)
-        snpvalue <- snpvalue[idx.fil][idx.match]
-        snpvalue.control <- snpvalue[idx.control]
-        freq <- sum(snpvalue.control)/(2*n.control)
-        freq.all[temp] <- freq
-        #print(paste0("freq",freq))
-        
-        # tryCatch(
-        #   {
-        
-      
-        Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-        z.standard <- Heter.result.Icog[[12]]
-        M <- nrow(z.standard)
-        number.of.tumor <- ncol(z.standard)
-        log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
-        nparm <- length(Heter.result.Icog[[1]])  
-        sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
-        
-        score_result[temp,]  <- log.odds.icog
-        infor_result[temp,] <- as.vector(sigma.log.odds.icog)
         
         
         
@@ -163,22 +186,9 @@ if(num!=0){
         
         
         
-      }
-      
-      
-      if(i==true.end){
-        break
-      }
-      
-      
-    
-    
-    
-    
-    
-    
-    
-    
+        
+        }
+       
     
     
     

@@ -43,65 +43,65 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub",i1,".
 
 
 
-result.all <- matrix(0,n,30)
-total <- 0
-for(i in 1:size){
-  print(i)
-  load(paste0("./genetic_correlation/ICOG/result/result.sub",i,".Rdata"))
-  temp <- nrow(result.sub)
-
-    result.all[total+(1:temp),] <- result.sub
-  total <- total+temp
-}
-
-
-log.odds <- result.all[,1:5]
-sd.odds <-  sqrt(result.all[,c(6,12,18,24,30)])
-id <- ICOG.result.clean[,c(3,6,7)]
-
-alleles.ICOG <- as.character(ICOG.result.clean$SNP.ICOGS)
-
-alleles1 <- rep("c",n)
-alleles2 <- rep("c",n)
-alleles.split.icog <- strsplit(alleles.ICOG,split=":")
-
-alleles.ONCO <- as.character(ICOG.result.clean$SNP.ONCO)
-alleles3 <- rep("c",n)
-alleles4 <- rep("c",n)
-alleles.split.onco <- strsplit(alleles.ONCO,split=":")
-
-
-for(i in 1:n){
-  print(i)
-  alleles1[i] <- alleles.split.icog[[i]][3]
-  alleles2[i] <- alleles.split.icog[[i]][4]
-  alleles3[i] <- alleles.split.onco[[i]][3]
-  alleles4[i] <- alleles.split.onco[[i]][4]
-}
-
-alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
-
-
-idx <- which(is.na(alleles1)&!is.na(alleles3))
-alleles1[idx] <- alleles3[idx]
-alleles2[idx] <- alleles4[idx]
-
-snpinfor <- data.frame(id,alleles1,alleles2)
-
-colnames(log.odds) <- c("Triple Negative",
-  "Luminial A",
-  "HER2 Enriched",
-  "Luminal B",
-  "Luminal B HER2Neg")
-colnames(sd.odds) <- c("Triple Negative",
-                       "Luminial A",
-                       "HER2 Enriched",
-                       "Luminal B",
-                       "Luminal B HER2Neg")
-
-
-
-ICOG.result <- list(snpinfor,log.odds,sd.odds)
-save(ICOG.result,file=paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
-
-idx <- which(is.na(alleles1)&is.na(alleles2))
+# result.all <- matrix(0,n,30)
+# total <- 0
+# for(i in 1:size){
+#   print(i)
+#   load(paste0("./genetic_correlation/ICOG/result/result.sub",i,".Rdata"))
+#   temp <- nrow(result.sub)
+# 
+#     result.all[total+(1:temp),] <- result.sub
+#   total <- total+temp
+# }
+# 
+# 
+# log.odds <- result.all[,1:5]
+# sd.odds <-  sqrt(result.all[,c(6,12,18,24,30)])
+# id <- ICOG.result.clean[,c(3,6,7)]
+# 
+# alleles.ICOG <- as.character(ICOG.result.clean$SNP.ICOGS)
+# 
+# alleles1 <- rep("c",n)
+# alleles2 <- rep("c",n)
+# alleles.split.icog <- strsplit(alleles.ICOG,split=":")
+# 
+# alleles.ONCO <- as.character(ICOG.result.clean$SNP.ONCO)
+# alleles3 <- rep("c",n)
+# alleles4 <- rep("c",n)
+# alleles.split.onco <- strsplit(alleles.ONCO,split=":")
+# 
+# 
+# for(i in 1:n){
+#   print(i)
+#   alleles1[i] <- alleles.split.icog[[i]][3]
+#   alleles2[i] <- alleles.split.icog[[i]][4]
+#   alleles3[i] <- alleles.split.onco[[i]][3]
+#   alleles4[i] <- alleles.split.onco[[i]][4]
+# }
+# 
+# alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
+# 
+# 
+# idx <- which(is.na(alleles1)&!is.na(alleles3))
+# alleles1[idx] <- alleles3[idx]
+# alleles2[idx] <- alleles4[idx]
+# 
+# snpinfor <- data.frame(id,alleles1,alleles2)
+# 
+# colnames(log.odds) <- c("Triple Negative",
+#   "Luminial A",
+#   "HER2 Enriched",
+#   "Luminal B",
+#   "Luminal B HER2Neg")
+# colnames(sd.odds) <- c("Triple Negative",
+#                        "Luminial A",
+#                        "HER2 Enriched",
+#                        "Luminal B",
+#                        "Luminal B HER2Neg")
+# 
+# 
+# 
+# ICOG.result <- list(snpinfor,log.odds,sd.odds)
+# save(ICOG.result,file=paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
+# 
+# idx <- which(is.na(alleles1)&is.na(alleles2))
