@@ -2,8 +2,7 @@ setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 total <- 0
 sig <- c(1:564)
-dele  = c(56,160,281,291,292,299,311,350,351,416,421,422,435)
-sig <- sig[-dele]
+
 
 
 
