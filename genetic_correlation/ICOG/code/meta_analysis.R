@@ -27,3 +27,88 @@ for(i in start:end){
 }
 
 save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub.meta",i1,".Rdata"))
+
+
+
+
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+total <- nrow(icog.onco.merge)
+
+result.all <- matrix(0,total,30)
+total <- 0
+for(i in 1:size){
+  print(i)
+  load(paste0("./genetic_correlation/ICOG/result/result.sub.meta",i,".Rdata"))
+  temp <- nrow(result.sub)
+  result.all[total+(1:temp),] <- result.sub
+  total <- temp+total
+}
+
+
+
+
+
+log.odds <- result.all[,1:5]
+sd.odds <-  sqrt(result.all[,c(6,12,18,24,30)])
+id <- icog.onco.merge[,c(3,6,7)]
+
+alleles.ICOG <- as.character(icog.onco.merge$SNP.ICOGS.x)
+
+alleles1 <- rep("c",total)
+alleles2 <- rep("c",total)
+alleles.split.icog <- strsplit(alleles.ICOG,split=":")
+
+alleles.ONCO <- as.character(icog.onco.merge$SNP.ONCO.x)
+alleles3 <- rep("c",total)
+alleles4 <- rep("c",total)
+alleles.split.onco <- strsplit(alleles.ONCO,split=":")
+
+
+for(i in 1:total){
+  print(i)
+  alleles1[i] <- alleles.split.icog[[i]][3]
+  alleles2[i] <- alleles.split.icog[[i]][4]
+  alleles3[i] <- alleles.split.onco[[i]][3]
+  alleles4[i] <- alleles.split.onco[[i]][4]
+}
+
+alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
+
+
+idx <- which(!is.na(alleles1)&is.na(alleles3))
+alleles3[idx] <- alleles1[idx]
+alleles4[idx] <- alleles2[idx] 
+
+snpinfor <- data.frame(id,alleles3,alleles4)
+
+colnames(log.odds) <- c("Triple Negative",
+                        "Luminial A",
+                        "HER2 Enriched",
+                        "Luminal B",
+                        "Luminal B HER2Neg")
+colnames(sd.odds) <- c("Triple Negative",
+                       "Luminial A",
+                       "HER2 Enriched",
+                       "Luminal B",
+                       "Luminal B HER2Neg")
+
+
+
+meta.result <- list(snpinfor,log.odds,sd.odds)
+save(meta.result,file=paste0("./genetic_correlation/ICOG/result/meta.result.Rdata"))
+
+
+all.result <- list(meta.result,ICOG.result,ONCO.result)
+
+
+
+
+
+
+
+
+
+
+idx <- which(is.na(alleles3)&is.na(alleles4))
+length(idx)
+
