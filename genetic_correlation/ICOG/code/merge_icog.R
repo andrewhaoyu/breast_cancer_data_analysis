@@ -1,45 +1,82 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
+load("./genetic_correlation/result/ICOG.result.clean.Rdata")
+
 total <- 0
-sig <- c(1:564)
-
-
-
-
-for(i1 in sig){
-  print(i1)
-  load(paste0("./genetic_correlation/ICOG/result/intrinsic_i1",i1))  
-  total <- total+length(result[[1]])
+size =1000
+for(i in 1:size){
+  print(i)
+  load(paste0("./genetic_correlation/ICOG/result/result.sub",i,".Rdata"))
+  temp <- nrow(result.sub)
+  
+#  result.all[total+(1:temp),] <- result.sub
+  total <- total+temp
 }
 
-sigma <- matrix(0,total,25)
-logodds <- matrix(0,total,5)
-snpid <- rep("c",total)
+result.all <- matrix(0,total,30)
 total <- 0
-for(i1 in sig){
-  print(i1)
-  load(paste0("./genetic_correlation/ICOG/result/intrinsic_i1",i1))   
-  temp <- length(result[[1]])
-  snpid[total+(1:temp)] <- result[[1]]
-  logodds[total+(1:temp),] <- result[[2]]
-  sigma[total+(1:temp),] <- result[[3]]
-  total <- total+ temp
+size =1000
+for(i in 1:size){
+  print(i)
+  load(paste0("./genetic_correlation/ICOG/result/result.sub",i,".Rdata"))
+  temp <- nrow(result.sub)
+
+    result.all[total+(1:temp),] <- result.sub
+  total <- total+temp
 }
 
 
-load("./genetic_correlation/result/hapmap3list.Rdata")
+ICOG.result.transform <- ICOG.result.clean
+ICOG.result.transform[,11:40] <- result.all
+save(ICOG.result.transform,file=paste0("./genetic_correlation/ICOG/result/ICOG.result.transform.Rdata"))
 
-ICOG.result <- data.frame(SNP.ICOGS=snpid,logodds,sigma)
+log.odds <- result.all[,1:5]
+sd.odds <-  sqrt(result.all[,c(6,12,18,24,30)])
+id <- ICOG.result.clean[,c(3,6,7)]
+
+alleles.ICOG <- as.character(ICOG.result.clean$SNP.ICOGS)
+
+alleles1 <- rep("c",total)
+alleles2 <- rep("c",total)
+alleles.split.icog <- strsplit(alleles.ICOG,split=":")
+
+alleles.ONCO <- as.character(ICOG.result.clean$SNP.ONCO)
+alleles3 <- rep("c",total)
+alleles4 <- rep("c",total)
+alleles.split.onco <- strsplit(alleles.ONCO,split=":")
 
 
-ICOG.result.clean <- merge(shared.data,ICOG.result,by.x="SNP.ICOGS",
-                           by.y = "SNP.ICOGS")
+for(i in 1:total){
+  print(i)
+  alleles1[i] <- alleles.split.icog[[i]][3]
+  alleles2[i] <- alleles.split.icog[[i]][4]
+  alleles3[i] <- alleles.split.onco[[i]][3]
+  alleles4[i] <- alleles.split.onco[[i]][4]
+}
 
-save(ICOG.result.clean,file= "./genetic_correlation/result/ICOG.result.clean.Rdata")
-
-#load("./genetic_correlation/result/hapmap3list.Rdata")
+alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
 
 
+idx <- which(is.na(alleles1)&!is.na(alleles3))
+alleles1[idx] <- alleles3[idx]
+alleles2[idx] <- alleles4[idx]
+
+snpinfor <- data.frame(id,alleles1,alleles2)
+
+colnames(log.odds) <- c("Triple Negative",
+  "Luminial A",
+  "HER2 Enriched",
+  "Luminal B",
+  "Luminal B HER2Neg")
+colnames(sd.odds) <- c("Triple Negative",
+                       "Luminial A",
+                       "HER2 Enriched",
+                       "Luminal B",
+                       "Luminal B HER2Neg")
 
 
-#dele  = c(56,160,281,291,292,299,311,350,351,416,421,422,435)
+
+ICOG.result <- list(snpinfor,log.odds,sd.odds)
+save(ICOG.result,file=paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
+
+idx <- which(is.na(alleles1)&is.na(alleles2))

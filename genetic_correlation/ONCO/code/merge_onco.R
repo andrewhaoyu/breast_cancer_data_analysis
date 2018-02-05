@@ -1,45 +1,91 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
+load( "./genetic_correlation/ONCO/result/result.clean.Rdata")
+
 total <- 0
-sig <- c(1:567)
-
-
-
-
-for(i1 in sig){
-  print(i1)
-  load(paste0("./genetic_correlation/ONCO/result/intrinsic_i1",i1))  
-  total <- total+length(result[[1]])
-}
-
-sigma <- matrix(0,total,25)
-logodds <- matrix(0,total,5)
-snpid <- rep("c",total)
-total <- 0
-for(i1 in sig){
-  print(i1)
-  load(paste0("./genetic_correlation/ONCO/result/intrinsic_i1",i1))   
-  temp <- length(result[[1]])
-  snpid[total+(1:temp)] <- result[[1]]
-  logodds[total+(1:temp),] <- result[[2]]
-  sigma[total+(1:temp),] <- result[[3]]
-  total <- total+ temp
+size =1000
+for(i in 1:size){
+  print(i)
+  load(paste0("./genetic_correlation/ONCO/result/result.sub",i,".Rdata"))
+  temp <- nrow(result.sub)
+  
+#  result.all[total+(1:temp),] <- result.sub
+  total <- total+temp
 }
 
 
-load("./genetic_correlation/result/hapmap3list.Rdata")
 
-ONCO.result <- data.frame(SNP.ONCO=snpid,logodds,sigma)
+result.all <- matrix(0,total,30)
+total <- 0
+size =1000
+for(i in 1:size){
+  print(i)
+  load(paste0("./genetic_correlation/ONCO/result/result.sub",i,".Rdata"))
+  temp <- nrow(result.sub)
+  
+  result.all[total+(1:temp),] <- result.sub
+  total <- total+temp
+}
 
 
-ONCO.result.clean <- merge(shared.data,ONCO.result,by.x="SNP.ONCO",
-                           by.y = "SNP.ONCO")
 
-save(ONCO.result.clean,file= "./genetic_correlation/ONCO/result/result.clean.Rdata")
+ONCO.result.transform <- ONCO.result.clean
+ONCO.result.transform[,11:40] <- result.all
 
-#load("./genetic_correlation/result/hapmap3list.Rdata")
-
+save(ONCO.result.transform,file=paste0("./genetic_correlation/ONCO/result/ONCO.result.transfrom.Rdata"))
 
 
 
-#dele  = c(56,160,281,291,292,299,311,350,351,416,421,422,435)
+
+
+log.odds <- result.all[,1:5]
+sd.odds <-  sqrt(result.all[,c(6,12,18,24,30)])
+id <- ONCO.result.clean[,c(3,6,7)]
+
+alleles.ICOG <- as.character(ONCO.result.clean$SNP.ICOGS)
+
+alleles1 <- rep("c",total)
+alleles2 <- rep("c",total)
+alleles.split.icog <- strsplit(alleles.ICOG,split=":")
+
+alleles.ONCO <- as.character(ONCO.result.clean$SNP.ONCO)
+alleles3 <- rep("c",total)
+alleles4 <- rep("c",total)
+alleles.split.onco <- strsplit(alleles.ONCO,split=":")
+
+
+for(i in 1:total){
+  print(i)
+  alleles1[i] <- alleles.split.icog[[i]][3]
+  alleles2[i] <- alleles.split.icog[[i]][4]
+  alleles3[i] <- alleles.split.onco[[i]][3]
+  alleles4[i] <- alleles.split.onco[[i]][4]
+}
+
+alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
+
+
+idx <- which(!is.na(alleles1)&is.na(alleles3))
+alleles3[idx] <- alleles1[idx]
+alleles4[idx] <- alleles2[idx] 
+
+snpinfor <- data.frame(id,alleles3,alleles4)
+
+colnames(log.odds) <- c("Triple Negative",
+                        "Luminial A",
+                        "HER2 Enriched",
+                        "Luminal B",
+                        "Luminal B HER2Neg")
+colnames(sd.odds) <- c("Triple Negative",
+                       "Luminial A",
+                       "HER2 Enriched",
+                       "Luminal B",
+                       "Luminal B HER2Neg")
+
+
+
+ONCO.result <- list(snpinfor,log.odds,sd.odds)
+save(ONCO.result,file=paste0("./genetic_correlation/ONCO/result/ONCO.result.Rdata"))
+
+idx <- which(is.na(alleles3)&is.na(alleles4))
+length(idx)
