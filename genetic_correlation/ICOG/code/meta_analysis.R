@@ -4,6 +4,7 @@ setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 paste0("./genetic_correlation/ICOG/result/icog.onco.merge.Rdata")
 library(bc2)
 size =1000
+n <- nrow(icog.onco.merge)
 start.end<- startend(n,size,i1)
 start <- start.end[1]
 end <- start.end[2]
