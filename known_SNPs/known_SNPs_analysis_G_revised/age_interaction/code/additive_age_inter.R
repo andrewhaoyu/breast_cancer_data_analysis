@@ -30,7 +30,6 @@ if(i1<=177){
   # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
   
   x.test.all.mis1 <- data1[,c(27:203)]
-  x.test.all.mis1 <- x.test.all.mis1
   ###pc1-10 and age
   x.covar.mis1 <- data1[,c(5:14)]
   age <- data1[,204]
@@ -42,8 +41,8 @@ if(i1<=177){
   age.cat <- ifelse(age.complete>50,1,0)
   age.snp.inter <- age.cat*snp
   
-  # x.all.mis1 <- as.matrix(cbind(age.snp.inter,snp,age.complete,x.covar.mis1))
-  x.all.mis1 <- as.matrix(cbind(snp,age.complete,x.covar.mis1))
+   x.all.mis1 <- as.matrix(cbind(age.snp.inter,snp,age.complete,x.covar.mis1))
+  #x.all.mis1 <- as.matrix(cbind(snp,age.complete,x.covar.mis1))
   colnames(x.all.mis1)[1] <- "age.gene.inter"
   
   
@@ -343,20 +342,22 @@ if(i1<=177){
   
   test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
-  meta.result <- LogoddsMetaAnalysis(log.odds.icog.2,
+  meta.result.2 <- LogoddsMetaAnalysis(log.odds.icog.2,
                                      sigma.log.odds.icog.2,
                                      log.odds.onco.2,
                                      sigma.log.odds.onco.2)
   
-  second.stage.logodds.meta.2 <- meta.result[[1]]
-  second.stage.sigma.meta.2 <- meta.result[[2]]
+  second.stage.logodds.meta.2 <- meta.result.2[[1]]
+  second.stage.sigma.meta.2 <- meta.result.2[[2]]
   
   
   
-  test.result.second.wald.2 <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
+  test.result.second.wald.2 <- DisplaySecondStageTestResult(second.stage.logodds.meta.2,second.stage.sigma.meta.2)
   
   heter.result <- list(test.result.second.wald,
                        test.result.second.wald.2)
+  
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/age_interaction/result/heter_result_",i1,".Rdata"))
   
   # beta.meta <- z.additive.design%*%second.stage.logodds.meta
   # beta.sigma.meta <- z.additive.design%*%second.stage.sigma.meta%*%t(z.additive.design)
@@ -637,6 +638,7 @@ if(i1<=177){
                        test.result.second.wald.2)
   
   
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/age_interaction/result/heter_result_",i1,".Rdata"))
   
   # beta.meta <- z.additive.design%*%second.stage.logodds.meta
   # beta.sigma.meta <- z.additive.design%*%second.stage.sigma.meta%*%t(z.additive.design)
