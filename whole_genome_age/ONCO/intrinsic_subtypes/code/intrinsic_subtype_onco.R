@@ -157,22 +157,17 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         score_result[temp,] <- 0
         infor_result[temp,] <- 0
       }else{
-        score.test.support.onco.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis2,
-                                                                                 x.self.design = snpvalue,
-                                                                                 z.design = z.design.support,
-                                                                                 additive=x.covar.mis2,
-                                                                                 missingTumorIndicator = 888,
-                                                                                 delta0=delta0)
+        Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+        z.standard <- Heter.result.Onco[[12]]
+        M <- nrow(z.standard)
+        number.of.tumor <- ncol(z.standard)
+        log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
+        nparm <- length(Heter.result.Onco[[1]])
+        sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
         
-        score.test.onco.casecase<- ScoreTestMixedModel(y=y.pheno.mis2,
-                                                       x=snpvalue,
-                                                       z.design = z.design.test,
-                                                       
-                                                       score.test.support= score.test.support.onco.casecase,
-                                                       missingTumorIndicator=888)
+        score_result[temp,]  <- log.odds.onco
+        infor_result[temp,] <- as.vector(sigma.log.odds.onco)
         
-        score_result[temp,]  <- score.test.onco.casecase[[1]]
-        infor_result[temp,] <- as.vector(score.test.onco.casecase[[2]])
         
         
       }
@@ -216,4 +211,4 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-save(result,file=paste0("./whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco",i1,"_",i2))
+save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco",i1,"_",i2))
