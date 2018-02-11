@@ -44,4 +44,5 @@ data/
 /genetic_correlation/ICOG/result
 /genetic_correlation/ONCO/result
 /known_SNPs/known_SNPs_analysis_G_revised/age_interaction/result
-/whole_genome_age/ICOG/Intrinsic_subtypes/result
+/whole_genome_age/ICOG/intrinsic_subtypes/result
+/whole_genome_age/ONCO/intrinsic_subtypes/result

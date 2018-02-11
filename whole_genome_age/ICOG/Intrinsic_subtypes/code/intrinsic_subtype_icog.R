@@ -120,8 +120,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   inner.file.num <- inner.end-inner.start+1
   true.start <- start+inner.start-1
   true.end <- start+inner.end-1
-  score_result <- matrix(0,inner.file.num,num.of.tumor-1)
-  infor_result <- matrix(0,inner.file.num,(num.of.tumor-1)^2)
+  score_result <- matrix(0,inner.file.num,num.of.tumor+1)
+  infor_result <- matrix(0,inner.file.num,(num.of.tumor+1)^2)
   snpid_result <- rep("c",inner.file.num)
   freq.all <- rep(0,inner.file.num)
   temp <- 0
@@ -201,8 +201,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 stopImplicitCluster()
 
-score_result <- matrix(0.1,file.num,num.of.tumor-1)
-infor_result <- matrix(0.1,file.num,(num.of.tumor-1)^2)
+score_result <- matrix(0.1,file.num,num.of.tumor+1)
+infor_result <- matrix(0.1,file.num,(num.of.tumor+1)^2)
 snpid_result <- rep("c",file.num)
 
 freq.all <- rep(0,file.num)
