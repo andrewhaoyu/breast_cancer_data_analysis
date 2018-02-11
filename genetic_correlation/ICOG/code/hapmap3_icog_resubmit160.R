@@ -110,7 +110,16 @@ if(num!=0){
     temp <- 0
     con <- gzfile(geno.file)
     open(con)
-    for(i in 1:num){
+    # for(i in 1:399){
+    #   print(i)
+    #   oneLine <- readLines(con,n=1)
+    #   if(i==399){
+    #     myVector <- strsplit(oneLine," ")
+    #     snpid <- as.character(myVector[[1]][3])
+    #     print(snpid)
+    #   }
+    # }
+    # for(i in 1:num){
       #print(i)
       if(i%%500==0){
         print(i)
