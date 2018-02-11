@@ -12,6 +12,7 @@ for(i1 in sig){
   total <- total+length(result[[1]])
 }
 
+
 sigma <- matrix(0,total,25)
 logodds <- matrix(0,total,5)
 snpid <- rep("c",total)
