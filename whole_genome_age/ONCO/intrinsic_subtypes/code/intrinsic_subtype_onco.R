@@ -155,7 +155,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       if(freq<0.006|freq>0.994){
         
         score_result[temp,] <- 0
-        infor_result[temp,] <- 0
+        infor_result[temp,] <- as.vector(diag(5))
       }else{
         Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
         z.standard <- Heter.result.Onco[[12]]
