@@ -30,10 +30,12 @@ ICOG.result.transform <- ICOG.result.clean
 ICOG.result.transform[,11:40] <- result.all
 save(ICOG.result.transform,file=paste0("./genetic_correlation/ICOG/result/ICOG.result.transform.Rdata"))
 
-log.odds <- result.all[,1:5]
-sd.odds <-  sqrt(result.all[,c(6,12,18,24,30)])
-id <- ICOG.result.clean[,c(3,6,7)]
 
+
+log.odds <- result.all[,1:5]
+var.odds <-  result.all[,c(6:30)]
+id <- ICOG.result.clean[,c(3,6,7)]
+freq.icog <- ICOG.result.clean[,41]
 alleles.ICOG <- as.character(ICOG.result.clean$SNP.ICOGS)
 
 alleles1 <- rep("c",total)
@@ -68,15 +70,15 @@ colnames(log.odds) <- c("Triple Negative",
   "HER2 Enriched",
   "Luminal B",
   "Luminal B HER2Neg")
-colnames(sd.odds) <- c("Triple Negative",
-                       "Luminial A",
-                       "HER2 Enriched",
-                       "Luminal B",
-                       "Luminal B HER2Neg")
+# colnames(sd.odds) <- c("Triple Negative",
+#                        "Luminial A",
+#                        "HER2 Enriched",
+#                        "Luminal B",
+#                        "Luminal B HER2Neg")
 
 
 
-ICOG.result <- list(snpinfor,log.odds,sd.odds)
+ICOG.result <- list(snpinfor,log.odds,var.odds,freq.icog)
 save(ICOG.result,file=paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
 
 idx <- which(is.na(alleles1)&is.na(alleles2))

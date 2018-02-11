@@ -16,6 +16,7 @@ for(i1 in sig){
 sigma <- matrix(0,total,25)
 logodds <- matrix(0,total,5)
 snpid <- rep("c",total)
+freq.onco <- rep(0,total)
 total <- 0
 for(i1 in sig){
   print(i1)
@@ -24,13 +25,14 @@ for(i1 in sig){
   snpid[total+(1:temp)] <- result[[1]]
   logodds[total+(1:temp),] <- result[[2]]
   sigma[total+(1:temp),] <- result[[3]]
+  freq.onco[total+(1:temp)] <- result[[4]]
   total <- total+ temp
 }
 
 
 load("./genetic_correlation/result/hapmap3list.Rdata")
 
-ONCO.result <- data.frame(SNP.ONCO=snpid,logodds,sigma)
+ONCO.result <- data.frame(SNP.ONCO=snpid,logodds,sigma,freq.onco)
 
 
 ONCO.result.clean <- merge(shared.data,ONCO.result,by.x="SNP.ONCO",

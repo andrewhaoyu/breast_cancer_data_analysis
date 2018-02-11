@@ -41,8 +41,6 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub",i1,".
 
 
 
-
-
 # result.all <- matrix(0,n,30)
 # total <- 0
 # for(i in 1:size){

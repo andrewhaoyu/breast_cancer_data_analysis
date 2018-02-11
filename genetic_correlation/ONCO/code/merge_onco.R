@@ -39,8 +39,9 @@ save(ONCO.result.transform,file=paste0("./genetic_correlation/ONCO/result/ONCO.r
 
 
 log.odds <- result.all[,1:5]
-sd.odds <-  sqrt(result.all[,c(6,12,18,24,30)])
+var.odds <-  result.all[,c(6:30)]
 id <- ONCO.result.clean[,c(3,6,7)]
+freq.onco <- ONCO.result.clean[,41]
 
 alleles.ICOG <- as.character(ONCO.result.clean$SNP.ICOGS)
 
@@ -76,15 +77,15 @@ colnames(log.odds) <- c("Triple Negative",
                         "HER2 Enriched",
                         "Luminal B",
                         "Luminal B HER2Neg")
-colnames(sd.odds) <- c("Triple Negative",
-                       "Luminial A",
-                       "HER2 Enriched",
-                       "Luminal B",
-                       "Luminal B HER2Neg")
+# colnames(sd.odds) <- c("Triple Negative",
+#                        "Luminial A",
+#                        "HER2 Enriched",
+#                        "Luminal B",
+#                        "Luminal B HER2Neg")
 
 
 
-ONCO.result <- list(snpinfor,log.odds,sd.odds)
+ONCO.result <- list(snpinfor,log.odds,var.odds,freq.onco)
 save(ONCO.result,file=paste0("./genetic_correlation/ONCO/result/ONCO.result.Rdata"))
 
 idx <- which(is.na(alleles3)&is.na(alleles4))

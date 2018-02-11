@@ -49,8 +49,9 @@ for(i in 1:size){
 
 
 log.odds <- result.all[,1:5]
-sd.odds <-  sqrt(result.all[,c(6,12,18,24,30)])
+var.odds <-  result.all[,c(6:30)]
 id <- icog.onco.merge[,c(3,6,7)]
+freq.meta <- cbind(icog.onco.merge$freq.icog,icog.onco.merge$freq.onco)
 
 alleles.ICOG <- as.character(icog.onco.merge$SNP.ICOGS.x)
 
@@ -86,15 +87,16 @@ colnames(log.odds) <- c("Triple Negative",
                         "HER2 Enriched",
                         "Luminal B",
                         "Luminal B HER2Neg")
-colnames(sd.odds) <- c("Triple Negative",
-                       "Luminial A",
-                       "HER2 Enriched",
-                       "Luminal B",
-                       "Luminal B HER2Neg")
+# colnames(sd.odds) <- c("Triple Negative",
+#                        "Luminial A",
+#                        "HER2 Enriched",
+#                        "Luminal B",
+#                        "Luminal B HER2Neg")
+# 
 
 
-
-meta.result <- list(snpinfor,log.odds,sd.odds)
+meta.result <- list(snpinfor,log.odds,var.odds,freq.meta)
+colnames(meta.result[[4]]) <- c("freq.icog","freq.onco")
 save(meta.result,file=paste0("./genetic_correlation/ICOG/result/meta.result.Rdata"))
 
 
