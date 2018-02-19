@@ -309,13 +309,25 @@ if(i1<=177){
   
   
   
-  Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:ncol(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+  Heter.result.Onco = EMmvpolySelfDesign(
+    y.pheno.mis2,
+    x.self.design = x.all.mis2[, 1, drop = F],
+    z.design = z.design,
+    baselineonly = NULL,
+    additive = x.all.mis2[, 2:ncol(x.all.mis2)],
+    pairwise.interaction = NULL,
+    saturated = NULL,
+    missingTumorIndicator = 888
+  )
   z.standard <- Heter.result.Onco[[12]]
   M <- nrow(z.standard)
-  number.of.tumor <- ncol(z.standard)+1
-  log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
+  number.of.tumor <- ncol(z.standard) + 1
+  log.odds.onco <-
+    Heter.result.Onco[[1]][(M + 1):(M + 1 + number.of.tumor)]
   nparm = length(Heter.result.Onco[[1]])
-  sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+  sigma.log.odds.onco <-
+    Heter.result.Onco[[2]][(M + 1):(M + 1 + number.of.tumor), (M + 1):(M +
+                                                                         1 + number.of.tumor)]
   # beta.onco <- z.trans%*%log.odds.onco
   # beta.sigma.onco <- z.trans%*%sigma.log.odds.onco%*%t(z.trans)
   loglikelihood.onco <- Heter.result.Onco[[8]]

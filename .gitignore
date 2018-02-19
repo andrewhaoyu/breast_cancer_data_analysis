@@ -46,3 +46,12 @@ data/
 /known_SNPs/known_SNPs_analysis_G_revised/age_interaction/result
 /whole_genome_age/ICOG/intrinsic_subtypes/result
 /whole_genome_age/ONCO/intrinsic_subtypes/result
+/genetic_correlation/standard_analysis/result
+/risk_prediction/standard_analysis/result
+/risk_prediction/two_stage_model/result
+/risk_prediction/mix_two_standard/result
+/whole_genome_age/ICOG/intrinsic_subtypes/Icon\r
+/whole_genome_age/ICOG/intrinsic_subtypes/code/Icon\r
+/whole_genome_age/ONCO/intrinsic_subtypes/Icon\r
+/whole_genome_age/ONCO/intrinsic_subtypes/code/Icon\r
+
