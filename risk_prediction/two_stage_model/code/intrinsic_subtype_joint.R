@@ -1,10 +1,31 @@
+rm(list=ls())
+arg <- commandArgs(trailingOnly=T)
+i1 <- as.numeric(arg[[1]])
+
+
+z.design <- matrix(c(
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+  c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+  c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
+  c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
+),ncol=5)
+rowSums(z.design)
+
+
+
+colnames(z.design) <- c("Luminial A","Luminal B",
+                        "Luminal B HER2Neg",
+                        "HER2 Enriched",
+                        "Triple Negative")
+
 true.false.calculate <- function(prs,test.data){
   idx.true <- which(test.data==1)
   idx.false <- which(test.data==0)
   n <- length(test.data)
   min.prs <- range(prs)[1]
   max.prs <- range(prs)[2]
-  cut.point <- seq(from=min.prs,to=max.prs,by=(max.prs-min.prs)/1000)
+  cut.point <- seq(from=min.prs,to=max.prs,by=(max.prs-min.prs)/100)
   true.pos <- rep(0,length(cut.point))
   false.pos <- rep(0,length(cut.point))
   true.pos[length(cut.point)] <- 1
@@ -21,15 +42,7 @@ true.false.calculate <- function(prs,test.data){
   return(cbind(true.pos,false.pos))
 }
 
-auc_cal <- function(roc){
-  n <- nrow(roc.result)
-  auc <- 0
-  for(i in 1:(n-1)){
-    temp <- (roc[i+1,1]-roc[i,1])*(roc[i+1,2]+roc[i,2])/2
-    auc <- temp+auc
-  }
-  return(auc)
-}
+
 
 
 library(data.table)
@@ -92,36 +105,29 @@ x.covar.train2 <- x.covar2[-idx.test2,]
 x.snp.all.train2 <- x.snp.all2[-idx.test2,]
 
 
-model1 <- glm(y.pheno.mis1.train[,1]~as.matrix(x.snp.all.train1)+as.matrix(x.covar.train1),family = binomial(link = 'logit'))
-log.odds.icog <-as.vector(model1$coefficients)[c(2:206)]
-sigma.icog <- vcov(model1)[c(2:206),c(2:206)]
+Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1.train,x.self.design = x.snp.all.train1[,i1],z.design=z.design,baselineonly = NULL,additive = x.covar.train1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 
-model2 <- glm(y.pheno.mis2.train[,1]~as.matrix(x.snp.all.train2)+as.matrix(x.covar.train2),family = binomial(link = 'logit'))
-log.odds.onco <-as.vector(model2$coefficients)[c(2:206)]
-sigma.onco <- vcov(model2)[c(2:206),c(2:206)]
 
-library(bc2)
+z.standard <- Heter.result.Icog[[12]]
+M <- nrow(z.standard)
+number.of.tumor <- ncol(z.standard)
+log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
+nparm <- length(Heter.result.Icog[[1]])  
+sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+
+Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2.train,x.self.design = x.snp.all.train1[,i1],z.design = z.design,baselineonly = NULL,additive = x.covar.train2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+z.standard <- Heter.result.Onco[[12]]
+M <- nrow(z.standard)
+number.of.tumor <- ncol(z.standard)
+log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
+nparm <- length(Heter.result.Onco[[1]])
+sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+
+
 meta.result <- LogoddsMetaAnalysis(log.odds.icog,
-                    sigma.icog,
-                    log.odds.onco,
-                    sigma.onco)
-log.odds.meta <- meta.result[[1]]
-
-prs <- x.snp.all.test%*%log.odds.meta
-min.prs <- range(prs)[1]
-max.prs <- range(prs)[2]
-cut.data <- seq(from=min.prs,to=max.prs,by=(max.prs-min.prs)/100)
-
-roc.result <- true.false.calculate(prs,y.test[,1])
-plot(roc.result[,1],roc.result[,2],xlab="false_p",ylab="true_p")
-abline(a=0,b=1,col="red")
-auc <- auc_cal(roc.result)
+                                   sigma.log.odds.icog,
+                                   log.odds.onco,
+                                   sigma.log.odds.onco)
 
 
-
-
-
-
-
-
-
+save(meta.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/meta.result",i1,".Rdata"))
