@@ -105,7 +105,8 @@ x.covar.train2 <- x.covar2[-idx.test2,]
 x.snp.all.train2 <- x.snp.all2[-idx.test2,]
 
 
-Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1.train,x.self.design = x.snp.all.train1[,i1],z.design=z.design,baselineonly = NULL,additive = x.covar.train1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+Heter.result.Icog = EMmvpoly(y.pheno.mis1.train,baselineonly = NULL,additive = cbind(x.snp.all.train1[,i1],x.covar.train1),pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+
 
 
 z.standard <- Heter.result.Icog[[12]]
@@ -115,7 +116,7 @@ log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
 nparm <- length(Heter.result.Icog[[1]])  
 sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
 
-Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2.train,x.self.design = x.snp.all.train1[,i1],z.design = z.design,baselineonly = NULL,additive = x.covar.train2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+Heter.result.Onco = EMmvpoly(y.pheno.mis2.train,baselineonly = NULL,additive = cbind(x.snp.all.train2[,i1],x.covar.train2),pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 z.standard <- Heter.result.Onco[[12]]
 M <- nrow(z.standard)
 number.of.tumor <- ncol(z.standard)
@@ -130,7 +131,7 @@ meta.result <- LogoddsMetaAnalysis(log.odds.icog,
                                    sigma.log.odds.onco)
 
 
-save(meta.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/meta.result",i1,".Rdata"))
+save(meta.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/add.meta.result",i1,".Rdata"))
 
 
 
