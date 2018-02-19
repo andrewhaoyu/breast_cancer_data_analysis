@@ -2,7 +2,7 @@ rm(list=ls())
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
 
-
+library(bc2)
 z.design <- matrix(c(
   c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
