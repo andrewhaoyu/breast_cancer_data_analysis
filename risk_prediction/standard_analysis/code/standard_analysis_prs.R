@@ -117,7 +117,7 @@ plot(roc.result[,1],roc.result[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
 auc <- auc_cal(roc.result)
 
-
+save(log.odds.meta, file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
 
 
 

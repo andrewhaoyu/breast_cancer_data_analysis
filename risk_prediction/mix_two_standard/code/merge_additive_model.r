@@ -1,11 +1,12 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/")
-log.odds.meta.two.stage <- rep(0,205)
+
+p.heter.add <- rep(0,205)
 for(i1 in 1:205){
-print(i1)
-    load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/meta.result",i1,".Rdata"))
-    log.odds.meta.two.stage[i1] <- meta.result[[1]][5]
+  print(i1)
+  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/add.meta.result",i1,".Rdata"))
+  p.heter.add[i1] <- as.numeric(DisplaySecondStageTestResult(meta.result[[1]],meta.result[[2]])[12])
 }
-save(log.odds.meta.two.stage,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.Rdata")
+save(p.heter.add,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.add.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.add.Rdata")
 
 true.false.calculate <- function(prs,test.data){
   idx.true <- which(test.data==1)
@@ -102,7 +103,15 @@ x.snp.all.train2 <- x.snp.all2[-idx.test2,]
 
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.Rdata")
-prs <- x.snp.all.test%*%log.odds.meta.two.stage
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.add.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
+
+
+log.odds.mix <- log.odds.meta
+idx <- which(p.heter.add<0.05)
+log.odds.mix[idx] <- log.odds.meta.two.stage[idx]
+
+prs <- x.snp.all.test%*%log.odds.mix
 min.prs <- range(prs)[1]
 max.prs <- range(prs)[2]
 cut.data <- seq(from=min.prs,to=max.prs,by=(max.prs-min.prs)/100)
