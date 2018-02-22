@@ -1,12 +1,17 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/")
 log.odds.meta.two.stage <- rep(0,205)
+log.odds.meta.two.stage.all <- matrix(0,205,5)
+sigma.log.odds.two.stage <- matrix(0,205,5)
 for(i1 in 1:205){
 print(i1)
     load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/meta.result",i1,".Rdata"))
     log.odds.meta.two.stage[i1] <- meta.result[[1]][5]
+    log.odds.meta.two.stage.all[i1,] <- meta.result[[1]]
+    sigma.log.odds.two.stage[i1,] <- diag(meta.result[[2]])
 }
 save(log.odds.meta.two.stage,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.Rdata")
-
+save(log.odds.meta.two.stage.all,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.all.Rdata")
+save(sigma.log.odds.two.stage,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")
 true.false.calculate <- function(prs,test.data){
   idx.true <- which(test.data==1)
   idx.false <- which(test.data==0)
