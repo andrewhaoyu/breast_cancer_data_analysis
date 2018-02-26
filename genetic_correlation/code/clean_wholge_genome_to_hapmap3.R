@@ -358,5 +358,6 @@ shared.data.meta.complete <- na.omit(shared.data.meta)
 
 shared.data.meta.complete.new <- merge(shared.data.meta.complete,shared.icog.data.complete,by.x="chr.pos",by.y="chr.pos")
 shared.data.meta.complete <- shared.data.meta.complete.new[,c(1,2,3,4,5,14,6,7,8,9)]
+
 colnames(shared.data.meta.complete) <- colnames(shared.icog.data.complete)
 save(shared.data.meta.complete,file="./genetic_correlation/standard_analysis/result/standard_gwas_result_hapmap3/ER-_control/meta/shared.data.meta.complete.Rdata")
