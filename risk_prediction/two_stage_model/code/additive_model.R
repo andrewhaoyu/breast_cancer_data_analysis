@@ -3,45 +3,6 @@ arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
 
 library(bc2)
-z.design <- matrix(c(
-  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
-  c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
-  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
-  c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
-  c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
-),ncol=5)
-rowSums(z.design)
-
-
-
-colnames(z.design) <- c("Luminial A","Luminal B",
-                        "Luminal B HER2Neg",
-                        "HER2 Enriched",
-                        "Triple Negative")
-
-true.false.calculate <- function(prs,test.data){
-  idx.true <- which(test.data==1)
-  idx.false <- which(test.data==0)
-  n <- length(test.data)
-  min.prs <- range(prs)[1]
-  max.prs <- range(prs)[2]
-  cut.point <- seq(from=min.prs,to=max.prs,by=(max.prs-min.prs)/100)
-  true.pos <- rep(0,length(cut.point))
-  false.pos <- rep(0,length(cut.point))
-  true.pos[length(cut.point)] <- 1
-  false.pos[length(cut.point)] <- 1
-  for(i in 2:(length(cut.point)-1)){
-    
-    predict.result <- ifelse(prs<cut.point[i],1,0)
-    
-    temp <- table(predict.result,test.data)
-    true.pos[i] <- temp[2,2]/colSums(temp)[2]
-    false.pos[i] <- (temp[2,1])/colSums(temp)[1]
-    
-  }
-  return(cbind(true.pos,false.pos))
-}
-
 
 
 
@@ -107,7 +68,7 @@ x.snp.all.train2 <- x.snp.all2[-idx.test2,]
 
 Heter.result.Icog = EMmvpoly(y.pheno.mis1.train,baselineonly = NULL,additive = cbind(x.snp.all.train1[,i1],x.covar.train1),pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 
-
+#Heter.result.Icog = EMmvpoly(y.pheno.mis1.train[,1:4],baselineonly = NULL,additive = cbind(x.snp.all.train1[,i1],x.covar.train1),pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 
 z.standard <- Heter.result.Icog[[12]]
 M <- nrow(z.standard)
@@ -117,6 +78,7 @@ nparm <- length(Heter.result.Icog[[1]])
 sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
 
 Heter.result.Onco = EMmvpoly(y.pheno.mis2.train,baselineonly = NULL,additive = cbind(x.snp.all.train2[,i1],x.covar.train2),pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+#Heter.result.Onco = EMmvpoly(y.pheno.mis2.train[,1:4],baselineonly = NULL,additive = cbind(x.snp.all.train2[,i1],x.covar.train2),pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 z.standard <- Heter.result.Onco[[12]]
 M <- nrow(z.standard)
 number.of.tumor <- ncol(z.standard)
@@ -132,13 +94,11 @@ meta.result <- LogoddsMetaAnalysis(log.odds.icog,
 
 
 save(meta.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/add.meta.result",i1,".Rdata"))
-
-
-
-
-
-
-
+save(z.standard,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/z.standard.Rdata"))
+y.combine <- rbind(y.pheno.mis1.train,y.pheno.mis2.train)
+complete.grade <- table(y.combine[,5])[1:3]
+grade.ratio <- complete.grade/sum(complete.grade)
+save(grade.ratio,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/grade.ratio.Rdata"))
 
 
 
