@@ -21,16 +21,6 @@ true.false.calculate <- function(prs,test.data){
   return(cbind(true.pos,false.pos))
 }
 
-auc_cal <- function(roc){
-  n <- nrow(roc.result)
-  auc <- 0
-  for(i in 1:(n-1)){
-    temp <- (roc[i+1,1]-roc[i,1])*(roc[i+1,2]+roc[i,2])/2
-    auc <- temp+auc
-  }
-  return(auc)
-}
-
 
 library(data.table)
 icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))

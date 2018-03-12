@@ -19,28 +19,6 @@ colnames(z.design) <- c("Luminial A","Luminal B",
                         "HER2 Enriched",
                         "Triple Negative")
 
-true.false.calculate <- function(prs,test.data){
-  idx.true <- which(test.data==1)
-  idx.false <- which(test.data==0)
-  n <- length(test.data)
-  min.prs <- range(prs)[1]
-  max.prs <- range(prs)[2]
-  cut.point <- seq(from=min.prs,to=max.prs,by=(max.prs-min.prs)/100)
-  true.pos <- rep(0,length(cut.point))
-  false.pos <- rep(0,length(cut.point))
-  true.pos[length(cut.point)] <- 1
-  false.pos[length(cut.point)] <- 1
-  for(i in 2:(length(cut.point)-1)){
-    
-    predict.result <- ifelse(prs<cut.point[i],1,0)
-    
-    temp <- table(predict.result,test.data)
-    true.pos[i] <- temp[2,2]/colSums(temp)[2]
-    false.pos[i] <- (temp[2,1])/colSums(temp)[1]
-    
-  }
-  return(cbind(true.pos,false.pos))
-}
 
 
 

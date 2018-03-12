@@ -1,3 +1,14 @@
+auc_cal <- function(roc){
+  n <- nrow(roc)
+  auc <- 0
+  for(i in 1:(n-1)){
+    temp <- (roc[i+1,1]-roc[i,1])*(roc[i+1,2]+roc[i,2])/2
+    auc <- temp+auc
+  }
+  return(auc)
+}
+
+
 prior_sigma <- function(log.odds,sigma){
   p <- ncol(sigma)
   n <- nrow(log.odds)
@@ -13,8 +24,30 @@ prior_sigma <- function(log.odds,sigma){
       prior.sigma.result[i] <- temp+prior.sigma.result[i]
     }
   }
-  prior.sigma.result <- prior.sigma.result*p/(p-1)
+  prior.sigma.result <- prior.sigma.result/(p-1)
   return(prior.sigma.result)
+}
+true.false.calculate <- function(prs,test.data){
+  idx.true <- which(test.data==1)
+  idx.false <- which(test.data==0)
+  n <- length(test.data)
+  min.prs <- range(prs)[1]
+  max.prs <- range(prs)[2]
+  cut.point <- seq(from=min.prs,to=max.prs,by=(max.prs-min.prs)/100)
+  true.pos <- rep(0,length(cut.point))
+  false.pos <- rep(0,length(cut.point))
+  true.pos[length(cut.point)] <- 1
+  false.pos[length(cut.point)] <- 1
+  for(i in 2:(length(cut.point)-1)){
+    
+    predict.result <- ifelse(prs<cut.point[i],1,0)
+    
+    temp <- table(predict.result,test.data)
+    true.pos[i] <- temp[2,2]/colSums(temp)[2]
+    false.pos[i] <- (temp[2,1])/colSums(temp)[1]
+    
+  }
+  return(cbind(true.pos,false.pos))
 }
 
 
