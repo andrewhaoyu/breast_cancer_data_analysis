@@ -93,7 +93,7 @@ log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
 nparm <- length(Heter.result.Icog[[1]])  
 sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
 
-Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2.train,x.self.design = x.snp.all.train1[,i1],z.design = z.design,baselineonly = NULL,additive = x.covar.train2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2.train,x.self.design = x.snp.all.train2[,i1],z.design = z.design,baselineonly = NULL,additive = x.covar.train2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 z.standard <- Heter.result.Onco[[12]]
 M <- nrow(z.standard)
 number.of.tumor <- ncol(z.standard)
