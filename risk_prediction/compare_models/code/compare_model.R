@@ -9,24 +9,24 @@ auc_cal <- function(roc){
 }
 
 
-prior_sigma <- function(log.odds,sigma){
-  p <- ncol(sigma)
-  n <- nrow(log.odds)
-  mean.log.odds <- apply(log.odds,1,mean)
-  n.eff <- 1/sigma
-  n.eff.sum <- apply(n.eff,1,sum)
-  prior.sigma.result <- rep(0,205)
-  
-  for(i in 1:n){
-    temp <- 0
-    for(j in 1:p){
-      temp <- (n.eff[i,j]/n.eff.sum[i])*(log.odds[i,j]-mean.log.odds[i])^2
-      prior.sigma.result[i] <- temp+prior.sigma.result[i]
-    }
-  }
-  prior.sigma.result <- prior.sigma.result/(p-1)
-  return(prior.sigma.result)
-}
+# prior_sigma <- function(log.odds,sigma){
+#   p <- ncol(sigma)
+#   n <- nrow(log.odds)
+#   mean.log.odds <- apply(log.odds,1,mean)
+#   n.eff <- 1/sigma
+#   n.eff.sum <- apply(n.eff,1,sum)
+#   prior.sigma.result <- rep(0,205)
+#   
+#   for(i in 1:n){
+#     temp <- 0
+#     for(j in 1:p){
+#       temp <- (n.eff[i,j]/n.eff.sum[i])*(log.odds[i,j]-mean.log.odds[i])^2
+#       prior.sigma.result[i] <- temp+prior.sigma.result[i]
+#     }
+#   }
+#   prior.sigma.result <- prior.sigma.result/(p-1)
+#   return(prior.sigma.result)
+# }
 true.false.calculate <- function(prs,test.data){
   idx.true <- which(test.data==1)
   idx.false <- which(test.data==0)
@@ -111,19 +111,69 @@ x.covar.train2 <- x.covar2[-idx.test2,]
 x.snp.all.train2 <- x.snp.all2[-idx.test2,]
 
 #############################compare different model
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.add.Rdata")
+######standard analysis result
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
+#####intrinsic subtype result
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.intrinsic.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.all.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.add.tri.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/prior.sigma.add.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.add.tri.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.Rdata")
+####additive two-stage model
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.add.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.add.triple.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.add.triple.eb.Rdata")
+
+
+
+
 
 
 ##############standard model
+calibration <- function(y,prs){
+  n <- length(y)
+  n.qun <- 11
+  idx.control <- which(y==0)
+  idx.case <- which(y==1)
+  prs.control <- prs[idx.control]
+  prs.case <- prs[idx.case]
+  control.qun <- quantile(prs.control,probs=seq(0,1,1/(n.qun-1)))
+  odds <- rep(0,n.qun-2)
+  for(i in 2:(n.qun-1)){
+    if(i==2){
+      idx <- which(prs.control<=control.qun[i])
+      n.control <- length(idx)
+      idx <- which(prs.case<= control.qun[i])
+      n.case <- length(idx)
+      odds[i-1] <- n.case/n.control
+    }else if(i==(n.qun-1)){
+      
+        idx <- which(prs.control>=control.qun[i])
+        n.control <- length(idx)
+        idx <- which(prs.case>= control.qun[i])
+        n.case <- length(idx)
+        odds[n.qun-2] <- n.case/n.control
+      }else{
+        idx <- which(prs.control>=control.qun[i-1]&
+                       prs.control<=control.qun[i])
+        n.control <- length(idx)
+        idx <- which(prs.case>= control.qun[i-1]&
+                       prs.case<= control.qun[i])
+        n.case <- length(idx)
+        odds[i-1] <- n.case/n.control
+      }
+    
+  }
+  return(odds)
+}
+
+
+
+
 
 prs.standard <- x.snp.all.test%*%log.odds.meta
+cal.standard <- calibration(y.test[,1],prs.standard)
 roc.result.standard <- true.false.calculate(prs.standard,y.test[,1])
 plot(roc.result.standard[,1],roc.result.standard[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
@@ -132,7 +182,8 @@ lab = rep("standard",n)
 auc.standard <- auc_cal(roc.result.standard)
 roc.result.standard.mer <- data.frame(roc.result.standard,lab)
 #############intrinsic subtypes
-prs.intrinsic <- x.snp.all.test%*%log.odds.meta.two.stage
+prs.intrinsic <- x.snp.all.test%*%log.odds.meta.triple
+cal.intrinsic <- calibration(y.test[,1],prs.intrinsic)
 roc.result.intrinsic <- true.false.calculate(prs.intrinsic,y.test[,1])
 plot(roc.result.intrinsic[,1],roc.result.intrinsic[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
@@ -141,36 +192,61 @@ auc.intrinsic <- auc_cal(roc.result.intrinsic)
 roc.reuslt.intrinsic.mer <- data.frame(roc.result.intrinsic,lab)
 ###########intrinsic subtypes dic mixed
 log.odds.intrinsic.dic <- log.odds.meta
-idx <- which(p.heter.add<0.05)
-log.odds.intrinsic.dic[idx] <- log.odds.meta.two.stage[idx]
+idx <- which(p.heter.intrinsic<0.05)
+log.odds.intrinsic.dic[idx] <- log.odds.meta.triple[idx]
 
 prs.intrinsic.dic <- x.snp.all.test%*%log.odds.intrinsic.dic
+cal.intrinsic.dic<- calibration(y.test[,1],prs.intrinsic.dic)
 roc.result.intrinsic.dic <- true.false.calculate(prs.intrinsic.dic,y.test[,1])
 plot(roc.result.intrinsic.dic[,1],roc.result.intrinsic.dic[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
 auc.intrinsic.dic <- auc_cal(roc.result.intrinsic.dic)
 lab = rep("intrinsic dicho",n)
 roc.result.intrinsic.dic.mer <- data.frame(roc.result.intrinsic.dic,lab)
-#########intrinsic subtypes eb (prior from intrinsic)
-prior.sigma.intrinsic <- prior_sigma(log.odds.meta.two.stage.all,
-                                     sigma.log.odds.two.stage)
-rho.intrinsic.eb.pin <- rep(0,205)
-for(i in 1:205){
-  rho.intrinsic.eb.pin [i] <- prior.sigma.intrinsic[i]/(prior.sigma.intrinsic[i]+sigma.log.odds.two.stage[i,5])
+#########intrinsic subtypes eb 
+ebestimate <- function(logodds.subtype,
+                       sigma.subtype,
+                       logodds.standard,
+                       prior.sigma
+){
+  M <- length(logodds.subtype)
+  if(prior.sigma==0){
+    return(rep(logodds.standard,M))
+  }else{
+    result <- solve(solve(sigma.subtype)+(1/prior.sigma)*diag(M))%*%(solve(sigma.subtype)%*%logodds.subtype+
+                                                           (1/prior.sigma)*rep(logodds.standard,M))
+    return(result)
+  }
 }
 
-log.odds.intrinsic.eb.pin <- rho.intrinsic.eb.pin*log.odds.meta.two.stage+(1-rho.intrinsic.eb.pin)*log.odds.meta
-prs.intrinsic.eb.pin <- x.snp.all.test%*%log.odds.intrinsic.eb.pin
+log.odds.intrinsic.eb <- rep(0,205)
+for(i in 1:205){
+ 
+   logodds.subtype <- log.odds.meta.two.stage.all[i,]
+ M <- length(logodds.subtype)
+    sigma.subtype <- matrix(sigma.log.odds.two.stage[i,],5,5)
+    log.odds.intrinsic.eb[i] <- ebestimate(logodds.subtype,sigma.subtype,
+             as.numeric(log.odds.meta[i]),
+             as.numeric(heter.sigma[i]))[5]
+}
 
-roc.result.intrinsic.eb.pin <- true.false.calculate(prs.intrinsic.eb.pin ,y.test[,1])
-plot(roc.result.intrinsic.eb.pin[,1],roc.result[,2],xlab="false_p",ylab="true_p")
+prs.intrinsic.eb <- x.snp.all.test%*%log.odds.intrinsic.eb
+cal.intrinsic.eb <- calibration(y.test[,1],prs.intrinsic.eb)
+roc.result.intrinsic.eb <- true.false.calculate(prs.intrinsic.eb ,y.test[,1])
+plot(roc.result.intrinsic.eb[,1],roc.result[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
-auc.intrinsic.eb.pin <- auc_cal(roc.result.intrinsic.eb.pin)
+auc.intrinsic.eb <- auc_cal(roc.result.intrinsic.eb)
 lab = rep("intrinsic eb",n)
-roc.result.intrinsic.eb.pin.mer <- data.frame(roc.result.intrinsic.eb.pin,lab)
-#######additive two-stage model
-prs.add <- x.snp.all.test%*%log.odds.add.tri
+roc.result.intrinsic.eb <- data.frame(roc.result.intrinsic.eb,lab)
 
+
+
+
+
+
+#######additive two-stage model
+prs.add <- x.snp.all.test%*%log.odds.add.triple
+cal.add <- calibration(y.test[,1],prs.add)
 roc.result.add <- true.false.calculate(prs.add,y.test[,1])
 plot(roc.result.add[,1],roc.result.add[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
@@ -179,10 +255,12 @@ lab = rep("add",n)
 roc.result.add.mer <- data.frame(roc.result.add,lab)
 #######additive two-stage model dichotomized
 log.odds.add.dic <- log.odds.meta
+
 idx <- which(p.heter.add<0.05)
-log.odds.add.dic[idx] <- log.odds.add.tri[idx]
+log.odds.add.dic[idx] <- log.odds.add.triple[idx]
 
 prs.add.dic <- x.snp.all.test%*%log.odds.add.dic
+cal.add.dic <- calibration(y.test[,1],prs.add.dic)
 roc.result.add.dic <- true.false.calculate(prs.add.dic,y.test[,1])
 plot(roc.result.add.dic[,1],roc.result.add.dic[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
@@ -190,14 +268,9 @@ auc.add.dic <- auc_cal(roc.result.add.dic)
 lab = rep("add dic",n)
 roc.result.add.dic <- data.frame(roc.result.add.dic,lab)
 #######additive two-stage model eb
-rho.add <- rep(0,205)
-for(i in 1:205){
-  rho.add[i] <- prior.sigma.add[i]/(prior.sigma.add[i]+sigma.add.tri[i])
-}
 
-log.odds.add.eb <- rho.add*log.odds.add.tri+(1-rho.add)*log.odds.meta
-prs.add.eb <- x.snp.all.test%*%log.odds.add.eb
-
+prs.add.eb <- x.snp.all.test%*%log.odds.add.triple.eb
+cal.add.eb <- calibration(y.test[,1],prs.add.eb)
 roc.result.add.eb <- true.false.calculate(prs.add.eb,y.test[,1])
 plot(roc.result.add.eb[,1],roc.result.add.eb[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
@@ -210,6 +283,17 @@ all.data <- rbind(roc.result.standard.mer,roc.reuslt.intrinsic.mer,roc.result.in
 
 
 
+cal.result <- rbind(cal.standard,cal.intrinsic,cal.intrinsic.dic,cal.intrinsic.eb,cal.add,cal.add.dic,cal.add.eb)
+row.names(cal.result) <- c(
+  "standard analysis",
+  "intrinsic subtype",
+  "intrinsic subtype dichotomized",
+  "intrinsic subtype empirical bayesian",
+  "additive two-stage model",
+  "additive two-stage model dichotomized",
+  "additive two-stage model empirical bayesian"
+)
+write.csv(cal.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/cal.result.csv")
 
 
 
@@ -285,3 +369,6 @@ roc.result <- true.false.calculate(prs,y.test[,1])
 plot(roc.result[,1],roc.result[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
 auc <- auc_cal(roc.result)
+
+
+

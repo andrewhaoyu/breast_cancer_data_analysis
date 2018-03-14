@@ -5,11 +5,10 @@ sigma.log.odds.two.stage <- matrix(0,205,25)
 p.heter.intrinsic <- rep(0,205)
 heter.sigma <- rep(0,205)
 
-logodds <- meta.result[[1]]
-sigma <- meta.result[[2]]
 
 
 
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
 
 
 heter.variance.estimate <- function(log.odds,sigma){
@@ -36,6 +35,8 @@ print(i1)
 save(log.odds.meta.triple,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
 save(log.odds.meta.two.stage.all,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.all.Rdata")
 save(sigma.log.odds.two.stage,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")
+save(p.heter.intrinsic,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.intrinsic.Rdata")
+save(heter.sigma,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.Rdata")
 true.false.calculate <- function(prs,test.data){
   idx.true <- which(test.data==1)
   idx.false <- which(test.data==0)
