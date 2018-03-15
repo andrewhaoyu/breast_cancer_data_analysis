@@ -171,9 +171,10 @@ calibration <- function(y,prs){
 
 
 
-
+library(pRoc)
 prs.standard <- x.snp.all.test%*%log.odds.meta
 cal.standard <- calibration(y.test[,1],prs.standard)
+roc.try <- roc(y.test[,1],prs.standard)
 roc.result.standard <- true.false.calculate(prs.standard,y.test[,1])
 plot(roc.result.standard[,1],roc.result.standard[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")

@@ -86,6 +86,40 @@ if(i1<=177){
   # beta.sigma.icog <- z.trans%*%sigma.log.odds.icog%*%t(z.trans)
   loglikelihood.icog <- Heter.result.Icog[[8]]
   
+  
+  score.test.support.fixed.icog <- ScoreTestSupportSelfDesign(y.pheno.mis1,
+                                         x.self.design=x.all.mis1[,1,drop=F],
+                                         z.design=z.design[,1,drop=F],
+                                         baselineonly=NULL,
+                                         additive=x.all.mis1[,2:ncol(x.all.mis1)],
+                                         pairwise.interaction=NULL,
+                                         saturated=NULL,
+                                         missingTumorIndicator = 888)
+  score.test.fixed.icog <- ScoreTestSelfDesign(y=y.pheno.mis1,                    x=x.all.mis1[,1,drop=F],
+                    z.design=z.design[,2:ncol(z.design)],
+                score.test.support= score.test.support.fixed.icog,                           missingTumorIndicator=888)
+  score.fixed.icog <-   score.test.fixed.icog[[1]]
+  infor.fixed.icog <-   score.test.fixed.icog[[2]]
+  score.test.support.random.icog <- ScoreTestSupportSelfDesign(y.pheno.mis1,                                                x.self.design=x.all.mis1[,1,drop=F],
+z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL,                                           additive=x.all.mis1[,2:ncol(x.all.mis1)],                     pairwise.interaction=NULL,                                  saturated=NULL,                                             missingTumorIndicator = 888)
+  
+  score.test.random.icog <- ScoreTestSelfDesign(y=y.pheno.mis1,                    x=x.all.mis1[,1,drop=F],
+                     z.design=z.design[,3:5],
+                                               score.test.support= score.test.support.random.icog,                           missingTumorIndicator=888)
+  score.random.icog <- score.test.random.icog[[1]]
+  infor.random.icog <- score.test.random.icog[[2]]
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   # score.test.support.icog <- ScoreTestSupport(
   #   y.pheno.mis1,
   #   baselineonly = NULL,
@@ -141,9 +175,9 @@ if(i1<=177){
   # 
   # 
   
-  names1 = colnames(data1)[27:206]
-  rm(data1)
-  gc()
+  # names1 = colnames(data1)[27:206]
+  # rm(data1)
+  # gc()
   
   
   
@@ -177,54 +211,36 @@ if(i1<=177){
   # beta.sigma.onco <- z.trans%*%sigma.log.odds.onco%*%t(z.trans)
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
+  score.test.support.fixed.onco <- ScoreTestSupportSelfDesign(y.pheno.mis2,
+                                                              x.self.design=x.all.mis2[,1,drop=F],
+                                                              z.design=z.design[,1,drop=F],
+                                                              baselineonly=NULL,
+                                                              additive=x.all.mis2[,2:ncol(x.all.mis2)],
+                                                              pairwise.interaction=NULL,
+                                                              saturated=NULL,
+                                                              missingTumorIndicator = 888)
+  score.test.fixed.onco <- ScoreTestSelfDesign(y=y.pheno.mis2,                    x=x.all.mis2[,1,drop=F],
+                                               z.design=z.design[,2:ncol(z.design)],
+                                               score.test.support= score.test.support.fixed.onco,                           missingTumorIndicator=888)
+  score.fixed.onco <-   score.test.fixed.onco[[1]]
+  infor.fixed.onco <-   score.test.fixed.onco[[2]]
+  score.test.support.random.onco <- ScoreTestSupportSelfDesign(y.pheno.mis2,                                                x.self.design=x.all.mis2[,1,drop=F],
+                                                               z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL,                                           additive=x.all.mis2[,2:ncol(x.all.mis2)],                     pairwise.interaction=NULL,                                  saturated=NULL,                                             missingTumorIndicator = 888)
   
-  # score.test.support.onco <- ScoreTestSupport(
-  #   y.pheno.mis2,
-  #   baselineonly = NULL,
-  #   additive = x.all.mis2[,2:ncol(x.all.mis2)],
-  #   pairwise.interaction = NULL,
-  #   saturated = NULL,
-  #   missingTumorIndicator = 888
-  # )
-  # 
-  # score.test.onco<- ScoreTestSelfDesign(y=y.pheno.mis2,
-  #                                       x=x.all.mis2[,1,drop=F],
-  #                                       z.design= z.design,
-  #                                       score.test.support=score.test.support.onco,
-  #                                       missingTumorIndicator=888)
-  # 
-  # score.onco <- score.test.onco[[1]]
-  # infor.onco <- score.test.onco[[2]]
-  # 
-  # 
-  # score.test.onco.baseline<- ScoreTestSelfDesign(y=y.pheno.mis2,
-  #                                                x=x.all.mis2[,1,drop=F],
-  #                                                z.design=z.design.score.baseline,
-  #                                                score.test.support=score.test.support.onco,
-  #                                                missingTumorIndicator=888)
-  # 
-  # score.onco.baseline <- score.test.onco.baseline[[1]]
-  # infor.onco.baseline <- score.test.onco.baseline[[2]]
-  # rm(score.test.support.onco)
-  # gc()
-  # 
-  # score.test.support.onco.casecase <- ScoreTestSupport(
-  #   y.pheno.mis2,
-  #   baselineonly = x.all.mis2[,1,drop=F],
-  #   additive = x.all.mis2[,2:ncol(x.all.mis2)],
-  #   pairwise.interaction = NULL,
-  #   saturated = NULL,
-  #   missingTumorIndicator = 888
-  # )
-  # score.test.onco.casecase<- ScoreTestSelfDesign(y=y.pheno.mis2,
-  #                                                x=x.all.mis2[,1,drop=F],
-  #                                                z.design=z.design.score.casecase,
-  #                                                score.test.support=score.test.support.onco.casecase,
-  #                                                missingTumorIndicator=888)
-  # 
-  # score.onco.casecase <- score.test.onco.casecase[[1]]
-  # infor.onco.casecase <- score.test.onco.casecase[[2]]
-  # 
+  score.test.random.onco <- ScoreTestSelfDesign(y=y.pheno.mis2,                    x=x.all.mis2[,1,drop=F],
+                                                z.design=z.design[,3:5],
+                                                score.test.support= score.test.support.random.onco,                         missingTumorIndicator=888)
+  score.random.onco <- score.test.random.onco[[1]]
+  infor.random.onco <- score.test.random.onco[[2]]
+  meta.result.score.fix <- ScoreMetaAnalysis(score.fixed.icog,infor.fixed.icog,score.fixed.onco,infor.fixed.onco)
+  score.fixed.meta <- meta.result.score.fix[[1]]
+  infor.fixed.meta <- meta.result.score.fix[[2]]
+  meta.result.score.random <- ScoreMetaAnalysis(score.random.icog,infor.random.icog,score.random.onco,infor.random.onco)
+  score.randomed.meta <- meta.result.score.random[[1]]
+  infor.randomed.meta <- meta.result.score.random[[2]]
+  
+  test.result.second.mixed <- DisplayMixedScoreTestResult(score.fixed.meta,                                                        infor.fixed.meta,                                        score.randomed.meta,                                        infor.randomed.meta)  
+    
   
   
   
