@@ -1,52 +1,14 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/")
-log.odds.meta.triple <- rep(0,205)
-log.odds.meta.two.stage.all <- matrix(0,205,5)
-sigma.log.odds.two.stage <- matrix(0,205,25)
+log.odds.meta.tvn.triple <- rep(0,205)
+log.odds.meta.two.stage.tvn.all <- matrix(0,205,2)
+sigma.log.odds.two.stage.tvn <- matrix(0,205,4)
 p.heter.intrinsic <- rep(0,205)
-heter.sigma <- rep(0,205)
-heter.sigma2 <- rep(0,205)
+heter.sigma.tvn <- rep(0,205)
+
 
 
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
-
-solve_variance <- function(x,k,lamda){
-  result <- sum(1/(lamda+x))-sum(k^2/(lamda+x)^2)
-  return(result)
-}
-findvariance <- uniroot(solve_variance,
-                      lower=0,upper = 0.5,k=k,lamda=lamda,a=0)
-
-log.odds <- meta.result[[1]]
-sigma <- meta.result[[2]]
-beta0 <- log.odds.meta[i]
-solve_variance(0,k,lamda)
-solve_variance(0.3,k,lamda)
-heter.variance.estimate2 <- function(log.odds,sigma,beta0){
-  M <- length(log.odds)
-  sigma.eigen <- eigen(sigma)
-  lamda <- sigma.eigen$values
-  P <- t(sigma.eigen$vectors)
-  k <- P%*%(log.odds-beta0)
-  if(solve_variance(0,k,lamda)*solve_variance(0.3,k,lamda)>=0){
-    result=0
-  }else{
-    findvariance <- uniroot(solve_variance,lower=0,upper = 0.3,k=k,lamda=lamda)
-    result <- as.numeric(findvariance$root)
-    
-  }
-  
-  if(result <= 0){
-    result <- 0
-  }
-  return(result)
-}
-
-
-
-
-
-
 
 
 heter.variance.estimate <- function(log.odds,sigma){
@@ -61,22 +23,18 @@ heter.variance.estimate <- function(log.odds,sigma){
 library(bc2)
 
 for(i1 in 1:205){
-print(i1)
-    load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/meta.result",i1,".Rdata"))
-    log.odds.meta.triple[i1] <- meta.result[[1]][5]
-    log.odds.meta.two.stage.all[i1,] <- meta.result[[1]]
-    sigma.log.odds.two.stage[i1,] <- as.vector(meta.result[[2]])
-    p.heter.intrinsic[i1] <- GlobalTestForHeter(meta.result[[1]],meta.result[[2]],self.design =T)
-  heter.sigma[i1] <-     heter.variance.estimate(meta.result[[1]],meta.result[[2]])
-  heter.sigma2[i1] <- heter.variance.estimate2(meta.result[[1]],meta.result[[2]],log.odds.meta[i])
+  print(i1)
+  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/triple_vs_nontriple_meta.result",i1,".Rdata"))
+  log.odds.meta.tvn.triple[i1] <- meta.result[[1]][2]
+log.odds.meta.two.stage.tvn.all[i1,] <- meta.result[[1]]
+sigma.log.odds.two.stage.tvn[i1,] <- as.vector(meta.result[[2]])
+    heter.sigma.tvn[i1] <-     heter.variance.estimate(meta.result[[1]],meta.result[[2]])
   
 }
-save(log.odds.meta.triple,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
-save(log.odds.meta.two.stage.all,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.all.Rdata")
-save(sigma.log.odds.two.stage,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")
-save(p.heter.intrinsic,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.intrinsic.Rdata")
-save(heter.sigma,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.Rdata")
-save(heter.sigma2,file= "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma2.Rdata")
+save(log.odds.meta.tvn.triple,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.tvn.triple.Rdata")
+save(log.odds.meta.two.stage.tvn.all,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.tvn.all.Rdata")
+save(sigma.log.odds.two.stage.tvn,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.tvn.Rdata")
+save(heter.sigma.tvn,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.tvn.Rdata")
 true.false.calculate <- function(prs,test.data){
   idx.true <- which(test.data==1)
   idx.false <- which(test.data==0)

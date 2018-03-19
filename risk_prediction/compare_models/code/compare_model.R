@@ -120,6 +120,13 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stag
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma2.Rdata")
+##triple vs nontriple
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.tvn.triple.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.tvn.all.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.tvn.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.tvn.Rdata")
+
 ####additive two-stage model
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.add.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.add.triple.Rdata")
@@ -171,10 +178,10 @@ calibration <- function(y,prs){
 
 
 
-library(pRoc)
+library(pROC)
 prs.standard <- x.snp.all.test%*%log.odds.meta
 cal.standard <- calibration(y.test[,1],prs.standard)
-roc.try <- roc(y.test[,1],prs.standard)
+roc.standard <- roc(y.test[,1],as.vector(prs.standard),ci=T,plot=T)
 roc.result.standard <- true.false.calculate(prs.standard,y.test[,1])
 plot(roc.result.standard[,1],roc.result.standard[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
@@ -219,7 +226,6 @@ ebestimate <- function(logodds.subtype,
     return(result)
   }
 }
-
 log.odds.intrinsic.eb <- rep(0,205)
 for(i in 1:205){
  
@@ -228,7 +234,7 @@ for(i in 1:205){
     sigma.subtype <- matrix(sigma.log.odds.two.stage[i,],5,5)
     log.odds.intrinsic.eb[i] <- ebestimate(logodds.subtype,sigma.subtype,
              as.numeric(log.odds.meta[i]),
-             as.numeric(heter.sigma[i]))[5]
+             as.numeric(heter.sigma2[i]))[5]
 }
 
 prs.intrinsic.eb <- x.snp.all.test%*%log.odds.intrinsic.eb
@@ -240,6 +246,38 @@ auc.intrinsic.eb <- auc_cal(roc.result.intrinsic.eb)
 lab = rep("intrinsic eb",n)
 roc.result.intrinsic.eb <- data.frame(roc.result.intrinsic.eb,lab)
 
+##triple vs nontriple 
+
+prs.tvn <- x.snp.all.test%*%log.odds.meta.tvn.triple
+cal.tvn <- calibration(y.test[,1],prs.tvn)
+roc.result.tvn <- true.false.calculate(prs.tvn,y.test[,1])
+plot(roc.result.tvn[,1],roc.result.tvn[,2],xlab="false_p",ylab="true_p")
+abline(a=0,b=1,col="red")
+lab = rep("tvn subtypes",n)
+auc.tvn <- auc_cal(roc.result.tvn)
+roc.reuslt.tvn.mer <- data.frame(roc.result.tvn,lab)
+
+#########triple vs n triple eb
+
+log.odds.tvn.eb <- rep(0,205)
+for(i in 1:205){
+  
+  logodds.subtype <- log.odds.meta.two.stage.all[i,]
+  M <- length(logodds.subtype)
+  sigma.subtype <- matrix(sigma.log.odds.two.stage[i,],5,5)
+  log.odds.tvn.eb[i] <- ebestimate(logodds.subtype,sigma.subtype,
+                                         as.numeric(log.odds.meta[i]),
+                                         as.numeric(heter.sigma.tvn[i]))[5]
+}
+
+prs.tvn.eb <- x.snp.all.test%*%log.odds.tvn.eb
+cal.tvn.eb <- calibration(y.test[,1],prs.tvn.eb)
+roc.result.tvn.eb <- true.false.calculate(prs.tvn.eb ,y.test[,1])
+plot(roc.result.tvn.eb[,1],roc.result[,2],xlab="false_p",ylab="true_p")
+abline(a=0,b=1,col="red")
+auc.tvn.eb <- auc_cal(roc.result.tvn.eb)
+lab = rep("tvn eb",n)
+roc.result.tvn.eb <- data.frame(roc.result.tvn.eb,lab)
 
 
 
