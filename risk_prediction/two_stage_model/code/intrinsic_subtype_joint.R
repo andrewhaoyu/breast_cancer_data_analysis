@@ -10,7 +10,7 @@ z.design <- matrix(c(
   c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
-rowSums(z.design)
+
 
 
 
@@ -106,9 +106,71 @@ meta.result <- LogoddsMetaAnalysis(log.odds.icog,
                                    sigma.log.odds.icog,
                                    log.odds.onco,
                                    sigma.log.odds.onco)
-
-
 save(meta.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/meta.result",i1,".Rdata"))
+heter.variance.estimate <- function(log.odds,sigma){
+  M <- length(log.odds)
+  result <- (sum((log.odds-mean(log.odds))^2)-sum(diag(sigma))+sum(sigma)/M)/(M-1)
+  if(result <= 0){
+    result <- 0
+  }
+  return(result)
+}
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
+M <- length(meta.result[[1]])
+beta0 <- log.odds.meta[i1]
+Sigma <- meta.result[[2]]
+betahat <- as.vector(meta.result[[1]])
+heter.sigma <- heter.variance.estimate(meta.result[[1]],meta.result[[2]])
+
+if(heter.sigma==0){
+  log.odds.meta.la <- rep(beta0,M)
+}else{
+  b <- sqrt(heter.sigma/2)
+  data <- list(M=M,beta0=beta0,betahat=betahat,Sigma=Sigma,
+               b=b)
+  library(rstan)
+  stan.model2 <- '
+  data{
+  //define data
+  int<lower=1> M;
+  real beta0;
+  vector[M] betahat;
+  matrix[M,M] Sigma;
+  real<lower=0> b;
+  }
+  parameters{
+  vector[M] beta;
+  }
+  model{
+  //prior
+  for(i in 1:M){
+  beta[i] ~ double_exponential(beta0,b);
+  }
+  //data
+  betahat ~ multi_normal(beta,Sigma);
+  }
+  '
+  smodel <- stan_model(model_code = stan.model2)
+  fit1 <- sampling(smodel,
+                   data=data,
+                   warmup=5000,
+                   iter=10000,
+                   control = list(adapt_delta=0.95),
+                   chains=4)
+  #traceplot(fit1,pars=c('beta'))
+  
+  log.odds.meta.la <- colMeans(extract(fit1)[[1]])
+}
+
+
+save(log.odds.meta.la,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.la",i1,".Rdata"))
+
+
+
+
+
+
 
 
 
