@@ -1,4 +1,5 @@
 #install_github("andrewhaoyu/bc2", args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#install_github("andrewhaoyu/bcutility",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 #install_github("andrewhaoyu/bc2",branch="version 0.0.2")
 ###1 represent Icog
 ###2 represent Onco
@@ -17,7 +18,7 @@ library(readr)
 library(devtools)
 #library(bc2,lib.loc ='/Users/zhangh24/Library/R/3.4/library')
 library(bc2)
-
+library(bcutility)
 z.design <- matrix(c(
   c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),

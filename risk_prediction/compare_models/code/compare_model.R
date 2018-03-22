@@ -120,7 +120,7 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stag
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.Rdata")
-
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.la.all.Rdata")
 ##triple vs nontriple
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.tvn.triple.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.tvn.all.Rdata")
@@ -172,31 +172,43 @@ calibration <- function(y,prs){
       }
     
   }
-  return(odds)
+  odds.ratio <- rep(0,length(odds))
+  for(i in 1:length(odds)){
+    odds.ratio[i] <- odds[i]/odds[5]
+  }
+  return(odds.ratio)
 }
 
 
 
 
 library(pROC)
+library(ggplot2)
 prs.standard <- x.snp.all.test%*%log.odds.meta
 cal.standard <- calibration(y.test[,1],prs.standard)
+plot(cal.standard,type="l",xlab="quantile",ylab="odds ratio",xlim=c(1,10),ylim=c(0,3),main="calibration")
 roc.standard <- roc(y.test[,1],as.vector(prs.standard),ci=T,plot=T)
+auc.standard <- roc.standard$auc
 roc.result.standard <- true.false.calculate(prs.standard,y.test[,1])
-plot(roc.result.standard[,1],roc.result.standard[,2],xlab="false_p",ylab="true_p")
-abline(a=0,b=1,col="red")
 n <- nrow(roc.result.standard)
 lab = rep("standard",n)
-auc.standard <- auc_cal(roc.result.standard)
+# plot(roc.result.standard[,1],roc.result.standard[,2],xlab="false_p",ylab="true_p")
+# abline(a=0,b=1,col="red")
+ 
+
+# auc.standard <- auc_cal(roc.result.standard)
 roc.result.standard.mer <- data.frame(roc.result.standard,lab)
 #############intrinsic subtypes
 prs.intrinsic <- x.snp.all.test%*%log.odds.meta.triple
 cal.intrinsic <- calibration(y.test[,1],prs.intrinsic)
+plot(cal.intrinsic,type="l",xlab="quantile",ylab="odds ratio",xlim=c(1,10),ylim=c(0,3),main="calibration")
+roc.intrinsic <- roc(y.test[,1],as.vector(prs.intrinsic),plot=T,ci=T)
+auc.intrinsic <- roc.intrinsic$auc
 roc.result.intrinsic <- true.false.calculate(prs.intrinsic,y.test[,1])
-plot(roc.result.intrinsic[,1],roc.result.intrinsic[,2],xlab="false_p",ylab="true_p")
-abline(a=0,b=1,col="red")
-lab = rep("intrinsic subtypes",n)
-auc.intrinsic <- auc_cal(roc.result.intrinsic)
+# plot(roc.result.intrinsic[,1],roc.result.intrinsic[,2],xlab="false_p",ylab="true_p")
+# abline(a=0,b=1,col="red")
+#lab = rep("intrinsic subtypes",n)
+#auc.intrinsic <- auc_cal(roc.result.intrinsic)
 roc.reuslt.intrinsic.mer <- data.frame(roc.result.intrinsic,lab)
 ###########intrinsic subtypes dic mixed
 log.odds.intrinsic.dic <- log.odds.meta
@@ -205,10 +217,13 @@ log.odds.intrinsic.dic[idx] <- log.odds.meta.triple[idx]
 
 prs.intrinsic.dic <- x.snp.all.test%*%log.odds.intrinsic.dic
 cal.intrinsic.dic<- calibration(y.test[,1],prs.intrinsic.dic)
+plot(cal.intrinsic.dic,type="l",xlab="quantile",ylab="odds ratio",xlim=c(1,10),ylim=c(0,3),main="calibration")
 roc.result.intrinsic.dic <- true.false.calculate(prs.intrinsic.dic,y.test[,1])
-plot(roc.result.intrinsic.dic[,1],roc.result.intrinsic.dic[,2],xlab="false_p",ylab="true_p")
-abline(a=0,b=1,col="red")
-auc.intrinsic.dic <- auc_cal(roc.result.intrinsic.dic)
+roc.intrinsic.dic <- roc(y.test[,1],as.vector(prs.intrinsic.dic),ci=T,plot=T)
+auc.intrinsic.dic <- roc.intrinsic.dic$auc
+# plot(roc.result.intrinsic.dic[,1],roc.result.intrinsic.dic[,2],xlab="false_p",ylab="true_p")
+# abline(a=0,b=1,col="red")
+
 lab = rep("intrinsic dicho",n)
 roc.result.intrinsic.dic.mer <- data.frame(roc.result.intrinsic.dic,lab)
 #########intrinsic subtypes eb 
@@ -234,17 +249,37 @@ for(i in 1:205){
     sigma.subtype <- matrix(sigma.log.odds.two.stage[i,],5,5)
     log.odds.intrinsic.eb[i] <- ebestimate(logodds.subtype,sigma.subtype,
              as.numeric(log.odds.meta[i]),
-             as.numeric(heter.sigma2[i]))[5]
+             as.numeric(heter.sigma[i]))[5]
 }
 
 prs.intrinsic.eb <- x.snp.all.test%*%log.odds.intrinsic.eb
 cal.intrinsic.eb <- calibration(y.test[,1],prs.intrinsic.eb)
 roc.result.intrinsic.eb <- true.false.calculate(prs.intrinsic.eb ,y.test[,1])
-plot(roc.result.intrinsic.eb[,1],roc.result[,2],xlab="false_p",ylab="true_p")
-abline(a=0,b=1,col="red")
-auc.intrinsic.eb <- auc_cal(roc.result.intrinsic.eb)
+roc.intrinsic.eb <- roc(y.test[,1],as.vector(prs.intrinsic.eb),ci=T,plot=T)
+plot(cal.intrinsic.eb,type="l",xlab="quantile",ylab="odds ratio",xlim=c(1,10),ylim=c(0,3),main="calibration")
+auc.intrinsic.eb <- roc.intrinsic.eb$auc
+#plot(roc.result.intrinsic.eb[,1],roc.result[,2],xlab="false_p",ylab="true_p")
+#abline(a=0,b=1,col="red")
+
 lab = rep("intrinsic eb",n)
 roc.result.intrinsic.eb <- data.frame(roc.result.intrinsic.eb,lab)
+
+###########intrinsic laplace
+log.odds.intrinsic.la <- log.odds.meta.la.all[,5]
+
+prs.intrinsic.la <- x.snp.all.test%*%log.odds.intrinsic.la
+cal.intrinsic.la <- calibration(y.test[,1],prs.intrinsic.la)
+plot(cal.intrinsic.la,type="l",xlab="quantile",ylab="odds ratio",xlim=c(1,10),ylim=c(0,3),main="calibration")
+roc.result.intrinsic.la <- true.false.calculate(prs.intrinsic.la ,y.test[,1])
+roc.intrinsic.la <- roc(y.test[,1],as.vector(prs.intrinsic.la),ci=T,plot=T)
+auc.intrinsic.la <- roc.intrinsic.la$auc
+#plot(roc.result.intrinsic.la[,1],roc.result[,2],xlab="false_p",ylab="true_p")
+#abline(a=0,b=1,col="red")
+#auc_cal(roc.result.intrinsic.la)
+lab = rep("intrinsic la",n)
+roc.result.intrinsic.la <- data.frame(roc.result.intrinsic.la,lab)
+
+
 
 ##triple vs nontriple 
 
