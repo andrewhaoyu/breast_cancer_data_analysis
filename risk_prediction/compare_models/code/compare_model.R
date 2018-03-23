@@ -1,3 +1,4 @@
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/')
 auc_cal <- function(roc){
   n <- nrow(roc)
   auc <- 0
@@ -9,24 +10,6 @@ auc_cal <- function(roc){
 }
 
 
-# prior_sigma <- function(log.odds,sigma){
-#   p <- ncol(sigma)
-#   n <- nrow(log.odds)
-#   mean.log.odds <- apply(log.odds,1,mean)
-#   n.eff <- 1/sigma
-#   n.eff.sum <- apply(n.eff,1,sum)
-#   prior.sigma.result <- rep(0,205)
-#   
-#   for(i in 1:n){
-#     temp <- 0
-#     for(j in 1:p){
-#       temp <- (n.eff[i,j]/n.eff.sum[i])*(log.odds[i,j]-mean.log.odds[i])^2
-#       prior.sigma.result[i] <- temp+prior.sigma.result[i]
-#     }
-#   }
-#   prior.sigma.result <- prior.sigma.result/(p-1)
-#   return(prior.sigma.result)
-# }
 true.false.calculate <- function(prs,test.data){
   idx.true <- which(test.data==1)
   idx.false <- which(test.data==0)
@@ -49,6 +32,339 @@ true.false.calculate <- function(prs,test.data){
   }
   return(cbind(true.pos,false.pos))
 }
+########subtypes risk prediction
+library(bcutility)
+library(bc2)
+library(data.table)
+icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
+onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
+library(tidyverse)
+y.pheno.mis1 <- select(icog.data,Behaviour1,ER_status1,PR_status1,HER2_status1,Grade1)
+
+subtypes.icog <- GenerateIntrinsicmis(y.pheno.mis1[,2],y.pheno.mis1[,3],
+                                      y.pheno.mis1[,4],y.pheno.mis1[,5])
+
+#table(subtypes.icog)+table(subtypes.onco)
+
+x.covar1 <- select(icog.data,5:14)
+x.snp.all1 <- select(icog.data,26:230)
+colnames(y.pheno.mis1)
+
+icog.test.id <- Generatetestid(subtypes.icog)
+
+y.pheno.mis2 <- select(onco.data,Behaviour1,ER_status1,PR_status1,HER2_status1,Grade1)
+subtypes.onco <- GenerateIntrinsicmis(y.pheno.mis2[,2],
+                                      y.pheno.mis2[,3],
+                                      y.pheno.mis2[,4],
+                                      y.pheno.mis2[,5])
+x.covar2 <- select(onco.data,5:14)
+x.snp.all2 <- select(onco.data,26:230)
+colnames(y.pheno.mis2)
+subtypes.onco <- GenerateIntrinsicmis(y.pheno.mis2[,2],y.pheno.mis2[,3],
+                                      y.pheno.mis2[,4],y.pheno.mis2[,5])
+onco.test.id <- Generatetestid(subtypes.onco)
+
+
+
+n.snp <- 205
+M <- 5
+log.odds.standard.all <-matrix(0,n.snp,M)
+log.odds.intrinsic.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.dic.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.eb.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.la.all <- matrix(0,n.snp,M)
+
+for(i1 in 1:n.snp){
+  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
+  
+  log.odds.standard.all[i1,] <- all.model.result[[1]][1:5]
+  log.odds.intrinsic.all[i1,] <- diag(all.model.result[[2]])
+  log.odds.intrinsic.dic.all[i1,] <- diag(all.model.result[[4]])
+  log.odds.intrinsic.eb.all[i1,] <- diag(all.model.result[[5]])
+  log.odds.intrinsic.la.all[i1,] <- diag(all.model.result[[6]])
+}
+
+subtypes.names <- c("Luminal A","Luminal B",
+                    "Luminal B HER2Neg",
+                    "HER2 Enriched",
+                    "Triple Negative")
+
+
+auc.summary <- matrix("c",5,5)
+auc.com <- matrix(0,5,5)
+for(i in 1:5){
+  print(i)
+  idx.test.case <-  icog.test.id[[1]][[i]]
+  idx.test.control <- icog.test.id[[2]][[i]]
+  idx.test1 <- c(idx.test.case,idx.test.control)
+  y.pheno.mis1.test <- y.pheno.mis1[idx.test1,1]
+  x.snp.all.test1 <- x.snp.all1[idx.test1,]
+  idx.test.case <-  onco.test.id[[1]][[i]]
+  idx.test.control <- onco.test.id[[2]][[i]]
+  idx.test2 <- c(idx.test.case,idx.test.control)
+  y.pheno.mis2.test <- y.pheno.mis2[idx.test2,1]
+  x.snp.all.test2 <- x.snp.all2[idx.test2,]
+  y.test <- c(y.pheno.mis1.test,y.pheno.mis2.test)
+  x.test <- rbind(as.matrix(x.snp.all.test1),as.matrix(x.snp.all.test2))
+  log.odds.standard <- log.odds.standard.all[,i]
+  log.odds.intrinsic <- log.odds.intrinsic.all[,i]
+  log.odds.intrinsic.dic <-  log.odds.intrinsic.dic.all[,i]
+  log.odds.intrinsic.eb <- log.odds.intrinsic.eb.all[,i]
+  log.odds.intrinsic.la <- log.odds.intrinsic.la.all[,i]
+  auc.cal.result <- GenerateAuc_Cal(
+    log.odds.standard,
+    log.odds.intrinsic,
+    log.odds.dic,
+    log.odds.intrinsic.eb,
+    log.odds.intrinsic.la,
+    x.test,
+    y.test
+  )    
+  auc.result <-   auc.cal.result [[1]]
+  auc.95 <- auc.cal.result[[2]]
+  auc.com[i,] <- auc.cal.result [[1]]
+  auc.summary[i,] <- paste0(auc.result," (",auc.95,")")
+  cal.result <- auc.cal.result[[3]]
+  sensitivities <-   as.vector(auc.cal.result[[4]])
+  specificities <- as.vector(auc.cal.result[[5]])
+  n <- length(sensitivities)/5
+  method <- c(rep("standard analysis",n),
+           rep("intrinsic subtypes",n),
+           rep("dichotomized analysis",n),
+           rep("Empirical Bayesian (Normal Prior)",n),
+           rep("Empirical Bayesian (Laplace Prior)",n))
+  n <- 10
+  quantile <- rep(c(1:10),5)
+  method.cal <- c(rep("Standard analysis",n),
+                  rep("Intrinsic subtypes",n),
+                  rep("Dichotomized analysis",n),
+                  rep("Empirical Bayesian (Normal Prior)",n),
+                  rep("Empirical Bayesian (Laplace Prior)",n))
+  data.auc <- data.frame(sensitivities,specificities,method)
+  png(filename=paste0(subtypes.names[i]," risk prediction.png"),
+      width=8,height=6,units="in",res=300)
+      print({
+        p <-  ggplot(data= data.auc,aes(x=1-specificities,y=sensitivities,col=method))+geom_line()+style_roc()+ggtitle(paste0(subtypes.names[i]," AUC plot"))
+                      p       
+      }
+        
+      )
+  dev.off()
+  data.cal <- data.frame(calresult = as.vector(t(cal.result)),
+                         quantile = quantile,
+                         method= method.cal)
+  png(filename=paste0(subtypes.names[i]," calibration.png"),
+      width=8,height=6,units="in",res=300)
+  print({
+  p <-   ggplot(data= data.cal,aes(x= quantile,y=calresult,col=method))+geom_line()+ggtitle(paste0(subtypes.names[i]," calibration"))+ylab("Odds ratio")+xlab("risk quantile")+
+      scale_x_continuous(breaks=c(1:10))
+  p
+    
+  })
+  
+  dev.off()
+}
+rownames(auc.summary) <- c("Luminal A","Luminal B",
+                           "Luminal B HER2Neg",
+                           "HER2 Enriched",
+                           "Triple Negative")
+colnames(auc.summary) <- c("standard analysis",
+                           "intrinsic subtypes",
+                           "dichotomized analysis",
+                           "Empirical Bayesian (Normal Prior)",
+                           "Empirical Bayesian (Laplace Prior)")
+write.csv(auc.summary,file="auc.summary.csv")
+auc.com 
+n <- 5
+method <- c(rep("Standard analysis",n),
+            rep("Intrinsic subtypes",n),
+            rep("Dichotomized analysis",n),
+            rep("Empirical Bayesian (Normal Prior)",n),
+            rep("Empirical Bayesian (Laplace Prior)",n))
+subtypes <- rep(c("Luminal A","Luminal B",
+              "Luminal B HER2Neg",
+              "HER2 Enriched",
+              "Triple Negative"),5)
+subtypes <- factor(subtypes,levels=c("Luminal A",
+                                           "Luminal B",
+                                           "Luminal B HER2Neg",
+                                           "HER2 Enriched",
+                                           "Triple Negative"))
+data <- data.frame(auc = as.vector(auc.com),method=method,subtypes=subtypes)
+png(filename=paste0(subtypes.names[i]," auc_summary.png"),
+    width=9,height=6,units="in",res=300)
+ggplot(data,aes(x= subtypes,y=auc,group=method,col=method))+geom_line()+
+  ggtitle(paste0("AUC summary"))
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# +
+#   ylab("AUC")
+# library(ggplot2)
+# library(plotROC)
+# 
+# 
+# library(pROC)
+# 
+# 
+# 
+
+
+#######standard breast cancer risk prediction
+
+n.snp <- 205
+M <- 5
+log.odds.standard.all <-rep(0,n.snp,M)
+log.odds.intrinsic.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.dic.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.eb.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.la.all <- matrix(0,n.snp,M)
+
+for(i1 in 1:n.snp){
+  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
+  
+  log.odds.standard.all[i1,] <- all.model.result[[1]][6]
+  log.odds.intrinsic.all[i1,] <- all.model.result[[2]][6,]
+  log.odds.intrinsic.dic.all[i1,] <- all.model.result[[4]][6,]
+  log.odds.intrinsic.eb.all[i1,] <- all.model.result[[5]][6,]
+  log.odds.intrinsic.la.all[i1,] <- all.model.result[[6]][6,]
+}
+
+subtypes.names <- c("Luminal A","Luminal B",
+                    "Luminal B HER2Neg",
+                    "HER2 Enriched",
+                    "Triple Negative")
+i <- 6
+print(i)
+idx.test.case <-  icog.test.id[[1]][[i]]
+idx.test.control <- icog.test.id[[2]][[i]]
+idx.test1 <- c(idx.test.case,idx.test.control)
+y.pheno.mis1.test <- y.pheno.mis1[idx.test1,1]
+x.snp.all.test1 <- x.snp.all1[idx.test1,]
+idx.test.case <-  onco.test.id[[1]][[i]]
+idx.test.control <- onco.test.id[[2]][[i]]
+idx.test2 <- c(idx.test.case,idx.test.control)
+y.pheno.mis2.test <- y.pheno.mis2[idx.test2,1]
+x.snp.all.test2 <- x.snp.all2[idx.test2,]
+y.test <- c(y.pheno.mis1.test,y.pheno.mis2.test)
+y.pheno.mis.test <- rbind(y.pheno.mis1[idx.test1,],y.pheno.mis2[idx.test2,])
+x.test <- rbind(as.matrix(x.snp.all.test1),as.matrix(x.snp.all.test2))
+#log.odds.standard <- log.odds.standard.all[,i]
+prs.standard <- x.test%*%log.odds.standard
+
+cal.standard <- calibration(y.test,prs.standard)
+roc.standard <- roc(y.test,as.vector(prs.standard),ci=T,plot=F)
+
+subtypes.prs.intrinsic <- x.test%*% log.odds.intrinsic.all
+try.prs <- apply(subtypes.prs.intrinsic,1,max)
+scale.prs <- apply(subtypes.prs.intrinsic,2,function(x){x-mean(x)/sd(x)})
+try.prs <- apply(scale.prs,1,max)
+try <- roc(y.test,try.prs)
+try
+try <- roc(y.test~subtypes.prs.intrinsic[,1]+subtypes.prs.intrinsic[,2])
+
+TrueFalseCalculateMult <- function(prs,test.data){
+  p <- ncol(prs)
+  idx.true <- which(test.data==1)
+  idx.false <- which(test.data==0)
+  n <- length(test.data)
+  n <- 11
+  cut.point <- matrix(0,n,p)
+  for(i in 1:p){
+    min.prs <- range(prs[,i])[1]
+    max.prs <- range(prs[,i])[2]
+    cut.point[,i] <- seq(from=min.prs,to=max.prs,by=(max.prs-min.prs)/10)
+  }
+  true.pos <- rep(0,n^p)
+  false.pos <- rep(0,length(cut.point))
+  true.pos[length(cut.point)] <- 1
+  false.pos[length(cut.point)] <- 1
+  for(i in 2:(length(cut.point)-1)){
+    
+    predict.result <- ifelse(prs<cut.point[i],1,0)
+    
+    temp <- table(predict.result,test.data)
+    true.pos[i] <- temp[2,2]/colSums(temp)[2]
+    false.pos[i] <- (temp[2,1])/colSums(temp)[1]
+    
+  }
+  return(cbind(true.pos,false.pos))
+}
+
+
+
+
+
+
+subtypes.test <- as.character(GenerateIntrinsicmis(y.pheno.mis.test[,2],y.pheno.mis.test[,3],
+                                      y.pheno.mis.test[,4],y.pheno.mis.test[,5]))
+idx.other <- which(subtypes.test!="Luminal_A"&subtypes.test!="TripleNeg"&subtypes.test!="control")
+subtypes.test[idx.other] <- "other subtypes"
+data <- data.frame(Luminal_A_PRS=subtypes.prs.intrinsic[,1],
+                   Triple_Neg_PRS = subtypes.prs.intrinsic[,5],
+                   subtypes=subtypes.test)
+png(filename=paste0("Luminal_A_vs_TP.png"),
+    width=8,height=6,units="in",res=300)
+ggplot(data,aes(x= Triple_Neg_PRS,y=Luminal_A_PRS,col=subtypes))+geom_point()+ggtitle("PRS Luminal A vs Triple Negative")+
+  xlab("Triple Negative PRS")+
+  ylab("Luminal A PRS")
+dev.off()
+  
+
+data.clean <- data[!(data$subtypes=="control"|data$subtypes=="other subtypes"),]
+png(filename=paste0("Luminal_A_vs_TP_clean.png"),
+    width=8,height=6,units="in",res=300)
+
+ggplot(data.clean,aes(x= Triple_Neg_PRS,y=Luminal_A_PRS,col=subtypes))+geom_point()+ggtitle("PRS Luminal A vs Triple Negative")+
+  xlab("Triple Negative PRS")+
+  ylab("Luminal A PRS")
+dev.off()
+
+
+
+
+
+
+
+log.odds.intrinsic <- log.odds.intrinsic.all[,i]
+log.odds.intrinsic.dic <-  log.odds.intrinsic.dic.all[,i]
+log.odds.intrinsic.eb <- log.odds.intrinsic.eb.all[,i]
+log.odds.intrinsic.la <- log.odds.intrinsic.la.all[,i]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 library(data.table)
@@ -138,48 +454,6 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stag
 
 
 ##############standard model
-calibration <- function(y,prs){
-  n <- length(y)
-  n.qun <- 11
-  idx.control <- which(y==0)
-  idx.case <- which(y==1)
-  prs.control <- prs[idx.control]
-  prs.case <- prs[idx.case]
-  control.qun <- quantile(prs.control,probs=seq(0,1,1/(n.qun-1)))
-  odds <- rep(0,n.qun-2)
-  for(i in 2:(n.qun-1)){
-    if(i==2){
-      idx <- which(prs.control<=control.qun[i])
-      n.control <- length(idx)
-      idx <- which(prs.case<= control.qun[i])
-      n.case <- length(idx)
-      odds[i-1] <- n.case/n.control
-    }else if(i==(n.qun-1)){
-      
-        idx <- which(prs.control>=control.qun[i])
-        n.control <- length(idx)
-        idx <- which(prs.case>= control.qun[i])
-        n.case <- length(idx)
-        odds[n.qun-2] <- n.case/n.control
-      }else{
-        idx <- which(prs.control>=control.qun[i-1]&
-                       prs.control<=control.qun[i])
-        n.control <- length(idx)
-        idx <- which(prs.case>= control.qun[i-1]&
-                       prs.case<= control.qun[i])
-        n.case <- length(idx)
-        odds[i-1] <- n.case/n.control
-      }
-    
-  }
-  odds.ratio <- rep(0,length(odds))
-  for(i in 1:length(odds)){
-    odds.ratio[i] <- odds[i]/odds[5]
-  }
-  return(odds.ratio)
-}
-
-
 
 
 library(pROC)
