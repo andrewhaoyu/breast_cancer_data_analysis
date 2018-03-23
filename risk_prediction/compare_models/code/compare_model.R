@@ -239,7 +239,7 @@ log.odds.intrinsic.la.all <- matrix(0,n.snp,M)
 for(i1 in 1:n.snp){
   load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
   
-  log.odds.standard.all[i1,] <- all.model.result[[1]][6]
+  log.odds.standard.all[i1] <- all.model.result[[1]][6]
   log.odds.intrinsic.all[i1,] <- all.model.result[[2]][6,]
   log.odds.intrinsic.dic.all[i1,] <- all.model.result[[4]][6,]
   log.odds.intrinsic.eb.all[i1,] <- all.model.result[[5]][6,]
@@ -256,20 +256,42 @@ idx.test.case <-  icog.test.id[[1]][[i]]
 idx.test.control <- icog.test.id[[2]][[i]]
 idx.test1 <- c(idx.test.case,idx.test.control)
 y.pheno.mis1.test <- y.pheno.mis1[idx.test1,1]
+y.pheno.mi1.train <- y.pheno.mis1[-idx.test1,]
 x.snp.all.test1 <- x.snp.all1[idx.test1,]
+x.snp.all.train1 <- x.snp.all1[-idx.test1,]
 idx.test.case <-  onco.test.id[[1]][[i]]
 idx.test.control <- onco.test.id[[2]][[i]]
 idx.test2 <- c(idx.test.case,idx.test.control)
 y.pheno.mis2.test <- y.pheno.mis2[idx.test2,1]
+y.pheno.mis2.train <- y.pheno.mis2[-idx.test2,]
 x.snp.all.test2 <- x.snp.all2[idx.test2,]
+x.snp.all.train2 <- x.snp.all2[-idx.test2,]
 y.test <- c(y.pheno.mis1.test,y.pheno.mis2.test)
 y.pheno.mis.test <- rbind(y.pheno.mis1[idx.test1,],y.pheno.mis2[idx.test2,])
+y.pheno.mis.train <- rbind(y.pheno.mi1.train,y.pheno.mis2.train)
+x.snp.train <- rbind(as.matrix(x.snp.all.train1) ,as.matrix(x.snp.all.train2))
 x.test <- rbind(as.matrix(x.snp.all.test1),as.matrix(x.snp.all.test2))
 #log.odds.standard <- log.odds.standard.all[,i]
 prs.standard <- x.test%*%log.odds.standard
 
 cal.standard <- calibration(y.test,prs.standard)
 roc.standard <- roc(y.test,as.vector(prs.standard),ci=T,plot=F)
+
+
+subtypes.prs.intrinsic.train <- x.snp.train%*%log.odds.intrinsic.all
+subtypes.train <- as.character(GenerateIntrinsicmis(y.pheno.mis.train[,2],y.pheno.mis.train[,3],
+                                                   y.pheno.mis.train[,4],y.pheno.mis.train[,5]))
+data.train <- data.frame(Luminal_A_PRS=subtypes.prs.intrinsic.train[,1],
+                   Triple_Neg_PRS = subtypes.prs.intrinsic.train[,5],
+                   subtypes=subtypes.train)
+png(filename=paste0("Luminal_A_vs_TP.png"),
+    width=8,height=6,units="in",res=300)
+ggplot(data.train,aes(x= Triple_Neg_PRS,y=Luminal_A_PRS,col=subtypes))+geom_point()+ggtitle("PRS Luminal A vs Triple Negative")+
+  xlab("Triple Negative PRS")+
+  ylab("Luminal A PRS")
+
+
+cor(subtypes.prs.intrinsic[,1],subtypes.prs.intrinsic[,5])
 
 subtypes.prs.intrinsic <- x.test%*% log.odds.intrinsic.all
 try.prs <- apply(subtypes.prs.intrinsic,1,max)
@@ -319,6 +341,7 @@ subtypes.test[idx.other] <- "other subtypes"
 data <- data.frame(Luminal_A_PRS=subtypes.prs.intrinsic[,1],
                    Triple_Neg_PRS = subtypes.prs.intrinsic[,5],
                    subtypes=subtypes.test)
+
 png(filename=paste0("Luminal_A_vs_TP.png"),
     width=8,height=6,units="in",res=300)
 ggplot(data,aes(x= Triple_Neg_PRS,y=Luminal_A_PRS,col=subtypes))+geom_point()+ggtitle("PRS Luminal A vs Triple Negative")+
@@ -328,6 +351,7 @@ dev.off()
   
 
 data.clean <- data[!(data$subtypes=="control"|data$subtypes=="other subtypes"),]
+cor(data.clean[,1],data.clean[,2])
 png(filename=paste0("Luminal_A_vs_TP_clean.png"),
     width=8,height=6,units="in",res=300)
 
@@ -717,6 +741,8 @@ roc.result <- true.false.calculate(prs,y.test[,1])
 plot(roc.result[,1],roc.result[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
 auc <- auc_cal(roc.result)
+
+
 
 
 

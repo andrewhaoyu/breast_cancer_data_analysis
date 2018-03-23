@@ -38,7 +38,7 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub.meta.c
 # total <- 0
 # for(i in 1:size){
 #   print(i)
-#   load(paste0("./genetic_correlation/ICOG/result/result.sub.meta",i,".Rdata"))
+#   load(paste0("./genetic_correlation/ICOG/result/result.sub.meta.completeglm",i1,".Rdata"))
 #   temp <- nrow(result.sub)
 #   result.all[total+(1:temp),] <- result.sub
 #   total <- temp+total
@@ -78,7 +78,7 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub.meta.c
 # 
 # idx <- which(!is.na(alleles1)&is.na(alleles3))
 # alleles3[idx] <- alleles1[idx]
-# alleles4[idx] <- alleles2[idx] 
+# alleles4[idx] <- alleles2[idx]
 # 
 # snpinfor <- data.frame(id,alleles3,alleles4)
 # 
@@ -92,7 +92,7 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub.meta.c
 # #                        "HER2 Enriched",
 # #                        "Luminal B",
 # #                        "Luminal B HER2Neg")
-# # 
+# #
 # 
 # 
 # meta.result <- list(snpinfor,log.odds,var.odds,freq.meta)
