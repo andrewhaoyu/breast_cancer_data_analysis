@@ -9,14 +9,16 @@ start.end<- startend(n,size,i1)
 start <- start.end[1]
 end <- start.end[2]
 
+
+
 result.sub <- matrix(0,end-start+1,30)
 total <- 0
 for(i in start:end){
   print(i)
   logodds.icog <- as.numeric(as.vector(icog.onco.merge[i,11:15]))
   sigma.icog <- matrix(as.numeric(icog.onco.merge[i,16:40]),5,5)
-  logodds.onco <- as.numeric(as.vector(icog.onco.merge[i,50:54]))
-  sigma.onco <- matrix(as.numeric(icog.onco.merge[i,55:79]),5,5)
+  logodds.onco <- as.numeric(as.vector(icog.onco.merge[i,51:55]))
+  sigma.onco <- matrix(as.numeric(icog.onco.merge[i,56:80]),5,5)
   temp.result <- LogoddsMetaAnalysis(logodds.icog,
                                      sigma.icog,
                                      logodds.onco,
@@ -33,14 +35,14 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub.meta.c
 
 # setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 # total <- nrow(icog.onco.merge)
-# 
+# size = 1000
 # result.all <- matrix(0,total,30)
 # total <- 0
-# for(i in 1:size){
-#   print(i)
+# for(i1 in 1:size){
+#   print(i1)
 #   load(paste0("./genetic_correlation/ICOG/result/result.sub.meta.completeglm",i1,".Rdata"))
 #   temp <- nrow(result.sub)
-#   result.all[total+(1:temp),] <- result.sub
+#  result.all[total+(1:temp),] <- result.sub
 #   total <- temp+total
 # }
 # 
@@ -82,11 +84,11 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub.meta.c
 # 
 # snpinfor <- data.frame(id,alleles3,alleles4)
 # 
-# colnames(log.odds) <- c("Triple Negative",
-#                         "Luminial A",
-#                         "HER2 Enriched",
-#                         "Luminal B",
-#                         "Luminal B HER2Neg")
+# colnames(log.odds) <- c( "Luminal_A",
+#                          "Luminal_B",
+#                          "Luminal_B_HER2Enriched",
+#                          "HER2Enriched",
+#                          "TripleNeg")
 # # colnames(sd.odds) <- c("Triple Negative",
 # #                        "Luminial A",
 # #                        "HER2 Enriched",
@@ -97,10 +99,18 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub.meta.c
 # 
 # meta.result <- list(snpinfor,log.odds,var.odds,freq.meta)
 # colnames(meta.result[[4]]) <- c("freq.icog","freq.onco")
-# save(meta.result,file=paste0("./genetic_correlation/ICOG/result/meta.result.Rdata"))
+# save(meta.result,file=paste0("./genetic_correlation/ICOG/result/meta.result.completeglm.Rdata"))
 # 
 # 
-# all.result <- list(meta.result,ICOG.result,ONCO.result)
+# 
+# 
+# 
+# load("./genetic_correlation/ICOG/result/meta.result.completeglm.Rdata")
+# load(paste0("./genetic_correlation/ONCO/result/result.clean.completeglm.Rdata"))
+# load(paste0("./genetic_correlation/result/ICOG.result.clean.completeglm.Rdata"))
+# 
+# 
+# all.result <- list(meta.result=meta.result,ICOG.result=ICOG.result.clean,ONCO.result=ONCO.result.clean)
 # 
 # 
 # 
