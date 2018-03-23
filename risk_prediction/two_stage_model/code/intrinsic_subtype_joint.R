@@ -36,7 +36,7 @@ y.pheno.mis1 <- select(icog.data,Behaviour1,ER_status1,PR_status1,HER2_status1,G
 subtypes.icog <- GenerateIntrinsicmis(y.pheno.mis1[,2],y.pheno.mis1[,3],
                                       y.pheno.mis1[,4],y.pheno.mis1[,5])
 
-table(subtypes.icog)+table(subtypes.onco)
+#table(subtypes.icog)+table(subtypes.onco)
 
 x.covar1 <- select(icog.data,5:14)
 x.snp.all1 <- select(icog.data,26:230)
