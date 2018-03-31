@@ -35,7 +35,9 @@ true.false.calculate <- function(prs,test.data){
 ########subtypes risk prediction
 library(bcutility)
 library(bc2)
+library(pROC)
 library(data.table)
+library(plotROC)
 icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
 onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
 library(tidyverse)
@@ -272,23 +274,184 @@ y.pheno.mis.train <- rbind(y.pheno.mi1.train,y.pheno.mis2.train)
 x.snp.train <- rbind(as.matrix(x.snp.all.train1) ,as.matrix(x.snp.all.train2))
 x.test <- rbind(as.matrix(x.snp.all.test1),as.matrix(x.snp.all.test2))
 #log.odds.standard <- log.odds.standard.all[,i]
-prs.standard <- x.test%*%log.odds.standard
-
+prs.standard <- x.test%*%log.odds.standard.all
+library(pROC)
 cal.standard <- calibration(y.test,prs.standard)
 roc.standard <- roc(y.test,as.vector(prs.standard),ci=T,plot=F)
 
 
+#######Generate the PRS using empirical Bayesian with normal proior
+
+subtypes.prs.intrinsic.eb.test <- x.test%*%log.odds.intrinsic.eb.all
+subtypes.test <- as.character(GenerateIntrinsicmis(y.pheno.mis.test[,2],y.pheno.mis.test[,3],
+                                                   y.pheno.mis.test[,4],y.pheno.mis.test[,5]))
+data.test <- data.frame(Luminal_A_PRS=subtypes.prs.intrinsic.eb.test[,1],
+                        Luminal_B_PRS = subtypes.prs.intrinsic.eb.test[,2],
+                        Luminal_B_HER2_en_PRS = subtypes.prs.intrinsic.eb.test[,3],
+                        HER2_en_PRS = subtypes.prs.intrinsic.eb.test[,4],
+                        
+                         
+                         Triple_Neg_PRS = subtypes.prs.intrinsic.eb.test[,5],
+                         subtypes=subtypes.test)
+
+all.subtypes <- c("Luminal_A",
+                  "Luminal_B",
+                  "Luminal_B_HER2Neg",
+                  "HER2Enriched",
+                  "TripleNeg")
+
+coefficients <- rep(0,5)
+control.mean <- rep(0,5)
+control.sd <- rep(0,5)
+for(i in 1:5){
+  control.mean[i] <- mean(data.test[,i])
+  control.sd[i] <- sd(data.test[,i])
+  subtypes.names.temp <- all.subtypes[i]
+  subtype <- all.subtypes[i]
+  idx <- which(subtypes.test==subtype|subtypes.test=="control")
+  subtype.y <- factor(subtypes.test[idx],levels=c("control",subtype))
+  prs.x <- data.test[idx,i]
+  model <- glm(subtype.y~prs.x,family=binomial(link='logit'))
+  coefficients[i] <- coef(model)[2]
+  
+}
+
+control.prs.infor <- data.frame(subtypes=all.subtypes,
+                                coefficients=coefficients,
+                                control.mean = control.mean,
+                                control.sd = control.sd
+)
+write.csv(control.prs.infor,file="control.prs.infor.csv")
+
+
+
+
+data.test.clean <- data.test[data.test$subtypes=="control",]
+
+
+
+
+#############generate the control PRS using empirical bayesian on training dataset
 subtypes.prs.intrinsic.train <- x.snp.train%*%log.odds.intrinsic.all
+standard.prs <- as.numeric(x.snp.train%*%log.odds.standard.all)
 subtypes.train <- as.character(GenerateIntrinsicmis(y.pheno.mis.train[,2],y.pheno.mis.train[,3],
                                                    y.pheno.mis.train[,4],y.pheno.mis.train[,5]))
 data.train <- data.frame(Luminal_A_PRS=subtypes.prs.intrinsic.train[,1],
+                         
                    Triple_Neg_PRS = subtypes.prs.intrinsic.train[,5],
+                   standard_prs = standard.prs,
                    subtypes=subtypes.train)
 png(filename=paste0("Luminal_A_vs_TP.png"),
     width=8,height=6,units="in",res=300)
 ggplot(data.train,aes(x= Triple_Neg_PRS,y=Luminal_A_PRS,col=subtypes))+geom_point()+ggtitle("PRS Luminal A vs Triple Negative")+
   xlab("Triple Negative PRS")+
   ylab("Luminal A PRS")
+dev.off()
+
+data.train.clean <- data.train[data.train$subtypes=="control",]
+
+cor(data.train.clean[,1],data.train.clean[,2])
+cor(data.train.clean[,1],data.train.clean[,3])
+cor(data.train.clean[,2],data.train.clean[,3])
+prs.LA <- data.train.clean[,1]
+prs.TN <- data.train.clean[,2]
+prs.sd <- data.train.clean[,3]
+
+
+
+
+
+
+library(dplyr)
+##########plot for LA
+
+
+
+
+
+
+# 
+# try <-  data.train%>%
+#   group_by(group1,group2) %>%
+#   count(HD)
+plot.subtype.name <- c("Luminal A","Triple Negative")
+for(i in 1:2){
+  names.col <- colnames(data.train)
+  emprical.pro <- crosstaub(data.train.clean[,i],prs.sd)
+  conditional.pro <- apply(emprical.pro,2,function(x){x/sum(x)})
+  conditional.m <- melt(conditional.pro)
+  emprical.m <- melt(emprical.pro)
+  
+  write.csv(emprical.pro,file=paste0(plot.subtype.name[i],"vs standard PRS probability.csv"))
+  
+  
+  png(filename=paste0(plot.subtype.name[i],"_vs_standard.png"),
+      width=8,height=6,units="in",res=300)
+  
+  
+  png(filename=paste0(plot.subtype.name[i],"_vs_standard.png"),
+      width=8,height=6,units="in",res=300)
+  ggplot(data.train.clean,aes(x= standard_prs,y=data.train.clean[,i]))+geom_point()+ggtitle(paste0("PRS" ,plot.subtype.name[i], " vs Standard analysis"))+
+    xlab("Standard PRS")+
+    ylab(paste0(plot.subtype.name[i]," PRS"))
+  dev.off()
+  
+  png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap_absolute.png"),
+      width=8,height=6,units="in",res=300)
+  ggplot(emprical.m, aes(group1, group2)) + 
+    geom_tile(aes(fill = value),colour = "white") + 
+    scale_fill_gradient(low = "white",  high = "steelblue")+
+    xlab("Standard PRS percentile")+
+    ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
+    ggtitle( paste0(plot.subtype.name[i]," vs Standard Analysis"))
+  dev.off()
+  
+  
+  png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap.png"),
+      width=8,height=6,units="in",res=300)
+  ggplot(conditional.m, aes(group1, group2)) + 
+    geom_tile(aes(fill = value),colour = "white") + 
+    scale_fill_gradient(low = "white",  high = "steelblue")+
+    xlab("Standard PRS percentile")+
+    ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
+    ggtitle( paste0(plot.subtype.name[i]," vs Standard"))
+  dev.off()
+  
+}
+
+
+# write.csv(result,file="./LuAvsTN.csv")
+# heatmap.2(result,
+#           tracecol=NA)
+library(plyr)
+library(scales)
+
+
+  
+png(filename=paste0("Luminal_A_vs_TP_heatmap_absolute.png"),
+    width=8,height=6,units="in",res=300)
+ggplot(emprical.m,aes(group1,group2))+
+  geom_tile(aes(fill = value),colour = "white") + 
+  scale_fill_gradient(low = "white",  high = "steelblue")+
+  xlab("Luminal A PRS percentile")+
+  ylab("Triple Negative PRS percentile")+
+  ggtitle("Luminal A vs Triple Negative")
+dev.off()
+# ,cexRow=1,cexCol=1,margins=c(10,12),col = col,breaks=pal.breaks,key.ylab="",key.title = "",
+#           main=" Genetic Correlation Heatmap",dendrogram="row",density.info="none",lwid = c(1.5,4))
+
+
+qun1 <- quantile(data.train.clean[,1],probs=
+                   c(0.01,0.05,0.10,0.20,
+                     0.40,0.60,0.80,
+                     0.9,
+                     0.95,0.99))
+
+
+
+
+
+
 
 
 cor(subtypes.prs.intrinsic[,1],subtypes.prs.intrinsic[,5])
@@ -350,12 +513,12 @@ ggplot(data,aes(x= Triple_Neg_PRS,y=Luminal_A_PRS,col=subtypes))+geom_point()+gg
 dev.off()
   
 
-data.clean <- data[!(data$subtypes=="control"|data$subtypes=="other subtypes"),]
+data.clean <- data[data$subtypes=="control",]
 cor(data.clean[,1],data.clean[,2])
 png(filename=paste0("Luminal_A_vs_TP_clean.png"),
     width=8,height=6,units="in",res=300)
 
-ggplot(data.clean,aes(x= Triple_Neg_PRS,y=Luminal_A_PRS,col=subtypes))+geom_point()+ggtitle("PRS Luminal A vs Triple Negative")+
+ggplot(data.clean,aes(x= Triple_Neg_PRS,y=Luminal_A_PRS))+geom_point(col="red")+ggtitle("PRS Luminal A vs Triple Negative")+
   xlab("Triple Negative PRS")+
   ylab("Luminal A PRS")
 dev.off()

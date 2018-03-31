@@ -129,6 +129,35 @@ for(i in 1:6){
   p.heter <- GlobalTestForHeter(meta.result[[1]],
                                 meta.result[[2]],
                                 self.design = T)
+  logodds <- meta.result[[1]]
+  sigma <- meta.result[[2]]
+  library(mvtnorm)
+  classtree <- function(logodds,sigma){
+    M <- length(logodds)
+    pairs <- combn(M,2)
+    pos <- ncol(pairs)
+    logodds.pair <- matrix(0,pos,M)
+    dis <- rep(0,pos)
+    ##############check the distance between subtypes
+    for(i in 1:pos){
+      dis[i] <- PairDis(logodds[pairs[,i]],sigma[pairs[,i],pairs[,i]])
+    }
+    #############find the best distance
+    idx.col <- which.min(dis)
+    
+    
+        
+  }
+  
+  PairDis <- function(logodds,sigma){
+    trans <- c(1,-1)
+    z = abs(trans%*%logodds)/sqrt(t(trans)%*%sigma%*%trans)
+    return(z)
+  }
+  
+  
+  
+  
   
   
   

@@ -1,5 +1,5 @@
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/ICOG/result/')
-load("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/ICOG/result/breast_cancer_ldsc/ICOG_ldsc_result.rda")
+load("./breast_cancer_ldsc/recompleteglmlogoddsratio/ldsc_result_ONCO.rda")
 covariance.matrix <- ldsc_result[[1]]
 covariance.matrix.se <- ldsc_result[[3]]
 correlation.matrix <- ldsc_result[[2]]
@@ -76,13 +76,29 @@ library(tidyverse)
 library(reshape2)
 library(ggplot2)
 library(gplots)
+
+
+
+correlation.matrix <- as.matrix(as.data.frame(fread("genetic_correlation_meta.csv")[,1:5]))
+rownames(correlation.matrix) <- colnames(correlation.matrix)
+pal.breaks <- seq(0,1,0.01)
+col <- colorRampPalette(c("dodgerblue4","white","red"))(length(pal.breaks)-1)
+correlation.matrix.icog <- correlation.matrix
+# heatmap(correlation.matrix,col = col,symm=T,margins=c(10,4),key.title="",key.ylab="",cexRow=1,cexCol=1)
+png(filename="./meta_heatmap.png",width=10,heigh=10,units="in",res=300)
+heatmap.2(correlation.matrix,tracecol=NA,cexRow=1,cexCol=1,margins=c(10,12),col = col,breaks=pal.breaks,key.ylab="",key.title = "",
+          main=" Genetic Correlation Heatmap",dendrogram="row",density.info="none",lwid = c(1.5,4))
+dev.off()
+
+
+
 pal.breaks <- seq(-1,1,0.01)
 col <- colorRampPalette(c("dodgerblue4","white","red"))(length(pal.breaks)-1)
 correlation.matrix.icog <- correlation.matrix
 # heatmap(correlation.matrix,col = col,symm=T,margins=c(10,4),key.title="",key.ylab="",cexRow=1,cexCol=1)
-png(filename="./ICOG_heatmap.png",width=800,heigh=600,units="px",res=600)
-heatmap.2(correlation.matrix.icog,tracecol=NA,cexRow=1,cexCol=1,margins=c(10,12),col = col,breaks=pal.breaks,key.ylab="",key.title = "",
-          main=" Genetic Correlation Heatmap ICOGs",dendrogram="row",density.info="none",lwid = c(1.5,4))
+png(filename="./meta_heatmap2.png",width=10,heigh=10,units="in",res=300)
+heatmap.2(correlation.matrix,tracecol=NA,cexRow=1,cexCol=1,margins=c(10,12),col = col,breaks=pal.breaks,key.ylab="",key.title = "",
+          main=" Genetic Correlation Heatmap",dendrogram="row",density.info="none",lwid = c(1.5,4))
 dev.off()
 
 
