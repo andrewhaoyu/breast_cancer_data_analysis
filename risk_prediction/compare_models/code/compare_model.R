@@ -451,6 +451,8 @@ plot.subtype.name <- c("Luminal A","Triple Negative")
 for(i in 1:2){
   names.col <- colnames(data.train)
   emprical.pro <- crosstaub(data.train.clean[,i],prs.sd)
+  high.emprical.pro <- emprical.pro[9:11,]
+  high.emprical.pro.m <- melt(high.emprical.pro)
   conditional.pro <- apply(emprical.pro,2,function(x){x/sum(x)})
   conditional.m <- melt(conditional.pro)
   emprical.m <- melt(emprical.pro)
@@ -468,7 +470,7 @@ for(i in 1:2){
   
   png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap_absolute.png"),
       width=8,height=6,units="in",res=300)
-  ggplot(emprical.m, aes(group1, group2)) + 
+  ggplot(emprical.m, aes(group2, group1)) + 
     geom_tile(aes(fill = value),colour = "white") + 
     scale_fill_gradient(low = "white",  high = "steelblue")+
     xlab("Standard PRS percentile")+
@@ -477,15 +479,30 @@ for(i in 1:2){
   dev.off()
   
   
+  
+  
   png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap.png"),
       width=8,height=6,units="in",res=300)
-  ggplot(conditional.m, aes(group1, group2)) + 
+  ggplot(conditional.m, aes(group2, group1)) + 
     geom_tile(aes(fill = value),colour = "white") + 
     scale_fill_gradient(limits=c(0,0.7),low = "white",  high = "dodgerblue4")+
     xlab("Standard PRS percentile")+
     ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
     ggtitle( paste0(plot.subtype.name[i]," vs Standard"))
   dev.off()
+  
+  
+  png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap_high.png"),
+      width=8,height=6,units="in",res=300)
+  ggplot(high.emprical.pro.m, aes(group2, group1)) + 
+    geom_tile(aes(fill = value),colour = "white") + 
+    scale_fill_gradient(low = "white",  high = "dodgerblue4")+
+    xlab("Standard PRS percentile")+
+    ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
+    ggtitle( paste0(plot.subtype.name[i]," vs Standard"))
+  dev.off()
+  
+  
   
 }
 
