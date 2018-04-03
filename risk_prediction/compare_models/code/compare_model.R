@@ -98,65 +98,6 @@ coeff <- matrix(0,5,5)
 coeff_95 <- matrix("c",5,5)
 
 
-GenerateCoeff <- function(
-  log.odds.standard,
-  log.odds.intrinsic,
-  log.odds.dic,
-  log.odds.intrinsic.eb,
-  log.odds.intrinsic.la,
-  x.test,
-  y.test
-){
-  pla <- 2
-  coeff <- rep(0,5)
-  coeff_95 <- rep("c",5)
-  prs.standard <- x.test%*%log.odds.standard
-  idx.control <- which(y.test==0)
-  sd.prs.control <- sd(prs.standard[idx.control])
-  prs.standard.scale <- prs.standard/sd.prs.control
-  model <- glm(y.test~  prs.standard.scale,family = binomial(link='logit'))
-  temp <- exp(coef(model)[2]+summary(model)$coefficient[2,2]*qnorm(c(0.025,0.5,0.975)))
-  coeff[1] <- temp[2]
-  coeff_95[1] <- paste0(round(temp[2],pla)," (",round(temp[1],pla)," - ",round(temp[3],pla),")")
-  
-   prs.intrinsic <- x.test%*%log.odds.intrinsic
-  sd.prs.control <- sd(prs.intrinsic[idx.control])
-  prs.intrinsic.scale <- prs.intrinsic/sd.prs.control
-  model <- glm(y.test~  prs.intrinsic.scale,family = binomial(link='logit'))
-  temp <- exp(coef(model)[2]+summary(model)$coefficient[2,2]*qnorm(c(0.025,0.5,0.975)))
-  coeff[2] <- temp[2]
-  coeff_95[2] <- paste0(round(temp[2],pla)," (",round(temp[1],pla)," - ",round(temp[3],pla),")")
-  prs.intrinsic.dic <- x.test%*%log.odds.intrinsic.dic
-  sd.prs.control <- sd(prs.intrinsic.dic[idx.control])
-  prs.intrinsic.dic.scale <- prs.intrinsic.dic/sd.prs.control
-  model <- glm(y.test~  prs.intrinsic.dic.scale,family = binomial(link='logit'))
-  temp <- exp(coef(model)[2]+summary(model)$coefficient[2,2]*qnorm(c(0.025,0.5,0.975)))
-  coeff[3] <- temp[2]
-  coeff_95[3] <- paste0(round(temp[2],pla)," (",round(temp[1],pla)," - ",round(temp[3],pla),")")
-  
- 
-  prs.intrinsic.eb <- x.test%*%log.odds.intrinsic.eb
-  sd.prs.control <- sd(prs.intrinsic.eb[idx.control])
-  prs.intrinsic.eb.scale <- prs.intrinsic.eb/sd.prs.control
-  model <- glm(y.test~  prs.intrinsic.eb.scale,family = binomial(link='logit'))
-  temp <- exp(coef(model)[2]+summary(model)$coefficient[2,2]*qnorm(c(0.025,0.5,0.975)))
-  coeff[4] <- temp[2]
-  coeff_95[4] <- paste0(round(temp[2],pla)," (",round(temp[1],pla)," - ",round(temp[3],pla),")")
-  
-  prs.intrinsic.la <- x.test%*%log.odds.intrinsic.la
-  sd.prs.control <- sd(prs.intrinsic.la[idx.control])
-  prs.intrinsic.la.scale <- prs.intrinsic.la/sd.prs.control
-  model <- glm(y.test~  prs.intrinsic.la.scale,family = binomial(link='logit'))
-  temp <- exp(coef(model)[2]+summary(model)$coefficient[2,2]*qnorm(c(0.025,0.5,0.975)))
-  coeff[5] <- temp[2]
-  coeff_95[5] <- paste0(round(temp[2],pla)," (",round(temp[1],pla)," - ",round(temp[3],pla),")")
-  return(list(coeff=coeff,
-              coeff_95=coeff_95))
-  
-  
-}
-
-
 
 for(i in 1:5){
   print(i)
@@ -447,17 +388,19 @@ library(dplyr)
 # try <-  data.train%>%
 #   group_by(group1,group2) %>%
 #   count(HD)
+
 plot.subtype.name <- c("Luminal A","Triple Negative")
 for(i in 1:2){
   names.col <- colnames(data.train)
   emprical.pro <- crosstaub(data.train.clean[,i],prs.sd)
-  high.emprical.pro <- emprical.pro[9:11,]
+  high.emprical.pro <- emprical.pro[9:11,]/sum(emprical.pro[9:11,])
   high.emprical.pro.m <- melt(high.emprical.pro)
   conditional.pro <- apply(emprical.pro,2,function(x){x/sum(x)})
   conditional.m <- melt(conditional.pro)
-  emprical.m <- melt(emprical.pro)
   
-  write.csv(emprical.pro,file=paste0(plot.subtype.name[i],"vs standard PRS probability.csv"))
+  emprical.pro.new <- crosstaub_new(data.train.clean[,i],prs.sd)
+  emprical.pro.new.m <- melt(emprical.pro.new)  
+  #write.csv(emprical.pro,file=paste0(plot.subtype.name[i],"vs standard PRS probability.csv"))
   
   
   
@@ -470,9 +413,9 @@ for(i in 1:2){
   
   png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap_absolute.png"),
       width=8,height=6,units="in",res=300)
-  ggplot(emprical.m, aes(group2, group1)) + 
+  ggplot(emprical.pro.new.m, aes(group2, group1)) + 
     geom_tile(aes(fill = value),colour = "white") + 
-    scale_fill_gradient(low = "white",  high = "steelblue")+
+    scale_fill_gradient(limits=c(0,0.08),low = "white",  high = "dodgerblue4")+
     xlab("Standard PRS percentile")+
     ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
     ggtitle( paste0(plot.subtype.name[i]," vs Standard Analysis"))

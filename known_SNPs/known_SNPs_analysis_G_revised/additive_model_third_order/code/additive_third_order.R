@@ -257,6 +257,12 @@ z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL
   test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
   
+  heter.result <- list(test.result.second.wald,
+                       test.result.second.mixed)
+  
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/heter_result_",i1,".Rdata"))
+  
+  
   # beta.meta <- z.trans%*%second.stage.logodds.meta
   # beta.sigma.meta <- z.trans%*%second.stage.sigma.meta%*%t(z.trans)
   # 
@@ -299,7 +305,7 @@ z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL
   # 
   # 
   # 
-  # save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_",i1,".Rdata"))
+  
   # 
   # 
   
@@ -398,6 +404,35 @@ z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL
   # infor.onco.casecase <- score.test.onco.casecase[[2]]
   # 
   
+  score.test.support.fixed.onco <- ScoreTestSupportSelfDesign(y.pheno.mis2,
+                                                              x.self.design=x.all.mis2[,1,drop=F],
+                                                              z.design=z.design[,1,drop=F],
+                                                              baselineonly=NULL,
+                                                              additive=x.all.mis2[,2:ncol(x.all.mis2)],
+                                                              pairwise.interaction=NULL,
+                                                              saturated=NULL,
+                                                              missingTumorIndicator = 888)
+  score.test.fixed.onco <- ScoreTestSelfDesign(y=y.pheno.mis2,                    x=x.all.mis2[,1,drop=F],
+                                               z.design=z.design[,2:ncol(z.design)],
+                                               score.test.support= score.test.support.fixed.onco,                           missingTumorIndicator=888)
+  score.fixed.onco <-   score.test.fixed.onco[[1]]
+  infor.fixed.onco <-   score.test.fixed.onco[[2]]
+  score.test.support.random.onco <- ScoreTestSupportSelfDesign(y.pheno.mis2,                                                x.self.design=x.all.mis2[,1,drop=F],
+                                                               z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL,                                           additive=x.all.mis2[,2:ncol(x.all.mis2)],                     pairwise.interaction=NULL,                                  saturated=NULL,                                             missingTumorIndicator = 888)
+  
+  score.test.random.onco <- ScoreTestSelfDesign(y=y.pheno.mis2,                    x=x.all.mis2[,1,drop=F],
+                                                z.design=z.design[,3:5],
+                                                score.test.support= score.test.support.random.onco,                         missingTumorIndicator=888)
+  score.random.onco <- score.test.random.onco[[1]]
+  infor.random.onco <- score.test.random.onco[[2]]
+ # meta.result.score.fix <- ScoreMetaAnalysis(score.fixed.icog,infor.fixed.icog,score.fixed.onco,infor.fixed.onco)
+  score.fixed.meta <-   score.fixed.onco 
+  infor.fixed.meta <- infor.fixed.onco
+ # meta.result.score.random <- ScoreMetaAnalysis(score.random.icog,infor.random.icog,score.random.onco,infor.random.onco)
+  score.randomed.meta <- score.random.onco
+  infor.randomed.meta <- infor.random.onco
+  
+  test.result.second.mixed <- DisplayMixedScoreTestResult(score.fixed.meta,                                                        infor.fixed.meta,                                        score.randomed.meta,                                        infor.randomed.meta)  
   
   
   second.stage.logodds.meta <-log.odds.onco
@@ -409,6 +444,10 @@ z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL
   
   test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
+  heter.result <- list(test.result.second.wald,
+                       test.result.second.mixed)
+  
+  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/heter_result_",i1,".Rdata"))
   
   # beta.meta <- z.trans%*%second.stage.logodds.meta
   # beta.sigma.meta <- z.trans%*%second.stage.sigma.meta%*%t(z.trans)
