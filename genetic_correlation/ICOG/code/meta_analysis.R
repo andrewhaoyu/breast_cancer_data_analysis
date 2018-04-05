@@ -87,6 +87,7 @@ colnames(log.odds) <- c("Triple Negative",
                         "HER2 Enriched",
                         "Luminal B",
                         "Luminal B HER2Neg")
+#c(2,4,5,3,1)
 # colnames(sd.odds) <- c("Triple Negative",
 #                        "Luminial A",
 #                        "HER2 Enriched",

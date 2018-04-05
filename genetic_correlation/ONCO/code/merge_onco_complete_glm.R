@@ -38,6 +38,10 @@ ONCO.result <- data.frame(SNP.ONCO=snpid,logodds,sigma,freq.onco)
 ONCO.result.clean <- merge(shared.data,ONCO.result,by.x="SNP.ONCO",
                            by.y = "SNP.ONCO")
 
+load(paste0("./genetic_correlation/ONCO/result/ONCO.result.Rdata"))
+ONCO.result.clean$A1 <- ONCO.result[[1]]$alleles3
+ONCO.result.clean$A2 <- ONCO.result[[1]]$alleles4
+
 save(ONCO.result.clean,file= "./genetic_correlation/ONCO/result/result.clean.completeglm.Rdata")
 
 #load("./genetic_correlation/result/hapmap3list.Rdata")

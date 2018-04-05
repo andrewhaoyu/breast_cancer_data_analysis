@@ -95,7 +95,11 @@ colnames(log.odds) <- c( "Luminal_A",
 #                        "Luminal B",
 #                        "Luminal B HER2Neg")
 #
-
+colnames(meta.result[[2]])  <- c( "Luminal_A",
+                                  "Luminal_B",
+                                  "Luminal_B_HER2Enriched",
+                                  "HER2Enriched",
+                                  "TripleNeg")
 
 meta.result <- list(snpinfor,log.odds,var.odds,freq.meta)
 colnames(meta.result[[4]]) <- c("freq.icog","freq.onco")

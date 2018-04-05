@@ -37,6 +37,11 @@ ICOG.result <- data.frame(SNP.ICOGS=snpid,logodds,sigma,freq.icog)
 ICOG.result.clean <- merge(shared.data,ICOG.result,by.x="SNP.ICOGS",
                            by.y = "SNP.ICOGS")
 
+load(paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
+#load(paste0("./genetic_correlation/ONCO/result/ONCO.result.transfrom.Rdata"))
+ICOG.result.clean$A1 <- ICOG.result[[1]]$alleles1
+ICOG.result.clean$A2 <- ICOG.result[[1]]$alleles2
+
 save(ICOG.result.clean,file= "./genetic_correlation/result/ICOG.result.clean.completeglm.Rdata")
 #load("./genetic_correlation/result/hapmap3list.Rdata")
 
