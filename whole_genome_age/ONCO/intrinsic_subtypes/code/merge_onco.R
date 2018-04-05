@@ -17,3 +17,16 @@ for(i1 in 1:567){
 }
 missingid <- missingid[1:temp,]
 length(unique(missingid[,1]))
+onco.unique.resubmit <- unique(missingid[,1])
+save(onco.unique.resubmit,file="./whole_genome_age/ONCO/intrinsic_subtypes/result/onco.unique.resubmit.Rdata")
+submit <- rep("c",length(onco.unique.resubmit)*15)
+temp <- 1
+for(i in 1:length(onco.unique.resubmit)){
+  for(j in 1:15){
+    submit[temp] <- paste0("Rscript /spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/code/intrinsic_subtype_onco.R ",onco.unique.resubmit[i]," ",j)
+    temp <- temp+1
+  }
+  
+}
+write.table(submit,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/code/onco_resubmit.sh",
+            row.names=F,quote=F,col.names=F)
