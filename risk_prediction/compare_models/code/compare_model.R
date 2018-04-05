@@ -75,6 +75,7 @@ log.odds.intrinsic.all <- matrix(0,n.snp,M)
 log.odds.intrinsic.dic.all <- matrix(0,n.snp,M)
 log.odds.intrinsic.eb.all <- matrix(0,n.snp,M)
 log.odds.intrinsic.la.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.tree.all <- matrix(0,n.snp,M)
 
 for(i1 in 1:n.snp){
   load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
@@ -84,19 +85,22 @@ for(i1 in 1:n.snp){
   log.odds.intrinsic.dic.all[i1,] <- diag(all.model.result[[4]])
   log.odds.intrinsic.eb.all[i1,] <- diag(all.model.result[[5]])
   log.odds.intrinsic.la.all[i1,] <- diag(all.model.result[[6]])
+  log.odds.intrinsic.tree.all[i1,] <- diag(all.model.result[[8]])
 }
 
-save(temp,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp.Rdata")
+#save(temp,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp.Rdata")
 subtypes.names <- c("Luminal A","Luminal B",
                     "Luminal B HER2Neg",
                     "HER2 Enriched",
                     "Triple Negative")
 
-
-auc.summary <- matrix("c",5,5)
-auc.com <- matrix(0,5,5)
-coeff <- matrix(0,5,5)
-coeff_95 <- matrix("c",5,5)
+#########
+n.method <- 6
+n.subtype <- 5
+auc.summary <- matrix("c",n.subtype,n.method)
+auc.com <- matrix(0,n.subtype,n.method)
+coeff <- matrix(0,n.subtype,n.method)
+coeff_95 <- matrix("c",n.subtype,n.method)
 
 
 
@@ -119,12 +123,14 @@ for(i in 1:5){
   log.odds.intrinsic.dic <-  log.odds.intrinsic.dic.all[,i]
   log.odds.intrinsic.eb <- log.odds.intrinsic.eb.all[,i]
   log.odds.intrinsic.la <- log.odds.intrinsic.la.all[,i]
+  log.odds.intrinsic.tree <-  log.odds.intrinsic.tree.all[,i]
   auc.cal.result <- GenerateAuc_Cal(
     log.odds.standard,
     log.odds.intrinsic,
     log.odds.dic,
     log.odds.intrinsic.eb,
     log.odds.intrinsic.la,
+    log.odds.intrinsic.tree,
     x.test,
     y.test
   )    
@@ -134,6 +140,7 @@ for(i in 1:5){
       log.odds.dic,
       log.odds.intrinsic.eb,
       log.odds.intrinsic.la,
+      log.odds.intrinsic.tree,
       x.test,
       y.test
     )
@@ -146,42 +153,42 @@ for(i in 1:5){
   cal.result <- auc.cal.result[[3]]
   sensitivities <-   as.vector(auc.cal.result[[4]])
   specificities <- as.vector(auc.cal.result[[5]])
-  n <- length(sensitivities)/5
-  method <- c(rep("standard analysis",n),
-           rep("intrinsic subtypes",n),
-           rep("dichotomized analysis",n),
-           rep("Empirical Bayesian (Normal Prior)",n),
-           rep("Empirical Bayesian (Laplace Prior)",n))
-  n <- 10
-  quantile <- rep(c(1:10),5)
-  method.cal <- c(rep("Standard analysis",n),
-                  rep("Intrinsic subtypes",n),
-                  rep("Dichotomized analysis",n),
-                  rep("Empirical Bayesian (Normal Prior)",n),
-                  rep("Empirical Bayesian (Laplace Prior)",n))
-  data.auc <- data.frame(sensitivities,specificities,method)
-  png(filename=paste0(subtypes.names[i]," risk prediction.png"),
-      width=8,height=6,units="in",res=300)
-      print({
-        p <-  ggplot(data= data.auc,aes(x=1-specificities,y=sensitivities,col=method))+geom_line()+style_roc()+ggtitle(paste0(subtypes.names[i]," AUC plot"))
-                      p       
-      }
-        
-      )
-  dev.off()
-  data.cal <- data.frame(calresult = as.vector(t(cal.result)),
-                         quantile = quantile,
-                         method= method.cal)
-  png(filename=paste0(subtypes.names[i]," calibration.png"),
-      width=8,height=6,units="in",res=300)
-  print({
-  p <-   ggplot(data= data.cal,aes(x= quantile,y=calresult,col=method))+geom_line()+ggtitle(paste0(subtypes.names[i]," calibration"))+ylab("Odds ratio")+xlab("risk quantile")+
-      scale_x_continuous(breaks=c(1:10))
-  p
-    
-  })
-  
-  dev.off()
+  # n <- length(sensitivities)/5
+  # method <- c(rep("standard analysis",n),
+  #          rep("intrinsic subtypes",n),
+  #          rep("dichotomized analysis",n),
+  #          rep("Empirical Bayesian (Normal Prior)",n),
+  #          rep("Empirical Bayesian (Laplace Prior)",n))
+  # n <- 10
+  # quantile <- rep(c(1:10),5)
+  # method.cal <- c(rep("Standard analysis",n),
+  #                 rep("Intrinsic subtypes",n),
+  #                 rep("Dichotomized analysis",n),
+  #                 rep("Empirical Bayesian (Normal Prior)",n),
+  #                 rep("Empirical Bayesian (Laplace Prior)",n))
+  # data.auc <- data.frame(sensitivities,specificities,method)
+  # png(filename=paste0(subtypes.names[i]," risk prediction.png"),
+  #     width=8,height=6,units="in",res=300)
+  #     print({
+  #       p <-  ggplot(data= data.auc,aes(x=1-specificities,y=sensitivities,col=method))+geom_line()+style_roc()+ggtitle(paste0(subtypes.names[i]," AUC plot"))
+  #                     p       
+  #     }
+  #       
+  #     )
+  # dev.off()
+  # data.cal <- data.frame(calresult = as.vector(t(cal.result)),
+  #                        quantile = quantile,
+  #                        method= method.cal)
+  # png(filename=paste0(subtypes.names[i]," calibration.png"),
+  #     width=8,height=6,units="in",res=300)
+  # print({
+  # p <-   ggplot(data= data.cal,aes(x= quantile,y=calresult,col=method))+geom_line()+ggtitle(paste0(subtypes.names[i]," calibration"))+ylab("Odds ratio")+xlab("risk quantile")+
+  #     scale_x_continuous(breaks=c(1:10))
+  # p
+  #   
+  # })
+  # 
+  # dev.off()
 }
 rownames(auc.summary) <- c("Luminal A","Luminal B",
                            "Luminal B HER2Neg",
