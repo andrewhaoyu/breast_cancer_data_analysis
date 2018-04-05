@@ -86,6 +86,7 @@ for(i1 in 1:n.snp){
   log.odds.intrinsic.la.all[i1,] <- diag(all.model.result[[6]])
 }
 
+save(temp,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp.Rdata")
 subtypes.names <- c("Luminal A","Luminal B",
                     "Luminal B HER2Neg",
                     "HER2 Enriched",
@@ -399,26 +400,35 @@ for(i in 1:2){
   conditional.m <- melt(conditional.pro)
   
   emprical.pro.new <- crosstaub_new(data.train.clean[,i],prs.sd)
-  emprical.pro.new.m <- melt(emprical.pro.new)  
+  emprical.pro.new.m <- melt(emprical.pro.new)
+  upper <- 0.04
+  emprical.pro.new.m$value[emprical.pro.new.m$value>=upper] <- upper
   #write.csv(emprical.pro,file=paste0(plot.subtype.name[i],"vs standard PRS probability.csv"))
   
   
   
   png(filename=paste0(plot.subtype.name[i],"_vs_standard.png"),
       width=8,height=6,units="in",res=300)
-  ggplot(data.train.clean,aes(x= standard_prs,y=data.train.clean[,i]))+geom_point()+ggtitle(paste0("PRS" ,plot.subtype.name[i], " vs Standard analysis"))+
-    xlab("Standard PRS")+
-    ylab(paste0(plot.subtype.name[i]," PRS"))
+  print(
+    {p <- ggplot(data.train.clean,aes(x= standard_prs,y=data.train.clean[,i]))+geom_point()+ggtitle(paste0("PRS" ,plot.subtype.name[i], " vs Standard analysis"))+
+      xlab("Standard PRS")+
+      ylab(paste0(plot.subtype.name[i]," PRS"))
+    p
+    }
+  )
   dev.off()
   
   png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap_absolute.png"),
       width=8,height=6,units="in",res=300)
-  ggplot(emprical.pro.new.m, aes(group2, group1)) + 
-    geom_tile(aes(fill = value),colour = "white") + 
-    scale_fill_gradient(limits=c(0,0.08),low = "white",  high = "dodgerblue4")+
-    xlab("Standard PRS percentile")+
-    ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
-    ggtitle( paste0(plot.subtype.name[i]," vs Standard Analysis"))
+  print({
+    ggplot(emprical.pro.new.m, aes(group2, group1)) + 
+      geom_tile(aes(fill = value),colour = "white") + 
+      scale_fill_gradient(limits=c(0,0.04),low = "white",  high = "dodgerblue4")+
+      xlab("Standard PRS percentile")+
+      ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
+      ggtitle( paste0(plot.subtype.name[i]," vs Standard Analysis"))
+    p
+  })
   dev.off()
   
   
@@ -426,24 +436,30 @@ for(i in 1:2){
   
   png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap.png"),
       width=8,height=6,units="in",res=300)
-  ggplot(conditional.m, aes(group2, group1)) + 
-    geom_tile(aes(fill = value),colour = "white") + 
-    scale_fill_gradient(limits=c(0,0.7),low = "white",  high = "dodgerblue4")+
-    xlab("Standard PRS percentile")+
-    ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
-    ggtitle( paste0(plot.subtype.name[i]," vs Standard"))
-  dev.off()
+  print({
+  p <-  ggplot(conditional.m, aes(group2, group1)) + 
+      geom_tile(aes(fill = value),colour = "white") + 
+      scale_fill_gradient(limits=c(0,0.7),low = "white",  high = "dodgerblue4")+
+      xlab("Standard PRS percentile")+
+      ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
+      ggtitle( paste0(plot.subtype.name[i]," vs Standard"))
+    dev.off()
+    p
+  })
   
   
   png(filename=paste0(plot.subtype.name[i],"_vs_standard_heatmap_high.png"),
       width=8,height=6,units="in",res=300)
-  ggplot(high.emprical.pro.m, aes(group2, group1)) + 
-    geom_tile(aes(fill = value),colour = "white") + 
-    scale_fill_gradient(low = "white",  high = "dodgerblue4")+
-    xlab("Standard PRS percentile")+
-    ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
-    ggtitle( paste0(plot.subtype.name[i]," vs Standard"))
-  dev.off()
+  print({
+    p <- ggplot(high.emprical.pro.m, aes(group2, group1)) + 
+      geom_tile(aes(fill = value),colour = "white") + 
+      scale_fill_gradient(low = "white",  high = "dodgerblue4")+
+      xlab("Standard PRS percentile")+
+      ylab( paste0(plot.subtype.name[i]," PRS percentile"))+
+      ggtitle( paste0(plot.subtype.name[i]," vs Standard"))
+    dev.off()
+  p  
+  })
   
   
   

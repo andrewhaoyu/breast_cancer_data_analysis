@@ -65,6 +65,7 @@ sigma.intrinsic.result <- matrix(0,6,M^2)
 log.odds.dic.result <-  matrix(0,6,M)
 log.odds.intrinsic.eb <-  matrix(0,6,M)
 log.odds.intrinsic.la <-  matrix(0,6,M)
+log.odds.tree <- matrix(0,6,M)
 
 heter.variance.estiamte <- rep(0,6)
 
@@ -132,29 +133,29 @@ for(i in 1:6){
   logodds <- meta.result[[1]]
   sigma <- meta.result[[2]]
   library(mvtnorm)
-  classtree <- function(logodds,sigma){
-    M <- length(logodds)
-    pairs <- combn(M,2)
-    pos <- ncol(pairs)
-    logodds.pair <- matrix(0,pos,M)
-    dis <- rep(0,pos)
-    ##############check the distance between subtypes
-    for(i in 1:pos){
-      dis[i] <- PairDis(logodds[pairs[,i]],sigma[pairs[,i],pairs[,i]])
-    }
-    #############find the best distance
-    idx.col <- which.min(dis)
-    
-    
-        
-  }
-  
-  PairDis <- function(logodds,sigma){
-    trans <- c(1,-1)
-    z = abs(trans%*%logodds)/sqrt(t(trans)%*%sigma%*%trans)
-    return(z)
-  }
-  
+  # classtree <- function(logodds,sigma){
+  #   M <- length(logodds)
+  #   pairs <- combn(M,2)
+  #   pos <- ncol(pairs)
+  #   logodds.pair <- matrix(0,pos,M)
+  #   dis <- rep(0,pos)
+  #   ##############check the distance between subtypes
+  #   for(i in 1:pos){
+  #     dis[i] <- PairDis(logodds[pairs[,i]],sigma[pairs[,i],pairs[,i]])
+  #   }
+  #   #############find the best distance
+  #   idx.col <- which.min(dis)
+  #   
+  #   
+  #       
+  # }
+  # 
+  # PairDis <- function(logodds,sigma){
+  #   trans <- c(1,-1)
+  #   z = abs(trans%*%logodds)/sqrt(t(trans)%*%sigma%*%trans)
+  #   return(z)
+  # }
+  # 
   
   
   
@@ -186,6 +187,8 @@ for(i in 1:6){
     log.odds.standard.result[i],
     heter.variance.estiamte [i]
   )
+  log.odds.tree <- tree_function(meta.result[[1]],
+                                 meta.result[[2]])
   
 }
 
@@ -202,7 +205,8 @@ all.model.result <- list(log.odds.standard.result
                          log.odds.intrinsic.la
                          =log.odds.intrinsic.la,
                          heter.variance.estiamte
-                         =heter.variance.estiamte)
+                         =heter.variance.estiamte,
+                         log.odds.tree=log.odds.tree)
 
 save(all.model.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
 
