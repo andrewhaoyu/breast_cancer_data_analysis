@@ -187,7 +187,7 @@ for(i in 1:6){
     log.odds.standard.result[i],
     heter.variance.estiamte [i]
   )
-  log.odds.tree <- tree_function(meta.result[[1]],
+  log.odds.tree[i,] <- tree_function(meta.result[[1]],
                                  meta.result[[2]])
   
 }
