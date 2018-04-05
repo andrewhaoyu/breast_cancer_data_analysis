@@ -16,3 +16,14 @@ for(i1 in 1:564){
 }
 missingid <- missingid[1:temp,]
 icog.unique.resubmit <- unique(missingid[,1])
+submit <- rep("c",length(icog.unique.resubmit)*15)
+temp <- 1
+for(i in 1:length(icog.unique.resubmit)){
+  for(j in 1:15){
+    submit[temp] <- paste0("Rscript /spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/code/intrinsic_subtype_icog.R ",icog.unique.resubmit[i]," ",j)
+    temp <- temp+1
+  }
+  
+}
+write.table(submit,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/code/icog_resubmit.sh",
+            row.names=F,quote=F,col.names=F)
