@@ -61,7 +61,7 @@ if(length(idx.check)==1){
 
 x.covar1 <- cbind(data1[,c(5:14)],data1[,idx.known])
 
-gene1 <- discovery.snp.icog[,check.id[i1,1]]
+gene1 <- discovery.snp.icog[,check.id[i1,1]-10]
 age <- data1[,204]
 x.covar1 <- cbind(x.covar1,age)
 idx.complete <- which(age!=888)
@@ -94,7 +94,7 @@ x.covar2 <- cbind(data2[,c(5:14)],data2[,idx.known])
 age <- data2[,204]
 x.covar2 <- cbind(x.covar2,age)
 idx.complete <- which(age!=888)
-gene2 <- discovery.snp.onco[,check.id[i1,1]]
+gene2 <- discovery.snp.onco[,check.id[i1,1]-10]
 y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
 x.covar2 <- x.covar2[idx.complete,]
 gene2 <- gene2[idx.complete]
@@ -117,7 +117,7 @@ colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 
 country1 <- as.factor(data1[,3])
 x.covar1 <- cbind(data1[,c(5:14)],data1[,idx.known],country1)
-gene1 <- discovery.snp.icog[,check.id[i1,1]]
+gene1 <- discovery.snp.icog[,check.id[i1,1]-10]
 
 idx.check <- which(check.data[,1]==check.data[2*i1-1,1])
 if(length(idx.check)==1){
@@ -151,7 +151,7 @@ if(length(idx.check)==1){
 }
 country2 <- as.factor(data2[,4])
 x.covar2 <- cbind(data2[,c(5:14)],data2[,idx.known],country2)
-gene2 <- discovery.snp.onco[,check.id[i1,1]]
+gene2 <- discovery.snp.onco[,check.id[i1,1]-10]
 #age <- data2[,204]
 
 p.value.standard <- two_data_standard_anlysis(y.pheno.mis1,
