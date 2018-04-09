@@ -1,5 +1,6 @@
 data/
 .DS_Store
+/discovery_SNP/conditional_analysis_novel/result
 /known_SNPs/known_SNPs_analysis_revised/additive_model/result
 /known_SNPs/known_SNPs_analysis_G_revised/additive_model/result
 .Rproj.user
