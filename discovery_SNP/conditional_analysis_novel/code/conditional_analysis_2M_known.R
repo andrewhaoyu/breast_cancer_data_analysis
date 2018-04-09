@@ -1,5 +1,8 @@
 #install_github("andrewhaoyu/bcutility",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+args = commandArgs(trailingOnly = T)
+i1 = as.numeric(args[[1]])
 library(data.table)
+library(bcutility)
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 discovery_snp <- as.data.frame(fread("./data/discovery_snps_annotated_clean.csv",header=T))
 fine_mapping <- as.data.frame(fread("./data/fine_mapping_annotated_clean.csv"))
@@ -27,7 +30,7 @@ for(i in 11:28){
   }
 }
 
-write.csv(check.data,file="./data/check_SNPs.csv",row.names = F,col.names = T)
+#write.csv(check.data,file="./data/check_SNPs.csv",row.names = F,col.names = T)
 
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
@@ -161,3 +164,5 @@ p.value.standard <- two_data_standard_anlysis(y.pheno.mis1,
 
 result <- list(p.value.two.stage.model=p.value.two.stage.model,
                p.value.standard= p.value.standard)
+
+save(result,file=paste0("./discovery_SNP/conditional_analysis_novel/novel_conditional_reuslt",i1,".Rdata"))
