@@ -98,7 +98,9 @@ gene2 <- discovery.snp.onco[,check.id[i1,1]-10]
 y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
 x.covar2 <- x.covar2[idx.complete,]
 gene2 <- gene2[idx.complete]
-
+#gene.known2 <- x.covar2[,11]
+#idx.control <- which(y.pheno.mis2[,1]==0)
+#cor(gene2[idx.control],gene.known2[idx.control])^2
 z.standard <- GenerateZstandard(y.pheno.mis1)
 z.random.support <- cbind(1,z.standard[,1])
 z.random.test <- z.standard[,2:4]
@@ -166,3 +168,5 @@ result <- list(p.value.two.stage.model=p.value.two.stage.model,
                p.value.standard= p.value.standard)
 
 save(result,file=paste0("./discovery_SNP/conditional_analysis_novel/novel_conditional_reuslt",i1,".Rdata"))
+
+
