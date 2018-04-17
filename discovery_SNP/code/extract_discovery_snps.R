@@ -1,5 +1,5 @@
 discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary.csv",header=T)
-#
+
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 snp.icogs.extract.id <- as.character(discovery_snp$SNP.ICOGS)
@@ -8,7 +8,7 @@ snp.onco.extract.id <- as.character(discovery_snp$SNP.ONCO)
 write.table(snp.onco.extract.id,file = paste0("./discovery_SNP/result/extract_id_onco_discovery.txt"),quote = F,row.names=F)
 
 
-/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/extract_id_icog_discovery.txt
+# /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/extract_id_icog_discovery.txt
 
 Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/"
 Files <- dir(Filesdir,pattern="icogs_merged_b1_12.",full.names=T)
