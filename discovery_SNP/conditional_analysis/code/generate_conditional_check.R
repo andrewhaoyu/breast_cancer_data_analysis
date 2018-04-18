@@ -272,12 +272,26 @@ x.all.mis.icog.4 <- cbind(near.known.icog,known.snp.value.icog,first.snp.value.i
 x.all.mis.onco.4 <- cbind(near.known.onco,known.snp.value.onco,first.snp.value.onco)
 
 
-conditional.check.data <- list(x.all.mis.icog.1,
-                               x.all.mis.onco.1,
-                               x.all.mis.icog.2,
-                               x.all.mis.onco.2,
-                               x.all.mis.icog.3,
-                               x.all.mis.onco.3,
-                               x.all.mis.icog.4,
-                               x.all.mis.onco.4)
+conditional.check.data <- list(x.all.mis.icog.1=
+                                 x.all.mis.icog.1,
+                               x.all.mis.onco.1=
+                                 x.all.mis.onco.1,
+                               x.all.mis.icog.2=
+                                 x.all.mis.icog.2,
+                               x.all.mis.onco.2=
+                                 x.all.mis.onco.2,
+                               x.all.mis.icog.3=
+                                 x.all.mis.icog.3,
+                               x.all.mis.onco.3=
+                                 x.all.mis.onco.3,
+                               x.all.mis.icog.4=
+                                 x.all.mis.icog.4,
+                               x.all.mis.onco.4=
+                                 x.all.mis.onco.4,
+                               y.pheno.mis1=
+                                 y.pheno.mis1,
+                               y.pheno.mis2=y.pheno.mis2,
+                               x.covar.mis1=x.covar.mis1,
+                               x.covar.mis2=x.covar.mis2
+                               )
 save(conditional.check.data,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.check.data.Rdata")
