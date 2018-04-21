@@ -23,8 +23,8 @@ setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 n <- 109713
 snpvalue <- rep(0,n)
-subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
-
+#subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
+subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt"
 z.design <- matrix(c(
   c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
@@ -41,7 +41,8 @@ colnames(z.design) <- c("Luminial A","Luminal B",
                         "HER2 Enriched",
                         "Triple Negative")
 
-Icog.order <- read.table(gzfile(subject.file))
+#Icog.order <- read.table(gzfile(subject.file))
+Icog.order <- read.table(subject.file)
 library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)

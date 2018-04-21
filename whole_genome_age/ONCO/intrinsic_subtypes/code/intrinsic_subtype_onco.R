@@ -28,8 +28,10 @@ z.design <- matrix(c(
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
 rowSums(z.design)
-subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
-onco.order <- read.table(gzfile(subject.file))
+#subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
+subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt"
+#onco.order <- read.table(gzfile(subject.file))
+onco.order <- read.table(subject.file)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
