@@ -10,14 +10,14 @@ library(bc2)
 dis <- 2*10^6
 check.data <- NULL
 check.id <- NULL
-for(i in 11:28){
+for(i in 1:28){
   pos <- discovery_snp$position[i]
   CHR <- discovery_snp$CHR[i]
   for(j in 1:178){
     pos.known <- fine_mapping$position[j]
     CHR.known <- fine_mapping$CHR[j]
     if(CHR==CHR.known&pos>=(pos.known-dis)&pos<=(pos.known+dis)){
-      print(c(i-10,j))
+      print(c(i,j))
       check.id <- rbind(check.id,c(i,j))
       temp1 <- discovery_snp[i,c(1,3,2)]
       colnames(temp1) <- c("SNP","CHR","Position")
@@ -64,6 +64,7 @@ x.covar1 <- cbind(data1[,c(5:14)],data1[,idx.known])
 gene1 <- discovery.snp.icog[,check.id[i1,1]-10]
 age <- data1[,204]
 x.covar1 <- cbind(x.covar1,age)
+idx.mis <- which(age==888)
 idx.complete <- which(age!=888)
 y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
 x.covar1 <- x.covar1[idx.complete,]

@@ -212,4 +212,5 @@ for(i in 1:inner.size){
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco",i1,"_",i2))
-save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit",i1,"_",i2))
+#save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit",i1,"_",i2))
+save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit",i1,"_",i2))
