@@ -88,7 +88,7 @@ num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 #   }
 # )
 # size = 5
-size = 15
+size = 1000
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
