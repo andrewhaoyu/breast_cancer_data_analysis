@@ -159,13 +159,22 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         score_result[temp,] <- 0
         infor_result[temp,] <- as.vector(diag(5))
       }else{
-        Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-        z.standard <- Heter.result.Onco[[12]]
-        M <- nrow(z.standard)
-        number.of.tumor <- ncol(z.standard)
-        log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
-        nparm <- length(Heter.result.Onco[[1]])
-        sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+        tryCatch({
+          Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+          z.standard <- Heter.result.Onco[[12]]
+          M <- nrow(z.standard)
+          number.of.tumor <- ncol(z.standard)
+          log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
+          nparm <- length(Heter.result.Onco[[1]])
+          sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+        }
+          ,
+          error = function(e){
+            log.odds.onco = rep(0,1+number.of.tumor);
+            sigma.log.odds.onco <- diag(1+number.of.tumor)
+          }
+          
+        )
         
         score_result[temp,]  <- log.odds.onco
         infor_result[temp,] <- as.vector(sigma.log.odds.onco)
