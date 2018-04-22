@@ -65,7 +65,7 @@ if(i1<=28){
   y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
   #x.all.mis1 <- x.all.mis1[idx.complete,]
   x.covar.mis1 <- x.covar.mis1[idx.complete,]
-  colnames(x.all.mis1)[1] <- "gene"
+  #colnames(x.all.mis1)[1] <- "gene"
   
   
   Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
