@@ -132,7 +132,7 @@ if(i1<=28){
   
   test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
-  save(heter.result,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_",i1,".Rdata"))
+  save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_",i1,".Rdata"))
   
   
   
