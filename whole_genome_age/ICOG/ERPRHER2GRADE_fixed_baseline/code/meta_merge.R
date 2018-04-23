@@ -63,6 +63,7 @@ save(meta_result_shared_1p_filter,file="/spin1/users/zhangh24/breast_cancer_data
 
 
  new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
+ new_filter <- new_filter[1:22,]
  new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 
 idx_cut <- NULL

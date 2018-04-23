@@ -14,7 +14,7 @@ if(i1==1){
   manhattan(gwas_result,suggestiveline = F, cex.axis = 2,main=paste0(" Global Test Association Manhattan Plot"),ylim=c(0,20))
   dev.off()
   png(paste0("./result/plot/qq.png"),width = 7.635,height =4.7175,units = "in",res = 600)
-  qq(gwas_result$P,main=paste0(" Global Test Association Manhattan QQ Plot"))
+  qq(gwas_result$P,main=paste0(" Global Test Association Manhattan QQ Plot"),ylim=c(0,20),xlim=c(0,8))
   dev.off()
   
 }else if(i1==2){
