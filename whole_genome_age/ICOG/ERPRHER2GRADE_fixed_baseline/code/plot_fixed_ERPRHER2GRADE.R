@@ -49,7 +49,9 @@ if(i1==1){
   png(paste0("./result/plot/man_filter_Montse.png"),width = 7.635,height =4.7175,units = "in",res = 600)
   manhattan(gwas_result,suggestiveline = F, cex.axis = 2,main=paste0(" Global Test Association Manhattan Plot"),ylim=c(0,20))
   dev.off()
-  
+  png(paste0("./result/plot/qq_filter_Ju.png"),width = 7.635,height =4.7175,units = "in",res = 600)
+  qq(gwas_result$P,main=paste0(" Global Test Association Manhattan QQ Plot"),ylim=c(0,15),xlim=c(0,7))
+  dev.off()
 }
 
 
