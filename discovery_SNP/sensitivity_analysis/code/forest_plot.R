@@ -9,14 +9,17 @@ n.coun <- 20
 all.countries[n.coun+1] <- "Summary"
 
 discover.casecase <- read.csv("./data/discovery_snp_casecase.csv",header = T)
+new.order <- c(1,9,15,13,2,6,5,8,17,4,10,18,
+                 3,14,7,19)
+discover.casecase <- discover.casecase[,]
 
 library(forestplot)
 plot.list <- list()
 
-for(i1 in 1:19){
+for(i1 in 1:length(new.order)){
   print(i1)
-  data <- sensitivity.result[[i1]]
-  data <- rbind(data,discover.casecase[i1,2:ncol(discover.casecase)])
+  data <- sensitivity.result[[new.order[i1]]]
+  data <- rbind(data,discover.casecase[new.order[i1],2:ncol(discover.casecase)])
   all.countries <- factor(all.countries,levels=rev(c(level1,"Summary")))
   levels(all.countries)
   
@@ -52,7 +55,7 @@ for(i1 in 1:19){
     #scale_y_continuous(limits=c(0.90,1.1))+
     xlab("Removed Countries")+
     facet_grid(.~tumor)+
-    ggtitle(paste0("Forest plot of ", discover.casecase[i1,1])
+    ggtitle(paste0("Forest plot of ", discover.casecase[new.order[i1],1])
     )+
     theme(plot.title = element_text(hjust=0.5))
   plot.list[[i1]] <- fp
@@ -62,33 +65,28 @@ for(i1 in 1:19){
 i1 = 3
 plot.list[[i1]]
 library(gridExtra)
-width = 21
-height = 29
-png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot1.png",width=21,
-    height= 29, units="cm", res= 600)
-grid.arrange(plot.list[[1]],plot.list[[2]],plot.list[[3]],nrow=3)
+width = 36
+height = 25
+png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot1.png",width=width,
+    height= height, units="cm", res= 600)
+grid.arrange(plot.list[[1]],plot.list[[2]],plot.list[[3]],plot.list[[4]],plot.list[[5]],plot.list[[6]],nrow=3,ncol=2)
 dev.off()
 png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot2.png",width=width,
     height= height, units="cm", res= 600)
-grid.arrange(plot.list[[4]],plot.list[[5]],plot.list[[6]],nrow=3)
+grid.arrange(plot.list[[7]],plot.list[[8]],plot.list[[9]],plot.list[[10]],plot.list[[11]],plot.list[[12]],nrow=3,ncol=2)
 dev.off()
 png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot3.png",width=width,
-    height= height, units="cm", res= 600)
-grid.arrange(plot.list[[7]],plot.list[[8]],plot.list[[9]],nrow=3)
+    height= (height*2/3), units="cm", res= 600)
+grid.arrange(plot.list[[13]],plot.list[[14]],plot.list[[15]],plot.list[[16]],nrow=2,ncol=2)
 dev.off()
-png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot4.png",width=width,
-    height= height, units="cm", res= 600)
-grid.arrange(plot.list[[10]],plot.list[[11]],plot.list[[12]],nrow=3)
-dev.off()
-png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot5.png",width=width,
-    height= height, units="cm", res= 600)
-grid.arrange(plot.list[[13]],plot.list[[14]],plot.list[[15]],nrow=3)
+
+
 dev.off()
 png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot6.png",width=width,
-    height= height, units="cm", res= 600)
-grid.arrange(plot.list[[16]],plot.list[[17]],plot.list[[18]],nrow=3)
+    height= height/3, units="cm", res= 600)
+plot.list[[16]]
 dev.off()
-png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot7.png",width=(width),
-    height= (height/3), units="cm", res= 600)
-plot.list[[19]]
-dev.off()
+# png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot7.png",width=(width),
+#     height= (height/3), units="cm", res= 600)
+# plot.list[[19]]
+# dev.off()
