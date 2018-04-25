@@ -99,7 +99,15 @@ for(i in 1:length(Files)){
   print(i)
   k = 1
   file_load = paste0("intrinsic_subytpe_icog_resubmit",idx[i],"_",k)
-  if(file_load%in%result_files){
+  if(idx[i]==413){
+    for(k in 1:1000){
+      load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit",idx[i],"_",k))
+      temp <- nrow(result[[2]])
+      score[num.total+(1:temp),] <- result[[2]]
+      infor[num.total+(1:temp),] <- result[[3]]
+      num.total <- temp+num.total
+    }
+  }else if(file_load%in%result_files){
     for(k in 1:15){
       load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit",idx[i],"_",k))
       temp <- nrow(result[[2]])
@@ -184,7 +192,7 @@ icog_result_casecase <- data.frame(icog_info,score,infor,CHR)
 
 
 
-save(icog_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/Icog_result_casecase.Rdata")
+save(icog_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis//whole_genome_age/ICOG/Intrinsic_subtypes/result/Icog_result_intrinsic_subtype.Rdata")
 # icog_result_baseline <- data.frame(icog_info,score_baseline,infor_baseline,CHR)
 # save(icog_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
 # print(1)
