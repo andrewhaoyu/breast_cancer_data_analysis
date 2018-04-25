@@ -11,7 +11,7 @@ if(i1==1){
   gwas_result <- data.frame(SNP=as.character(meta_result_shared_1p$rs_id),CHR=meta_result_shared_1p$CHR,BP=meta_result_shared_1p$position,
                             P=pvalue,stringsAsFactors =F)
 
-  png(paste0("./result/plot/man.png"),width = 7.635,height =4.7175,units = "in",res = 600)
+  png(paste0("./result/plot/man.png"),width = 7.635,height =4.7175,units = "in",res = 600)lr
   manhattan(gwas_result,suggestiveline = F, cex.axis = 2,main=paste0(" Global Test Association Manhattan Plot"),ylim=c(0,20))
   dev.off()
   png(paste0("./result/plot/qq.png"),width = 7.635,height =4.7175,units = "in",res = 600)

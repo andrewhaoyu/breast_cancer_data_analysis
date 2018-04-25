@@ -1,5 +1,5 @@
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/ICOG/result/')
-load("./breast_cancer_ldsc/recompleteglmlogoddsratio/ldsc_result_ONCO.rda")
+load("./breast_cancer_ldsc/meta_ldsc_result.rda")
 covariance.matrix <- ldsc_result[[1]]
 covariance.matrix.se <- ldsc_result[[3]]
 correlation.matrix <- ldsc_result[[2]]
@@ -19,7 +19,7 @@ covariance.matrix.transform <- log(covariance.matrix)
 covariance.matrix.transform.low <- covariance.matrix.transform - 1.96*covariance.matrix.se/covariance.matrix
 covariance.matrix.transform.high <- covariance.matrix.transform + 1.96*covariance.matrix.se/covariance.matrix
 covariance.matrix.high <- exp(covariance.matrix.transform.high)
-covariance.matrix.transform.low  <- exp(covariance.matrix.transform.low)
+covariance.matrix.low  <- exp(covariance.matrix.transform.low)
 covariance.matrix.high <- round(covariance.matrix.high,places)
 covariance.matrix.low <- round(covariance.matrix.low,places)
 
@@ -81,8 +81,8 @@ library(gplots)
 
 correlation.matrix <- as.matrix(as.data.frame(fread("genetic_correlation_meta.csv")[,1:5]))
 rownames(correlation.matrix) <- colnames(correlation.matrix)
-pal.breaks <- seq(0,1,0.01)
-col <- colorRampPalette(c("dodgerblue4","white","red"))(length(pal.breaks)-1)
+pal.breaks <- seq(0.4,1,0.01)
+col <- colorRampPalette(c("white","red"))(length(pal.breaks)-1)
 correlation.matrix.icog <- correlation.matrix
 # heatmap(correlation.matrix,col = col,symm=T,margins=c(10,4),key.title="",key.ylab="",cexRow=1,cexCol=1)
 png(filename="./meta_heatmap.png",width=10,heigh=10,units="in",res=300)
