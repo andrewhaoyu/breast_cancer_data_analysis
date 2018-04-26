@@ -76,7 +76,7 @@ result.dir <- './whole_genome_age/ICOG/Intrinsic_subtypes/result/'
 
 
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result.Rdata")
-rs_id <- icog_result$rs_id
+#rs_id <- icog_result$rs_id
 num <- nrow(icog_result)
 
 # num.total <- 0
@@ -90,35 +90,50 @@ number.of.tumor <- 4
 score <- matrix(0,nrow=num,ncol = (number.of.tumor+1))
 infor <- matrix(0,nrow = num,ncol = (number.of.tumor+1)^2)
 freq.all <- rep(0,num)
+rs_id <- rep("c",num)
 
 
 
 
+resubmit_id <- matrix(0,100,2)
+resubmit_temp <- 0
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
-  k = 1
-  file_load = paste0("intrinsic_subytpe_icog_resubmit",idx[i],"_",k)
+  file_load = paste0("intrinsic_subytpe_icog_resubmit",idx[i],"_",1)
   if(idx[i]==413){
     for(k in 1:1000){
       load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit",idx[i],"_",k))
       temp <- nrow(result[[2]])
+      rs_id[num.total+(1:temp)] <- result[[1]]
       score[num.total+(1:temp),] <- result[[2]]
       infor[num.total+(1:temp),] <- result[[3]]
       num.total <- temp+num.total
+      if(sum(result[[1]]=="c")!=0){
+        resubmit_temp <- resubmit_temp+1
+        resubmit_id[resubmit_temp,1] <- idx[i]
+        resubmit_id[resubmit_temp,2] <- k
+      }
     }
   }else if(file_load%in%result_files){
     for(k in 1:15){
       load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit",idx[i],"_",k))
       temp <- nrow(result[[2]])
+      rs_id[num.total+(1:temp)] <- result[[1]]
       score[num.total+(1:temp),] <- result[[2]]
       infor[num.total+(1:temp),] <- result[[3]]
       num.total <- temp+num.total
+      if(sum(result[[1]]=="c")!=0){
+        resubmit_temp <- resubmit_temp+1
+        resubmit_id[resubmit_temp,1] <- idx[i]
+        resubmit_id[resubmit_temp,2] <- k
+      }
     }
   }else{
     for(k in 1:5){
       load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog",idx[i],"_",k))
       temp <- nrow(result[[2]])
+      rs_id[num.total+(1:temp)] <- result[[1]]
       score[num.total+(1:temp),] <- result[[2]]
       infor[num.total+(1:temp),] <- result[[3]]
       # for(j in 1:temp){
@@ -129,20 +144,30 @@ for(i in 1:length(Files)){
       #   print(c(i,k))
       # }
       num.total <- temp+num.total
-      
+      if(sum(result[[1]]=="c")!=0){
+        resubmit_temp <- resubmit_temp+1
+        resubmit_id[resubmit_temp,1] <- idx[i]
+        resubmit_id[resubmit_temp,2] <- k
+      }
   }
-    
+   
     
   }
 
-  
+
   
   
 }
+resubmit_id <- resubmit_id[1:resubmit_temp,]
+unique(resubmit_id[,1])
 
 
 
-
+k <- 1
+load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog",idx[i],"_",k))
+idx.try <- which(result[[1]]=="c")
+print(length(idx.try))
+#try <- merge(icog_info,rs_id,by.x=rs_id,by.y=rs_id,all=T)
 
 
 
@@ -182,6 +207,7 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHE
 # icog_info <- cbind(icog_info,CHR)
 # save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
 all.equal(icog_info$rs_id,rs_id)
+idx.diff <- which(icog_info$rs_id!=rs_id)
 CHR <- icog_info[,11]
 icog_info <- icog_info[,1:10]
 
