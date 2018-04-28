@@ -5,6 +5,7 @@ setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/E
 library(qqman)
 if(i1==1){
   load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
+
   pvalue <- meta_result_shared_1p[,15]
   idx <- which(pvalue<=1.0e-20)
   pvalue[idx] <- 1.0e-20
