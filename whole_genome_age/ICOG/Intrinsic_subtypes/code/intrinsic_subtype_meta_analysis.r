@@ -1,9 +1,12 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_intrinsic_subtype.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/Icog_result_intrinsic_subtype.Rdata")
-second.num <- 3
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_shared.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_shared.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_only_shared_1p.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_only_shared_1p.Rdata")
+
+second.num <- 5
 
 icog_result_shared_1p_casecase <- icog_result_shared_1p
 onco_result_shared_1p_casecase <- onco_result_shared_1p
@@ -18,10 +21,15 @@ icog_score_infor_icog_only_casecase <- icog_result_only_shared_1p_casecase[,11:(
 
 onco_score_infor_icog_only_sudo_casecase <- icog_score_infor_icog_only_casecase
 onco_score_infor_icog_only_sudo_casecase[] <- 0
+for(i in 1:nrow(onco_score_infor_icog_only_sudo_casecase)){
+  onco_score_infor_icog_only_sudo_casecase[i,(second.num+1):(second.num+second.num^2)] <- as.vector(diag(10000,second.num))
+}
 onco_score_infor_onco_only_casecase <- onco_result_only_shared_1p_casecase[,11:(11+second.num+second.num^2-1)]
 icog_score_infor_onco_only_sudo_casecase <- onco_score_infor_onco_only_casecase
 icog_score_infor_onco_only_sudo_casecase[] <- 0
-
+for(i in 1:nrow(icog_score_infor_onco_only_sudo_casecase)){
+  icog_score_infor_onco_only_sudo_casecase[i,(second.num+1):(second.num+second.num^2)] <- as.vector(diag(10000,second.num))
+}
 
 
 icog_onco_score_infor_casecase <- cbind(icog_score_infor_casecase,onco_score_infor_casecase)
@@ -32,75 +40,19 @@ icog_onco_score_infor_final_casecase <- rbind(icog_onco_score_infor_casecase,ico
 icog_onco_score_infor_casecase <- icog_onco_score_infor_final_casecase
 
 n <- nrow(icog_onco_score_infor_casecase)
-debug.one.line <- c(rep(0,second.num),as.vector(diag(second.num)),rep(0,second.num),as.vector(diag(second.num)))
-debug.idx <- c(9649548,9650051)
-for(k in 1:length(debug.idx)){
-  print(k)
-  icog_onco_score_infor_casecase[debug.idx[k],] <- debug.one.line  
-}
+# debug.one.line <- c(rep(0,second.num),as.vector(diag(second.num)),rep(0,second.num),as.vector(diag(second.num)))
+# debug.idx <- c(9649548,9650051)
+# for(k in 1:length(debug.idx)){
+#   print(k)
+#   icog_onco_score_infor_casecase[debug.idx[k],] <- debug.one.line  
+# }
+# 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_only_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_only_shared_1p.Rdata")
-
-
+icog_onco_score_infor <- icog_onco_score_infor_casecase
 
 
 
 library(bc2)
-second.num <- 5
-
-#####get the score and infor for baseline only
-icog_score_infor <- icog_result_shared_1p[,11:(11+second.num+second.num^2-1)]
-onco_score_infor <- onco_result_shared_1p[,11:(11+second.num+second.num^2-1)]
-
-icog_score_infor <- icog_score_infor[,c(1,2,6,7,11,12)]
-onco_score_infor <- onco_score_infor[,c(1,2,6,7,11,12)]
-
-
-
-
-icog_score_infor <- icog_result_shared_1p[,11:(11+second.num+second.num^2-1)]
-onco_score_infor <- onco_result_shared_1p[,11:(11+second.num+second.num^2-1)]
-icog_score_infor <- icog_score_infor[,c(1,2,6,7,11,12)]
-onco_score_infor <- onco_score_infor[,c(1,2,6,7,11,12)]
-
-
-icog_score_infor_icog_only <- icog_result_only_shared_1p[,11:(11+second.num+second.num^2-1)]
-icog_score_infor_icog_only <- icog_score_infor_icog_only[,c(1,2,6,7,11,12)] 
-onco_score_infor_icog_only_sudo <- icog_score_infor_icog_only
-onco_score_infor_icog_only_sudo[] <- 0
-
-onco_score_infor_onco_only <- onco_result_only_shared_1p[,11:(11+second.num+second.num^2-1)]
-onco_score_infor_onco_only <- onco_score_infor_onco_only[,c(1,2,6,7,11,12)]
-
-
-icog_score_infor_onco_only_sudo <- onco_score_infor_onco_only
-icog_score_infor_onco_only_sudo[] <- 0
-
-
-
-icog_onco_score_infor <- cbind(icog_score_infor,onco_score_infor)
-icog_onco_score_infor_icog_only <- cbind(icog_score_infor_icog_only,onco_score_infor_icog_only_sudo)
-icog_onco_score_infor_onco_only <- cbind(icog_score_infor_onco_only_sudo,onco_score_infor_onco_only)
-icog_onco_score_infor_final <- rbind(icog_onco_score_infor,icog_onco_score_infor_icog_only,icog_onco_score_infor_onco_only)
-icog_onco_score_infor <- icog_onco_score_infor_final
-
-second.num <- 2
-
-n <- nrow(icog_onco_score_infor)
-debug.one.line <- c(rep(0,second.num),as.vector(diag(second.num)),rep(0,second.num),as.vector(diag(second.num)))
-debug.idx <- c(9649548,9650051)
-
-
-for(k in 1:length(debug.idx)){
-  print(k)
-  icog_onco_score_infor[debug.idx[k],] <- debug.one.line  
-}
-
-
-
 
 rm(icog_result_shared_1p)
 rm(onco_result_shared_1p)
@@ -119,8 +71,8 @@ size <- 1000
 #n <- nrow(icog_onco_score_infor)
 
 
-fixed.second.num <- 2
-random.second.num <- 3
+# fixed.second.num <- 2
+# random.second.num <- 3
 #registerDoParallel(no.cores)
 #pvalue <- rep(0,nrow(icog_onco_score_infor))
 
@@ -131,13 +83,16 @@ random.second.num <- 3
 start.end <- startend(n,size,i1)
 start <- start.end[1]
 end <- start.end[2]
-pvalue_sub <- rep(0,end-start+1)
+result_summary <- matrix(0,end-start+1,(second.num+second.num^2+1))
+#pvalue_sub <- rep(0,end-start+1)
 temp = 1
 for(j in start:end){
   #print(j)
   icog_onco_score_infor_oneline <- icog_onco_score_infor[j,]
-  icog_onco_score_infor_casecase_oneline <- icog_onco_score_infor_casecase[j,]
-  pvalue_sub[temp] <- MetaMixedPfunction_temp(icog_onco_score_infor_oneline,icog_onco_score_infor_casecase_oneline,fixed.second.num,random.second.num)
+  result_temp <- MetaFixedPfunction_temp(icog_onco_score_infor_oneline,second.num)
+  result_summary[j,1:second.num] <- as.vector(result_temp[[1]])
+  result_summary[j,(second.num+1):(second.num+second.num^2)] <- as.vector(result_temp[[2]])
+  result_summary[j,(second.num+second.num^2+1)] <- as.numeric(result_temp[[3]][11])
   temp = temp+1
 }
 #return(pvalue_sub)
@@ -161,7 +116,7 @@ for(j in start:end){
 
 #meta_result_shared_1p <- cbind(meta_result_shared_1p,pvalue)
 
-save(pvalue_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/p_value_sub",i1,".Rdata"))
+save(result_summary,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/reuslt_summary_sub",i1,".Rdata"))
 
 
 
