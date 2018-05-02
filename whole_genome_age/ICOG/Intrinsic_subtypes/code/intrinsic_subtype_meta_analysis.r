@@ -91,9 +91,9 @@ for(j in start:end){
   #print(j)
   icog_onco_score_infor_oneline <- icog_onco_score_infor[j,]
   result_temp <- MetaFixedPfunction_temp(icog_onco_score_infor_oneline,second.num)
-  result_summary[j,1:second.num] <- as.vector(result_temp[[1]])
-  result_summary[j,(second.num+1):(second.num+second.num^2)] <- as.vector(result_temp[[2]])
-  result_summary[j,(second.num+second.num^2+1)] <- as.numeric(result_temp[[3]][11])
+  result_summary[temp,1:second.num] <- as.vector(result_temp[[1]])
+  result_summary[temp,(second.num+1):(second.num+second.num^2)] <- as.vector(result_temp[[2]])
+  result_summary[temp,(second.num+second.num^2+1)] <- as.numeric(result_temp[[3]][11])
   temp = temp+1
 }
 #return(pvalue_sub)

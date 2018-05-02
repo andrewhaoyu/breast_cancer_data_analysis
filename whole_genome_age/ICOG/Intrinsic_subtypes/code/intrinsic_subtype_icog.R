@@ -1,5 +1,6 @@
 rm(list=ls())
 #install_github("andrewhaoyu/bc2", ref = "development",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#install_github("andrewhaoyu/bc2",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 #args=(commandArgs(TRUE))
 #for(p in 1:length(args)){
 #       eval(parse(text=args[[p]]))
