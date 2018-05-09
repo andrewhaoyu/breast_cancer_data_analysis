@@ -47,6 +47,65 @@ colnames(intrinsic_subtype_triple_negative_results) <-
   c("rs_id","SNP_ICOGs","SNP_ONCO","position",
     "CHR","freq_a1","imputation_quality","log_odds_triple_negative","variance_triple_negative")
 save(intrinsic_subtype_triple_negative_results,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subtype_triple_negative_results.Rdata"))
+alleles.ICOG <- as.character(intrinsic_subtype_triple_negative_results$SNP_ICOGs)
+total <- nrow(intrinsic_subtype_triple_negative_results)
+alleles1 <- rep("c",total)
+alleles2 <- rep("c",total)
+alleles.split.icog <- strsplit(alleles.ICOG,split=":")
+
+alleles.ONCO <- as.character(intrinsic_subtype_triple_negative_results$SNP_ONCO)
+alleles3 <- rep("c",total)
+alleles4 <- rep("c",total)
+alleles.split.onco <- strsplit(alleles.ONCO,split=":")
+
+
+for(i in 1:total){
+  if(i%%100==0){
+    print(i)  
+  }
+  alleles1[i] <- alleles.split.icog[[i]][3]
+  alleles2[i] <- alleles.split.icog[[i]][4]
+  alleles3[i] <- alleles.split.onco[[i]][3]
+  alleles4[i] <- alleles.split.onco[[i]][4]
+}
+
+alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
+
+
+
+
+
+idx <- which(is.na(alleles1)&!is.na(alleles3))
+alleles1[idx] <- alleles3[idx]
+alleles2[idx] <- alleles4[idx]
+head(intrinsic_subtype_triple_negative_results)
+
+
+idx <- which(is.na(alleles1))
+head(alleles.data[idx,])
+
+alleles.ONCO <- as.character(intrinsic_subtype_triple_negative_results$SNP_ONCO[idx])
+alleles.split.onco <- strsplit(alleles.ONCO,split="_")
+for(i in 1:length(idx)){
+  # if(i%%100==0){
+  #   print(i)  
+  # }
+  alleles1[idx[i]] <- alleles.split.onco[[i]][3]
+  alleles2[idx[i]] <- alleles.split.onco[[i]][4]
+  alleles3[idx[i]] <- alleles.split.onco[[i]][3]
+  alleles4[idx[i]] <- alleles.split.onco[[i]][4]
+}
+alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
+intrinsic_subtype_triple_negative_results$allele1 <- alleles.data$alleles1
+intrinsic_subtype_triple_negative_results$allele2 <- alleles.data$alleles2
+idx <- which(is.na(alleles1))
+length(idx)
+head(intrinsic_subtype_triple_negative_results[idx,])
+head(alleles.data[idx,])
+intrinsic_subtype_triple_negative_results[idx[1:100],]
+save(intrinsic_subtype_triple_negative_results,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subtype_triple_negative_results.Rdata"))
+# (intrinsic_subtype_triple_negative_results[idx[1:10],])
+
 
 
 idx_cut <- NULL
