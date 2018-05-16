@@ -228,7 +228,17 @@ if(i1<=178){
   # loglikelihood <- loglikelihood.icog+loglikelihood.onco
   # AIC <- 2*length(Heter.result.Onco[[1]])-2*loglikelihood
   # 
-  heter.result <- data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,test.result.second.mixed.ER)
+ 
+  x <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
+  model.standard <- glm(y.pheno.mis2[,1]~x,family = binomial(link='logit'))
+
+    summary(model.standard)$coefficients[2,4]
+  
+    heter.result <- data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,test.result.second.mixed.ER,summary(model.standard)$coefficients[2,4])
+  colnames(heter.result)[18] <- "standard_p"
+  
+  
+  
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
   
   
