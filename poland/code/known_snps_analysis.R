@@ -16,6 +16,37 @@ library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
+library(multcomp)
+Generatesubtypes<- function(ER,PR,HER2,Grade){
+  n <- length(ER)
+  subtypes <- rep("control",n)
+  temp = 1
+  for(i in 0:1){
+    for(j in 0:1){
+      for(k in 0:1){
+        for(l in 1:3){
+          
+          idx <- which(ER==i&PR==j&HER2==k&Grade==l)
+          if(length(idx)!=0){
+            subtypes[idx] <- temp
+            temp = temp+1  
+          }
+          
+        }
+      }
+    }
+  }
+  
+  subtypes <- factor(subtypes,levels=c("control",
+                                       c(1:temp)))
+  sum <- table(subtypes)
+  idx.cat <- which(sum<=10)
+  idx.remove <- which((subtypes%in%(unique(idx.cat)-1))==T)
+  subtypes <- subtypes[-idx.remove]
+  return(list(subtypes,idx.remove))
+}
+
+
 
 if(i1<=178){
    data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
@@ -236,10 +267,45 @@ if(i1<=178){
   
     heter.result <- data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,test.result.second.mixed.ER,summary(model.standard)$coefficients[2,4])
   colnames(heter.result)[18] <- "standard_p"
+  data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+  data2 <- as.data.frame(data2)
+  idx <- which(data2$StudyCountry=="Poland")
+  data2 <- data2[idx,]
   
+  idx <- which(data2$ER_status1==888|data2$PR_status1==888|
+                 data2$HER2_status1==888|data2$Grade1==888)
+  data2 <- data2[-idx,]
+  y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
   
+  #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+  colnames(y.pheno.mis2) = c("Behaviour","ER",
+                             "PR","HER2","Grade")
   
-  save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/heter_result_",i1,".Rdata"))
+  x.test.all.mis2 <- data2[,c(27:203,205)]
+  x.test.all.mis2 <- x.test.all.mis2
+  x.covar.mis2 <- data2[,c(5:8,204)]
+  snpvalue <- x.test.all.mis2[,i1]
+ 
+  
+ temp <-  Generatesubtypes(data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+  subtypes <- temp[[1]]
+  idx.remove <- temp[[2]]
+  x <- cbind(snpvalue,as.matrix(x.covar.mis2))[-idx.remove,]
+  
+  score_result[temp,]  <- as.vector(coef(model1)[,2])
+  infor_result[temp,] <- as.vector(vcov(model1)[2+7*(0:4),2+13*(0:4)])
+  
+  poly.model <- multinom(subtypes~x)
+  poly.model.coef <- coef(poly.model)
+  M <- nrow(poly.model.coef)
+  p.covariate <- ncol(poly.model.coef)
+  snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
+  snp.coef <- poly.model.coef[,2]
+  p.poly <- DisplaySecondStageTestResult(snp.coef,snp.cov)[35]
+  heter.result <- cbind(heter.result,p.poly)
+  colnames(heter.result)[19] <- "polytomous_p"
+   
+  save(heter.result,file=paste0("./poland/result/known_snps/heter_result_",i1,".Rdata"))
   
   
   
