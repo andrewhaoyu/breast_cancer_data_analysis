@@ -292,8 +292,6 @@ if(i1<=178){
   idx.remove <- temp[[2]]
   x <- cbind(snpvalue,as.matrix(x.covar.mis2))[-idx.remove,]
   
-  score_result[temp,]  <- as.vector(coef(model1)[,2])
-  infor_result[temp,] <- as.vector(vcov(model1)[2+7*(0:4),2+13*(0:4)])
   
   poly.model <- multinom(subtypes~x)
   poly.model.coef <- coef(poly.model)
