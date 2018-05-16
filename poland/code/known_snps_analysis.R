@@ -16,7 +16,7 @@ library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
-library(multcomp)
+library(nnet)
 Generatesubtypes<- function(ER,PR,HER2,Grade){
   n <- length(ER)
   subtypes <- rep("control",n)
