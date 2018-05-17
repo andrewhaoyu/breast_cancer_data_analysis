@@ -108,8 +108,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   true.end <- start+inner.end-1
   score_result <- matrix(0,inner.file.num,num.of.tumor+1)
   infor_result <- matrix(0,inner.file.num,(num.of.tumor+1)^2)
-  score_result <- matrix(0,inner.file.num,num.of.tumor-1)
-  infor_result <- matrix(0,inner.file.num,(num.of.tumor-1)^2)
+  score_result2 <- matrix(0,inner.file.num,num.of.tumor-1)
+  infor_result2 <- matrix(0,inner.file.num,(num.of.tumor-1)^2)
   
   snpid_result <- rep("c",inner.file.num)
   freq.all <- rep(0,inner.file.num)
@@ -154,6 +154,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         
         score_result[temp,] <- 0
         infor_result[temp,] <- 0
+        score_result2[temp,] <- 0
+        infor_result2[temp,] <- 0
       }else{
         score.test.onco<- ScoreTest(y=y.pheno.mis2,
                                     x=snpvalue,
@@ -224,8 +226,8 @@ for(i in 1:inner.size){
   score_result[total+(1:temp),] <- result.temp[[2]]
   infor_result[total+(1:temp),] <- result.temp[[3]]
   freq.all[total+(1:temp)] <- result.temp[[4]]
-  score_result[total+(1:temp),] <- result.temp[[5]]
-  infor_result[total+(1:temp),] <- result.temp[[6]]
+  score_result2[total+(1:temp),] <- result.temp[[5]]
+  infor_result2[total+(1:temp),] <- result.temp[[6]]
   
   total <- temp+total
 }
