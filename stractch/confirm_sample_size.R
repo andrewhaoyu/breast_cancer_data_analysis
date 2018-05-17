@@ -1,4 +1,5 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+library(data.table)
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 
@@ -15,7 +16,7 @@ subtypes1 <- GenerateIntrinsic_new(new.data[,1],
                                    new.data[,5])
 subtypes <- subtypes1[[1]]
 age <- new.data[-subtypes1[[2]],6]
-age.cut <- cut(age,breaks=c(15,39,49,59,69,100,999))
+age.cut <- cut(age,breaks=c(15,39.99,49.99,59.99,69.99,100,999))
 write.csv(table(age.cut,subtypes),file="./data/intrinsic_sample_size.csv")
 GenerateIntrinsic_new <- function(casecon,ER,PR,HER2,Grade){
   n <- length(ER)

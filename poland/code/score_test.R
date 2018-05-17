@@ -232,6 +232,8 @@ for(i in 1:inner.size){
   total <- temp+total
 }
 
-result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
+result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,
+               score_result2=score_result2,
+               infor_result2=infor_result2)
 
 save(result,file=paste0("./poland/result/whole_genome/ERPRHER2Grade_fixed_onco",i1,"_",i2))
