@@ -11,16 +11,18 @@ end <- start.end[2]
 file.num <- end-start+1
 p_sub1 <- rep(0,file.num)
 p_sub2 <- rep(0,file.num)
-for(i in 1:file.num){
-  score = t(as.numeric(onco_result_fixed_5p[start+i,11:15]))
-  infor = matrix(as.numeric(onco_result_fixed_5p[start+i,16:40]),5,5)
-  p_sub1[i] = DisplayFixedScoreTestResult(score,infor)
+temp = 1
+for(i in start:end){
+    score = t(as.numeric(onco_result_fixed_5p[i,11:15]))
+  infor = matrix(as.numeric(onco_result_fixed_5p[i,16:40]),5,5)
+  p_sub1[temp] = DisplayFixedScoreTestResult(score,infor)
   score.fix = t(score[1:2])
   infor.fix = infor[1:2,1:2]
-  score.random = t(as.numeric(onco_result_casecase_5p[start+i,11:13]))
-  infor.random = t(matrix(as.numeric(onco_result_casecase_5p[start+i,14:22]),
+  score.random = t(as.numeric(onco_result_casecase_5p[i,11:13]))
+  infor.random = t(matrix(as.numeric(onco_result_casecase_5p[i,14:22]),
                         3,3))
-  p_sub2[i] = DisplayMixedScoreTestResult(score.fix,infor.fix,score.random,infor.random)[1]
+  p_sub2[temp] = DisplayMixedScoreTestResult(score.fix,infor.fix,score.random,infor.random)[1]
+  temp = temp + 1
 }
 p_sub = list(p_sub1,p_sub2)
 save(p_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/p_sub",i1,".Rdata"))
