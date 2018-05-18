@@ -73,8 +73,8 @@ for(i in 1:567){
       infor[num.total+(1:temp),] <- result[[3]]
       freq.all[num.total+(1:temp)] <- result[[4]] 
       score2[num.total+(1:temp),] <- result[[5]]
-      infor2[num.total+(1:temp),] <- result[[6]]
-      
+       infor2[num.total+(1:temp),] <- result[[6]]
+      # 
       num.total <- temp+num.total
       job.sub.length[i] <- job.sub.length[i]+temp
     }  
@@ -141,7 +141,18 @@ CHR <- onco_info[,11]
 onco_info <- onco_info[,1:10]
 
 
-onco_result_casecase <- data.frame(onco_info,score,infor,CHR)
+onco_result_fixed <- data.frame(onco_info,score,infor,CHR)
+onco_result_casecase <- data.frame(onco_info,score2,infor2,CHR)
 
-save(onco_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_casecase.Rdata")
+
+save(onco_result_fixed,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed.Rdata")
+save(onco_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase.Rdata")
+
+idx <- which(onco_result_fixed$exp_freq_a1>=0.05&
+               onco_result_fixed$exp_freq_a1<=0.95)
+onco_result_fixed_5p <- onco_result_fixed[idx,]
+onco_result_casecase_5p <- onco_result_casecase[idx,]
+save(onco_result_fixed_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
+save(onco_result_casecase_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase_5p.Rdata")
+
 print(1)

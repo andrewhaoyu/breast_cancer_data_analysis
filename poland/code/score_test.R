@@ -226,9 +226,9 @@ for(i in 1:inner.size){
   score_result[total+(1:temp),] <- result.temp[[2]]
   infor_result[total+(1:temp),] <- result.temp[[3]]
   freq.all[total+(1:temp)] <- result.temp[[4]]
-  score_result2[total+(1:temp),] <- result.temp[[5]]
-  infor_result2[total+(1:temp),] <- result.temp[[6]]
-  
+  # score_result2[total+(1:temp),] <- result.temp[[5]]
+  # infor_result2[total+(1:temp),] <- result.temp[[6]]
+  # 
   total <- temp+total
 }
 
