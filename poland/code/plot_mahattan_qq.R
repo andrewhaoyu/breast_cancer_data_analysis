@@ -1,6 +1,3 @@
-args <- commandArgs(trailingOnly=T)
-args <- as.numeric(args[[1]])
-i1 <- args
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/")
 library(qqman)
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
