@@ -145,7 +145,11 @@ idx.control <- which(y.pheno.mis2[,1]==0)
 n.control <- length(idx.control)
 
 
-
+size = 5
+start.end <- startend(num,size,i2)
+start <- start.end[1]
+end <- start.end[2]
+file.num <- end-start+1
 
 
 no.cores <- 2
