@@ -17,8 +17,39 @@ i2 <- as.numeric(arg[[2]])
 print(i1)
 print(i2)
 
+Generatesubtypes<- function(ER,PR,HER2,Grade){
+  n <- length(ER)
+  subtypes <- rep("control",n)
+  temp = 1
+  for(i in 0:1){
+    for(j in 0:1){
+      for(k in 0:1){
+        for(l in 1:3){
+          
+          idx <- which(ER==i&PR==j&HER2==k&Grade==l)
+          if(length(idx)!=0){
+            subtypes[idx] <- temp
+            temp = temp+1  
+          }
+          
+        }
+      }
+    }
+  }
+  
+  subtypes <- factor(subtypes,levels=c("control",
+                                       c(1:temp)))
+  sum <- table(subtypes)
+  idx.cat <- which(sum<=10)
+  idx.remove <- which((subtypes%in%(unique(idx.cat)-1))==T)
+  subtypes <- subtypes[-idx.remove]
+  return(list(subtypes,idx.remove))
+}
+
+
 library(R.utils)
 library(data.table)
+library(nnet)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
@@ -34,24 +65,56 @@ y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$H
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
-x.covar.mis2 <- data2[,c(5:8,204)]
-Onc_ID <- data2$Onc_ID
+x.covar.mis2 <- data2[,c(5:8)]
 
-load("./poland/result/whole_genome/delta0.onco.Rdata")
-load("./poland/result/whole_genome/z.standard.Rdata")
-z.design.support <- cbind(1,z.standard[,1])
-z.design.test <- z.standard[,2:4]
 Onc_ID <- data2$Onc_ID
+# 
+# load("./poland/result/whole_genome/delta0.onco.Rdata")
+# load("./poland/result/whole_genome/z.standard.Rdata")
+# z.design.support <- cbind(1,z.standard[,1])
+# z.design.test <- z.standard[,2:4]
+#Onc_ID <- data2$Onc_ID
+
+
+
+idx.mis <- which(data2$ER_status1==888|data2$PR_status1==888|
+               data2$HER2_status1==888|data2$Grade1==888)
+data2.com <- data2[-idx.mis,]
+x.covar.com <- data2[-idx.mis,c(5:8)]
+Onc_ID.com <-  data2$Onc_ID[-idx.mis]
+y.pheno.com <- cbind(data2.com$Behaviour1,data2.com$ER_status1,data2.com$PR_status1,data2.com$HER2_status1,data2.com$Grade1)
+
+#y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+colnames(y.pheno.com) = c("Behaviour","ER",
+                           "PR","HER2","Grade")
+
+
+
+temp <-  Generatesubtypes(data2.com$ER_status1,data2.com$PR_status1,data2.com$HER2_status1,data2.com$Grade1)
+subtypes <- temp[[1]]
+idx.remove <- temp[[2]]
+Onc_ID2 <- Onc_ID.com[-idx.remove]
+x.covar.complete <- x.covar.com[-idx.remove,]
+
+
+
+
+
+
+
+
 
 rm(data2)
-gc()
-load("./poland/result/whole_genome/score.test.support.onco.ERPRHER2Grade.Rdata")
+ gc()
+# load("./poland/result/whole_genome/score.test.support.onco.ERPRHER2Grade.Rdata")
 
 
 idx.fil <- onco.order[,1]%in%Onc_ID
+idx.fil2 <- onco.order[,1]%in%Onc_ID2
 n <- length(idx.fil)
 snpvalue <- rep(0,n)
 idx.match <- match(Onc_ID,onco.order[idx.fil,1])
+idx.match2 <- match(Onc_ID2,onco.order[idx.fil2,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
 #load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
@@ -84,11 +147,6 @@ n.control <- length(idx.control)
 
 
 
-size = 5
-start.end <- startend(num,size,i2)
-start <- start.end[1]
-end <- start.end[2]
-file.num <- end-start+1
 
 no.cores <- 2
 library(foreach)
@@ -105,11 +163,13 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   inner.file.num <- inner.end-inner.start+1
   true.start <- start+inner.start-1
   true.end <- start+inner.end-1
-  score_result <- matrix(0,inner.file.num,num.of.tumor+1)
-  infor_result <- matrix(0,inner.file.num,(num.of.tumor+1)^2)
-  score_result2 <- matrix(0,inner.file.num,num.of.tumor-1)
-  infor_result2 <- matrix(0,inner.file.num,(num.of.tumor-1)^2)
-  
+  p_value1 <- rep(0,inner.file.num)
+  p_value2 <- rep(0,inner.file.num)
+  # score_result <- matrix(0,inner.file.num,num.of.tumor+1)
+  # infor_result <- matrix(0,inner.file.num,(num.of.tumor+1)^2)
+  # score_result2 <- matrix(0,inner.file.num,num.of.tumor-1)
+  # infor_result2 <- matrix(0,inner.file.num,(num.of.tumor-1)^2)
+  # 
   snpid_result <- rep("c",inner.file.num)
   freq.all <- rep(0,inner.file.num)
   temp <- 0
@@ -139,8 +199,9 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         break
       }
       
-      snpvalue <- convert(snppro,n)
-      snpvalue <- snpvalue[idx.fil][idx.match]
+      rawsnpvalue <- convert(snppro,n)
+      snpvalue <- rawsnpvalue[idx.fil][idx.match]
+      snpvalue2 <- rawsnpvalue[idx.fil2][idx.match2]
       snpvalue.control <- snpvalue[idx.control]
       freq <- sum(snpvalue.control)/(2*n.control)
       freq.all[temp] <- freq
@@ -149,39 +210,30 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       # tryCatch(
       #   {
       
-      if(freq<0.009|freq>0.991){
-        
-        score_result[temp,] <- 0
-        infor_result[temp,] <- 0
-        score_result2[temp,] <- 0
-        infor_result2[temp,] <- 0
+      if(freq<0.04|freq>0.96){
+       p_value1[temp] <- 1
+       p_value2[temp] <- 1
+        # score_result[temp,] <- 0
+        # infor_result[temp,] <- 0
+        # score_result2[temp,] <- 0
+        # infor_result2[temp,] <- 0
       }else{
-        score.test.onco<- ScoreTest(y=y.pheno.mis2,
-                                    x=snpvalue,
-                                    second.stage.structure="additive",
-                                    score.test.support=score.test.support.onco.ERPRHER2Grade,
-                                    missingTumorIndicator=888)
         
+        x1 <- cbind(snpvalue,as.matrix(x.covar.mis2)) 
+        x2 <- cbind(snpvalue2,as.matrix(x.covar.complete))
+        model.standard <- glm(y.pheno.mis2[,1]~x1,family = binomial(link='logit'))
         
-        score_result[temp,]  <- score.test.onco[[1]]
-        infor_result[temp,] <- as.vector(score.test.onco[[2]])
+        p_value1[temp] <- summary(model.standard)$coefficients[2,4]
         
+        poly.model <- multinom(subtypes~x2)
+        poly.model.coef <- coef(poly.model)
+        M <- nrow(poly.model.coef)
+        p.covariate <- ncol(poly.model.coef)
+        snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
+        snp.coef <- poly.model.coef[,2]
+        p_value2[temp] <- DisplaySecondStageTestResult(snp.coef,snp.cov)[35]
         
-        score.test.support.onco.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis2,
-                                                                                 x.self.design = snpvalue,
-                                                                                 z.design = z.design.support,
-                                                                                 additive=x.covar.mis2,
-                                                                                 missingTumorIndicator = 888,
-                                                                                 delta0=delta0)
-        
-        score.test.onco.casecase<- ScoreTestMixedModel(y=y.pheno.mis2,
-                                                       x=snpvalue,
-                                                       z.design = z.design.test,
-                                                       
-                                                       score.test.support= score.test.support.onco.casecase,
-                                                       missingTumorIndicator=888)
-        score_result2[temp,]  <- score.test.onco.casecase[[1]]
-        infor_result2[temp,] <- as.vector(score.test.onco.casecase[[2]])
+
         
       }
       
@@ -200,21 +252,21 @@ result.list <- foreach(job.i = 1:2)%dopar%{
     
   }
   close(con)
-  result <- list(snpid_result,score_result,infor_result,freq.all,
-                 score_result2,infor_result2)
+  result <- list(snpid_result,p_value1,p_value2,freq.all)
   
   return(result)
 }
 stopImplicitCluster()
 
-score_result <- matrix(0.1,file.num,num.of.tumor+1)
-infor_result <- matrix(0.1,file.num,(num.of.tumor+1)^2)
-
-
-score_result2 <- matrix(0.1,file.num,num.of.tumor-1)
-infor_result2 <- matrix(0.1,file.num,(num.of.tumor-1)^2)
+# score_result <- matrix(0.1,file.num,num.of.tumor+1)
+# infor_result <- matrix(0.1,file.num,(num.of.tumor+1)^2)
+# 
+# 
+# score_result2 <- matrix(0.1,file.num,num.of.tumor-1)
+# infor_result2 <- matrix(0.1,file.num,(num.of.tumor-1)^2)
 snpid_result <- rep("c",file.num)
-
+p_value1 <- rep(1,file.num)
+p_value2 <- rep(1,file.num)
 freq.all <- rep(0,file.num)
 
 total <- 0
@@ -222,8 +274,8 @@ for(i in 1:inner.size){
   result.temp <- result.list[[i]]
   temp <- length(result.temp[[1]])
   snpid_result[total+(1:temp)] <- result.temp[[1]]
-  score_result[total+(1:temp),] <- result.temp[[2]]
-  infor_result[total+(1:temp),] <- result.temp[[3]]
+  p_value1[total+(1:temp)] <- result.temp[[2]]
+  p_value2[total+(1:temp)] <- as.numeric(result.temp[[3]])
   freq.all[total+(1:temp)] <- result.temp[[4]]
   # score_result2[total+(1:temp),] <- result.temp[[5]]
   # infor_result2[total+(1:temp),] <- result.temp[[6]]
@@ -231,8 +283,6 @@ for(i in 1:inner.size){
   total <- temp+total
 }
 
-result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,
-               score_result2=score_result2,
-               infor_result2=infor_result2)
+result <- list(snpid_reuslt=snpid_result,p_value1=p_value1,p_value2=p_value2,freq.all=freq.all)
 
-save(result,file=paste0("./poland/result/whole_genome/ERPRHER2Grade_fixed_onco",i1,"_",i2))
+save(result,file=paste0("./poland/result/whole_genome/standard_analysis",i1,"_",i2))
