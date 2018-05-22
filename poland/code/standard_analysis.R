@@ -230,12 +230,19 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         p_value1[temp] <- summary(model.standard)$coefficients[2,4]
         
         poly.model <- multinom(subtypes~x2)
-        poly.model.coef <- coef(poly.model)
-        M <- nrow(poly.model.coef)
-        p.covariate <- ncol(poly.model.coef)
-        snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
-        snp.coef <- poly.model.coef[,2]
-        p_value2[temp] <- DisplaySecondStageTestResult(snp.coef,snp.cov)[35]
+        if(poly.model$convergence==0){
+          poly.model.coef <- coef(poly.model)
+          M <- nrow(poly.model.coef)
+          p.covariate <- ncol(poly.model.coef)
+          snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
+          snp.coef <- poly.model.coef[,2]
+          p_value2[temp] <- DisplaySecondStageTestResult(snp.coef,snp.cov)[35]
+          
+        }else{
+          p_value2[temp] = 1
+        }
+        
+        
         
 
         
