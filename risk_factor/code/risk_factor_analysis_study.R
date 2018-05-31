@@ -79,7 +79,7 @@ if(i1==1){
                               baselineonly = study.mat,additive =NULL,pairwise.interaction = NULL,
                               saturated = NULL,
                               missingTumorIndicator = 888)
-  save(model2,file="./risk_factor/result/intrinsic_model_study.Rdata")s
+  save(model2,file="./risk_factor/result/intrinsic_model_study.Rdata")
 }
 
 
