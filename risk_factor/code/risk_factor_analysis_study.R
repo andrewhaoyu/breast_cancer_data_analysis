@@ -1,3 +1,6 @@
+args = commandArgs(trailingOnly = T)
+i1 = as.numeric(args[[1]])
+
 library(data.table)
 library(bc2)
 #data <- fread("./data/dataset_montse_20180522.txt")
@@ -52,13 +55,35 @@ x.covar <- cbind(parity.mat,ethnicity.mat,refage)
 
 #parity.mat,
 #,
-model <- TwoStageModel(y = y.pheno.mis,
-                       baselineonly = study.mat,
-                       additive = x.covar,
-                       missingTumorIndicator = 888)
+if(i1==1){
+  model <- TwoStageModel(y = y.pheno.mis,
+                         baselineonly = study.mat,
+                         additive = x.covar,
+                         missingTumorIndicator = 888)
+  
+  
+  save(model,file="./risk_factor/result/add_model_study.Rdata")
+}else{
+  z.design <- matrix(c(
+    c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+    c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
+    c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+    c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
+    c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
+  ),ncol=5)
+  colnames(z.design) <- c("Luminial A","Luminal B",
+                          "Luminal B HER2-",
+                          "HER2 Enriched",
+                          "Triple Negative")
+  model2 = EMmvpolySelfDesign(y.pheno.mis,x.self.design = x.covar,z.design=z.design,
+                              baselineonly = study.mat,additive =NULL,pairwise.interaction = NULL,
+                              saturated = NULL,
+                              missingTumorIndicator = 888)
+  save(model2,file="./risk_factor/result/intrinsic_model_study.Rdata")s
+}
 
 
-save(model,file="./risk_factor/result/add_model_study.Rdata")
+
 
 # 
 # y = y.pheno.mis
