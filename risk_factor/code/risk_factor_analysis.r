@@ -59,7 +59,7 @@ model <- TwoStageModel(y = y.pheno.mis,
 library(xlsx)
 write.xlsx(model[[4]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="second_stage_parameter")
 write.xlsx(model[[5]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="test_result",append=T)
-write.xlsx(model[[6]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="first_stage_result",append=T)
+write.xlsx(model[[7]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="first_stage_result",append=T)
 z.design <- matrix(c(
   c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
@@ -79,7 +79,7 @@ model2[[4]][,2] <- rep(c("Luminial A","Luminal B",
   "Luminal B HER2-",
   "HER2 Enriched",
   "Triple Negative"),10)
-write.xlsx(model2[[4]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="intrinsic_subtype",append=T)
+write.xlsx(model2[[4]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="intrinsic_subtye",append=T)
 
 # 
 # y = y.pheno.mis
