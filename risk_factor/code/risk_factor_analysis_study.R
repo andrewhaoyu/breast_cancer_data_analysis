@@ -53,6 +53,7 @@ x.covar <- cbind(parity.mat,ethnicity.mat,refage)
 #parity.mat,
 #,
 model <- TwoStageModel(y = y.pheno.mis,
+                       baselineonly = study.mat,
                        additive = x.covar,
                        missingTumorIndicator = 888)
 

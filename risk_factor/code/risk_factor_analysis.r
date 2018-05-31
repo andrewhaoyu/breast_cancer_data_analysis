@@ -75,6 +75,11 @@ model2 = EMmvpolySelfDesign(y.pheno.mis,x.self.design = x.covar,z.design=z.desig
                             baselineonly = NULL,additive =NULL,pairwise.interaction = NULL,
                             saturated = NULL,
                             missingTumorIndicator = 888)
+model2[[4]][,2] <- rep(c("Luminial A","Luminal B",
+  "Luminal B HER2-",
+  "HER2 Enriched",
+  "Triple Negative"),10)
+write.xlsx(model2[[4]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="intrinsic_subtype",append=T)
 
 # 
 # y = y.pheno.mis
