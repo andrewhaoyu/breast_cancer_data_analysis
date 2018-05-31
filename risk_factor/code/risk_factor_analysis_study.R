@@ -1,7 +1,7 @@
 library(data.table)
 library(bc2)
 #data <- fread("./data/dataset_montse_20180522.txt")
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
+#setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
 data <- fread("./data/dataset_montse_20180524.txt")
 
 
@@ -57,7 +57,7 @@ model <- TwoStageModel(y = y.pheno.mis,
                        additive = x.covar,
                        missingTumorIndicator = 888)
 
-save(model,file="./risk_factor/result/add_model_study.Rdata")
+save(model,file=)
 
 # 
 # y = y.pheno.mis
