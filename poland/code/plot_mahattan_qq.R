@@ -33,8 +33,19 @@ png(paste0("./qq_standard.png"),width = 7.635,height =4.7175,units = "in",res = 
 qq(gwas_result3$P,main=paste0("Global Test Association Manhattan QQ Plot"))
 dev.off()
 
+
+# idx <- which(onco_result_standard_5p$exp_freq_a1>=0.2&
+#                onco_result_standard_5p$exp_freq_a1<=0.8)
+# onco_result_standard_20p <- onco_result_standard_5p[idx,]
+
+p_value2 <- onco_result_standard_5p$p_value2
+p_value2[is.nan(p_value2)] <- 1
+# too significant due the the insufficient 
+idx <- which(p_value2 <= 1E-10)
+p_value2[idx] <- 1
 gwas_result4 <- data.frame(SNP=as.character(onco_result_standard_5p$rs_id),CHR=onco_result_standard_5p$CHR,BP=onco_result_standard_5p$position,
-                           P=onco_result_standard_5p$p_value2,stringsAsFactors =F)
+                           P=p_value2,stringsAsFactors =F)
+
 png(paste0("./man_poly.png"),width = 7.635,height =4.7175,units = "in",res = 600)
 manhattan(gwas_result4,suggestiveline = F, cex.axis = 2,main=paste0("Global Test Association Manhattan Plot"))
 dev.off()
