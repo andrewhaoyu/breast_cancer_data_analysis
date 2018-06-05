@@ -51,7 +51,7 @@ gwas_result4 <- data.frame(SNP=as.character(onco_result_standard_5p$rs_id),CHR=o
 idx <- which(p_value2==1)
 gwas_result4 <- gwas_result4[-idx,]
 png(paste0("./man_poly.png"),width = 7.635,height =4.7175,units = "in",res = 600)
-manhattan(gwas_result4,suggestiveline = F, cex.axis = 2,main=paste0("Global Test Association Manhattan Plot"))
+manhattan(gwas_result4,suggestiveline = F, cex.axis = 2,main=paste0("Global Test Association Manhattan Plot"), ylim=c(0,12))
 dev.off()
 png(paste0("./qq_poly.png"),width = 7.635,height =4.7175,units = "in",res = 600)
 qq(gwas_result4$P,main=paste0("Global Test Association Manhattan QQ Plot"))
