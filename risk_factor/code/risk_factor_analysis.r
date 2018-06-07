@@ -48,18 +48,30 @@ colnames(study.mat) <- unique(data$study)[-1]
 ethnicity.mat <- model.matrix(~as.factor(data$ethnicity)-1)[,-1]
 colnames(ethnicity.mat) <- paste0("ethnicity",c(1:6))[-1]
 refage <- data$refage
-x.covar <- cbind(parity.mat,ethnicity.mat,refage)
 
-#parity.mat,
-#,
-model <- TwoStageModel(y = y.pheno.mis,
+# x.covar <- cbind(parity.mat,ethnicity.mat,refage)
+# 
+# #parity.mat,
+# #,
+# 
+# model <- TwoStageModel(y = y.pheno.mis,
+#                        #baselineonly = study.mat,
+#                        additive = x.covar,
+#                        missingTumorIndicator = 888)
+library(xlsx)
+# write.xlsx(model[[4]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="second_stage_parameter")
+# write.xlsx(model[[5]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="test_result",append=T)
+# write.xlsx(model[[7]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="first_stage_result",append=T)
+
+parity <- data$parity_cat
+x.covar <- cbind(parity,ethnicity.mat,refage)
+model.lin <- TwoStageModel(y = y.pheno.mis,
                        #baselineonly = study.mat,
                        additive = x.covar,
                        missingTumorIndicator = 888)
-library(xlsx)
-write.xlsx(model[[4]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="second_stage_parameter")
-write.xlsx(model[[5]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="test_result",append=T)
-write.xlsx(model[[7]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="first_stage_result",append=T)
+write.xlsx(model.lin[[4]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="second_stage_parameter")
+write.xlsx(model.lin[[5]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="test_result",append=T)
+# write.xlsx(model[[7]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="first_stage_result",append=T)
 z.design <- matrix(c(
   c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
@@ -71,6 +83,52 @@ colnames(z.design) <- c("Luminial A","Luminal B",
                         "Luminal B HER2-",
                         "HER2 Enriched",
                         "Triple Negative")
+
+
+parity <- data$parity_cat
+x.covar <- cbind(parity,ethnicity.mat,refage)
+model.lin.intrin <- EMmvpolySelfDesign(y.pheno.mis,x.self.design = x.covar[,1,drop=F],z.design=z.design,baselineonly = NULL,additive = x.covar[,2:ncol(x.covar)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+model.lin.intrin[[4]][,2] <- c("Luminial A","Luminal B",
+                               "Luminal B HER2-",
+                               "HER2 Enriched",
+                               "Triple Negative")
+write.xlsx(model.lin.intrin[[4]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="intrinsic_subtype_parity_lin",append=T)
+#write.xlsx(model.lin[[5]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="test_result",append=T)
+
+
+
+
+z.design.new <- matrix(c(1-c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0),
+                         c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)),ncol=2)
+model.tri <- EMmvpolySelfDesign(y.pheno.mis,x.self.design = x.covar[,1,drop=F],z.design=z.design.new,baselineonly = NULL,additive = x.covar[,2:ncol(x.covar)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+model[[4]][,2] <- c("non-triple","triple")
+write.xlsx(model.tri[[4]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="non_triple_vs_triple",append=T)
+
+
+
+load("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/z.design.Rdata")
+
+model.lin.tninter <- EMmvpolySelfDesign(y.pheno.mis,x.self.design = x.covar[,1,drop=F],z.design=z.design,baselineonly = NULL,additive = x.covar[,2:ncol(x.covar)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+
+write.xlsx(model.lin.tninter[[4]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="second_stage_parameter_third_order",append=T)
+write.xlsx(model.lin.tninter[[5]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="test_result_third_order",append=T)
+
+z.design <- matrix(c(
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+  c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+  c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
+  c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
+),ncol=5)
+colnames(z.design) <- c("Luminial A","Luminal B",
+                        "Luminal B HER2-",
+                        "HER2 Enriched",
+                        "Triple Negative")
+design_cat <- data$design_cat
+#idx.pop <- which(data$design_cat==0)
+parity.mat_design_inter <- design_cat*parity.mat
+colnames(parity.mat_design_inter) <- paste0(colnames(parity.mat),"_interaction")
+x.covar <- cbind(parity.mat,parity.mat_design_inter,design_cat,ethnicity.mat,refage)
 model2 = EMmvpolySelfDesign(y.pheno.mis,x.self.design = x.covar,z.design=z.design,
                             baselineonly = NULL,additive =NULL,pairwise.interaction = NULL,
                             saturated = NULL,
@@ -78,8 +136,23 @@ model2 = EMmvpolySelfDesign(y.pheno.mis,x.self.design = x.covar,z.design=z.desig
 model2[[4]][,2] <- rep(c("Luminial A","Luminal B",
   "Luminal B HER2-",
   "HER2 Enriched",
-  "Triple Negative"),10)
-write.xlsx(model2[[4]],file="./risk_factor/result/risk_factor_no_study.xlsx",sheetName="intrinsic_subtye",append=T)
+  "Triple Negative"),15)
+write.xlsx(model2[[4]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="intrinsic_subtye",append=T)
+
+idx.pop <- which(data$design_cat==0)
+# parity.mat_design_inter <- design_cat*parity.mat
+# colnames(parity.mat_design_inter) <- paste0(colnames(parity.mat),"_interaction")
+x.covar <- cbind(parity.mat,ethnicity.mat,refage)
+model3 = EMmvpolySelfDesign(y.pheno.mis[idx.pop,],x.self.design = x.covar[idx.pop,],z.design=z.design,
+                            baselineonly = NULL,additive =NULL,pairwise.interaction = NULL,
+                            saturated = NULL,
+                            missingTumorIndicator = 888)
+model3[[4]][,2] <- rep(c("Luminial A","Luminal B",
+                         "Luminal B HER2-",
+                         "HER2 Enriched",
+                         "Triple Negative"),10)
+write.xlsx(model3[[4]],file="./risk_factor/result/risk_factor_paraty_lin.xlsx",sheetName="intrinsic_subtye_population_only",append=T)
+
 
 # 
 # y = y.pheno.mis
