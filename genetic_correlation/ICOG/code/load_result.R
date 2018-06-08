@@ -1,7 +1,7 @@
-setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/ICOG/result/')
+setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/ICOG/result')
 # load("./breast_cancer_ldsc/ICOG_ldsc_result.rda")
 # load("./breast_cancer_ldsc/ONCO_ldsc_result.rda")
-load("./breast_cancer_ldsc/meta_ldsc_result.rda")
+load("./breast_cancer_ldsc/two-stage-model-intrinsic_subtype/meta_ldsc_result.rda")
 covariance.matrix <- ldsc_result[[1]]
 covariance.matrix.se <- ldsc_result[[3]]
 correlation.matrix <- ldsc_result[[2]]
