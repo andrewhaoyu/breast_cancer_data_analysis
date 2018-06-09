@@ -199,7 +199,7 @@ refage <- data$refage
 
 breastmos6 <- data$breastmos6
 breast_mos <- data$breastmos_cat
-x.covar <- cbind( breastmos6,ethnicity.mat,refage)
+x.covar <- cbind( breast_mos,ethnicity.mat,refage)
 model.lin.b <- TwoStageModel(y = y.pheno.mis,
                            #baselineonly = study.mat,
                            additive = x.covar,
@@ -247,6 +247,110 @@ write.xlsx(model.intrinsic.pop.b[[4]],file="./risk_factor/result/risk_factor_all
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+data <- fread("./data/dataset_montse_20180524.txt")
+
+
+
+idx.remove <- which(data$parity_cat==9|data$breastmos_cat==9)
+data <- data[-idx.remove,]
+
+
+
+status <- data$status
+status[(status==2|status==3)] = 1
+ER <- data$ER_status1
+ER.update <- transform(status,ER)
+PR <- data$PR_status1
+PR.update <- transform(status,PR)
+HER2 <- data$HER2_status1
+HER2.update <- transform(status,HER2)
+Grade <- data$Grade1
+Grade.update <- transform(status,Grade)
+table(data$parity_cat)
+table(data$study)
+table(data$ethnicity)
+table(data$refage)
+y.pheno.mis <- cbind(status,ER.update,PR.update,HER2.update
+                     ,Grade.update)
+colnames(y.pheno.mis) <- c("casecon","ER","PR","HER","Grade")
+breast_mos.mat <- model.matrix(~as.factor(data$breastmos_cat)-1)[,-(1:2)]
+colnames(breast_mos.mat) <- paste0("breast_cat",c(2:5))
+parity_cat <- data$parity_cat
+parity.mat <- model.matrix(~as.factor(data$parity_cat)-1)[,-1]
+colnames(parity.mat) <- paste0("parity_cat",c(1:4))
+
+study.mat <- model.matrix(~as.factor(data$study)-1)[,-1]
+colnames(study.mat) <- unique(data$study)[-1]
+ethnicity.mat <- model.matrix(~as.factor(data$ethnicity)-1)[,-1]
+colnames(ethnicity.mat) <- paste0("ethnicity",c(1:6))[-1]
+refage <- data$refage
+
+library(xlsx)
+breast_mos <- data$breastmos_cat
+x.covar <- cbind( parity_cat,breast_mos,ethnicity.mat,refage)
+model.lin.pb <- TwoStageModel(y = y.pheno.mis,
+                             #baselineonly = study.mat,
+                             additive = x.covar,
+                             missingTumorIndicator = 888)
+write.xlsx(model.lin.pb[[4]],file="./risk_factor/result/risk_factor_all_include.xlsx",sheetName="second_stage_parameter_pb",append = T)
+write.xlsx(model.lin.pb[[5]],file="./risk_factor/result/risk_factor_all_include.xlsx",sheetName="test_result_pb",append=T)
+#write.csv(data[idx,],file="./risk_factor/result/special_people.csv")
+
+load("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/z.design.Rdata")
+
+model.lin.tninter.pb <- EMmvpolySelfDesign(y.pheno.mis,x.self.design = x.covar[,1:2,drop=F],z.design=z.design,baselineonly = NULL,additive = x.covar[,3:ncol(x.covar)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+
+write.xlsx(model.lin.tninter.pb[[4]],file="./risk_factor/result/risk_factor_all_include.xlsx",sheetName="sparameter_third_order_pb",append=T)
+write.xlsx(model.lin.tninter.pb[[5]],file="./risk_factor/result/risk_factor_all_include.xlsx",sheetName="test_result_third_order_pb",append=T)
+
+
+
+
+z.design <- matrix(c(
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+  c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+  c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
+  c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
+),ncol=5)
+colnames(z.design) <- c("Luminial A","Luminal B",
+                        "Luminal B HER2-",
+                        "HER2 Enriched",
+                        "Triple Negative")
+
+idx.pop <- which(data$design_cat==0)
+
+x.covar <- cbind(parity.mat,breast_mos.mat,ethnicity.mat,refage)
+model.intrinsic.pop.pb = EMmvpolySelfDesign(y.pheno.mis[idx.pop,],x.self.design = x.covar[idx.pop,],z.design=z.design,
+                                           baselineonly = NULL,additive =NULL,pairwise.interaction = NULL,
+                                           saturated = NULL,
+                                           missingTumorIndicator = 888)
+#model.intrinsic.pop <- model3
+model.intrinsic.pop.pb[[4]][,2] <- rep(c("Luminial A","Luminal B",
+                                        "Luminal B HER2-",
+                                        "HER2 Enriched",
+                                        "Triple Negative"),14)
+write.xlsx(model.intrinsic.pop.pb[[4]],file="./risk_factor/result/risk_factor_all_include.xlsx",sheetName="is_population_only_pb",append=T)
 
 # 
 # y = y.pheno.mis
