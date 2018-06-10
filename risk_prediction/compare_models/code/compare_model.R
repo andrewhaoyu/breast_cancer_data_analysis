@@ -198,7 +198,8 @@ colnames(auc.summary) <- c("standard analysis",
                            "intrinsic subtypes",
                            "dichotomized analysis",
                            "Empirical Bayesian (Normal Prior)",
-                           "Empirical Bayesian (Laplace Prior)")
+                           "Empirical Bayesian (Laplace Prior)",
+                           "Classification tree")
 write.csv(auc.summary,file="auc.summary.csv")
 auc.com 
 n <- 5
@@ -206,7 +207,8 @@ method <- c(rep("Standard analysis",n),
             rep("Intrinsic subtypes",n),
             rep("Dichotomized analysis",n),
             rep("Empirical Bayesian (Normal Prior)",n),
-            rep("Empirical Bayesian (Laplace Prior)",n))
+            rep("Empirical Bayesian (Laplace Prior)",n),
+            rep("Classification tree"),n)
 subtypes <- rep(c("Luminal A","Luminal B",
               "Luminal B HER2Neg",
               "HER2 Enriched",
@@ -354,7 +356,7 @@ data.test.clean <- data.test[data.test$subtypes=="control",]
 
 
 #############generate the control PRS using empirical bayesian on training dataset
-subtypes.prs.intrinsic.train <- x.snp.train%*%log.odds.intrinsic.all
+subtypes.prs.intrinsic.train <- x.snp.train%*%log.odds.intrinsic.eb.all
 standard.prs <- as.numeric(x.snp.train%*%log.odds.standard.all)
 subtypes.train <- as.character(GenerateIntrinsicmis(y.pheno.mis.train[,2],y.pheno.mis.train[,3],
                                                    y.pheno.mis.train[,4],y.pheno.mis.train[,5]))
