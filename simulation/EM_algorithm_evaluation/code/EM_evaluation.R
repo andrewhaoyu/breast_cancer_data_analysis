@@ -90,6 +90,18 @@ SimulateData <- function(theta_intercept,theta_test,theta_covar){
               x_covar=x_covar))  
 }
 
+
+
+GenerateComplete <- function(y.pheno.mis,x_covar){
+  idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
+                 y.pheno.mis[,4]==888|y.pheno.mis[,5]==888)
+  y.pheno.complete <- y.pheno.mis[-idx.mis,]
+  x.covar.complete <- x_covar[-idx.mis,]
+return(list(y.pheno.complete,x.covar.complete))
+  }
+
+
+
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 set.seed(i1)
@@ -101,8 +113,11 @@ theta_test <- -c(0.35, 0.15, 0.25, 0.05, 0.20)
 theta_covar <- -c(0.35, 0.15, 0.25, 0.05, 0.20)
 
 s_times <- 100
-odds <- matrix(0,s_times,5)
-sigma <- matrix(0,s_times,5)
+odds1 <- matrix(0,s_times,5)
+sigma1 <- matrix(0,s_times,5)
+odds2 <- matrix(0,s_times,5)
+sigma2 <- matrix(0,s_times,5)
+
 for(i in 1:s_times){
   print(i)
   
@@ -110,12 +125,17 @@ for(i in 1:s_times){
   y.pheno.mis <- simulate_data[[1]]
   G <- simulate_data[[2]]
   x_covar <- simulate_data[[3]]
-  model <- TwoStageModel(y.pheno.mis,additive=cbind(G,x_covar),missingTumorIndicator = 888)
-  
-  odds[i,] <- model[[1]][25:29]
-  sigma[i,] <-  diag(model[[2]][25:29,25:29])
+  model1 <- TwoStageModel(y.pheno.mis,additive=cbind(G,x_covar),missingTumorIndicator = 888)
+  complete.data <- GenerateComplete(y.pheno.mis,cbind(G,x_covar))
+  y.pheno.complete <- complete.data[[1]]
+  x.complete <- complete.data[[2]]
+  model2 <- TwoStageModel(y.pheno.complete,additive=x.complete,missingTumorIndicator = NULL)
+  odds1[i,] <- model1[[1]][25:29]
+  sigma1[i,] <-  diag(model1[[2]][25:29,25:29])
+  odds2[i,] <- model2[[1]][25:29]
+  sigma2[i,] <-  diag(model2[[2]][25:29,25:29])
   
 }
 
-result <- list(odds,sigma)
+result <- list(odds1,sigma1,odds2,sigma2)
 save(result,file=paste0("./simulation/EM_algorithm_evaluation/result/simu_result",i1,".Rdata"))
