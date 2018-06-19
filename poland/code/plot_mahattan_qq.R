@@ -36,7 +36,7 @@ if(i1 == 1){
   gwas_result3 <- data.frame(SNP=as.character(onco_result_standard_5p$rs_id),CHR=onco_result_standard_5p$CHR,BP=onco_result_standard_5p$position,
                              P=onco_result_standard_5p$p_value1,stringsAsFactors =F)
   png(paste0("./man_standard.png"),width = 7.635,height =4.7175,units = "in",res = 600)
-  manhattan(gwas_result3,suggestiveline = F, cex.axis = 2,main=paste0("Global Test Association Manhattan Plot"),ymax=12)
+  manhattan(gwas_result3,suggestiveline = F, cex.axis = 2,main=paste0("Global Test Association Manhattan Plot"), ylim=c(0,12))
   dev.off()
   png(paste0("./qq_standard.png"),width = 7.635,height =4.7175,units = "in",res = 600)
   qq(gwas_result3$P,main=paste0("Global Test Association Manhattan QQ Plot"),ylim=c(0,12))
