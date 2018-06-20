@@ -1,66 +1,38 @@
-#This is an example with 1000 samples;
-#There are 3 covaraites in total;p_col means the number of covariates;
-#Three second stage categories;
+###########simulate data with four tumor characteristics containing three binary tumor characteristics and one oridinal tumor characteristics.
+###########one genotype with MAF 0.25 is simulated
+###########one covariate with rnorm(n) simulated
 
-rm(list=ls())
-args <- commandArgs(trailingOnly = T)
-i1 <- as.numeric(args[[1]])
 
-set.seed(i1)
 
-n.simulation <- 1000
-p.value.simulation <- matrix(0,n.simulation,6)
-for(i.simu in 1:n.simulation){
+SimulateData <- function(beta_intercept,beta_covar,x_covar,n){
   a <- c(0,1)
   b <- c(0,1)
   c <- c(0,1)
-  p_col <- 3
-  z <- as.matrix(expand.grid(a,b,c)) # orig
+  d <- c(1,2,3)
+  ##number of the other covarites
+  p_col <- 1
+  z.standard <- as.matrix(expand.grid(a,b,c,d)) # orig
+  M <- nrow(z.standard)
   #z <- as.matrix(expand.grid(a,b))
   
   
   #this z_design matrix is the second stage matrix 
-  z_design <- cbind(1,z)
-  M <- nrow(z_design)
-  z_all <- NULL
-  z_all_temp <- NULL
-  for(i in 1:M){
-    z_all_temp <- rbind(z_all_temp,kronecker(diag(p_col),t(z_design[i,])))
-  }
+  z.design.additive <- cbind(1,z.standard)
+  M <- nrow(z.design.additive)
+  additive.number <- 2
+  additive.second.cat <- ncol(z.design.additive)
+  total.covar.number <- 1+ additive.number
   
-  z_all <- matrix(0,nrow = M*(p_col+1),ncol= M+p_col*ncol(z_design))
-  for(i in 1:M){
-    z_all[1+(i-1)*(p_col+1),i] <- 1
-  }
-  for(i in 1:M){
-    z_all[(2+(i-1)*(p_col+1)):(i*(p_col+1)),(M+1):ncol(z_all)] <- 
-      z_all_temp[(1+(i-1)*p_col):(i*p_col),]
-  }
-  # for(i in 1:(M)){
-  #   temp <- rep(0,ncol(z_all))
-  #   temp[i] <- 1
-  #   z_all[1+(i-1)*(p_col+1),] = temp
-  # }
-  K <- ncol(z_design)
   
-  # z <- kronecker(diag(2),z)
-  theta_intercept <- rep(-2,M)
-  theta_test <- rep(0,K)
-  theta_covar <- rep(0.2,K*(p_col-1))
+  beta <- c(beta_intercept,beta_covar)
+  beta <- matrix(beta,nrow=p_col+1,byrow=T)
   
-  #this theta is the true value
-  theta <- c(theta_intercept,theta_test,theta_covar)
-  
-  #this is the true beta
-  beta <- z_all%*%theta
-  beta <- matrix(beta,nrow=p_col+1)
   #alpha <- c(0,rep(1,length(beta)-1))
   
-  n <- 120000
-  x <-  matrix(rnorm(p_col*n),nrow = n)
-  x_test <- x[,1]
-  x_covar <- x[,2:ncol(x)]
-  x_all <- cbind(1,x) ##adding the intercept into the model
+  #n <- 100000
+  #G <-  rbinom(n,2,0.25)
+  #x_covar <- rnorm(n)
+  x_all <- cbind(1,x_covar) ##adding the intercept into the model
   
   predictor <- x_all%*%(beta)
   predictor <- cbind(0,predictor)
@@ -72,100 +44,141 @@ for(i.simu in 1:n.simulation){
   y <- t(apply(p,1,function(x){rmultinom(1,1,x)}))
   
   y <- y[,-1] # this is the y matrix for the model
-  
   y.case.control <- rowSums(y)
-  n.case <- sum(y.case.control)
+  y.tumor <- y%*%z.standard
   
-  
-  y.tumor <- matrix(0,n,ncol(z))
-  for(i in 1:n){
-    if(y.case.control[i]==1){
-      temp.id <- which(y[i,]==1)
-      y.tumor[i,] = z[temp.id,]
-    }else{
-      y.tumor[i,] <- rep(NA,ncol(z))
-    }
-  }
-  
-  y.pheno <- cbind(y.case.control,y.tumor)
-  tumor <- K-1
+  idx.control <- which(y.case.control==0)
+  y.tumor[idx.control,] <- rep(NA,4)
   idx.case <- which(y.case.control==1)
-  idx.mis <- matrix(rbinom(n.case*tumor,1,0.2),n.case,tumor)
-  
-  for(i in 1:ncol(idx.mis)){
-    y.tumor[idx.case,i][idx.mis[,i]] <- 888
+  rate <- c(0.17,0.25,0.42,0.27)
+  for(i in 1:4){
+    idx.mis <-  sample(idx.case,size=length(idx.case)*rate[i])
+    y.tumor[idx.mis,i] <- 888
   }
-  
-  y.pheno.mis <- as.data.frame(cbind(y.case.control,y.tumor))
-  colnames(y.pheno.mis) <- c("behavior","ER","PR","HER2")
-  x <- as.data.frame(x)
-  colnames(x) <- c("gene","pc1","pc2")
-  
-  library(bc2)
-  result <- EMmvpoly(y.pheno.mis,baselineonly = NULL,additive = x,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-  
-  p.value <- c(as.numeric(result[[5]][1,2:3]),result[[4]][,6][1:4])
-  p.value.simulation[i.simu,] <- p.value
+  y.pheno.mis <- cbind(y.case.control,y.tumor)
+  return(y.pheno.mis)  
 }
 
-save(p.value.simulation,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result/pvalue",i1,".Rdata"))
+
+FixedMixedTwoStageModel <- function(y.pheno.mis,G,x_covar,score.test.support.fixed){
+  model1 <- TwoStageModel(y.pheno.mis,additive=cbind(G,x_covar),missingTumorIndicator = 888)
+  z.standard <- model1[[12]]
+  M <- nrow(z.standard)
+  odds <- model1[[1]][M+(1:5)]
+  sigma <-  (model1[[2]][M+(1:5),M+(1:5)])
+  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
+  p_global <- fixed.result[11]
+  p_heter <- fixed.result[12]
+  p_indi <- fixed.result[2]
+  ##########MTOP global test for association 
+  z.design.fixed <- cbind(rep(1,M),z.standard[,1])
+  z.design.random <-z.standard[,2:ncol(z.standard)]
+  score.test.fixed<- ScoreTestSelfDesign(y=y.pheno.mis,
+                                         x=as.matrix(G),
+                                         z.design=z.design.fixed,
+                                         score.test.support=score.test.support.fixed,
+                                         missingTumorIndicator=888)
+  score.fixed <- score.test.fixed[[1]]
+  infor.fixed <- score.test.fixed[[2]]
+  
+  score.test.support.random <- ScoreTestSupportMixedModelSelfDesign(
+    y.pheno.mis,
+    x.self.design  = G,
+    z.design = z.design.fixed,
+    additive =  as.matrix(x_covar),
+    pairwise.interaction = NULL,
+    saturated = NULL,
+    missingTumorIndicator = 888
+  )
+  score.test.random<- ScoreTestMixedModel(y=y.pheno.mis,
+                                          x=as.matrix(G),
+                                          z.design=z.design.random,
+                                          score.test.support=score.test.support.random,
+                                          missingTumorIndicator=888)
+  score.random <- score.test.random[[1]]
+  infor.random <- score.test.random[[2]]
+  p_mglobal <- DisplayMixedScoreTestResult(score.fixed,
+                                           infor.fixed,
+                                           score.random,
+                                           infor.random)[1]
+  ##########MTOP global test for heterogeneity
+  z.design.score.fixed <- z.standard[,1,drop=F]
+  z.design.score.random <-z.standard[,2:ncol(z.standard)]
+  
+  score.test.heter.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
+                                               x=as.matrix(G),
+                                               z.design=z.design.fixed,
+                                               score.test.support=score.test.support.random,
+                                               missingTumorIndicator=888)
+  score.fixed.heter <- score.test.fixed[[1]]
+  infor.fixed.heter <- score.test.fixed[[2]]
+  p_mheter <- DisplayMixedScoreTestResult(score.fixed.heter,
+                                          infor.fixed.heter,
+                                          score.random,
+                                          infor.random)[1]
+result <- list(p_global,p_heter,p_indi,p_mglobal,p_mheter)  
+return(result)
+}
 
 
-# #result <- Mvpoly(delta0,y,x,z_design)
-# 
-# print("Finished mv_poly")
-# 
-# delta0 <- c(theta_intercept+runif(K),theta_covar+runif(length(theta_covar)))
-# #this gives you the score test result
-# #p_value <- score_test(delta0,y,x_test,x_covar,z_design)
-# 
-# result <- score_test(delta0,y,x_test,x_covar,z_design)
-# 
-# 
-# 
-# I_M <- diag(M)
-# p_covar <- ncol(x_covar)
-# 
-# z_covar_temp <- NULL
-# 
-# for(i in 1:M){
-#   z_covar_temp <- rbind(z_covar_temp,kronecker(diag(p_covar),t(z_design[i,])))
+# GenerateComplete <- function(y.pheno.mis,x_covar){
+#   idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
+#                      y.pheno.mis[,4]==888|y.pheno.mis[,5]==888)
+#   y.pheno.complete <- y.pheno.mis[-idx.mis,]
+#   x.covar.complete <- x_covar[-idx.mis,]
+#   return(list(y.pheno.complete,x.covar.complete))
 # }
-# 
-# z_covar <- matrix(0,nrow = M*(p_covar+1),ncol= M+p_covar*ncol(z_design))
-# for(i in 1:M){
-#   z_covar[1+(i-1)*(p_covar+1),i] <- 1
-# }
-# for(i in 1:M){
-#   z_covar[(2+(i-1)*(p_covar+1)):(i*(p_covar+1)),(M+1):ncol(z_covar)] <- 
-#     z_covar_temp[(1+(i-1)*p_covar):(i*p_covar),]
-# }
-# x_covar <- cbind(1,x_covar)
-# xx_covar <- kronecker(I_M,x_covar)
-# xxz_covar <- xx_covar%*%z_covar
-# 
-# 
-# # sof <- "source.so"
-# # dyn.load(sof)
-# # 
-# # 
-# # 
-# # nparm <- length(delta0)
-# # NITER <- 100
-# # tol   <- 1e-4
-# # NCOV  <- ncol(x_covar)
-# # ncat  <- NCOL(z_design)-1
-# # DEBUG     <- 2
-# # ret_rc    <- as.integer(1)
-# # ret_delta <- as.numeric(rep(-9999, nparm))
-# # ret_p     <- as.numeric(1)
-# # 
-# # temp <- .C("score_test", as.numeric(delta0), as.integer(nparm), as.numeric(as.vector(y)),
-# #            as.numeric(x_covar), as.numeric(x_test), as.numeric(z_design), as.integer(n), as.integer(M), 
-# #            as.integer(ncat), as.integer(NCOV), as.integer(NITER), as.numeric(tol), 
-# #            as.integer(DEBUG), ret_rc=ret_rc, ret_delta=ret_delta, ret_p=ret_p)
-# # print(paste("rc = ", temp$ret_rc, sep=""))
-# # print(paste("pval = ", temp$ret_p, sep=""))
-# 
-# 
-# 
+
+
+
+args = commandArgs(trailingOnly = T)
+i1 = as.numeric(args[[1]])
+set.seed(i1)
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+library(bc2)
+
+beta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91)
+#theta_test <- -c(0.35, 0.15, 0.25, 0.05, 0.20)
+beta_covar <- rep(0.05,24)
+#SimulateData <- function(beta_intercept,beta_covar,x_covar,n)
+s_times <- 2
+p_global_result <- rep(0,3*s_times)
+p_heter_result <- rep(0,3*s_times)
+p_indi_result <- rep(0,3*s_times)
+p_mglobal_result <- rep(0,3*s_times)
+p_mheter_result <- rep(0,3*s_times)
+sizes <- c(5000,50000,500000)
+temp <- 1
+for(n in sizes){
+  x_covar <- rnorm(n)
+  y.pheno.mis <- SimulateData(beta_intercept,beta_covar,x_covar,n)
+  
+  score.test.support.fixed <- ScoreTestSupport(
+    y.pheno.mis,
+    baselineonly = NULL,
+    additive = as.matrix(x_covar),
+    pairwise.interaction = NULL,
+    saturated = NULL,
+    missingTumorIndicator = 888
+  )
+  
+  for(i in 1:s_times){
+    print(i)
+    G <- rbinom(n,2,0.25)
+    
+    ###########FTOP model
+    result <- FixedMixedTwoStageModel(y.pheno.mis,G,x_covar,score.test.support.fixed)
+    p_global_result[temp] <- result[[1]]
+    p_heter_result[temp] <- result[[2]]
+    p_indi_result[temp] <- result[[3]]
+    p_mglobal_result[temp] <- result[[4]]
+    p_mheter_result[temp] <- result[[5]]
+    
+    temp = temp+1
+    
+  }
+  
+}
+
+result <- list(odds1,sigma1,odds2,sigma2)
+save(result,file=paste0("./simulation/EM_algorithm_evaluation/result/simu_result",i1,".Rdata"))
