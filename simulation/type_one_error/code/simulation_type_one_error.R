@@ -73,7 +73,7 @@ FixedMixedTwoStageModel <- function(y.pheno.mis,G,x_covar,score.test.support.fix
   ##########MTOP global test for association 
   z.design.fixed <- cbind(rep(1,M),z.standard[,1])
   z.design.random <-z.standard[,2:ncol(z.standard)]
-  score.test.fixed<- ScoreTestSelfDesign(y=y.pheno.mis,
+  score.test.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
                                          x=as.matrix(G),
                                          z.design=z.design.fixed,
                                          score.test.support=score.test.support.fixed,
@@ -141,19 +141,21 @@ beta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.6
 #theta_test <- -c(0.35, 0.15, 0.25, 0.05, 0.20)
 beta_covar <- rep(0.05,24)
 #SimulateData <- function(beta_intercept,beta_covar,x_covar,n)
-s_times <- 2
+s_times <- 100
 p_global_result <- rep(0,3*s_times)
 p_heter_result <- rep(0,3*s_times)
 p_indi_result <- rep(0,3*s_times)
 p_mglobal_result <- rep(0,3*s_times)
 p_mheter_result <- rep(0,3*s_times)
-sizes <- c(5000,50000,500000)
+sizes <- c(5000,50000,100000)
+#sizes <- 100000
+#s_times <- 2
 temp <- 1
 for(n in sizes){
   x_covar <- rnorm(n)
   y.pheno.mis <- SimulateData(beta_intercept,beta_covar,x_covar,n)
-  
-  score.test.support.fixed <- ScoreTestSupport(
+  print("simulation")
+  score.test.support.fixed <- ScoreTestSupportMixedModel(
     y.pheno.mis,
     baselineonly = NULL,
     additive = as.matrix(x_covar),
@@ -161,18 +163,18 @@ for(n in sizes){
     saturated = NULL,
     missingTumorIndicator = 888
   )
-  
+  print("finished")
   for(i in 1:s_times){
     print(i)
     G <- rbinom(n,2,0.25)
     
-    ###########FTOP model
+    ###########TOP model
     result <- FixedMixedTwoStageModel(y.pheno.mis,G,x_covar,score.test.support.fixed)
-    p_global_result[temp] <- result[[1]]
-    p_heter_result[temp] <- result[[2]]
-    p_indi_result[temp] <- result[[3]]
-    p_mglobal_result[temp] <- result[[4]]
-    p_mheter_result[temp] <- result[[5]]
+    p_global_result[temp] <- as.numeric(result[[1]])
+    p_heter_result[temp] <- as.numeric(result[[2]])
+    p_indi_result[temp] <- as.numeric(result[[3]])
+    p_mglobal_result[temp] <- as.numeric(result[[4]])
+    p_mheter_result[temp] <- as.numeric(result[[5]])
     
     temp = temp+1
     
@@ -180,5 +182,5 @@ for(n in sizes){
   
 }
 
-result <- list(odds1,sigma1,odds2,sigma2)
-save(result,file=paste0("./simulation/EM_algorithm_evaluation/result/simu_result",i1,".Rdata"))
+result <- list(p_global_result,p_heter_result,p_indi_result,p_mglobal_result,p_mheter_result)
+save(result,file=paste0("./simulation/type_one_error/result/simu_result",i1,".Rdata"))
