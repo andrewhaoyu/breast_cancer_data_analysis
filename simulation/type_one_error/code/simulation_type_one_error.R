@@ -102,16 +102,24 @@ FixedMixedTwoStageModel <- function(y.pheno.mis,G,x_covar,score.test.support.fix
                                            score.random,
                                            infor.random)[1]
   ##########MTOP global test for heterogeneity
-  z.design.score.fixed <- z.standard[,1,drop=F]
-  z.design.score.random <-z.standard[,2:ncol(z.standard)]
-  
+  z.design.support <- matrix(rep(1,M),M,ncol=1)
+  z.design.fixed <- z.standard[,1,drop=F]
+  score.test.heter.support <- ScoreTestSupportMixedModelSelfDesign(
+    y.pheno.mis,
+    x.self.design  = G,
+    z.design = z.design.support,
+    additive =  as.matrix(x_covar),
+    pairwise.interaction = NULL,
+    saturated = NULL,
+    missingTumorIndicator = 888
+  )
   score.test.heter.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
                                                x=as.matrix(G),
                                                z.design=z.design.fixed,
-                                               score.test.support=score.test.support.random,
+                                               score.test.support=score.test.heter.support,
                                                missingTumorIndicator=888)
-  score.fixed.heter <- score.test.fixed[[1]]
-  infor.fixed.heter <- score.test.fixed[[2]]
+  score.fixed.heter <- score.test.heter.fixed[[1]]
+  infor.fixed.heter <- score.test.heter.fixed[[2]]
   p_mheter <- DisplayMixedScoreTestResult(score.fixed.heter,
                                           infor.fixed.heter,
                                           score.random,
@@ -133,7 +141,7 @@ return(result)
 
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
-set.seed(i1)
+
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 library(bc2)
 
@@ -141,46 +149,59 @@ beta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.6
 #theta_test <- -c(0.35, 0.15, 0.25, 0.05, 0.20)
 beta_covar <- rep(0.05,24)
 #SimulateData <- function(beta_intercept,beta_covar,x_covar,n)
-s_times <- 100
-p_global_result <- rep(0,3*s_times)
-p_heter_result <- rep(0,3*s_times)
-p_indi_result <- rep(0,3*s_times)
-p_mglobal_result <- rep(0,3*s_times)
-p_mheter_result <- rep(0,3*s_times)
-sizes <- c(5000,50000,100000)
 #sizes <- 100000
 #s_times <- 2
-temp <- 1
-for(n in sizes){
-  x_covar <- rnorm(n)
-  y.pheno.mis <- SimulateData(beta_intercept,beta_covar,x_covar,n)
-  print("simulation")
-  score.test.support.fixed <- ScoreTestSupportMixedModel(
-    y.pheno.mis,
-    baselineonly = NULL,
-    additive = as.matrix(x_covar),
-    pairwise.interaction = NULL,
-    saturated = NULL,
-    missingTumorIndicator = 888
-  )
-  print("finished")
-  for(i in 1:s_times){
-    print(i)
-    G <- rbinom(n,2,0.25)
-    
-    ###########TOP model
-    result <- FixedMixedTwoStageModel(y.pheno.mis,G,x_covar,score.test.support.fixed)
-    p_global_result[temp] <- as.numeric(result[[1]])
-    p_heter_result[temp] <- as.numeric(result[[2]])
-    p_indi_result[temp] <- as.numeric(result[[3]])
-    p_mglobal_result[temp] <- as.numeric(result[[4]])
-    p_mheter_result[temp] <- as.numeric(result[[5]])
-    
-    temp = temp+1
+library(foreach)
+library(doParallel)
+no.cores <- 2
+registerDoParallel(no.cores)
+
+
+result.list <- foreach(job.i = 1:2)%dopar%{
+  set.seed(2*i1-job.i)
+  s_times <- 2000
+  p_global_result <- rep(0,3*s_times)
+  p_heter_result <- rep(0,3*s_times)
+  p_indi_result <- rep(0,3*s_times)
+  p_mglobal_result <- rep(0,3*s_times)
+  p_mheter_result <- rep(0,3*s_times)
+  sizes <- c(5000,50000,100000)
+  
+    temp <- 1  
+  for(n in sizes){
+    x_covar <- rnorm(n)
+    y.pheno.mis <- SimulateData(beta_intercept,beta_covar,x_covar,n)
+    print("simulation")
+    score.test.support.fixed <- ScoreTestSupportMixedModel(
+      y.pheno.mis,
+      baselineonly = NULL,
+      additive = as.matrix(x_covar),
+      pairwise.interaction = NULL,
+      saturated = NULL,
+      missingTumorIndicator = 888
+    )
+    print("finished")
+    for(i in 1:s_times){
+      print(i)
+      G <- rbinom(n,2,0.25)
+      
+      ###########TOP model
+      model.result <- FixedMixedTwoStageModel(y.pheno.mis,G,x_covar,score.test.support.fixed)
+      p_global_result[temp] <- as.numeric(model.result[[1]])
+      p_heter_result[temp] <- as.numeric(model.result[[2]])
+      p_indi_result[temp] <- as.numeric(model.result[[3]])
+      p_mglobal_result[temp] <- as.numeric(model.result[[4]])
+      p_mheter_result[temp] <- as.numeric(model.result[[5]])
+      
+      temp = temp+1
+      
+    }
     
   }
   
+  result <- list(p_global_result,p_heter_result,p_indi_result,p_mglobal_result,p_mheter_result)
+  return(result)
 }
+stopImplicitCluster()
 
-result <- list(p_global_result,p_heter_result,p_indi_result,p_mglobal_result,p_mheter_result)
-save(result,file=paste0("./simulation/type_one_error/result/simu_result",i1,".Rdata"))
+  save(result.list,file=paste0("./simulation/type_one_error/result/simu_result",i1,".Rdata"))
