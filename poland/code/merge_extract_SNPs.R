@@ -47,7 +47,7 @@ for(i in 1:2){
   snppro <- as.numeric(unlist(myVector)[7:length(myVector[[1]])])
   snpvalue <- convert(snppro,n)
   snpvalue <- snpvalue[idx.fil][idx.match]
-  top_signal_in_poland[,2] <- snpvalue
+  top_signal_in_poland[,i] <- snpvalue
 }
 
 colnames(top_signal_in_poland) <- c("rs11200014","rs78540526")
