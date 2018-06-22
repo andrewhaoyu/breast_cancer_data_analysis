@@ -65,7 +65,7 @@ if(i1<=2){
   colnames(y.pheno.mis2) = c("Behaviour","ER",
                              "PR","HER2","Grade")
   
-  x.test.all.mis2 <- top_signal
+  x.test.all.mis2 <- top_signal[idx,]
   x.covar.mis2 <- data2[,c(5:8,204)]
   
   
