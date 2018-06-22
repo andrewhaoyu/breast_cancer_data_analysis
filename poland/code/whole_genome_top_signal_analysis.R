@@ -303,7 +303,7 @@ if(i1<=2){
   heter.result <- cbind(heter.result,p.poly)
   colnames(heter.result)[19] <- "polytomous_p"
   
-  save(heter.result,file=paste0("./result/whole_genome/heter_result_",i1,".Rdata"))
+  save(heter.result,file=paste0("./poland/result/whole_genome/heter_result_",i1,".Rdata"))
   
   
   
