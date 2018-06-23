@@ -121,8 +121,13 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
   sum <- table(subtypes)
   idx.cat <- which(sum<=10)
   idx.remove <- which((subtypes%in%(unique(idx.cat)-1))==T)
-  subtypes <- subtypes[-idx.remove]
-  return(list(subtypes,idx.remove))
+  if(length(idx.remove)==0){
+    return(list(subtypes,idx.remove))
+  }else{
+    subtypes <- subtypes[-idx.remove]
+    return(list(subtypes,idx.remove))  
+  }
+  
 }
 
 
@@ -199,8 +204,15 @@ PowerCompare <- function(y.pheno.mis,G,x_covar){
   }else{
     subtypes <- temp[[1]]
     idx.remove <- temp[[2]]
-    x.covar.poly <- x.covar.com[-idx.remove]
-    G.poly <- G.com[-idx.remove]
+    if(length(idx.remove)!=0){
+      x.covar.poly <- x.covar.com[-idx.remove]
+      G.poly <- G.com[-idx.remove]
+      
+    }else{
+      x.covar.poly <- x.covar.com
+      G.poly <- G.com
+      
+    }
     poly.model <- multinom(subtypes~x.covar.poly+G.poly,maxit = 1000)
     
     if(poly.model$convergence==0){
@@ -265,7 +277,7 @@ registerDoParallel(no.cores)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 2
+  s_times <- 20
   p_global_result <- rep(0,9*s_times)
   p_mglobal_result <- rep(0,9*s_times)
   p_standard <- rep(0,9*s_times)
@@ -284,19 +296,22 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         theta_test <- c(c(0,0.05),rnorm(3,0,0.02))
       }
       for(n in sizes){
-        # x_covar <- rnorm(n)
-        temp.simu <- SimulateDataPower(theta_intercept,theta_test,theta_covar,n)
-        y.pheno.mis <- temp.simu[[1]]
-        G <- temp.simu[[2]]
-        x_covar <- temp.simu[[3]]
-        print("simulation")
-        model.result <- PowerCompare(y.pheno.mis,G,x_covar)
+        for(i in s_times){
+          temp.simu <- SimulateDataPower(theta_intercept,theta_test,theta_covar,n)
+          y.pheno.mis <- temp.simu[[1]]
+          G <- temp.simu[[2]]
+          x_covar <- temp.simu[[3]]
+          print("simulation")
+          model.result <- PowerCompare(y.pheno.mis,G,x_covar)
           p_global_result[temp] <- as.numeric(model.result[[1]])
-        p_mglobal_result[temp] <- as.numeric(model.result[[2]])
-        p_standard[temp] <- as.numeric(model.result[[3]])
-        p_global_complete[temp] <- as.numeric(model.result[[4]])
-        p_poly[temp] <- as.numeric(model.result[[5]])
-        temp = temp+1
+          p_mglobal_result[temp] <- as.numeric(model.result[[2]])
+          p_standard[temp] <- as.numeric(model.result[[3]])
+          p_global_complete[temp] <- as.numeric(model.result[[4]])
+          p_poly[temp] <- as.numeric(model.result[[5]])
+          temp = temp+1
+          
+        }
+        # x_covar <- rnorm(n)
         
       }
       
@@ -307,5 +322,4 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
   
 stopImplicitCluster()
-
-save(result.list,file=paste0("./simulation/type_one_error/result/simu_result",i1,".Rdata"))
+save(result.list,file=paste0("./simulation/power/result/simu_result",i1,".Rdata"))
