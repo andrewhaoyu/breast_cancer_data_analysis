@@ -133,7 +133,7 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
 
 
 
-PowerCompare <- function(y.pheno.mis,G,x_covar){
+PowerCompare <- function(y.pheno.mis,G,x_covar,delta0){
   model1 <- TwoStageModel(y.pheno.mis,additive=cbind(G,x_covar),missingTumorIndicator = 888)
   z.standard <- model1[[12]]
   M <- nrow(z.standard)
@@ -259,8 +259,8 @@ PowerCompare <- function(y.pheno.mis,G,x_covar){
 
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
-
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd("/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis/")
+#setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 library(bc2)
 
 theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91)
@@ -277,7 +277,7 @@ registerDoParallel(no.cores)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 20
+  s_times <- 2
   p_global_result <- rep(0,9*s_times)
   p_mglobal_result <- rep(0,9*s_times)
   p_standard <- rep(0,9*s_times)
