@@ -259,6 +259,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,delta0){
 
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
+print(i1)
 setwd("/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis/")
 #setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 library(bc2)
