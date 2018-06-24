@@ -297,7 +297,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         theta_test <- c(c(0,0.05),rnorm(3,0,0.02))
       }
       for(n in sizes){
-        for(i in s_times){
+        for(i in 1:s_times){
           temp.simu <- SimulateDataPower(theta_intercept,theta_test,theta_covar,n)
           y.pheno.mis <- temp.simu[[1]]
           G <- temp.simu[[2]]
