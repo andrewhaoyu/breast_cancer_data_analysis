@@ -4,7 +4,7 @@
 
 
 
-SimulateData <- function(beta_intercept,beta_covar,x_covar,n){
+SimulateData <- function(beta_intercept,beta_covar,x_covar,n,){
   a <- c(0,1)
   b <- c(0,1)
   c <- c(0,1)
@@ -60,8 +60,11 @@ SimulateData <- function(beta_intercept,beta_covar,x_covar,n){
 }
 
 
-FixedMixedTwoStageModel <- function(y.pheno.mis,G,x_covar,score.test.support.fixed){
-  model1 <- TwoStageModel(y.pheno.mis,additive=cbind(G,x_covar),missingTumorIndicator = 888)
+FixedMixedTwoStageModel <- function(y.pheno.mis,G,x_covar,score.test.support.fixed,beta_intercept,theta_test,theta_covar){
+  model1 <- TwoStageModel(y.pheno.mis,
+                          additive=cbind(G,x_covar),
+                          missingTumorIndicator = 888,
+                          delta0 = c(beta_intercept,theta_test,theta_covar))
   z.standard <- model1[[12]]
   M <- nrow(z.standard)
   odds <- model1[[1]][M+(1:5)]
@@ -88,7 +91,8 @@ FixedMixedTwoStageModel <- function(y.pheno.mis,G,x_covar,score.test.support.fix
     additive =  as.matrix(x_covar),
     pairwise.interaction = NULL,
     saturated = NULL,
-    missingTumorIndicator = 888
+    missingTumorIndicator = 888,
+    delta0 = c(beta_intercept,theta_test[1:ncol(z.design.fixed)],theta_covar)
   )
   score.test.random<- ScoreTestMixedModel(y=y.pheno.mis,
                                           x=as.matrix(G),
@@ -111,7 +115,8 @@ FixedMixedTwoStageModel <- function(y.pheno.mis,G,x_covar,score.test.support.fix
     additive =  as.matrix(x_covar),
     pairwise.interaction = NULL,
     saturated = NULL,
-    missingTumorIndicator = 888
+    missingTumorIndicator = 888,
+    delta0 = c(beta_intercept,theta_test[1:ncol(z.design.support)],theta_covar)
   )
   score.test.heter.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
                                                x=as.matrix(G),
@@ -156,10 +161,13 @@ library(doParallel)
 no.cores <- 2
 registerDoParallel(no.cores)
 
+theta_test <- rep(0,5)
+theta_covar <- c(0.05,0,0,0,0)
+delta_ini = c(beta_intercept,theta_test,beta_covar)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 2000
+  s_times <- 2
   p_global_result <- rep(0,3*s_times)
   p_heter_result <- rep(0,3*s_times)
   p_indi_result <- rep(0,3*s_times)
@@ -171,6 +179,16 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   for(n in sizes){
     x_covar <- rnorm(n)
     y.pheno.mis <- SimulateData(beta_intercept,beta_covar,x_covar,n)
+   y <- y.pheno.mis
+   missing.data.vec <- GenerateMissingPosition(y,missingTumorIndicator=888)
+   y.pheno.complete <- y[-missing.data.vec,]
+   freq.subtypes <- GenerateFreqTable(y.pheno.complete)
+   idx.del <- which(freq.subtypes[,ncol(freq.subtypes)]<=10)
+   if(length(idx.del)!=0){
+     beta_intercept_input = beta_intercept[-idx.del]
+   }else{
+     beta_intercept_input = beta_intercept
+   }
     print("simulation")
     score.test.support.fixed <- ScoreTestSupportMixedModel(
       y.pheno.mis,
@@ -178,7 +196,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       additive = as.matrix(x_covar),
       pairwise.interaction = NULL,
       saturated = NULL,
-      missingTumorIndicator = 888
+      missingTumorIndicator = 888,
+      delta0 = c(beta_intercept_input,theta_covar)
     )
     print("finished")
     for(i in 1:s_times){
@@ -186,7 +205,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       G <- rbinom(n,2,0.25)
       
       ###########TOP model
-      model.result <- FixedMixedTwoStageModel(y.pheno.mis,G,x_covar,score.test.support.fixed)
+      model.result <- FixedMixedTwoStageModel(y.pheno.mis,G,x_covar,score.test.support.fixed,beta_intercept_input,theta_test,theta_covar)
       p_global_result[temp] <- as.numeric(model.result[[1]])
       p_heter_result[temp] <- as.numeric(model.result[[2]])
       p_indi_result[temp] <- as.numeric(model.result[[3]])
