@@ -167,7 +167,7 @@ delta_ini = c(beta_intercept,theta_test,beta_covar)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 2
+  s_times <- 2000
   p_global_result <- rep(0,3*s_times)
   p_heter_result <- rep(0,3*s_times)
   p_indi_result <- rep(0,3*s_times)
