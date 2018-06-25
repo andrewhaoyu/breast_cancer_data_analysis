@@ -4,7 +4,7 @@
 
 
 
-SimulateData <- function(beta_intercept,beta_covar,x_covar,n,){
+SimulateData <- function(beta_intercept,beta_covar,x_covar,n){
   a <- c(0,1)
   b <- c(0,1)
   c <- c(0,1)
