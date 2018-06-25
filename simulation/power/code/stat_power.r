@@ -133,8 +133,11 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
 
 
 
-PowerCompare <- function(y.pheno.mis,G,x_covar,delta0){
-  model1 <- TwoStageModel(y.pheno.mis,additive=cbind(G,x_covar),missingTumorIndicator = 888)
+PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_covar){
+  model1 <- TwoStageModel(y.pheno.mis,
+                          additive=cbind(G,x_covar),
+                          missingTumorIndicator = 888,
+                          delta0 = c(theta_intercept,theta_test,theta_covar))
   z.standard <- model1[[12]]
   M <- nrow(z.standard)
   odds <- model1[[1]][M+(1:5)]
@@ -152,13 +155,16 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,delta0){
     additive = as.matrix(x_covar),
     pairwise.interaction = NULL,
     saturated = NULL,
-    missingTumorIndicator = 888
+    missingTumorIndicator = 888,
+    c(theta_intercept,
+      theta_covar)
   )
   score.test.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
                                          x=as.matrix(G),
                                          z.design=z.design.fixed,
                                          score.test.support=score.test.support.fixed,
-                                         missingTumorIndicator=888)
+                                         missingTumorIndicator=888
+                                         )
   score.fixed <- score.test.fixed[[1]]
   infor.fixed <- score.test.fixed[[2]]
   
@@ -169,7 +175,9 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,delta0){
     additive =  as.matrix(x_covar),
     pairwise.interaction = NULL,
     saturated = NULL,
-    missingTumorIndicator = 888
+    missingTumorIndicator = 888,
+    delta0 = c(theta_intercept,theta_test[1:ncol(z.design.fixed)],
+      theta_covar)
   )
   score.test.random<- ScoreTestMixedModel(y=y.pheno.mis,
                                           x=as.matrix(G),
@@ -189,7 +197,8 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,delta0){
   y.pheno.com <- y.pheno.mis[-idx.mis,]
   x.covar.com <- x_covar[-idx.mis]
   G.com <- G[-idx.mis]
-  model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL)
+  model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,
+                                                                                                      theta_covar))
   z.standard <- model2[[12]]
   M <- nrow(z.standard)
   odds <- model2[[1]][M+(1:5)]
@@ -278,7 +287,7 @@ registerDoParallel(no.cores)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 10
+  s_times <- 2
   p_global_result <- rep(0,9*s_times)
   p_mglobal_result <- rep(0,9*s_times)
   p_standard <- rep(0,9*s_times)
@@ -302,8 +311,23 @@ result.list <- foreach(job.i = 1:2)%dopar%{
           y.pheno.mis <- temp.simu[[1]]
           G <- temp.simu[[2]]
           x_covar <- temp.simu[[3]]
+          
+          y <- y.pheno.mis
+          missing.data.vec <- GenerateMissingPosition(y,missingTumorIndicator=888)
+          y.pheno.complete <- y[-missing.data.vec,]
+          freq.subtypes <- GenerateFreqTable(y.pheno.complete)
+          idx.del <- which(freq.subtypes[,ncol(freq.subtypes)]<=10)
+          if(length(idx.del)!=0){
+            theta_intercept_input = theta_intercept[-idx.del]
+          }else{
+            theta_intercept_input = theta_intercept
+          }
           print("simulation")
-          model.result <- PowerCompare(y.pheno.mis,G,x_covar)
+          
+          model.result <- PowerCompare(y.pheno.mis,G,x_covar,
+                                       theta_intercept_input,
+                                       theta_test,
+                                       theta_covar)
           p_global_result[temp] <- as.numeric(model.result[[1]])
           p_mglobal_result[temp] <- as.numeric(model.result[[2]])
           p_standard[temp] <- as.numeric(model.result[[3]])
