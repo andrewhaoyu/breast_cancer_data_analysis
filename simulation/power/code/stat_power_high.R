@@ -150,7 +150,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   odds <- model1[[1]][M+(1:(K))]
   sigma <-  (model1[[2]][M+(1:K),M+(1:K)])
   fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_global <- fixed.result[15]
+  p_global <- fixed.result[length(fixed.result)-1]
   # p_heter <- fixed.result[12]
   # p_indi <- fixed.result[2]
   ##########MTOP global test for association 
@@ -211,7 +211,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   odds <- model2[[1]][M+(1:K)]
   sigma <-  (model2[[2]][M+(1:K),M+(1:K)])
   fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_global_complete <- fixed.result[15]
+  p_global_complete <- fixed.result[length(fixed.result)-1]
   
   
   temp <-  Generatesubtypes(y.pheno.com[,2],y.pheno.com[,3],y.pheno.com[,4],y.pheno.com[,5],y.pheno.com[,6],y.pheno.com[,7])
