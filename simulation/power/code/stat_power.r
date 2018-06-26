@@ -222,7 +222,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
       G.poly <- G.com
       
     }
-    poly.model <- multinom(subtypes~x.covar.poly+G.poly,maxit = 1000)
+    poly.model <- multinom(subtypes~G.poly+x.covar.poly,maxit = 1000)
     
     if(poly.model$convergence==0){
       tryCatch({
