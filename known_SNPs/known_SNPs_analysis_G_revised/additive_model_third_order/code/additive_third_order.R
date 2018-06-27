@@ -88,10 +88,11 @@ if(i1<=177){
   loglikelihood.icog <- Heter.result.Icog[[8]]
   
   ###################Global test for association
-  score.test.support.fixed.icog.ga <- ScoreTestSupport(y.pheno.mis1,
-                                        baselineonly=NULL,
-                                        additive=x.all.mis1[,2:ncol(x.all.mis1)],
-                                missingTumorIndicator = 888)
+  score.test.support.fixed.icog.ga <- 
+    ScoreTestSupport(y.pheno.mis1,
+                    baselineonly=NULL,
+                    additive=x.all.mis1[,2:ncol(x.all.mis1)],
+                    missingTumorIndicator = 888)
   score.test.fixed.icog.ga <- 
     ScoreTestSelfDesign(y=y.pheno.mis1,                                                           x=x.all.mis1[,1,drop=F],
                   z.design=z.design[,c(1,2,6)],

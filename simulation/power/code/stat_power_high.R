@@ -215,50 +215,50 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   
   
   temp <-  Generatesubtypes(y.pheno.com[,2],y.pheno.com[,3],y.pheno.com[,4],y.pheno.com[,5],y.pheno.com[,6],y.pheno.com[,7])
-  if(length(temp[[1]])<=2){
-    p_poly = 1
-  }else{
-    subtypes <- temp[[1]]
-    idx.remove <- temp[[2]]
-    if(length(idx.remove)!=0){
-      x.covar.poly <- x.covar.com[-idx.remove]
-      G.poly <- G.com[-idx.remove]
-      
-    }else{
-      x.covar.poly <- x.covar.com
-      G.poly <- G.com
-      
-    }
-    poly.model <- multinom(subtypes~G.poly+x.covar.poly,maxit = 1000)
-    
-    if(poly.model$convergence==0){
-      tryCatch({
-        poly.model.coef <- coef(poly.model)
-        M <- nrow(poly.model.coef)
-        p.covariate <- ncol(poly.model.coef)
-        snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
-        snp.coef <- poly.model.coef[,2]
-        
-        result_temp <- DisplaySecondStageTestResult(snp.coef,snp.cov)  
-        p_poly <- result_temp[length(result_temp)-1]
-      },
-      error = function(e){
-        p_poly<- 1
-      }
-      
-      )
-      
-      
-    }else{
-      p_poly = 1
-    }
-    
-    
-    
-  }
+  # if(length(temp[[1]])<=2){
+  #   p_poly = 1
+  # }else{
+  #   subtypes <- temp[[1]]
+  #   idx.remove <- temp[[2]]
+  #   if(length(idx.remove)!=0){
+  #     x.covar.poly <- x.covar.com[-idx.remove]
+  #     G.poly <- G.com[-idx.remove]
+  #     
+  #   }else{
+  #     x.covar.poly <- x.covar.com
+  #     G.poly <- G.com
+  #     
+  #   }
+  #   poly.model <- multinom(subtypes~G.poly+x.covar.poly,maxit = 1000)
+  #   
+  #   if(poly.model$convergence==0){
+  #     tryCatch({
+  #       poly.model.coef <- coef(poly.model)
+  #       M <- nrow(poly.model.coef)
+  #       p.covariate <- ncol(poly.model.coef)
+  #       snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
+  #       snp.coef <- poly.model.coef[,2]
+  #       
+  #       result_temp <- DisplaySecondStageTestResult(snp.coef,snp.cov)  
+  #       p_poly <- result_temp[length(result_temp)-1]
+  #     },
+  #     error = function(e){
+  #       p_poly<- 1
+  #     }
+  #     
+  #     )
+  #     
+  #     
+  #   }else{
+  #     p_poly = 1
+  #   }
+  #   
+  #   
+  #   
+  # }
+  # 
   
-  
-  result <- list(p_global,p_mglobal,p_standard,p_global_complete,p_poly)  
+  result <- list(p_global,p_mglobal,p_standard,p_global_complete)  
   return(result)
 }
 
@@ -297,7 +297,7 @@ registerDoParallel(no.cores)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 2
+  s_times <- 1
   sizes <- c(50000,100000)
   n.sizes <- length(sizes)
   p_global_result <- rep(0,n.sizes*s_times)
@@ -345,7 +345,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         p_mglobal_result[temp] <- as.numeric(model.result[[2]])
         p_standard[temp] <- as.numeric(model.result[[3]])
         p_global_complete[temp] <- as.numeric(model.result[[4]])
-        p_poly[temp] <- as.numeric(model.result[[5]])
+       # p_poly[temp] <- as.numeric(model.result[[5]])
         temp = temp+1
         
       }
@@ -355,7 +355,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
     
   }
   
-  result <- list(p_global_result,p_mglobal_result,p_standard,p_mglobal_result,p_global_complete,p_poly)
+  result <- list(p_global_result,p_mglobal_result,p_standard,p_mglobal_result,p_global_complete)
   return(result)
 }
 
