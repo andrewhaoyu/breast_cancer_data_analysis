@@ -30,7 +30,7 @@ if(i1<=177){
   # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
   
   x.test.all.mis1 <- data1[,c(27:203)]
-  x.test.all.mis1 <- 2-x.test.all.mis1
+  x.test.all.mis1 <- x.test.all.mis1
   ###pc1-10 and age
   x.covar.mis1 <- data1[,c(5:14)]
   
@@ -52,7 +52,7 @@ if(i1<=177){
   beta.sigma.icog <- z.additive.design%*%sigma.log.odds.icog%*%t(z.additive.design)
   loglikelihood.icog <- Heter.result.Icog[[8]]
   rm(Heter.result.Icog)
-  
+ ##################global test for association 
   score.test.support.icog <- ScoreTestSupport(
     y.pheno.mis1,
     baselineonly = NULL,

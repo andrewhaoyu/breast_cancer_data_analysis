@@ -18,6 +18,7 @@ library(bc2)
 library(data.table)
 # load("./known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/z.standard.Rdata")
 load("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/z.design.Rdata")
+
 # 
 # idx <- which(z.standard[,1]==0&
 #                z.standard[,2]==0&
@@ -86,7 +87,33 @@ if(i1<=177){
   # beta.sigma.icog <- z.trans%*%sigma.log.odds.icog%*%t(z.trans)
   loglikelihood.icog <- Heter.result.Icog[[8]]
   
+  ###################Global test for association
+  score.test.support.fixed.icog.ga <- ScoreTestSupport(y.pheno.mis1,
+                                        baselineonly=NULL,
+                                        additive=x.all.mis1[,2:ncol(x.all.mis1)],
+                                missingTumorIndicator = 888)
+  score.test.fixed.icog.ga <- 
+    ScoreTestSelfDesign(y=y.pheno.mis1,                                                           x=x.all.mis1[,1,drop=F],
+                  z.design=z.design[,c(1,2,6)],
+                  score.test.support= score.test.support.fixed.icog.ga,                           missingTumorIndicator=888)
+  score.fixed.icog.ga <- score.test.fixed.icog.ga[[1]]
+  infor.fixed.icog.ga <- score.test.fixed.icog.ga[[2]]
   
+  
+  score.test.support.random.icog.ga <- 
+    ScoreTestSupportSelfDesign(y.pheno.mis1,                                                x.self.design=x.all.mis1[,1,drop=F],
+            z.design=z.design[,c(1,2,6),drop=F],                                            additive=x.all.mis1[,2:ncol(x.all.mis1)],                                       missingTumorIndicator = 888)
+  
+  score.test.random.icog.ga <- 
+    ScoreTestSelfDesign(y=y.pheno.mis1,                    
+                        x=x.all.mis1[,1,drop=F],
+                        z.design=z.design[,3:5],
+                        score.test.support= score.test.support.random.icog.ga,                          missingTumorIndicator=888)
+  score.random.icog.ga <- score.test.random.icog.ga[[1]]
+  infor.random.icog.ga <- score.test.random.icog.ga[[2]]
+  
+  
+   ###################Global test for heterogeneity
   score.test.support.fixed.icog <- ScoreTestSupportSelfDesign(y.pheno.mis1,
                                          x.self.design=x.all.mis1[,1,drop=F],
                                          z.design=z.design[,1,drop=F],
@@ -95,94 +122,28 @@ if(i1<=177){
                                          pairwise.interaction=NULL,
                                          saturated=NULL,
                                          missingTumorIndicator = 888)
-  score.test.fixed.icog <- ScoreTestSelfDesign(y=y.pheno.mis1,                    x=x.all.mis1[,1,drop=F],
-                    z.design=z.design[,2:ncol(z.design)],
-                score.test.support= score.test.support.fixed.icog,                           missingTumorIndicator=888)
+  score.test.fixed.icog <- 
+    ScoreTestSelfDesign(y=y.pheno.mis1,
+                        x=x.all.mis1[,1,drop=F],
+                        z.design=z.design[,2:ncol(z.design)],
+                        score.test.support= score.test.support.fixed.icog,                              missingTumorIndicator=888)
   score.fixed.icog <-   score.test.fixed.icog[[1]]
   infor.fixed.icog <-   score.test.fixed.icog[[2]]
-  score.test.support.random.icog <- ScoreTestSupportSelfDesign(y.pheno.mis1,                                                x.self.design=x.all.mis1[,1,drop=F],
-z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL,                                           additive=x.all.mis1[,2:ncol(x.all.mis1)],                     pairwise.interaction=NULL,                                  saturated=NULL,                                             missingTumorIndicator = 888)
+  score.test.support.random.icog <- 
+    ScoreTestSupportSelfDesign(y.pheno.mis1,                                                x.self.design=x.all.mis1[,1,drop=F],
+            z.design=z.design[,c(1,2,6),drop=F],                                            additive=x.all.mis1[,2:ncol(x.all.mis1)],                                       missingTumorIndicator = 888)
   
-  score.test.random.icog <- ScoreTestSelfDesign(y=y.pheno.mis1,                    x=x.all.mis1[,1,drop=F],
-                     z.design=z.design[,3:5],
-                                               score.test.support= score.test.support.random.icog,                           missingTumorIndicator=888)
+  score.test.random.icog <- 
+    ScoreTestSelfDesign(y=y.pheno.mis1,
+                        x=x.all.mis1[,1,drop=F],
+                        z.design=z.design[,3:5],
+                       score.test.support= score.test.support.random.icog,                           missingTumorIndicator=888)
   score.random.icog <- score.test.random.icog[[1]]
   infor.random.icog <- score.test.random.icog[[2]]
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  # score.test.support.icog <- ScoreTestSupport(
-  #   y.pheno.mis1,
-  #   baselineonly = NULL,
-  #   additive = x.all.mis1[,2:ncol(x.all.mis1)],
-  #   pairwise.interaction = NULL,
-  #   saturated = NULL,
-  #   missingTumorIndicator = 888
-  # )
-  # 
-  # 
-  # 
-  # score.test.icog<- ScoreTestSelfDesign(y=y.pheno.mis1,
-  #                                       x=x.all.mis1[,1,drop=F],
-  #                                       z.design=z.design,
-  #                                       score.test.support=score.test.support.icog,
-  #                                       missingTumorIndicator=888)
-  # 
-  # 
-  # score.icog <- score.test.icog[[1]]
-  # infor.icog <- score.test.icog[[2]]
-  # 
-  # score.test.icog.baseline <- ScoreTestSelfDesign(y=y.pheno.mis1,
-  #                                                 x=x.all.mis1[,1,drop=F],
-  #                                                 z.design = z.design.score.baseline,
-  #                                                 score.test.support = score.test.support.icog,
-  #                                                 missingTumorIndicator=888
-  # )
-  # score.icog.baseline <- score.test.icog.baseline[[1]]
-  # infor.icog.baseline <- score.test.icog.baseline[[2]]
-  # rm(score.test.support.icog)  
-  # gc()
-  # score.test.support.icog.casecase <- ScoreTestSupport(
-  #   y.pheno.mis1,
-  #   baselineonly = x.all.mis1[,1,drop=F],
-  #   additive = x.all.mis1[,2:ncol(x.all.mis1)],
-  #   pairwise.interaction = NULL,
-  #   saturated = NULL,
-  #   missingTumorIndicator = 888
-  # )
-  # score.test.icog.casecase<- ScoreTestSelfDesign(y=y.pheno.mis1,
-  #                                                x=x.all.mis1[,1,drop=F],
-  #                                                z.design=z.design.score.casecase,
-  #                                                score.test.support=score.test.support.icog.casecase,
-  #                                                missingTumorIndicator=888)
-  # 
-  # 
-  # score.icog.casecase <- score.test.icog.casecase[[1]]
-  # infor.icog.casecase <- score.test.icog.casecase[[2]]
-  # rm(score.test.support.icog.casecase)
-  # gc()
-  # 
-  # 
-  # 
-  # 
-  
-  # names1 = colnames(data1)[27:206]
-  # rm(data1)
-  # gc()
-  
-  
-  
-  #analysis for Onco Array
-  #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
+
   data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
   data2 <- as.data.frame(data2)
   y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
@@ -210,26 +171,72 @@ z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL
   # beta.onco <- z.trans%*%log.odds.onco
   # beta.sigma.onco <- z.trans%*%sigma.log.odds.onco%*%t(z.trans)
   loglikelihood.onco <- Heter.result.Onco[[8]]
+  ###########global test for association
+  score.test.support.fixed.onco.ga <- 
+    ScoreTestSupport(y.pheno.mis2,
+                    additive=x.all.mis2[,2:ncol(x.all.mis2)],
+                    missingTumorIndicator = 888)
+  score.test.fixed.onco.ga <- 
+    ScoreTestSelfDesign(y=y.pheno.mis2,
+                        x=x.all.mis2[,1,drop=F],
+                        z.design=z.design[,c(1,2,6)],
+                        score.test.support= score.test.support.fixed.onco.ga,                           missingTumorIndicator=888)
+  score.test.fixed.onco.ga <-   score.test.fixed.onco.ga[[1]]
+  score.test.fixed.onco.ga <-   score.test.fixed.onco.ga[[2]]
+  score.test.support.random.onco.ga <- 
+    ScoreTestSupportSelfDesign(y.pheno.mis2,                                                                  x.self.design=x.all.mis2[,1,drop=F],
+                              z.design=z.design[,c(1,2,6),drop=F],                                            additive=x.all.mis2[,2:ncol(x.all.mis2)],                                       missingTumorIndicator = 888)
   
-  score.test.support.fixed.onco <- ScoreTestSupportSelfDesign(y.pheno.mis2,
-                                                              x.self.design=x.all.mis2[,1,drop=F],
-                                                              z.design=z.design[,1,drop=F],
-                                                              baselineonly=NULL,
-                                                              additive=x.all.mis2[,2:ncol(x.all.mis2)],
-                                                              pairwise.interaction=NULL,
-                                                              saturated=NULL,
-                                                              missingTumorIndicator = 888)
-  score.test.fixed.onco <- ScoreTestSelfDesign(y=y.pheno.mis2,                    x=x.all.mis2[,1,drop=F],
-                                               z.design=z.design[,2:ncol(z.design)],
-                                               score.test.support= score.test.support.fixed.onco,                           missingTumorIndicator=888)
+  score.test.random.onco <- 
+    ScoreTestSelfDesign(y=y.pheno.mis2,                    
+                        x=x.all.mis2[,1,drop=F],
+                        z.design=z.design[,3:5],
+                        score.test.support= score.test.support.random.onco.ga,                          missingTumorIndicator=888)
+  score.test.random.onco.ga <-   score.test.fixed.onco.ga[[1]]
+  score.test.random.onco.ga <-   score.test.fixed.onco.ga[[2]]
+  
+  meta.result.score.fix.ga <- 
+    ScoreMetaAnalysis(score.fixed.icog.ga,
+                      infor.fixed.icog.ga,
+                      score.fixed.onco.ga,
+                      infor.fixed.onco.ga)
+  score.fixed.meta.ga <- meta.result.score.fix.ga[[1]]
+  infor.fixed.meta.ga <- meta.result.score.fix.ga[[2]]
+  meta.result.score.random.ga <- 
+    ScoreMetaAnalysis(score.random.icog.ga,
+                      infor.random.icog.ga,
+                      score.random.onco.ga,
+                      infor.random.onco.ga)
+  score.randomed.meta.ga <- meta.result.score.random.ga[[1]]
+  infor.randomed.meta.ga <- meta.result.score.random.ga[[2]]
+  
+  test.result.second.mixed.ga <- 
+    DisplayMixedScoreTestResult(score.fixed.meta.ga,                                                            infor.fixed.meta.ga,                                                            score.randomed.meta.ga,                                                         infor.randomed.meta.ga)  
+  
+  
+  ###########global test for heterogneity  
+  score.test.support.fixed.onco <- 
+    ScoreTestSupportSelfDesign(y.pheno.mis2,
+                              x.self.design=x.all.mis2[,1,drop=F],
+                              z.design=z.design[,1,drop=F],
+                              additive=x.all.mis2[,2:ncol(x.all.mis2)],
+                              missingTumorIndicator = 888)
+  score.test.fixed.onco <- 
+    ScoreTestSelfDesign(y=y.pheno.mis2,
+                        x=x.all.mis2[,1,drop=F],
+                        z.design=z.design[,2:ncol(z.design)],
+                        score.test.support= score.test.support.fixed.onco,                              missingTumorIndicator=888)
   score.fixed.onco <-   score.test.fixed.onco[[1]]
   infor.fixed.onco <-   score.test.fixed.onco[[2]]
-  score.test.support.random.onco <- ScoreTestSupportSelfDesign(y.pheno.mis2,                                                x.self.design=x.all.mis2[,1,drop=F],
-                                                               z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL,                                           additive=x.all.mis2[,2:ncol(x.all.mis2)],                     pairwise.interaction=NULL,                                  saturated=NULL,                                             missingTumorIndicator = 888)
+  score.test.support.random.onco <- 
+    ScoreTestSupportSelfDesign(y.pheno.mis2,                                                                  x.self.design=x.all.mis2[,1,drop=F],
+                              z.design=z.design[,c(1,2,6),drop=F],                                            additive=x.all.mis2[,2:ncol(x.all.mis2)],                                       missingTumorIndicator = 888)
   
-  score.test.random.onco <- ScoreTestSelfDesign(y=y.pheno.mis2,                    x=x.all.mis2[,1,drop=F],
-                                                z.design=z.design[,3:5],
-                                                score.test.support= score.test.support.random.onco,                         missingTumorIndicator=888)
+  score.test.random.onco <- 
+    ScoreTestSelfDesign(y=y.pheno.mis2,                    
+                        x=x.all.mis2[,1,drop=F],
+                        z.design=z.design[,3:5],
+                        score.test.support= score.test.support.random.onco,                             missingTumorIndicator=888)
   score.random.onco <- score.test.random.onco[[1]]
   infor.random.onco <- score.test.random.onco[[2]]
   meta.result.score.fix <- ScoreMetaAnalysis(score.fixed.icog,infor.fixed.icog,score.fixed.onco,infor.fixed.onco)
@@ -258,56 +265,11 @@ z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL
   
   
   heter.result <- list(test.result.second.wald,
+                       test.result.mixed.ga,
                        test.result.second.mixed)
   
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/heter_result_",i1,".Rdata"))
   
-  
-  # beta.meta <- z.trans%*%second.stage.logodds.meta
-  # beta.sigma.meta <- z.trans%*%second.stage.sigma.meta%*%t(z.trans)
-  # 
-  # test.result.first.wald <- DisplayFirstStageTestResult(beta.meta,beta.sigma.meta)
-  # 
-  # meta.result.score <- ScoreMetaAnalysis(score.icog,infor.icog,
-  #                                        score.onco,infor.onco)
-  # score.meta <- meta.result.score[[1]]
-  # infor.meta <- meta.result.score[[2]]
-  # 
-  # test.result.second.score <- DisplayFixedScoreTestResult(score.meta,infor.meta)
-  # 
-  # meta.result.score.baseline <- ScoreMetaAnalysis(score.icog.baseline,
-  #                                                 infor.icog.baseline,
-  #                                                 score.onco.baseline,
-  #                                                 infor.onco.baseline)
-  # score.meta.baseline <- meta.result.score.baseline[[1]]
-  # infor.meta.baseline <- meta.result.score.baseline[[2]]
-  # 
-  # meta.result.score.casecase <- ScoreMetaAnalysis(score.icog.casecase,
-  #                                                 infor.icog.casecase,
-  #                                                 score.onco.casecase,
-  #                                                 infor.onco.casecase)
-  # score.meta.casecase <- meta.result.score.casecase[[1]]
-  # infor.meta.casecase <- meta.result.score.casecase[[2]]
-  # test.result.second.mixed <- DisplayMixedScoreTestResult(score.meta.baseline,
-  #                                                         infor.meta.baseline,
-  #                                                         score.meta.casecase,
-  #                                                         infor.meta.casecase)  
-  # test.result.second.mixed <- data.frame(t(test.result.second.mixed))
-  # 
-  # colnames(test.result.second.mixed) <- c("mixed model global test for association","mixed model global test for heterogeneity")
-  # 
-  # loglikelihood <- loglikelihood.icog+loglikelihood.onco
-  # AIC <- 2*length(Heter.result.Onco[[1]])-2*loglikelihood
-  # 
-  # heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,loglikelihood = loglikelihood,AIC=AIC),
-  #                      data.frame(test.result.first.wald))
-  # 
-  # 
-  # 
-  # 
-  
-  # 
-  # 
   
 }else{
   data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
@@ -354,75 +316,62 @@ z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL
   # beta.sigma.onco <- z.trans%*%sigma.log.odds.onco%*%t(z.trans)
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
+  ###########global test for association
+  score.test.support.fixed.onco.ga <- 
+    ScoreTestSupport(y.pheno.mis2,
+                     additive=x.all.mis2[,2:ncol(x.all.mis2)],
+                     missingTumorIndicator = 888)
+  score.test.fixed.onco.ga <- 
+    ScoreTestSelfDesign(y=y.pheno.mis2,
+                        x=x.all.mis2[,1,drop=F],
+                        z.design=z.design[,c(1,2,6)],
+                        score.test.support= score.test.support.fixed.onco.ga,                           missingTumorIndicator=888)
+  score.test.fixed.onco.ga <-   score.test.fixed.onco.ga[[1]]
+  score.test.fixed.onco.ga <-   score.test.fixed.onco.ga[[2]]
+  score.test.support.random.onco.ga <- 
+    ScoreTestSupportSelfDesign(y.pheno.mis2,                                                                  x.self.design=x.all.mis2[,1,drop=F],
+                               z.design=z.design[,c(1,2,6),drop=F],                                            additive=x.all.mis2[,2:ncol(x.all.mis2)],                                       missingTumorIndicator = 888)
   
-  # score.test.support.onco <- ScoreTestSupport(
-  #   y.pheno.mis2,
-  #   baselineonly = NULL,
-  #   additive = x.all.mis2[,2:ncol(x.all.mis2)],
-  #   pairwise.interaction = NULL,
-  #   saturated = NULL,
-  #   missingTumorIndicator = 888
-  # )
-  # 
-  # score.test.onco<- ScoreTestSelfDesign(y=y.pheno.mis2,
-  #                                       x=x.all.mis2[,1,drop=F],
-  #                                       z.design= z.design,
-  #                                       score.test.support=score.test.support.onco,
-  #                                       missingTumorIndicator=888)
-  # 
-  # score.onco <- score.test.onco[[1]]
-  # infor.onco <- score.test.onco[[2]]
-  # #rm(score.test.support.onco)
-  # gc()
-  # 
-  # score.test.onco.baseline<- ScoreTestSelfDesign(y=y.pheno.mis2,
-  #                                                x=x.all.mis2[,1,drop=F],
-  #                                                z.design=z.design.score.baseline,
-  #                                                score.test.support=score.test.support.onco,
-  #                                                missingTumorIndicator=888)
-  # 
-  # score.onco.baseline <- score.test.onco.baseline[[1]]
-  # infor.onco.baseline <- score.test.onco.baseline[[2]]
-  # 
-  # score.test.support.onco.casecase <- ScoreTestSupport(
-  #   y.pheno.mis2,
-  #   baselineonly = x.all.mis2[,1,drop=F],
-  #   additive = x.all.mis2[,2:ncol(x.all.mis2)],
-  #   pairwise.interaction = NULL,
-  #   saturated = NULL,
-  #   missingTumorIndicator = 888
-  # )
-  # score.test.onco.casecase<- ScoreTestSelfDesign(y=y.pheno.mis2,
-  #                                                x=x.all.mis2[,1,drop=F],
-  #                                                z.design=z.design.score.casecase,
-  #                                                score.test.support=score.test.support.onco.casecase,
-  #                                                missingTumorIndicator=888)
-  # 
-  # 
-  # 
-  # score.onco.casecase <- score.test.onco.casecase[[1]]
-  # infor.onco.casecase <- score.test.onco.casecase[[2]]
-  # 
+  score.test.random.onco <- 
+    ScoreTestSelfDesign(y=y.pheno.mis2,                    
+                        x=x.all.mis2[,1,drop=F],
+                        z.design=z.design[,3:5],
+                        score.test.support= score.test.support.random.onco.ga,                          missingTumorIndicator=888)
+  score.test.random.onco.ga <-   score.test.fixed.onco.ga[[1]]
+  score.test.random.onco.ga <-   score.test.fixed.onco.ga[[2]]
   
-  score.test.support.fixed.onco <- ScoreTestSupportSelfDesign(y.pheno.mis2,
-                                                              x.self.design=x.all.mis2[,1,drop=F],
-                                                              z.design=z.design[,1,drop=F],
-                                                              baselineonly=NULL,
-                                                              additive=x.all.mis2[,2:ncol(x.all.mis2)],
-                                                              pairwise.interaction=NULL,
-                                                              saturated=NULL,
-                                                              missingTumorIndicator = 888)
-  score.test.fixed.onco <- ScoreTestSelfDesign(y=y.pheno.mis2,                    x=x.all.mis2[,1,drop=F],
-                                               z.design=z.design[,2:ncol(z.design)],
-                                               score.test.support= score.test.support.fixed.onco,                           missingTumorIndicator=888)
+  score.fixed.meta.ga <-   score.fixed.onco.ga
+  infor.fixed.meta.ga <- infor.fixed.onco.ga
+  # meta.result.score.random <- ScoreMetaAnalysis(score.random.icog,infor.random.icog,score.random.onco,infor.random.onco)
+  score.randomed.meta.ga <- score.random.onco.ga
+  infor.randomed.meta.ga <- infor.random.onco.ga
+  
+  test.result.second.mixed.ga <- 
+    DisplayMixedScoreTestResult(score.fixed.meta.ga,                                                            infor.fixed.meta.ga,                                                            score.randomed.meta.ga,                                                         infor.randomed.meta.ga)  
+  
+    ##############global test for heterogeneity
+  score.test.support.fixed.onco <- 
+    ScoreTestSupportSelfDesign(y.pheno.mis2,
+                               x.self.design=x.all.mis2[,1,drop=F],
+                               z.design=z.design[,1,drop=F],
+                               additive=x.all.mis2[,2:ncol(x.all.mis2)],
+                               missingTumorIndicator = 888)
+  score.test.fixed.onco <- 
+    ScoreTestSelfDesign(y=y.pheno.mis2,
+                        x=x.all.mis2[,1,drop=F],
+                        z.design=z.design[,2:ncol(z.design)],
+                        score.test.support= score.test.support.fixed.onco,                              missingTumorIndicator=888)
   score.fixed.onco <-   score.test.fixed.onco[[1]]
   infor.fixed.onco <-   score.test.fixed.onco[[2]]
-  score.test.support.random.onco <- ScoreTestSupportSelfDesign(y.pheno.mis2,                                                x.self.design=x.all.mis2[,1,drop=F],
-                                                               z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL,                                           additive=x.all.mis2[,2:ncol(x.all.mis2)],                     pairwise.interaction=NULL,                                  saturated=NULL,                                             missingTumorIndicator = 888)
+  score.test.support.random.onco <- 
+    ScoreTestSupportSelfDesign(y.pheno.mis2,                                                                   x.self.design=x.all.mis2[,1,drop=F],
+                               z.design=z.design[,c(1,2,6),drop=F],                                            additive=x.all.mis2[,2:ncol(x.all.mis2)],                                       missingTumorIndicator = 888)
   
-  score.test.random.onco <- ScoreTestSelfDesign(y=y.pheno.mis2,                    x=x.all.mis2[,1,drop=F],
-                                                z.design=z.design[,3:5],
-                                                score.test.support= score.test.support.random.onco,                         missingTumorIndicator=888)
+  score.test.random.onco <- 
+    ScoreTestSelfDesign(y=y.pheno.mis2,
+                        x=x.all.mis2[,1,drop=F],
+                        z.design=z.design[,3:5],
+                        score.test.support= score.test.support.random.onco,                             missingTumorIndicator=888)
   score.random.onco <- score.test.random.onco[[1]]
   infor.random.onco <- score.test.random.onco[[2]]
  # meta.result.score.fix <- ScoreMetaAnalysis(score.fixed.icog,infor.fixed.icog,score.fixed.onco,infor.fixed.onco)
@@ -445,47 +394,12 @@ z.design=z.design[,c(1,2,6),drop=F],                           baselineonly=NULL
   test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
   heter.result <- list(test.result.second.wald,
+                       test.result.second.mixed.ga,
                        test.result.second.mixed)
   
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/heter_result_",i1,".Rdata"))
   
-  # beta.meta <- z.trans%*%second.stage.logodds.meta
-  # beta.sigma.meta <- z.trans%*%second.stage.sigma.meta%*%t(z.trans)
-  # 
-  # test.result.first.wald <- DisplayFirstStageTestResult(beta.meta,beta.sigma.meta)
-  # 
-  # 
-  # score.meta <- score.onco
-  # infor.meta <- infor.onco
-  # 
-  # test.result.second.score <- DisplayFixedScoreTestResult(score.meta,infor.meta)
-  # 
-  # 
-  # score.meta.baseline <- score.onco.baseline
-  # infor.meta.baseline <- infor.onco.baseline
-  # 
-  # score.meta.casecase <- score.onco.casecase
-  # infor.meta.casecase <- infor.onco.casecase
-  # test.result.second.mixed <- DisplayMixedScoreTestResult(score.meta.baseline,
-  #                                                         infor.meta.baseline,
-  #                                                         score.meta.casecase,
-  #                                                         infor.meta.casecase)  
-  # test.result.second.mixed <- data.frame(t(test.result.second.mixed))
-  # 
-  # colnames(test.result.second.mixed) <- c("mixed model global test for association","mixed model global test for heterogeneity")
-  # 
-  # loglikelihood <- loglikelihood.onco
-  # AIC <- 2*length(Heter.result.Onco[[1]])-2*loglikelihood
-  # 
-  # heter.result <- list(data.frame(test.result.second.wald,test.result.second.score, test.result.second.mixed,loglikelihood = loglikelihood,AIC=AIC),
-  #                      data.frame(test.result.first.wald))
-  # 
-  # 
-  # save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_",i1,".Rdata"))
-  # 
-  # 
-  
-  
+ 
   
 }
 
