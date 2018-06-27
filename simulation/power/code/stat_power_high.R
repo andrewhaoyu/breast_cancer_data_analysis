@@ -357,5 +357,5 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 
 stopImplicitCluster()
-save(result.list,file=paste0("./simulation/power/result/simu_result_high",i1,".Rdata"))
+save(result.list,file=paste0("./simulation/power/result/simu_high",i1,".Rdata"))
 

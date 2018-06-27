@@ -197,13 +197,6 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   y.pheno.com <- y.pheno.mis[-idx.mis,]
   x.covar.com <- x_covar[-idx.mis]
   G.com <- G[-idx.mis]
-  temp.support <- ScoreTestSupport(y.pheno.com,
-                                additive = as.matrix(x.covar.com),
-                                missingTumorIndicator = NULL)
-  temp.test <- ScoreTest(y.pheno.com,
-                         x = as.matrix(G.com),
-                         second.stage.structure = "additive",
-                         score.test.support=temp.support)
   
   model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,
                                                                                                       theta_covar))
