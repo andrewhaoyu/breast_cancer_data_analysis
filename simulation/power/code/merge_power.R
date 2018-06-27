@@ -148,11 +148,15 @@ apply(p_global_complete,2,function(x){CountPower(x,10^-3)})
 apply(p_poly,2,function(x){CountPower(x,10^-3)})
 
 
+result <- cbind(apply(p_global_result,2,function(x){CountPower(x,10^-3)}),
+                apply(p_mglobal_result,2,function(x){CountPower(x,10^-3)}),
+                apply(p_standard,2,function(x){CountPower(x,10^-3)}),
+                apply(p_global_complete,2,function(x){CountPower(x,10^-3)}),
+                apply(p_poly,2,function(x){CountPower(x,10^-3)}))
 
 
 
-
-
+write.csv(result,file=paste0("./simulation/power/result/power.simulation.result.csv") )
 
 
 
