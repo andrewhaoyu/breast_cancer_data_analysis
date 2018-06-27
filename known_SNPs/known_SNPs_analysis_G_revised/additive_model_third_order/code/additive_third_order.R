@@ -182,8 +182,8 @@ if(i1<=177){
                         x=x.all.mis2[,1,drop=F],
                         z.design=z.design[,c(1,2,6)],
                         score.test.support= score.test.support.fixed.onco.ga,                           missingTumorIndicator=888)
-  score.test.fixed.onco.ga <-   score.test.fixed.onco.ga[[1]]
-  score.test.fixed.onco.ga <-   score.test.fixed.onco.ga[[2]]
+  score.fixed.onco.ga <-   score.test.fixed.onco.ga[[1]]
+  infor.fixed.onco.ga <-   score.test.fixed.onco.ga[[2]]
   score.test.support.random.onco.ga <- 
     ScoreTestSupportSelfDesign(y.pheno.mis2,                                                                  x.self.design=x.all.mis2[,1,drop=F],
                               z.design=z.design[,c(1,2,6),drop=F],                                            additive=x.all.mis2[,2:ncol(x.all.mis2)],                                       missingTumorIndicator = 888)
@@ -193,8 +193,8 @@ if(i1<=177){
                         x=x.all.mis2[,1,drop=F],
                         z.design=z.design[,3:5],
                         score.test.support= score.test.support.random.onco.ga,                          missingTumorIndicator=888)
-  score.test.random.onco.ga <-   score.test.fixed.onco.ga[[1]]
-  score.test.random.onco.ga <-   score.test.fixed.onco.ga[[2]]
+  score.random.onco.ga <-   score.test.fixed.onco.ga[[1]]
+  infor.random.onco.ga <-   score.test.fixed.onco.ga[[2]]
   
   meta.result.score.fix.ga <- 
     ScoreMetaAnalysis(score.fixed.icog.ga,
@@ -327,8 +327,8 @@ if(i1<=177){
                         x=x.all.mis2[,1,drop=F],
                         z.design=z.design[,c(1,2,6)],
                         score.test.support= score.test.support.fixed.onco.ga,                           missingTumorIndicator=888)
-  score.test.fixed.onco.ga <-   score.test.fixed.onco.ga[[1]]
-  score.test.fixed.onco.ga <-   score.test.fixed.onco.ga[[2]]
+  score.fixed.onco.ga <-   score.test.fixed.onco.ga[[1]]
+  infor.fixed.onco.ga <-   score.test.fixed.onco.ga[[2]]
   score.test.support.random.onco.ga <- 
     ScoreTestSupportSelfDesign(y.pheno.mis2,                                                                  x.self.design=x.all.mis2[,1,drop=F],
                                z.design=z.design[,c(1,2,6),drop=F],                                            additive=x.all.mis2[,2:ncol(x.all.mis2)],                                       missingTumorIndicator = 888)
@@ -338,8 +338,8 @@ if(i1<=177){
                         x=x.all.mis2[,1,drop=F],
                         z.design=z.design[,3:5],
                         score.test.support= score.test.support.random.onco.ga,                          missingTumorIndicator=888)
-  score.test.random.onco.ga <-   score.test.fixed.onco.ga[[1]]
-  score.test.random.onco.ga <-   score.test.fixed.onco.ga[[2]]
+  score.random.onco.ga <-   score.test.fixed.onco.ga[[1]]
+  infor.random.onco.ga <-   score.test.fixed.onco.ga[[2]]
   
   score.fixed.meta.ga <-   score.fixed.onco.ga
   infor.fixed.meta.ga <- infor.fixed.onco.ga
