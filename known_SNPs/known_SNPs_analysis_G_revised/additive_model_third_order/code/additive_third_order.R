@@ -266,7 +266,7 @@ if(i1<=177){
   
   
   heter.result <- list(test.result.second.wald,
-                       test.result.mixed.ga,
+                       test.result.second.mixed.ga,
                        test.result.second.mixed)
   
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/heter_result_",i1,".Rdata"))
