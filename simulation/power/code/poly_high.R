@@ -238,7 +238,7 @@ sc <- 3
 
 #result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(i1)
-  s_times <- 50
+  s_times <- 5
   sizes <- c(50000,100000)
   n.sizes <- length(sizes)
   # p_global_result <- rep(0,n.sizes*s_times)
