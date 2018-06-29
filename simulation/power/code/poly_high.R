@@ -298,5 +298,5 @@ sc <- 3
   
   
 #stopImplicitCluster()
-save(p.poly,file=paste0("./simulation/power/result/poly_high",i1,".Rdata"))
+save(p_poly,file=paste0("./simulation/power/result/poly_high",i1,".Rdata"))
 
