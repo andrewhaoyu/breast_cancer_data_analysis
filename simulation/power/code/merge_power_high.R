@@ -2,7 +2,7 @@ setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_high",full.names=T)
 total <- 0
-for(i1 in 1:1000){
+for(i1 in 1:3200){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
@@ -22,7 +22,7 @@ p_global_complete <- matrix(0,total,6)
 
 total <- 0
 
-for(i1 in 1:1000){
+for(i1 in 1:3200){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
@@ -34,7 +34,7 @@ for(i1 in 1:1000){
       p_global_result[total+(1:temp2),] <- matrix(result.list[[2]][[1]],ncol=6)
       
       p_mglobal_result[total+(1:temp2),] <- matrix(result.list[[2]][[2]],ncol=6)
-      p_standard[total+(1:temp2),] <- matrix(result.list[[2]][[3]],ncol=9)
+      p_standard[total+(1:temp2),] <- matrix(result.list[[2]][[3]],ncol=6)
       
       p_global_complete[total+(1:temp2),] <-matrix(result.list[[2]][[5]],ncol=6)  
     }else if(temp2==0){
@@ -78,52 +78,34 @@ CountPower <- function(p,alpha){
 
 
 
-
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
-files <- dir(filedir,pattern="simu_result",full.names=T)
+
+files <- dir(filedir,pattern="poly_high",full.names=T)
 total <- 0
-for(i1 in 4000:6000){
+for(i1 in 1:500){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
   if(file%in%files==T){
-    load(paste0("./simulation/power/result//simu_result",i1,".Rdata")) 
-    total = total+ length(result.list[[1]][[1]])/9 + length(result.list[[2]][[1]])/9
+    load(paste0("./simulation/power/result/poly_high",i1,".Rdata")) 
+    total = total+ length(p_poly)/6 
     
   }
 }
 
 #total = total*2
 
-# p_global_result <- matrix(0,total,9)
-# p_mglobal_result <- matrix(0,total,9)
-# p_standard <- matrix(0,total,9)
-# p_global_complete <- matrix(0,total,9)
-p_poly <- matrix(0,total,9)
+p_poly_result <- matrix(0,total,6)
 
 total <- 0
 
-for(i1 in 4000:6000){
+for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
   if(file%in%files==T){
-    load(paste0("./simulation/power/result//simu_result",i1,".Rdata"))
-    temp1 = length(result.list[[1]][[1]])/9
-    temp2 = length(result.list[[2]][[1]])/9
-    temp = temp1+temp2
-    if(temp1==0){
-      p_poly[total+(1:temp2),] <- matrix(result.list[[2]][[6]],ncol=9)  
-    }else if(temp2==0){
-      p_poly[total+(1:temp1),] <- matrix(result.list[[1]][[6]],ncol=9)
-      
-    }else{
-      
-      
-      p_poly[total+(1:temp),] <- rbind(matrix(result.list[[1]][[6]],ncol=9),
-                                       matrix(result.list[[2]][[6]],ncol=9))
-    }
-    
-    
+    load(paste0("./simulation/power/result/poly_high",i1,".Rdata"))
+    temp = length(p_poly)/6
+    p_poly_result[total+(1:temp),] = matrix(p_poly,ncol=6)
     #p_poly[total+(1:temp),] <- rbind(matrix(result.list[[1]][[6]],ncol=9),
     # matrix(result.list[[2]][[6]],ncol=9))
     
@@ -139,19 +121,18 @@ for(i1 in 4000:6000){
 
 
 
-
-
 apply(p_global_result,2,function(x){CountPower(x,10^-3)})
 apply(p_mglobal_result,2,function(x){CountPower(x,10^-3)})
 apply(p_standard,2,function(x){CountPower(x,10^-3)})
 apply(p_global_complete,2,function(x){CountPower(x,10^-3)})
-#apply(p_poly,2,function(x){CountPower(x,10^-3)})
+apply(p_poly_result,2,function(x){CountPower(x,10^-3)})
 
 
 result <- cbind(apply(p_global_result,2,function(x){CountPower(x,10^-3)}),
                 apply(p_mglobal_result,2,function(x){CountPower(x,10^-3)}),
                 apply(p_standard,2,function(x){CountPower(x,10^-3)}),
-                apply(p_global_complete,2,function(x){CountPower(x,10^-3)}))
+                apply(p_global_complete,2,function(x){CountPower(x,10^-3)}),
+                apply(p_poly_result,2,function(x){CountPower(x,10^-3)}))
 
 
 # 

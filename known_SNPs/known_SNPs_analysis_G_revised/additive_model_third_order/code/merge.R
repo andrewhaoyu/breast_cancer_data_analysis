@@ -63,26 +63,7 @@ data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
-# Grade1.fake <- data1$Grade1
-# Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
-# Grade1.fake[data1$Grade1==1] <- 0
-#y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
-# y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
-
-x.test.all.mis1 <- data1[,c(27:203)]
-###pc1-10 and age
-x.covar.mis1 <- data1[,c(5:14)]
-
-
-
-x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
-
-
-
-
-Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,
-                                  missingDataAlgorithm = "EM")
-z.standard <- Heter.result.Icog[[12]]
+z.standard <- GenerateZstandard(y.pheno.mis1)
 generate_first_stage_parameter_names = function(tumor_characteristics,z_standard){
   max.z_standard = apply(z_standard,2,max)
   idx.not.binary = which(max.z_standard!=1)
@@ -158,7 +139,8 @@ for(i1 in 1:178){
   print(i1)
   load(paste0("./known_SNPs/known_SNPs_analysis_G_revised/additive_model_third_order/result/heter_result_",i1,".Rdata"))
   result <- rbind(result,c(heter.result[[1]],
-                    heter.result[[2]]))
+                    heter.result[[2]][1],
+                    heter.result[[3]][1]))
   #first.stage <- rbind(first.stage,heter.result[[2]])
 }
 
