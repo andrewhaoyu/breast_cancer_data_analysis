@@ -2,7 +2,7 @@ arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
 print(i1)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-
+library(bc2)
 
 z.design <- matrix(c(
   c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
