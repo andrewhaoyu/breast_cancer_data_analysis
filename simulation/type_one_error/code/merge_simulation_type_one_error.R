@@ -117,4 +117,11 @@ apply(p_heter_result,2,function(x){CountTypeOne(x,10^-5)})
 apply(p_indi_result,2,function(x){CountTypeOne(x,10^-5)})
 apply(p_mglobal_result,2,function(x){CountTypeOne(x,10^-5)})
 apply(p_mheter_result,2,function(x){CountTypeOne(x,10^-5)})
+
+apply(p_global_result,2,function(x){CountTypeOne(x,10^-6)})
+apply(p_heter_result,2,function(x){CountTypeOne(x,10^-6)})
+apply(p_indi_result,2,function(x){CountTypeOne(x,10^-6)})
+apply(p_mglobal_result,2,function(x){CountTypeOne(x,10^-6)})
+apply(p_mheter_result,2,function(x){CountTypeOne(x,10^-6)})
+
 #CountTypeOne(p_global_result,10^-4)
