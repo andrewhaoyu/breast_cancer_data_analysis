@@ -87,7 +87,7 @@ for(i in 394:394){
 }
 snpid.result <- snpid.result[1:total]
 snpvalue.result <- snpvalue.result[,1:total]
-load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_snp_name_match.Rdata")
+#load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_snp_name_match.Rdata")
 
 
 
@@ -178,7 +178,7 @@ for(i in 397:397){
 
 snpid.result <- snpid.result[1:total]
 snpvalue.result <- snpvalue.result[,1:total]
-
+load(paste0("./discovery_SNP/CIMBA_conditional_analysis/result/CIMBA_snp_name_match.Rdata"))
 #load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_snp_name_match.Rdata")
 
 
