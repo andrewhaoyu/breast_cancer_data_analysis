@@ -36,4 +36,4 @@ for(i in start:end){
   meta.result.sub[temp,] <- MetaCIMBABCAC(BCAC.vector,CIMBA.vector)
   temp = temp+1
 }
-save(meta.result,file = paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/meta.result.sub",i1,".Rdata"))
+save(meta.result.sub,file = paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/meta.result.sub",i1,".Rdata"))
