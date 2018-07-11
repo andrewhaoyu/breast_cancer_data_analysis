@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/data')
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.combine.Rdata"))
 library(bc2)
 n <- nrow(CIMBA.BCAC.combine)
@@ -8,7 +8,9 @@ start.end <- startend(n,1000,i1)
 start <- start.end[1]
 end <- start.end[2]
 total <- end-start+1
-
+############## Meta analysis between BCAC and CIMBA
+############## CIMBA only get the triple negative results
+############## Triple negative is the 5th subtypes in BCAC
 MetaCIMBABCAC <- function(BCAC.vector,CIMBA.vector){
   BCAC.log.odds <- BCAC.vector[1:5]
   BCAC.sigma <- matrix(BCAC.vector[6:30],5,5)
