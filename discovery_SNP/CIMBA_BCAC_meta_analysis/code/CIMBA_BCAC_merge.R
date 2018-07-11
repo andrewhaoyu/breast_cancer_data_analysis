@@ -13,5 +13,6 @@ colnames(meta_result_shared_1p)[21:45] <- paste0("var",c(1:25))
 ##############combine CIMBA and BCAC
 combine.data <- merge(CIMBA,meta_result_shared_1p,by.x = "MarkerName",
                       by.y = "var_name")
+CIMBA.BCAC.combine <- combine.data
 ##############save BCAC and CIMBA combine data for meta-analysis
-save(combine.data,file = paste0(""))
+save(combine.data,file = paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.combine.Rdata"))
