@@ -1,14 +1,16 @@
+###########merge the intrinsic subtype ICOG data together
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 total <- 0
 sig <- c(1:564)
-
+temp2 <- rep(0,564)
 
 
 
 for(i1 in sig){
   print(i1)
   load(paste0("./genetic_correlation/ICOG/result/intrinsic_i1",i1))  
+  temp2[i1] <- length(result[[1]])
   total <- total+length(result[[1]])
 }
 

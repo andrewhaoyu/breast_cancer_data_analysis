@@ -1,14 +1,16 @@
+###########merge the intrinsic subtype results based on only complete data
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 total <- 0
 sig <- c(1:564)
-
+temp1 <- rep(0,564)
 
 
 
 for(i1 in sig){
   print(i1)
   load(paste0("./genetic_correlation/ICOG/result/complete_glm",i1))  
+  temp1[i1] <- length(result[[1]])
   total <- total+length(result[[1]])
 }
 
@@ -19,7 +21,7 @@ freq.icog <- rep(0,total)
 total <- 0
 for(i1 in sig){
   print(i1)
-  load(paste0("./genetic_correlation/ICOG/result/intrinsic_i1",i1))   
+  load(paste0("./genetic_correlation/ICOG/result/complete_glm",i1)) 
   temp <- length(result[[1]])
   snpid[total+(1:temp)] <- result[[1]]
   logodds[total+(1:temp),] <- result[[2]]

@@ -10,3 +10,5 @@ icog.onco.merge <- merge(ICOG.result.clean,
                          all.x=F,
                          all.y=F)
 save(icog.onco.merge,file=paste0("./genetic_correlation/ICOG/result/icog.onco.merge.completeglm.Rdata"))
+ICOG.result[[2]][4,c(2,4,5,3,1)]
+ICOG.result.clean.completeglm[4,11:15]

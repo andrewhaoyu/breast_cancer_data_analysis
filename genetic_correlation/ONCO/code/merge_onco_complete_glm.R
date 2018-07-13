@@ -20,7 +20,7 @@ freq.onco <- rep(0,total)
 total <- 0
 for(i1 in sig){
   print(i1)
-  load(paste0("./genetic_correlation/ONCO/result/intrinsic_i1",i1))   
+  load(paste0("./genetic_correlation/ONCO/result/complete_glm",i1))    
   temp <- length(result[[1]])
   snpid[total+(1:temp)] <- result[[1]]
   logodds[total+(1:temp),] <- result[[2]]
