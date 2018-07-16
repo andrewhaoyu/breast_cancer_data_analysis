@@ -37,10 +37,41 @@ ONCO.result <- data.frame(SNP.ONCO=snpid,logodds,sigma,freq.onco)
 
 ONCO.result.clean <- merge(shared.data,ONCO.result,by.x="SNP.ONCO",
                            by.y = "SNP.ONCO")
+total <- nrow(ONCO.result.clean)
 
-load(paste0("./genetic_correlation/ONCO/result/ONCO.result.Rdata"))
-ONCO.result.clean$A1 <- ONCO.result[[1]]$alleles3
-ONCO.result.clean$A2 <- ONCO.result[[1]]$alleles4
+
+alleles.ICOG <- as.character(ONCO.result.clean$SNP.ICOGS)
+
+alleles1 <- rep("c",total)
+alleles2 <- rep("c",total)
+alleles.split.icog <- strsplit(alleles.ICOG,split=":")
+
+alleles.ONCO <- as.character(ONCO.result.clean$SNP.ONCO)
+alleles3 <- rep("c",total)
+alleles4 <- rep("c",total)
+alleles.split.onco <- strsplit(alleles.ONCO,split=":")
+
+
+for(i in 1:total){
+  print(i)
+  alleles1[i] <- alleles.split.icog[[i]][3]
+  alleles2[i] <- alleles.split.icog[[i]][4]
+  alleles3[i] <- alleles.split.onco[[i]][3]
+  alleles4[i] <- alleles.split.onco[[i]][4]
+}
+
+#alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
+
+
+idx <- which(is.na(alleles1)&!is.na(alleles3))
+alleles1[idx] <- alleles3[idx]
+alleles2[idx] <- alleles4[idx]
+ONCO.result.clean$A1 <- alleles1
+ONCO.result.clean$A2 <- alleles2
+
+# load(paste0("./genetic_correlation/ONCO/result/ONCO.result.Rdata"))
+# ONCO.result.clean$A1 <- ONCO.result[[1]]$alleles3
+# ONCO.result.clean$A2 <- ONCO.result[[1]]$alleles4
 
 save(ONCO.result.clean,file= "./genetic_correlation/ONCO/result/result.clean.completeglm.Rdata")
 

@@ -29,7 +29,7 @@ for(i1 in sig){
   freq.icog[total+(1:temp)] <- result[[4]]
   total <- total+ temp
 }
-
+snpid.temp <- snpid
 
 load("./genetic_correlation/result/hapmap3list.Rdata")
 
@@ -39,10 +39,53 @@ ICOG.result <- data.frame(SNP.ICOGS=snpid,logodds,sigma,freq.icog)
 ICOG.result.clean <- merge(shared.data,ICOG.result,by.x="SNP.ICOGS",
                            by.y = "SNP.ICOGS")
 
-load(paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
-#load(paste0("./genetic_correlation/ONCO/result/ONCO.result.transfrom.Rdata"))
-ICOG.result.clean$A1 <- ICOG.result[[1]]$alleles1
-ICOG.result.clean$A2 <- ICOG.result[[1]]$alleles2
+total <- nrow(ICOG.result.clean)
+
+
+alleles.ICOG <- as.character(ICOG.result.clean$SNP.ICOGS)
+
+alleles1 <- rep("c",total)
+alleles2 <- rep("c",total)
+alleles.split.icog <- strsplit(alleles.ICOG,split=":")
+
+alleles.ONCO <- as.character(ICOG.result.clean$SNP.ONCO)
+alleles3 <- rep("c",total)
+alleles4 <- rep("c",total)
+alleles.split.onco <- strsplit(alleles.ONCO,split=":")
+
+
+for(i in 1:total){
+  print(i)
+  alleles1[i] <- alleles.split.icog[[i]][3]
+  alleles2[i] <- alleles.split.icog[[i]][4]
+  alleles3[i] <- alleles.split.onco[[i]][3]
+  alleles4[i] <- alleles.split.onco[[i]][4]
+}
+
+#alleles.data <- data.frame(alleles1,alleles2,alleles3,alleles4)
+
+
+idx <- which(is.na(alleles1)&!is.na(alleles3))
+alleles1[idx] <- alleles3[idx]
+alleles2[idx] <- alleles4[idx]
+ICOG.result.clean$A1 <- alleles1
+ICOG.result.clean$A2 <- alleles2
+#snpinfor <- data.frame(id,alleles1,alleles2)
+
+
+
+
+
+
+
+
+
+# load(paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
+# #load(paste0("./genetic_correlation/ONCO/result/ONCO.result.transfrom.Rdata"))
+# head(ICOG.result[[1]])
+# head(ICOG.result.clean)
+# ICOG.result.clean$A1 <- ICOG.result[[1]]$alleles1
+# ICOG.result.clean$A2 <- ICOG.result[[1]]$alleles2
 
 save(ICOG.result.clean,file= "./genetic_correlation/result/ICOG.result.clean.completeglm.Rdata")
 #load("./genetic_correlation/result/hapmap3list.Rdata")

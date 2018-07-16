@@ -1,7 +1,7 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 load("./genetic_correlation/result/ICOG.result.clean.Rdata")
-
+head(ICOG.result[[1]])
 total <- 0
 size =1000
 for(i in 1:size){
@@ -20,7 +20,7 @@ for(i in 1:size){
   print(i)
   load(paste0("./genetic_correlation/ICOG/result/result.sub",i,".Rdata"))
   temp <- nrow(result.sub)
-
+  
     result.all[total+(1:temp),] <- result.sub
   total <- total+temp
 }
