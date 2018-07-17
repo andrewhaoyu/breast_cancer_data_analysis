@@ -99,8 +99,9 @@ colnames(log.odds) <- c("Triple Negative",
 meta.result <- list(snpinfor,log.odds,var.odds,freq.meta)
 colnames(meta.result[[4]]) <- c("freq.icog","freq.onco")
 save(meta.result,file=paste0("./genetic_correlation/ICOG/result/meta.result.Rdata"))
-
-
+load(paste0("./genetic_correlation/ICOG/result/meta.result.Rdata"))
+BCAC.meta.result <- meta.result
+load(paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
 all.result <- list(meta.result,ICOG.result,ONCO.result)
 
 
