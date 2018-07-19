@@ -27,91 +27,91 @@ library(bc2)
 
 
 extract.num <- nrow(functional_snp_conditional)
-snpid.result <- rep("c",extract.num)
-n.sub <- 72411
-snpvalue.result <- matrix(0,n.sub,extract.num)
-
-
-
-total <- 0
-#temp1 = rep(0,564)
-for(i in 1:564){
-  
-  print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ICOG/funcitonal_conditional_icog",i,".txt"
-  )
-  temp.out <- system(paste0('wc -l ',geno.file),intern=T)
-  temp.out <- gsub(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ICOG/funcitonal_conditional_icog",i,".txt"),"",temp.out)
-  num <- as.numeric(temp.out)
-  temp1[i] <- num
- # }
-  
-  if(num!=0){
-    
-    
-    con <- file(geno.file)
-    temp <- 0
-    open(con)
-    for(i in 1:num){
-      
-      oneLine <- readLines(con,n=1)
-      myVector <- strsplit(oneLine," ")
-      snpid <- as.character(myVector[[1]][3])
-      
-      
-      temp <- temp+1
-      print(temp)
-      snpid.result[temp+total] <- snpid
-      #snpvalue <- rep(0,n)
-      
-      
-      snppro <- as.numeric(unlist(myVector)[7:length(myVector[[1]])])
-      
-      snpvalue <- convert(snppro,n.raw)
-      snpvalue <- snpvalue[idx.fil][idx.match]
-      snpvalue.result[,temp+total] <- snpvalue
-      
-      
-    }
-    close(con)
-    
-    total <- total+num
-    
-    
-  }
-  
-  # if(is.null(result[[1]])==0){
-  #   temp <- length(result[[1]])
-  #   snpid.result[total+(1:temp)] <- result[[1]]
-  #   snpvalue.result[,total+(1:temp)] <- result[[2]]
-  #   total <- temp+total
-  # }
-}
-snpid.result <- snpid.result[1:total]
-snpvalue.result <- snpvalue.result[,1:total]
-#load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_snp_name_match.Rdata")
-
-
-#idx.remove <- which(is.na(snpid.result))
-#snpid.result <- snpid.result[-idx.remove]
-#snpvalue.result <- snpvalue.result[,-idx.remove]
-
-idx.match <- match(functional_snp_conditional$SNP.ICOGS,snpid.result)
-
-
-
-snpid.result <- snpid.result[idx.match]
-
-idx.temp <- which(is.na(snpid.result))
-head(snpvalue.result[,idx.temp[1]])
-#functional_snp_conditional[idx.temp,c(13,14,16)]
-
-all.equal(snpid.result,functional_snp_conditional$SNP.ICOGS)
-snpvalue.result <- snpvalue.result[,idx.match]
-extract.result <- list(snpid.result,snpvalue.result)
-colnames(snpvalue.result) <- snpid.result
-snpvalue.result.icog <- snpvalue.result
-save(snpvalue.result.icog,file="./discovery_SNP/functional_analysis/result/ICOG/functional_conditional_icog_snpvalue.Rdata")
+# snpid.result <- rep("c",extract.num)
+# n.sub <- 72411
+# snpvalue.result <- matrix(0,n.sub,extract.num)
+# 
+# 
+# 
+# total <- 0
+# #temp1 = rep(0,564)
+# for(i in 1:564){
+#   
+#   print(i)  
+#   geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ICOG/funcitonal_conditional_icog",i,".txt"
+#   )
+#   temp.out <- system(paste0('wc -l ',geno.file),intern=T)
+#   temp.out <- gsub(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ICOG/funcitonal_conditional_icog",i,".txt"),"",temp.out)
+#   num <- as.numeric(temp.out)
+#   #temp1[i] <- num
+#  # }
+#   
+#   if(num!=0){
+#     
+#     
+#     con <- file(geno.file)
+#     temp <- 0
+#     open(con)
+#     for(i in 1:num){
+#       
+#       oneLine <- readLines(con,n=1)
+#       myVector <- strsplit(oneLine," ")
+#       snpid <- as.character(myVector[[1]][3])
+#       
+#       
+#       temp <- temp+1
+#       print(temp)
+#       snpid.result[temp+total] <- snpid
+#       #snpvalue <- rep(0,n)
+#       
+#       
+#       snppro <- as.numeric(unlist(myVector)[7:length(myVector[[1]])])
+#       
+#       snpvalue <- convert(snppro,n.raw)
+#       snpvalue <- snpvalue[idx.fil][idx.match]
+#       snpvalue.result[,temp+total] <- snpvalue
+#       
+#       
+#     }
+#     close(con)
+#     
+#     total <- total+num
+#     
+#     
+#   }
+#   
+#   # if(is.null(result[[1]])==0){
+#   #   temp <- length(result[[1]])
+#   #   snpid.result[total+(1:temp)] <- result[[1]]
+#   #   snpvalue.result[,total+(1:temp)] <- result[[2]]
+#   #   total <- temp+total
+#   # }
+# }
+# snpid.result <- snpid.result[1:total]
+# snpvalue.result <- snpvalue.result[,1:total]
+# #load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_snp_name_match.Rdata")
+# 
+# 
+# #idx.remove <- which(is.na(snpid.result))
+# #snpid.result <- snpid.result[-idx.remove]
+# #snpvalue.result <- snpvalue.result[,-idx.remove]
+# 
+# idx.match <- match(functional_snp_conditional$SNP.ICOGS,snpid.result)
+# 
+# 
+# 
+# snpid.result <- snpid.result[idx.match]
+# 
+# # idx.temp <- which(is.na(snpid.result))
+# # head(snpvalue.result[,idx.temp[1]])
+# #functional_snp_conditional[idx.temp,c(13,14,16)]
+# 
+# all.equal(snpid.result,functional_snp_conditional$SNP.ICOGS)
+# snpvalue.result <- snpvalue.result[,idx.match]
+# extract.result <- list(snpid.result,snpvalue.result)
+# colnames(snpvalue.result) <- snpid.result
+# snpvalue.result.icog <- snpvalue.result
+# save(snpvalue.result.icog,file="./discovery_SNP/functional_analysis/result/ICOG/functional_conditional_icog_snpvalue.Rdata")
 
 
 
@@ -133,7 +133,7 @@ idx.fil <- onco.order[,1]%in%Onc_ID
 n <- length(idx.fil)
 snpvalue <- rep(0,n)
 idx.match <- match(Onc_ID,onco.order[idx.fil,1])
-
+extract.num <- nrow(functional_snp_conditional)
 library(bc2)
 
 #extract.num <- nrow(extract.list)
