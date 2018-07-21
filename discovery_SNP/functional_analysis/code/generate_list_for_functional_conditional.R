@@ -78,3 +78,12 @@ for(i in 1:nrow(MTOP_con_SNP)){
   functional.result <- rbind(functional.result,result.temp)
   
 }
+
+functional.result.two.stage <- functional.result[,c(2,11,3)]
+write.csv(functional.result.two.stage,file= "./discovery_SNP/functional_analysis/result/functional_analysis_list_two_stage.csv",row.names=F,quote=F)
+
+# SNP.list <- strsplit(functional.result$rs_id,split= ":")
+# SNP <- rep("c",nrow(functional.result))
+# for(i in 1:nrow(functional.result)){
+#   SNP[i] <- SNP.list[[i]][1]
+# }
