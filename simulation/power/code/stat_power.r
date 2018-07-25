@@ -295,7 +295,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   p_global_complete <- rep(0,9*s_times)
   p_poly <- rep(0,9*s_times)
   
-  sizes <- c(5000,50000,100000)
+  #sizes <- c(5000,50000,100000)
+  sizes <- c(25000)
   
   temp <- 1  
     for(s in 1:sc){
