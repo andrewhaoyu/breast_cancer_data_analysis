@@ -292,7 +292,9 @@ result[c(2,3,5,6,8,9),] <- result.1
 result[c(1,4,7),] <- result.2
 write.csv(result,file=paste0("./simulation/power/result/power_high.result.csv") )
 
-
+result.high <- result
+result.high[,2]/result.high[,3]
+result.high[,2]/result.high[,4]
 
 
 
