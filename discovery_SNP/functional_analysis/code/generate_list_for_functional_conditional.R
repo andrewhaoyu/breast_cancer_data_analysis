@@ -26,16 +26,18 @@ library(data.table)
 MTOP_SNP <- fread("./data/Discovery_SNP_MTOP.csv",header=T)
 functional.result <- NULL
 
+
 FunctionalFilter <- function(chr.temp,pos.temp,data){
   idx.temp <- which(data$CHR==chr.temp&
                       data$position==pos.temp)
   p.temp <- data$p.value[idx.temp]
-  
+  top.SNP <- data[idx.temp,12]
   idx <- which(data$CHR==chr.temp&
                  data$position>=(pos.temp-50000)&
                  data$position<=(pos.temp+50000)&
                  data$p.value<=(p.temp*100))
-  return(data[idx,])
+  lead.snp <- rep(top.SNP,length(idx))
+  return(cbind(data[idx,],lead.snp))
 }
 
 
@@ -63,6 +65,7 @@ for(i in 1:nrow(FTOP_SNP)){
   functional.result <- rbind(functional.result,result.temp)
   
 }
+n.uncon <- nrow(functional.result)
 
 ############# 4 SNPs only detected by conditoinal mixed effet two-stage model
 
@@ -79,7 +82,15 @@ for(i in 1:nrow(MTOP_con_SNP)){
   
 }
 
-functional.result.two.stage <- functional.result[,c(2,11,3)]
+analysis <- rep("Condition",nrow(functional.result))
+analysis[1:n.uncon] <- "Uncondition"
+
+functional.result.two.stage <- cbind(functional.result[,c(12,11,3,
+                                                    16,
+                                                    15)],
+                                     analysis)
+
+#functional.result.two.stage <- functional.result[,c(2,11,3)]
 write.csv(functional.result.two.stage,file= "./discovery_SNP/functional_analysis/result/functional_analysis_list_two_stage.csv",row.names=F,quote=F)
 
 # SNP.list <- strsplit(functional.result$rs_id,split= ":")
