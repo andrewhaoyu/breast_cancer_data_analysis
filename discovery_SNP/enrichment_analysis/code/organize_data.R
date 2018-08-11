@@ -38,6 +38,26 @@ enrichment_analysis_data <- data.frame(enrichment_analysis_data,p_value1,p_value
 colnames(enrichment_analysis_data)[c(14,15)] <- c("Luminal_A_p_value",
                                                   "triple_negative_p_value")
 save(enrichment_analysis_data,file = "./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
+load("./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
+
+n <- nrow(enrichment_analysis_data)
+z_LuA <- rep(0,n)
+z_tn <- rep(0,n)
+n_LuA <- rep(0,n)
+n_tn <- rep(0,n)
+z_LuA <- enrichment_analysis_data[,8]/sqrt(enrichment_analysis_data[,10])
+z_tn <- enrichment_analysis_data[,9]/sqrt(enrichment_analysis_data[,13])
+  n_LuA <- 1/(enrichment_analysis_data[,10]*2*enrichment_analysis_data[,6]*(1-enrichment_analysis_data[,6]))
+  n_tn <- 1/(enrichment_analysis_data[,13]*2*enrichment_analysis_data[,6]*(1-enrichment_analysis_data[,6]))
+  enrichment_analysis_data <- cbind(enrichment_analysis_data,z_LuA,z_tn,n_LuA,n_tn)
+  head(enrichment_analysis_data)
+  colnames(enrichment_analysis_data)[16:19] <- c("Z_Luminal_A",
+                                                 "Z_triple_neg",
+                                                 "sample_size_Luminal_A",
+                                                 "sample_size_triple_neg")
+  save(enrichment_analysis_data,file="./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
+#}
+
 # matrix(as.numeric(enrichment_analysis_data[1,10:13]),2,2)
 # 
 # ##############combine CIMBA and BCAC
