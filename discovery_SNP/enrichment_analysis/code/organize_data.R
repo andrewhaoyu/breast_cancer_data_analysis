@@ -14,7 +14,7 @@ colnames(enrichment_result)[c(1,4,5,6,7,8,9)] <- c("rs_id",
 )
 enrichment_analysis_data <- enrichment_result
 enrichment_analysis_data <- as.data.frame(enrichment_analysis_data)
-save(enrichment_analysis_data,file = "./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
+#save(enrichment_analysis_data,file = "./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
 
 head(enrichment_analysis_data)
 
@@ -26,19 +26,19 @@ Pfunction <- function(z){
 n <- nrow(enrichment_analysis_data)
 p_value2 <- p_value1 <- rep(0,n)
 
-for(i in 1:n){
-  if(i%%1000==0){
-    print(i)
-  }
-  p_value1[i] <- Pfunction(enrichment_analysis_data[i,8]/sqrt(enrichment_analysis_data[i,10]))
-  p_value2[i] <- Pfunction(enrichment_analysis_data[i,9]/sqrt(enrichment_analysis_data[i,13]))
-}
+# for(i in 1:n){
+#   if(i%%1000==0){
+#     print(i)
+#   }
+  p_value1 <- Pfunction(enrichment_analysis_data[,8]/sqrt(enrichment_analysis_data[,10]))
+  p_value2 <- Pfunction(enrichment_analysis_data[,9]/sqrt(enrichment_analysis_data[,13]))
+#}
 
 enrichment_analysis_data <- data.frame(enrichment_analysis_data,p_value1,p_value2)
 colnames(enrichment_analysis_data)[c(14,15)] <- c("Luminal_A_p_value",
                                                   "triple_negative_p_value")
-save(enrichment_analysis_data,file = "./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
-load("./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
+#save(enrichment_analysis_data,file = "./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
+#load("./discovery_SNP/enrichment_analysis/result/enrichment_analysis_data.Rdata")
 
 n <- nrow(enrichment_analysis_data)
 z_LuA <- rep(0,n)
