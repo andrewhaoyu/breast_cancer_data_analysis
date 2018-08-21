@@ -69,3 +69,7 @@ load("/spin1/users/zhangh20/breast_cancer/standard_gwas/case_control/meta/CHR.Rd
 ERNeg_control_meta_result_final$CHR =CHR
 
 save(ERNeg_control_meta_result_final,file=paste0("/data/zhangh20/breast_cancer/standard_gwas/ER-_control/meta/ER-_control_meta_result_final.Rdata"))
+
+
+
+

@@ -1,5 +1,6 @@
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/discovery_SNP/enrichment_analysis/result/rediscoveryprojectnextsteps')
 library(ggplot2)
+library(reshape)
 ###########220 celltypes results
 celltypes220_lua <- read.table("220celltype.1.lumA.txt",
                                header=T)
@@ -11,6 +12,100 @@ celltypes220_TN$log10p <- -log10(celltypes220_TN$Enrichment_p)
 
 # subtypes <- c(rep("Luminal A like",nrow(celltypes220_lua)),
 #               rep("Triple negative",nrow(celltypes220_lua)))
+#################create a plot for enrichment score
+n <- nrow(celltypes220_lua)
+cell_type <- paste0(as.character(celltypes220_lua$cell_type), "_",
+                    as.character(celltypes220_lua$mark))
+cell_type[137] <- "Fetal_brain_(H3K4me3)_2"
+cell_type[60] <- "Pancreatic_islets_H3K4me1_2"
+cell_type[138] <- "Pancreatic_islets_H3K4me3_2"
+luminal_enrichment_score <- celltypes220_lua$Coefficient_z.score
+triple_neg_enrichment_score <- celltypes220_TN$Coefficient_z.score
+celltype220_data <- data.frame(luminal_enrichment_score,
+                               triple_neg_enrichment_score)
+rownames(celltype220_data) <- cell_type
+colnames(celltype220_data) <- c("Luminal A like",
+                                "Triple negative")
+celltype220_data <- as.matrix(celltype220_data)
+#plot(celltype220_data[,1],celltype220_data[,2])
+celltype220_data1 <- celltype220_data[c(55,56,57,58,133,134,135,181),]
+library(pheatmap)
+library(RColorBrewer)
+library(viridis)
+paletteLength <- 20
+my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
+myBreaks <- c(seq(min(celltype220_data1), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(celltype220_data1)/paletteLength, max(celltype220_data1), length.out=floor(paletteLength/2)))
+png("brest_cell_z.png", height = 32, width  = 28,units="cm" ,res = 300)
+pheatmap(
+  mat               = celltype220_data1,
+  color             = my.color,
+  breaks           = myBreaks,
+  cluster_rows=FALSE,
+  cluster_cols=FALSE,
+  # border_color      = NA,
+  # show_colnames     = FALSE,
+  # show_rownames     = FALSE,
+  # annotation_col    = mat_col,
+  # annotation_colors = mat_colors,
+  # drop_levels       = TRUE,
+  fontsize          = 14
+  # main              = "Default Heatmap"
+)
+dev.off()
+
+###############generate the plot for H3K27ac
+idx <- which(celltypes220_lua$mark=="H3K27ac")
+
+celltype220_data2 <- celltype220_data[idx,]
+# library(pheatmap)
+# library(RColorBrewer)
+# library(viridis)
+paletteLength <- 50
+my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
+myBreaks <- c(seq(min(celltype220_data2), 0, length.out=ceiling(paletteLength/2) + 1), 
+              seq(max(celltype220_data2)/paletteLength, max(celltype220_data1), length.out=floor(paletteLength/2)))
+png("H3K27_z.png", height = 32, width  = 28, units="cm",res = 300)
+pheatmap(
+  mat               = celltype220_data2,
+  color             = my.color,
+  breaks           = myBreaks,
+  cluster_rows=FALSE,
+  cluster_cols=FALSE,
+  # border_color      = NA,
+  # show_colnames     = FALSE,
+  # show_rownames     = FALSE,
+  # annotation_col    = mat_col,
+  # annotation_colors = mat_colors,
+  # drop_levels       = TRUE,
+  fontsize          = 12
+  # main              = "Default Heatmap"
+)
+dev.off()
+
+
+
+
+
+
+celltype220_data1.m <- melt(celltype220_data1)
+base_size <- 9
+ggplot(celltype220_data1.m,aes(X2,X1))+
+  geom_tile(aes(fill=value),colour="white")+
+  scale_fill_gradient(low="white",
+                      high="steelblue")+
+  theme_grey(base_size = base_size) + 
+  labs(x = "", y = "") + 
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0)) 
+  # element(legend.position = "none", 
+  #      axis.ticks = theme_blank(), 
+  #      axis.text.x = theme_text(size = base_size *0.8, angle = 330, hjust = 0, colour = "grey50"))
+
+#heatmap(celltype220_data1,scale = "column")
+
+
+
 
 ################# create a data frame for gg plot2
 n <- nrow(celltypes220_lua)
