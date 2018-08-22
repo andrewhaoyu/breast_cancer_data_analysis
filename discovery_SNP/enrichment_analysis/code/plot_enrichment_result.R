@@ -1,6 +1,17 @@
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/discovery_SNP/enrichment_analysis/result/rediscoveryprojectnextsteps')
 library(ggplot2)
 library(reshape)
+
+##########test difference
+
+TestDiff <- function(x1,s1,x2,s2){
+  z = (x1-x2)/sqrt(s1^2+s2^2)
+  return(2*pnorm(abs(z),lower.tail = F))
+}
+
+
+
+
 ###########220 celltypes results
 
 celltypes220_lua <- read.table("220celltype.1.lumA.txt",
@@ -8,6 +19,23 @@ celltypes220_lua <- read.table("220celltype.1.lumA.txt",
 celltypes220_lua$log10p <- -log10(celltypes220_lua$Enrichment_p)
 
 celltypes220_TN <- read.table("220celltype.2.TN.txt",header=T)
+
+
+
+idx1 <- which(celltypes220_lua$Enrichment_p<=0.05/220)
+celltypes220_lua[idx1,]
+idx2 <- which(celltypes220_TN$Enrichment_p<=0.05/220)
+celltypes220_TN[idx2,]
+library(xlsx)
+write.csv(celltypes220_lua[idx1,],file = "sig_220_luA.csv")
+result.celltypes <- rbind(celltypes220_lua[idx1,],
+                         celltypes220_TN[idx2,])
+##################test the difference between the 220 celltypes
+celltypes.diff <- TestDiff(celltypes220_lua$Enrichment,celltypes220_lua$Enrichment_std_error,celltypes220_TN$Enrichment,celltypes220_TN$Enrichment_std_error)
+idx <- which(celltypes.diff<=0.05/220)
+print(idx)
+
+
 
 celltypes220_TN$log10p <- -log10(celltypes220_TN$Enrichment_p)
 
@@ -53,12 +81,14 @@ pheatmap(
   fontsize          = 14
   # main              = "Default Heatmap"
 )
+
 dev.off()
 
 ###############generate the plot for H3K27ac
 idx <- which(celltypes220_lua$mark=="H3K27ac")
 
 celltype220_data2 <- celltype220_data[idx,]
+row.names(celltype220_data2) <- as.character(celltypes220_lua$cell_type[idx])
 # library(pheatmap)
 # library(RColorBrewer)
 # library(viridis)
@@ -84,7 +114,7 @@ pheatmap(
 )
 dev.off()
 
-
+#################plot for 
 
 
 
@@ -237,6 +267,23 @@ dev.off()
 
 
 
+############analysze the baseline results
+
+idx1 <- which(baseline1.lua$Enrichment_p<=0.05/53)
+baseline1.lua[idx1,]
+idx2 <- which(baseline2.TN$Enrichment_p<=0.05/53)
+baseline2.TN[idx2,]
+baseline2.TN[order(baseline2.TN$Enrichment_p),]
+result.baseline <- rbind(baseline1.lua[idx,],
+                         baseline2.TN[idx2,])
+write.csv(result.baseline,file = "sig_baseline.csv")
 
 
 
+
+
+
+##################test the difference between the 220 celltypes
+baseline.diff <- TestDiff(baseline1.lua$Enrichment,baseline1.lua$Enrichment_std_error,baseline2.TN$Enrichment,baseline2.TN$Enrichment_std_error)
+idx <- which(celltypes.diff<=0.05/53)
+print(idx)
