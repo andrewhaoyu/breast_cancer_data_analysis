@@ -156,13 +156,14 @@ myBreaks <- c(seq(0, max(correlation.matrix), length.out=floor(paletteLength)))
 
 png(filename="meta_heatmap_two_stage.png",width=10,heigh=10,units="in",res=600)
 corrplot(correlation.matrix, 
-         p.mat = p.value,
+         #p.mat = p.value,
          #insig = "label_sig",
-         #low=as.matrix(correlation.matrix.low),
-         #upp= as.matrix(correlation.matrix.high),
-         #rect.col = "navy", plotC = "rect", cl.pos = "n"
+         low=as.matrix(correlation.matrix.low),
+         upp= as.matrix(correlation.matrix.high),
+         
+         rect.col = "navy", plotC = "rect", cl.pos = "n",
          #col = my.color,
-         method = "color",
+         #method = "color",
          addrect=2, 
          tl.col = "black", 
          #tl.srt = 30,
