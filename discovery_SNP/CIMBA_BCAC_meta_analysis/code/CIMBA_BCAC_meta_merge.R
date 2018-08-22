@@ -12,7 +12,7 @@ for(i1 in 1:1000){
   total <- total+temp
 }
 
-CIMBA.BCAC.combine[,c(22:51)] <- meta.result
+CIMBA.BCAC.combine[,c(21:50)] <- meta.result
 CIMBA.BCAC.meta.result <- CIMBA.BCAC.combine
 
 save(CIMBA.BCAC.meta.result,file=paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.meta.result.Rdata"))
@@ -23,7 +23,7 @@ load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.meta.res
 
 load(paste0("./genetic_correlation/ICOG/result/meta.result.completeglm.Rdata"))
 load(paste0("./genetic_correlation/ICOG/result/ICOG.result.Rdata"))
-
+meta.result <- meta.result.completeglm
 chr.pos <- paste0(meta.result[[1]][,2],"_",
                   meta.result[[1]][,3],"_",
                   meta.result[[1]][,4],"_",
@@ -38,9 +38,12 @@ CIMBA.BCAC.meta.temp <- merge(snp.infor,CIMBA.BCAC.meta.result,
 snp.infor.meta <- CIMBA.BCAC.meta.temp[,c(2,3,4,5,6)]
 colnames(CIMBA.BCAC.meta.temp)
 colnames(snp.infor.meta) <- colnames(meta.result[[1]])
-log.odds.meta <- CIMBA.BCAC.meta.temp[,c(27:31)]
+colnames(snp.infor.meta)[4:5] <- c("Reference_allele",
+                                   "Effect_allele")
+log.odds.meta <- CIMBA.BCAC.meta.temp[,c(26:30)]
 colnames(log.odds.meta) <- colnames(meta.result[[2]])
-sigma.meta <- CIMBA.BCAC.meta.temp[,c(32:56)]
+head(log.odds.meta)
+sigma.meta <- CIMBA.BCAC.meta.temp[,c(31:55)]
 CIMBA.BCAC.meta <- list(snp.infor.meta,
                        log.odds.meta,
                        sigma.meta)

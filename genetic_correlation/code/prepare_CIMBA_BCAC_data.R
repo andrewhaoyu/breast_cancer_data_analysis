@@ -1,7 +1,8 @@
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 library(data.table)
 ###########load CIMBA data
-CIMBA <- as.data.frame(fread('./data/brca1_bc.txt',header=T))
+load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.clean.Rdata"))
+CIMBA <- CIMBA.clean
 ###########load BCAC intrinsic subtype data
 load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p.Rdata"))
 
@@ -72,7 +73,7 @@ CIMBA.result <- data.frame(CIMBA[,1:5],
 colnames(CIMBA.result) <- c("MarkerName",
                             "ReferenceAllele",
                             "EffectAllele",
-                            "Freq1",
+                            "Freq_effect_allele",
                             "LogOR",
                             "Var",
                             "Zstat",
@@ -158,21 +159,21 @@ load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.meta.res
 head(CIMBA.BCAC.meta.result)
 
 
-idx <- which(CIMBA.BCAC.meta.result[,12]>=0.3)
+idx <- which(CIMBA.BCAC.meta.result[,11]>=0.3)
 CIMBA.BCAC.meta.result <- CIMBA.BCAC.meta.result[idx,]
 CIMBA.BCAC.meta.result <- as.data.frame(CIMBA.BCAC.meta.result)
 #try <- (meta_result_shared_1p[,c(1,7,13,19,25)+20]),2,sd)
-z.stat <- CIMBA.BCAC.meta.result[,22:26]/sqrt(CIMBA.BCAC.meta.result[,c(1,7,13,19,25)+26])
+z.stat <- CIMBA.BCAC.meta.result[,21:25]/sqrt(CIMBA.BCAC.meta.result[,c(1,7,13,19,25)+25])
 p.value <- z.stat
 for(i in 1:5){
   p.value[,i] <- 2*pnorm(abs(z.stat[,i]),lower.tail = F)  
 }
 
 
-N <- 1/(CIMBA.BCAC.meta.result[,c(1,7,13,19,25)+26]*2*CIMBA.BCAC.meta.result[,4]*(1-CIMBA.BCAC.meta.result[,4]))
+N <- 1/(CIMBA.BCAC.meta.result[,c(1,7,13,19,25)+25]*2*CIMBA.BCAC.meta.result[,4]*(1-CIMBA.BCAC.meta.result[,4]))
 
 
-CIMBA.BCAC.meta.result.m<- CIMBA.BCAC.meta.result[,c(7,18,10,4,2,3,22:26,c(1,7,13,19,25)+26)]
+CIMBA.BCAC.meta.result.m<- CIMBA.BCAC.meta.result[,c(8,17,9,4,2,3,21:25,c(1,7,13,19,25)+25)]
 head(CIMBA.BCAC.meta.result.m)
 CIMBA.BCAC.meta.result <- data.frame(CIMBA.BCAC.meta.result.m,
                                    z.stat,
