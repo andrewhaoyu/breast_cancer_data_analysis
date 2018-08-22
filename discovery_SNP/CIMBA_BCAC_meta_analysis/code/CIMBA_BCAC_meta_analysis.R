@@ -31,7 +31,7 @@ meta.result.sub <- matrix(0,total,30)
 temp = 1
 for(i in start:end){
   print(i)
-  BCAC.vector <- as.numeric(CIMBA.BCAC.combine[i,22:51])
+  BCAC.vector <- as.numeric(CIMBA.BCAC.combine[i,21:50])
   CIMBA.vector <- as.numeric(c(CIMBA.BCAC.combine[i,5],as.numeric(CIMBA.BCAC.combine[i,6]^2)))
   meta.result.sub[temp,] <- MetaCIMBABCAC(BCAC.vector,CIMBA.vector)
   temp = temp+1

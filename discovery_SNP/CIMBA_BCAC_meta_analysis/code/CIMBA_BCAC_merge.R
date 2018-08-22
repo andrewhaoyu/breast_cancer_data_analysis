@@ -83,6 +83,6 @@ freq.diff = combine.data$Freq_Effect_Allele-combine.data$exp_freq_a1
 idx <- which(freq.diff>=0.3)
 
 CIMBA.BCAC.combine <- combine.data[-idx,]
-
+CIMBA.BCAC.combine <- as.data.frame(CIMBA.BCAC.combine)
 ##############save BCAC and CIMBA combine data for meta-analysis
 save(CIMBA.BCAC.combine,file = paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.combine.Rdata"))
