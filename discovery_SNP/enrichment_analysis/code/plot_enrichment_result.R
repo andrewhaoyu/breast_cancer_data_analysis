@@ -2,6 +2,7 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/discovery_SNP/enr
 library(ggplot2)
 library(reshape)
 ###########220 celltypes results
+
 celltypes220_lua <- read.table("220celltype.1.lumA.txt",
                                header=T)
 celltypes220_lua$log10p <- -log10(celltypes220_lua$Enrichment_p)
