@@ -199,8 +199,12 @@ head(meta_result_shared_1p)
 
 
 
-
-
+#
+# new.data <- merge(CIMBA.BCAC.meta.result,
+#                   enrichment_analysis_data,
+#                   by.x ="rs_id",
+#                   by.y = "rs_id")
+# all.equal(new.data$log_or_Triple_Negative,new.data$Log_OR_Triple_Neg)
 
 #save()
 

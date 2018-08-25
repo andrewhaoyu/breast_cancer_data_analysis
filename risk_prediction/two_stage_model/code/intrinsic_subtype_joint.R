@@ -2,6 +2,7 @@
 rm(list=ls())
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
+i
 library(bcutility)
 library(bc2)
 library(rstan)
@@ -13,15 +14,19 @@ z.design <- matrix(c(
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
 
+genetic_covariance <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_covariance.csv",header=T)
 
-
+#genetic_covariance <- genetic_covariance[,-c(1,2)]
+# genetic_covariance <- genetic_covariance[,-6]
+# genetic_covariance <- genetic_covariance[c(2,4,5,3,1),c(2,4,5,3,1)]
+# write.csv(genetic_covariance,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_covariance.csv",row.names = F)
 
 colnames(z.design) <- c("Luminial A","Luminal B",
                         "Luminal B HER2Neg",
                         "HER2 Enriched",
                         "Triple Negative")
 
-
+###############transform the genetic correlation
 
 
 
@@ -104,7 +109,8 @@ for(i in 1:6){
   
 
   
-  
+  idx.train.control.onco <- which(y.pheno.mis2.train[,1]==0)
+  freq <- sum(x.snp.all.train2[idx.train.control.onco,i1])/(2*length(idx.train.control.onco))
    
   
   #############intrinsic subtypes analysis
@@ -173,19 +179,29 @@ for(i in 1:6){
   heter.variance.estiamte [i] <- 
     HeterVarianceEstimate(meta.result[[1]],
                           meta.result[[2]])
-  
+  EbestimateNew <- function(logodds.subtype,
+                            sigma.subtype,
+                            logodds.standard,
+                            prior.sigma
+  ){
+    M <- length(logodds.subtype)
+    
+    result <- solve(solve(sigma.subtype)+solve(prior.sigma))%*%(solve(sigma.subtype)%*%logodds.subtype+ solve(prior.sigma)%*%as.vector(rep(logodds.standard,M)))
+    return(result)
+    
+  }
   log.odds.intrinsic.eb[i,] <- ebestimate(
     meta.result[[1]],
     meta.result[[2]],
     log.odds.standard.result[i],
     heter.variance.estiamte [i] 
   )
-  
-  log.odds.intrinsic.la[i,] <- eblaplace(
+  prior.sigma <- 2*freq*(1-freq)*genetic_covariance/1190
+  log.odds.intrinsic.la[i,] <- EbestimateNew(
    as.vector(meta.result[[1]]),
     meta.result[[2]],
     log.odds.standard.result[i],
-    heter.variance.estiamte [i]
+   prior.sigma
   )
   log.odds.tree[i,] <- tree_function(as.vector(meta.result[[1]]),
                                  meta.result[[2]])

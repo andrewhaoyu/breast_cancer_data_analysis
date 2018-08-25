@@ -165,10 +165,23 @@ casecon.icog <- c(data1.train$Behaviour1)
 casecon.onco <- c(data2.train$Behaviour1,data2.test$Behaviour1)
 table(casecon.icog)
 table(casecon.onco)
+sum(table(casecon.icog))
+sum(table(casecon.onco))
+sum(table(casecon.icog))+sum(table(casecon.onco))
+table(casecon.icog)+table(casecon.onco)
+casecon.onco.test <- data2.test$Behaviour1
+casecon.onco.train <- data2.train$Behaviour1
+sum(table(casecon.onco.test))
+sum(table(casecon.onco.train)+table(casecon.icog))
+
 ############write out the training and testing sample size by study
 write.xlsx(cbind(table(data1.train$study,subtypes1.train),table(data1.train$study,data1.train$Behaviour1)),
            file = "./risk_prediction/result/training_testing_data_sample_size_by_study.xlsx",
            sheetName="icog_training")
+temp = cbind(table(data2.train$study,subtype2.train),table(data2.train$study,data2.train$Behaviour1))
+colnames(temp)
+sum(temp[,8:10])
+sum(table(casecon.onco))
 write.xlsx(cbind(table(data2.train$study,subtype2.train),table(data2.train$study,data2.train$Behaviour1)),
            file = "./risk_prediction/result/training_testing_data_sample_size_by_study.xlsx",
            sheetName = "onco_training",
