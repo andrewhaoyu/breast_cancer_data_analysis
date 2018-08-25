@@ -2,7 +2,6 @@
 rm(list=ls())
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
-i
 library(bcutility)
 library(bc2)
 library(rstan)
