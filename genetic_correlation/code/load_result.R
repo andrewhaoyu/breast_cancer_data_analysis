@@ -79,17 +79,63 @@ setwd("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlati
 intrinsic_result <- read.csv("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/CIMBA_BCAC.csv",header=F)
 correlation.matrix <- intrinsic_result[1:5,2:6]
 correlation.matrix.se <- intrinsic_result[6:10,2:6]
-
+correlation.matrix <- correlation.matrix[c(2,5,4,3,1),c(2,5,4,3,1)]
+correlation.matrix.se <- correlation.matrix.se[c(2,5,4,3,1),c(2,5,4,3,1)]
 correlation.95 <- get_cor_95(correlation.matrix,correlation.matrix.se)
-colnames(correlation.matrix) <- intrinsic_result[1:5,1]
-rownames(correlation.matrix) <- intrinsic_result[1:5,1]
+names <- as.character(intrinsic_result[c(2,5,4,3,1),1])
+colnames(correlation.matrix) <- names
+rownames(correlation.matrix) <- names
 
-colnames(correlation.95) <- intrinsic_result[1:5,1]
-rownames(correlation.95) <- intrinsic_result[1:5,1]
-correlation.95 <- correlation.95[c(2,5,4,3,1),c(2,5,4,3,1)]
+colnames(correlation.95) <- names
+rownames(correlation.95) <- names
+
 correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
 correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
+
+
+
+
+
 p.value<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[3]]
+
+M <- nrow(correlation.matrix)
+combn.list <- combn(M,2)
+n <- ncol(combn.list)
+cor.vec.high <- cor.vec.low <- cor.vec <- rep(0,n)
+subtypes <- rep("c",n)
+for(i in n:1){
+  subtypes[i] <- paste0(names[combn.list[1,i]],
+                     " vs ",
+                     names[combn.list[2,i]])
+  cor.vec[i] <- correlation.matrix[combn.list[2,i],combn.list[1,i]]
+  cor.vec.low[i] <- correlation.matrix.low[combn.list[2,i],combn.list[1,i]]
+  cor.vec.high[i] <- correlation.matrix.high[combn.list[2,i],combn.list[1,i]]
+}
+subtypes.f <- factor(subtypes,levels=subtypes)
+
+cor.data <-data.frame(subtypes.f,cor.vec,
+                      cor.vec.low,
+                      cor.vec.high)
+ggplot(cor.data,aes(x=subtypes.f,y=cor.vec))+
+  geom_point(size=4)+
+  geom_errorbar(aes(ymax = cor.vec.high, ymin = cor.vec.low))+
+  theme_minimal()+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylab("Genetic correlation") + 
+  ggtitle("Genetic correlation between five intrinsic subtypes")  + 
+  theme(text = element_text(size=10),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold"),
+        axis.text.y = element_text(face = "bold.italic"),
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold"))+
+  xlab("Intrinsic subtypes")+
+  scale_y_continuous(limits=c(0,1))
+  #geom_hline (yintercept = -log10(0.05/220), color = "red")+
+  
+  # coord_flip()+
+  # facet_grid(.~subtypes)+
+  # theme(strip.text = element_text(face = "bold"))
+
+
+
+
 write.csv(correlation.95,file="correlation_95_CIMBA_BCAC.csv",quote=F)
 places <- 3
 
@@ -138,9 +184,9 @@ library(gplots)
 
 # correlation.matrix <- as.matrix(as.data.frame(fread("genetic_correlation_meta.csv")[,1:5]))
 #rownames(correlation.matrix) <- colnames(correlation.matrix)
-correlation.matrix <- correlation.matrix[c(2,5,4,3,1),c(2,5,4,3,1)]
-rownames(correlation.matrix) <- colnames(correlation.matrix)
-correlation.matrix <- as.matrix(correlation.matrix)
+# correlation.matrix <- correlation.matrix[c(2,5,4,3,1),c(2,5,4,3,1)]
+# rownames(correlation.matrix) <- colnames(correlation.matrix)
+# correlation.matrix <- as.matrix(correlation.matrix)
 #correlation.matrix <- correlation.matrix[c(2,4,3,1),c(2,4,3,1)]
 
 library(corrplot)
@@ -155,15 +201,15 @@ my.color <- colorRampPalette(c("white", "dodgerblue4"))(paletteLength)
 myBreaks <- c(seq(0, max(correlation.matrix), length.out=floor(paletteLength)))
 
 png(filename="meta_heatmap_two_stage.png",width=10,heigh=10,units="in",res=600)
-corrplot(correlation.matrix, 
+corrplot(as.matrix(correlation.matrix), 
          #p.mat = p.value,
          #insig = "label_sig",
          low=as.matrix(correlation.matrix.low),
          upp= as.matrix(correlation.matrix.high),
          
-         rect.col = "navy", plotC = "rect", cl.pos = "n",
+         #rect.col = "navy", plotC = "rect", cl.pos = "n",
          #col = my.color,
-         #method = "color",
+         method = "color",
          addrect=2, 
          tl.col = "black", 
          #tl.srt = 30,

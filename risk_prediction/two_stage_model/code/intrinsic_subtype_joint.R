@@ -14,6 +14,11 @@ z.design <- matrix(c(
 ),ncol=5)
 
 genetic_covariance <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_covariance.csv",header=T)
+genetic_correlation <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",header=T)
+
+
+# genetic_correlation <- genetic_correlation[c(2,4,5,3,1),c(2,4,5,3,1)]
+#  write.csv(genetic_correlation,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",row.names = F)
 
 #genetic_covariance <- genetic_covariance[,-c(1,2)]
 # genetic_covariance <- genetic_covariance[,-6]
@@ -184,8 +189,12 @@ for(i in 1:6){
                             prior.sigma
   ){
     M <- length(logodds.subtype)
+    if(det(prior.sigma)==0){
+      result <- as.vector(rep(logodds.standard,M))
+    }else{
+      result <- solve(solve(sigma.subtype)+solve(prior.sigma))%*%(solve(sigma.subtype)%*%logodds.subtype+ solve(prior.sigma)%*%as.vector(rep(logodds.standard,M)))  
+    }
     
-    result <- solve(solve(sigma.subtype)+solve(prior.sigma))%*%(solve(sigma.subtype)%*%logodds.subtype+ solve(prior.sigma)%*%as.vector(rep(logodds.standard,M)))
     return(result)
     
   }
@@ -195,7 +204,7 @@ for(i in 1:6){
     log.odds.standard.result[i],
     heter.variance.estiamte [i] 
   )
-  prior.sigma <- 2*freq*(1-freq)*genetic_covariance/1190
+  prior.sigma <-    heter.variance.estiamte [i]*genetic_correlationion
   log.odds.intrinsic.la[i,] <- EbestimateNew(
    as.vector(meta.result[[1]]),
     meta.result[[2]],

@@ -133,6 +133,15 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
 
 
 
+#try
+# idx.try <- which(y.pheno.mis[,5]==1|y.pheno.mis[,5]==2|
+#                    y.pheno.mis[,5]==3)
+# 
+# y.pheno.mis[idx.try,5] <- y.pheno.mis[idx.try,5]-2
+
+
+
+
 PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_covar){
   model1 <- TwoStageModel(y.pheno.mis,
                           additive=cbind(G,x_covar),
