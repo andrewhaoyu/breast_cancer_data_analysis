@@ -204,7 +204,7 @@ for(i in 1:6){
     log.odds.standard.result[i],
     heter.variance.estiamte [i] 
   )
-  prior.sigma <-    heter.variance.estiamte [i]*genetic_correlation
+  prior.sigma <-    heter.variance.estiamte [i]*as.matrix(genetic_correlation)
   log.odds.intrinsic.la[i,] <- EbestimateNew(
    as.vector(meta.result[[1]]),
     meta.result[[2]],
