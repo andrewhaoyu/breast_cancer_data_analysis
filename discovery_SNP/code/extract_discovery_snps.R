@@ -1,4 +1,20 @@
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary.csv",header=T)
+discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p.Rdata")
+
+# chr.pos <- paste0(meta_result_shared_1p$CHR,":",meta_result_shared_1p$position)
+# meta_result_shared_1p$chr.pos <- chr.pos
+# 
+# discovery_snp$chr.pos <- paste0(discovery_snp$CHR,":",discovery_snp$Pos)
+# 
+# discovery_snp_new <- merge(discovery_snp,
+#                            meta_result_shared_1p,
+#                            by.x = "chr.pos",
+#                            by.y = "chr.pos")
+# discovery_snp <- discovery_snp_new
+#write.csv(discovery_snp,file ="/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv")
+
+
 
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")

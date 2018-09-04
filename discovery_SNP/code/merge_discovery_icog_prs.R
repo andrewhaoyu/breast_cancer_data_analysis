@@ -15,8 +15,8 @@ library(data.table)
 Icog.order <- read.table(gzfile(subject.file))
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
-#data1 <- fread("./data/PRS_subtype_icgos_pheno_v10_euro.csv",header=T)
-data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
+data1 <- fread("./data/PRS_subtype_icgos_pheno_v10_euro.csv",header=T)
+#data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
@@ -100,11 +100,30 @@ snpvalue.result <- snpvalue.result[,idx.match]
 extract.result <- list(snpid.result,snpvalue.result)
 colnames(snpvalue.result) <- snpid.result
 
-write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog_data.csv",row.names = F,quote=F)
+write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog_data_prs.csv",row.names = F,quote=F)
 
 
 
+data2 <- fread("./data/PRS_subtype_Onco_euro_v10_08012018.csv",
+               header=T)
+data2 <- as.data.frame(data2)
 
 
+pc1 <- data1[5:14]
+snpvalue1 <- cbind(data1[,27:203],snpvalue.result)
+age <- data1[,204]
+
+sig_snp_icog_prs <- cbind(y.pheno.mis1,
+                          pc1,
+                          snpvalue1,
+                          age)
+write.csv(sig_snp_icog_prs,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv")
+
+names1 <- colnames(data1)[27:203]
+names2 <- colnames(data2)[27:204]
+
+
+idx <- which(names2%in%names1==F)
+idx.match <- match(names1,names2)
 
 
