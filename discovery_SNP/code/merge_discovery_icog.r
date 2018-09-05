@@ -102,6 +102,31 @@ colnames(snpvalue.result) <- snpid.result
 
 write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog_data.csv",row.names = F,quote=F)
 
+data2 <- as.data.frame(fread("./data/Onco_euro_v10_10232017.csv",header=T))
+#data2 <- data2)
+
+#data2 <- fread("./data/PRS_subtype_Onco_euro_v10_08012018.csv",
+#               header=T)
+#data2 <- as.data.frame(data2)
+
+ID <- data1[,1]
+pc1 <- data1[5:14]
+snpvalue1 <- cbind(data1[,27:203],snpvalue.result)
+age <- data1[,204]
+
+sig_snp_icog<- cbind(ID,y.pheno.mis1,
+                          pc1,
+                          snpvalue1,
+                          age)
+write.csv(sig_snp_icog,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog.csv")
+
+names1 <- colnames(data1)[27:203]
+names2 <- colnames(data2)[27:204]
+
+
+idx <- which(names2%in%names1==F)
+idx.match <- match(names1,names2)
+
 
 
 

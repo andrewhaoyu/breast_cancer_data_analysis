@@ -1,5 +1,4 @@
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary.csv",header=T)
-
+discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 snp.icogs.extract.id <- as.character(discovery_snp$SNP.ICOGS)
@@ -13,10 +12,15 @@ snpvalue <- rep(0,n.raw)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+library(data.table)
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 
 Onc_ID <- data2$Onc_ID
+#data2 <- as.data.frame(data2)
+y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+colnames(y.pheno.mis2) = c("Behavior","ER","PR","HER2","Grade")
+
 
 
 idx.fil <- onco.order[,1]%in%Onc_ID
@@ -89,4 +93,28 @@ extract.result <- list(snpid.result,snpvalue.result)
 colnames(snpvalue.result) <- snpid.result
 
 write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",row.names = F,quote=F)
+
+
+data1 <- fread("./data/PRS_subtype_icgos_pheno_v10_euro.csv",header=T)
+#data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
+data1 <- as.data.frame(data1)
+
+names1 <- colnames(data1)[27:203]
+names2 <- colnames(data2)[c(27:203,205)]
+idx <- which(names2%in%names1==F)
+all.equal(names2[1:177],names1)
+
+
+pc2 <- data2[5:14]
+snpvalue2 <- cbind(data2[,c(c(1:177)+26,205)],snpvalue.result)
+all.equal(colnames(snpvalue2)[1:177],names1)
+age <- data2[,204]
+special.snp <- data2[,205]
+ID <- data2[,1]
+sig_snp_onco <- cbind(ID,y.pheno.mis2,
+                          pc2,
+                          snpvalue2,
+                          age,
+                          special.snp)
+write.csv(sig_snp_onco,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv")
 

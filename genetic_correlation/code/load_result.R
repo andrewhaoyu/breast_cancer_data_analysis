@@ -103,6 +103,11 @@ combn.list <- combn(M,2)
 n <- ncol(combn.list)
 cor.vec.high <- cor.vec.low <- cor.vec <- rep(0,n)
 subtypes <- rep("c",n)
+names <- c("HR+, HER2-, low grade",
+           "HR+, HER2-, high grade",
+           "HR+, HER2+",
+           "HR-, HER2+",
+           "HR-, HER2-")
 for(i in n:1){
   subtypes[i] <- paste0(names[combn.list[1,i]],
                      " vs ",
@@ -116,6 +121,10 @@ subtypes.f <- factor(subtypes,levels=subtypes)
 cor.data <-data.frame(subtypes.f,cor.vec,
                       cor.vec.low,
                       cor.vec.high)
+
+cor.data <- cor.data[order(cor.data[,2]),]
+cor.data[,1] <- factor(cor.data[,1],
+                       levels=as.character(cor.data[,1]))
 ggplot(cor.data,aes(x=subtypes.f,y=cor.vec))+
   geom_point(size=4)+
   geom_errorbar(aes(ymax = cor.vec.high, ymin = cor.vec.low))+
@@ -126,7 +135,8 @@ ggplot(cor.data,aes(x=subtypes.f,y=cor.vec))+
         axis.title.x = element_text(face = "bold"),
         axis.title.y = element_text(face = "bold"))+
   xlab("Intrinsic subtypes")+
-  scale_y_continuous(limits=c(0,1))
+  scale_y_continuous(limits=c(0,1))+
+  coord_flip()
   #geom_hline (yintercept = -log10(0.05/220), color = "red")+
   
   # coord_flip()+

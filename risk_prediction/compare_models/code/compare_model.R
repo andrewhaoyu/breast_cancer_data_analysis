@@ -62,6 +62,10 @@ colnames(y.pheno.mis1)
 #                  id.cohort.clean1,
 #                  id.cohort.clean2)
 #load the training and testing data row number
+genetic_correlation <- as.matrix(read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",header=T))
+
+
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./risk_prediction/result/split.id.rdata"))
 #icog.test.id <- Generatetestid(subtypes.icog)
 icog.train.id <- split.id[[1]]
@@ -84,7 +88,7 @@ x.snp.all2 <- select(onco.data,17:228)
 colnames(y.pheno.mis2)
 subtypes.onco <- GenerateIntrinsicmis(y.pheno.mis2[,2],y.pheno.mis2[,3],
                                       y.pheno.mis2[,4],y.pheno.mis2[,5])
-n.snp <- ncol(x.snp.all.train1)
+n.snp <- ncol(x.snp.all1)
 
 M <- 5
 log.odds.standard.all <-matrix(0,n.snp,M)
@@ -100,20 +104,68 @@ for(i1 in 1:n.snp){
   load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
   
   log.odds.standard.all[i1,] <- rep(all.model.result[[1]],M)
-  log.odds.poly.all <- all.model.result[[2]]
-  log.odds.intrinsic.all[i1,] <- all.model.result[[4]]
-  log.odds.intrinsic.eb.all
-  log.odds.intrinsic.ge.all[i1,] <- all.model.result[[5]]
+  log.odds.poly.all[i1,] <- all.model.result[[4]]
+  log.odds.intrinsic.all[i1,] <- all.model.result[[2]]
+  log.odds.intrinsic.eb.all[i1,] <- all.model.result[[5]]
+  log.odds.intrinsic.ge.all[i1,] <- all.model.result[[6]]
+  # log.odds.intrinsic.la.all[i1,] <- diag(all.model.result[[6]])
+  # log.odds.intrinsic.tree.all[i1,] <- diag(all.model.result[[8]])
+}
+#prior.sigma <- cov(log.odds.intrinsic.all)
+
+
+for(i1 in 1:n.snp){
+  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
+  log.odds.intrinsic <- all.model.result[[2]]
+  sigma.log.odds.intrinsic <- matrix(all.model.result[[3]],M,M)
+  #######empirical bayesian with whole genome genetic correlaiton
+  heter.variance.estiamte.R <- HeterVarianceEstimateNew(
+    log.odds.intrinsic,
+    sigma.log.odds.intrinsic,
+    genetic_correlation
+  )
+  prior.sigma <-    heter.variance.estiamte.R*as.matrix(genetic_correlation)
+  log.odds.intrinsic.ge.all[i1,] <- EbestimateNew(
+    log.odds.intrinsic,
+    sigma.log.odds.intrinsic,
+    all.model.result[[1]],
+    prior.sigma
+  )
+  #######empirical bayesian with empirical genetic correlation
+  heter.variance.estiamte.R <- HeterVarianceEstimateNew(
+    log.odds.intrinsic,
+    sigma.log.odds.intrinsic,
+    cor(log.odds.intrinsic.all)
+  )
+  prior.sigma <-    heter.variance.estiamte.R*as.matrix(genetic_correlation)
+  
+  log.odds.intrinsic.ep.all[i1,] <- EbestimateNew(
+    log.odds.intrinsic,
+    sigma.log.odds.intrinsic,
+    all.model.result[[1]],
+    prior.sigma
+  )
+  # log.odds.standard.all[i1,] <- rep(all.model.result[[1]],M)
+  # log.odds.poly.all <- all.model.result[[4]]
+  # log.odds.intrinsic.all[i1,] <- all.model.result[[2]]
+  # log.odds.intrinsic.eb.all[i1,] <- all.model.result[[5]]
+  # log.odds.intrinsic.ge.all[i1,] <- all.model.result[[6]]
   # log.odds.intrinsic.la.all[i1,] <- diag(all.model.result[[6]])
   # log.odds.intrinsic.tree.all[i1,] <- diag(all.model.result[[8]])
 }
 
 #save(temp,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp.Rdata")
-subtypes.names <- c("Luminal A","Luminal B",
-                    "Luminal B HER2Neg",
-                    "HER2 Enriched",
-                    "Triple Negative")
+subtypes.names <- c("Luminal_A","Luminal_B",
+                    "Luminal_B_HER2Neg",
+                    "HER2Enriched",
+                    "TripleNeg")
+plot(log.odds.standard.all[,5],log.odds.intrinsic.all[,5])
+plot(log.odds.intrinsic.all[,5],log.odds.intrinsic.eb.all[,5])
+plot(log.odds.intrinsic.all[,5],log.odds.intrinsic.ge.all[,5])
 
+log.odds.intrinsic.eb.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.ge.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.ep.all
 #########
 n.method <- 6
 n.subtype <- 5
@@ -122,105 +174,90 @@ auc.com <- matrix(0,n.subtype,n.method)
 coeff <- matrix(0,n.subtype,n.method)
 coeff_95 <- matrix("c",n.subtype,n.method)
 
+##########split the data
+onco.test <- which(onco.data[,1]%in%onco.test.id)
+y.pheno.mis2.test <- y.pheno.mis2[onco.test,]
+x.covar.test <- x.covar2[onco.test,]
+x.snp.all.test <- x.snp.all2[onco.test,]
+insub.onco.test <- GenerateIntrinsicmis(y.pheno.mis2.test[,2],
+                                        y.pheno.mis2.test[,3],
+                                        y.pheno.mis2.test[,4],
+                                        y.pheno.mis2.test[,5])
 
 
-for(i in 1:5){
-  print(i)
-  idx.test.case <-  icog.test.id[[1]][[i]]
-  idx.test.control <- icog.test.id[[2]][[i]]
-  idx.test1 <- c(idx.test.case,idx.test.control)
-  y.pheno.mis1.test <- y.pheno.mis1[idx.test1,1]
-  x.snp.all.test1 <- x.snp.all1[idx.test1,]
-  idx.test.case <-  onco.test.id[[1]][[i]]
-  idx.test.control <- onco.test.id[[2]][[i]]
-  idx.test2 <- c(idx.test.case,idx.test.control)
-  y.pheno.mis2.test <- y.pheno.mis2[idx.test2,1]
-  x.snp.all.test2 <- x.snp.all2[idx.test2,]
-  y.test <- c(y.pheno.mis1.test,y.pheno.mis2.test)
-  x.test <- rbind(as.matrix(x.snp.all.test1),as.matrix(x.snp.all.test2))
-  log.odds.standard <- log.odds.standard.all[,i]
-  log.odds.intrinsic <- log.odds.intrinsic.all[,i]
-  log.odds.intrinsic.dic <-  log.odds.intrinsic.dic.all[,i]
-  log.odds.intrinsic.eb <- log.odds.intrinsic.eb.all[,i]
-  log.odds.intrinsic.la <- log.odds.intrinsic.la.all[,i]
-  log.odds.intrinsic.tree <-  log.odds.intrinsic.tree.all[,i]
+
+for(j in 1:M){
+
+  onco.test.sub.j <- which(insub.onco.test==subtypes.names[j]|
+                             insub.onco.test=="control")
+  y.pheno.mis2.test.casecon.j <- as.vector(y.pheno.mis2.test[onco.test.sub.j,1])
+  x.snp.j <- as.matrix(x.snp.all.test[onco.test.sub.j,])
   auc.cal.result <- GenerateAuc_Cal(
-    log.odds.standard,
-    log.odds.intrinsic,
-    log.odds.dic,
-    log.odds.intrinsic.eb,
-    log.odds.intrinsic.la,
-    log.odds.intrinsic.tree,
-    x.test,
-    y.test
+    log.odds.standard=
+      as.vector(log.odds.standard.all[,j]),
+    log.odds.intrinsic=
+      log.odds.poly.all[,j],
+    log.odds.dic=
+      log.odds.intrinsic.all[,j],
+    log.odds.intrinsic.eb=
+      log.odds.intrinsic.eb.all[,j],
+    log.odds.intrinsic.la=
+      log.odds.intrinsic.ge.all[,j],
+    log.odds.intrinsic.tree=
+      log.odds.intrinsic.ep.all[,j],
+    x.test=
+      x.snp.j,
+    y.test=
+      y.pheno.mis2.test.casecon.j
   )    
   coeff.result <- GenerateCoeff(
-      log.odds.standard,
-      log.odds.intrinsic,
-      log.odds.dic,
-      log.odds.intrinsic.eb,
-      log.odds.intrinsic.la,
-      log.odds.intrinsic.tree,
-      x.test,
-      y.test
-    )
-    coeff[i,] <- coeff.result[[1]]
-    coeff_95[i,] <- coeff.result[[2]]
+    log.odds.standard.all[,j],
+    log.odds.poly.all[,j],
+    log.odds.intrinsic.all[,j],
+    log.odds.intrinsic.eb.all[,j],
+    log.odds.intrinsic.ge.all[,j],
+    log.odds.intrinsic.ep.all[,j],
+    x.snp.j,
+    y.pheno.mis2.test.casecon.j
+  )
+  coeff[j,] <- coeff.result[[1]]
+  coeff_95[j,] <- coeff.result[[2]]
   auc.result <-   auc.cal.result [[1]]
   auc.95 <- auc.cal.result[[2]]
-  auc.com[i,] <- auc.cal.result [[1]]
-  auc.summary[i,] <- paste0(auc.result," (",auc.95,")")
+  auc.com[j,] <- auc.cal.result [[1]]
+  auc.summary[j,] <- paste0(auc.result," (",auc.95,")")
   cal.result <- auc.cal.result[[3]]
   sensitivities <-   as.vector(auc.cal.result[[4]])
   specificities <- as.vector(auc.cal.result[[5]])
-  # n <- length(sensitivities)/5
-  # method <- c(rep("standard analysis",n),
-  #          rep("intrinsic subtypes",n),
-  #          rep("dichotomized analysis",n),
-  #          rep("Empirical Bayesian (Normal Prior)",n),
-  #          rep("Empirical Bayesian (Laplace Prior)",n))
-  # n <- 10
-  # quantile <- rep(c(1:10),5)
-  # method.cal <- c(rep("Standard analysis",n),
-  #                 rep("Intrinsic subtypes",n),
-  #                 rep("Dichotomized analysis",n),
-  #                 rep("Empirical Bayesian (Normal Prior)",n),
-  #                 rep("Empirical Bayesian (Laplace Prior)",n))
-  # data.auc <- data.frame(sensitivities,specificities,method)
-  # png(filename=paste0(subtypes.names[i]," risk prediction.png"),
-  #     width=8,height=6,units="in",res=300)
-  #     print({
-  #       p <-  ggplot(data= data.auc,aes(x=1-specificities,y=sensitivities,col=method))+geom_line()+style_roc()+ggtitle(paste0(subtypes.names[i]," AUC plot"))
-  #                     p       
-  #     }
-  #       
-  #     )
-  # dev.off()
-  # data.cal <- data.frame(calresult = as.vector(t(cal.result)),
-  #                        quantile = quantile,
-  #                        method= method.cal)
-  # png(filename=paste0(subtypes.names[i]," calibration.png"),
-  #     width=8,height=6,units="in",res=300)
-  # print({
-  # p <-   ggplot(data= data.cal,aes(x= quantile,y=calresult,col=method))+geom_line()+ggtitle(paste0(subtypes.names[i]," calibration"))+ylab("Odds ratio")+xlab("risk quantile")+
-  #     scale_x_continuous(breaks=c(1:10))
-  # p
-  #   
-  # })
-  # 
-  # dev.off()
+  
 }
+
+
+
+
+
+
+
+
+
 rownames(auc.summary) <- c("Luminal A","Luminal B",
                            "Luminal B HER2Neg",
                            "HER2 Enriched",
                            "Triple Negative")
 colnames(auc.summary) <- c("standard analysis",
-                           "intrinsic subtypes",
-                           "dichotomized analysis",
+                           "poly subtypes",
+                           "two-stage analysis",
                            "Empirical Bayesian (Normal Prior)",
-                           "Empirical Bayesian (Laplace Prior)",
-                           "Classification tree")
-write.csv(auc.summary,file="auc.summary.csv")
+                           "Empirical Bayesian (Genetic correlation)",
+                           "Empirical Bayesian (Empirical prior)")
+
+# colnames(auc.summary) <- c("standard analysis",
+#                            "intrinsic subtypes",
+#                            "dichotomized analysis",
+#                            "Empirical Bayesian (Normal Prior)",
+#                            "Empirical Bayesian (Laplace Prior)",
+#                            "Classification tree")
+write.csv(auc.summary,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/auc.summary.csv")
 auc.com 
 n <- 5
 method <- c(rep("Standard analysis",n),

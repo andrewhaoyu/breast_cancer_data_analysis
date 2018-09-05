@@ -1,5 +1,6 @@
 #install_github("andrewhaoyu/bcutility",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.5"'))
-#install_github("andrewhaoyu/bcutility")
+library(devtools)
+install_github("andrewhaoyu/bcutility")
 rm(list=ls())
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
