@@ -108,12 +108,12 @@ data2 <- fread("./data/PRS_subtype_Onco_euro_v10_08012018.csv",
                header=T)
 data2 <- as.data.frame(data2)
 
-
+ID <- data1[,1]
 pc1 <- data1[5:14]
 snpvalue1 <- cbind(data1[,27:203],snpvalue.result)
 age <- data1[,204]
 
-sig_snp_icog_prs <- cbind(y.pheno.mis1,
+sig_snp_icog_prs <- cbind(ID,y.pheno.mis1,
                           pc1,
                           snpvalue1,
                           age)

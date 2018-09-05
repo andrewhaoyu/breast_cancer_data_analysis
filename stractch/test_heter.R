@@ -7,20 +7,27 @@ b <- sqrt(heter.sigma/2)
 M <- 5
 n <- 10000
 beta0 = 1
+Q <- matrix(runif(M*M),M,M)
+Q <- Q%*%t(Q)
+R <- cov2cor(Q)
+
+beta <- mvrnorm(n=n,mu=rep(beta0,M),Sigma=(R*heter.sigma))
 #beta <- matrix(rnorm(n*M,mean=beta0,sd=sqrt(heter.sigma)),n,M)
-beta <- matrix(rlaplace(n*M,m=beta0,s=b),n,M)
+#beta <- matrix(rlaplace(n*M,m=beta0,s=b),n,M)
 library(MASS)
-library(rmutil)
+#library(rmutil)
+
 beta_hat <- beta
 heter.sigma.est <- rep(0,n)
 for(i in 1:n){
   beta_hat[i,] <- mvrnorm(1,beta[i,],Sigma) 
-  heter.sigma.est[i] <- heter.variance.estimate(beta_hat[i,],Sigma)
+  heter.sigma.est[i] <- heter.variance.estimate(beta_hat[i,],Sigma,R)
 }
 mean(heter.sigma.est)
-heter.variance.estimate <- function(log.odds,sigma){
+heter.variance.estimate <- function(log.odds,sigma,R){
   M <- length(log.odds)
-  result <- (sum((log.odds-mean(log.odds))^2)-sum(diag(sigma))+sum(sigma)/M)/(M-1)
+  result <- (sum((log.odds-mean(log.odds))^2)-sum(diag(sigma))+sum(sigma)/M)/(M-sum(R)/M)
+  #result <- (sum((log.odds-mean(log.odds))^2)-(M+1)*sum(diag(sigma))/M)/(M-1)
   #if(result <= 0){
   #  result <- 0
  # }

@@ -4,16 +4,25 @@ SubtypesTrans <- function(casecon,ER,PR,HER2,grade){
   result <- rep("unknown",n)
   idx.con <- which(casecon==0)
   result[idx.con] <- "control"
-  idx.LA <- which((ER==1|PR==1)&HER2==0)
-  idx.LB <- which((ER==1|PR==1)&HER2==1&grade!=3)
-  idx.LB.HERneg <- which((ER==1|PR==1)&HER2==1&grade==3)
-  idx.TN <- which(ER==0&PR==0&HER2==0)
-  idx.HER2 <- which(ER==0&PR==0&HER2==1)
+  idx.LA <- which(HER2==0&(ER==1|PR==1)&(grade==1|grade==2))
+  idx.LB <- which(HER2==1&(ER==1|PR==1))
+  idx.LUBHER2 <- which(HER2==0&(ER==1|PR==1)&grade==3)
+  idx.HER2 <- which(HER2==1&ER==0&PR==0)
+  idx.TN <- which(HER2==0&ER==0&PR==0)
+  #idx.mis <- which(HER2==888|ER==888|PR==888|Grade==888)
   result[idx.LA] <- "Luminal_A"
   result[idx.LB] <- "Luminal_B"
-  result[idx.LB.HERneg] <- "Luminal_B_HER2neg"
-  result[idx.HER2] <- "HER2_enriched"
-  result[idx.TN] <- "triple_neg"
+  result[idx.LUBHER2] <- "Luminal_B_HER2Neg"
+  result[idx.HER2] <- "HER2Enriched"
+  result[idx.TN] <- "TripleNeg"
+  result <- factor(result,levels=c("control",
+                                       "Luminal_A",
+                                       "Luminal_B",
+                                       "Luminal_B_HER2Neg",
+                                       "HER2Enriched",
+                                       "TripleNeg",
+                                       "unknown"))
+  
   return(result)
   
 }
@@ -74,7 +83,7 @@ subtype2.cohort2 <- SubtypesTrans(data2.cohort.clean$Behaviour1,
                                   data2.cohort.clean$Grade1)
 
 t(table(subtype2.cohort2,data2.cohort.clean$study))
-#write.csv(t(table(subtype2.cohort2,data2.cohort.clean$study)),file = "./risk_prediction/result/cohort_study_sample_size.csv")
+write.csv(t(table(subtype2.cohort2,data2.cohort.clean$study)),file = "./risk_prediction/result/cohort_study_sample_size.csv")
 idx.unknown <- which(subtype2.cohort2=="unknown")
 head(data2.cohort.clean[idx.unknown,])
 
@@ -96,7 +105,9 @@ subtypes.other <- SubtypesTrans(casecon.other,
                                 grade.other)
 ##########always rank the subtypes with the following orders:
 ##########Lu_A, Lu_B，Lu_B_HER2_neg, HER2_en_TN
-subtypes.ratio <- table(subtypes.other)[c(3,4,5,2,6)]/sum( table(subtypes.other)[c(3,4,5,2,6)])
+#subtypes.ratio <- table(subtypes.other)[c(3,4,5,2,6)]/sum( table(subtypes.other)[c(3,4,5,2,6)])
+subtypes.ratio <- table(subtypes.other)[c(2:6)]/sum(table(subtypes.other)[c(2:6)])
+
 n.test.case <- round(table(casecon.other)[2]*0.1,0)
 n.test.control <- round(table(casecon.other)[1]*0.1,0)
 n.test.subtype <- round(n.test.case*subtypes.ratio,0)

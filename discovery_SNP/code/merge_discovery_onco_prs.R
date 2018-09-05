@@ -113,8 +113,8 @@ snpvalue2 <- cbind(data2[,c(1:(idx-1),(idx+1):178)+26],snpvalue.result)
 all.equal(colnames(snpvalue2)[1:177],names1)
 age <- data2[,205]
 special.snp <- data2[,26+idx]
-
-sig_snp_onco_prs <- cbind(y.pheno.mis2,
+ID <- data2[,1]
+sig_snp_onco_prs <- cbind(ID,y.pheno.mis2,
                           pc2,
                           snpvalue2,
                           age,
