@@ -134,7 +134,7 @@ log.odds.intrinsic.ep <-  rep(0,M)
                                      log.odds.onco,
                                      sigma.onco)
   log.odds.meta <- meta.result[[1]][i1]
-  log.odds.standard.result <- rep(log.odds.meta,M)
+  log.odds.standard.result <- log.odds.meta
   
 
   #############polytomous model
