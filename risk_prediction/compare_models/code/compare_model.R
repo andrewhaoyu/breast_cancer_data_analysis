@@ -38,54 +38,74 @@ library(bc2)
 library(pROC)
 library(data.table)
 library(plotROC)
-icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
-onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
+icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
+icog.data <- icog.data[,-1]
+onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
+onco.data <- onco.data[,-1]
 library(tidyverse)
-y.pheno.mis1 <- select(icog.data,Behaviour1,ER_status1,PR_status1,HER2_status1,Grade1)
-
+y.pheno.mis1 <- select(icog.data,Behavior,ER,PR,HER2,Grade)
+############put the people with unknown case status as 1
+idx.insi.unknown.icog <- which(y.pheno.mis1[,1]==888|
+                                 y.pheno.mis1[,1]==2) 
+y.pheno.mis1[idx.insi.unknown.icog,1] = 1
 subtypes.icog <- GenerateIntrinsicmis(y.pheno.mis1[,2],y.pheno.mis1[,3],
                                       y.pheno.mis1[,4],y.pheno.mis1[,5])
 
 #table(subtypes.icog)+table(subtypes.onco)
 
-x.covar1 <- select(icog.data,5:14)
-x.snp.all1 <- select(icog.data,26:230)
+x.covar1 <- select(icog.data,7:16)
+x.snp.all1 <- select(icog.data,17:228)
 colnames(y.pheno.mis1)
+# split.id <- list(id1.train,
+#                  id2.train,
+#                  id2.test,
+#                  id.cohort.clean1,
+#                  id.cohort.clean2)
+#load the training and testing data row number
+load(paste0("./risk_prediction/result/split.id.rdata"))
+#icog.test.id <- Generatetestid(subtypes.icog)
+icog.train.id <- split.id[[1]]
+onco.train.id <- split.id[[2]]
+onco.test.id <- split.id[[3]]
+icog.cohort.id <- split.id[[4]]
+onco.cohort.id <- split.id[[5]]
 
-icog.test.id <- Generatetestid(subtypes.icog)
-
-y.pheno.mis2 <- select(onco.data,Behaviour1,ER_status1,PR_status1,HER2_status1,Grade1)
+y.pheno.mis2 <- select(onco.data,Behavior,ER,PR,HER2,Grade)
+############put onco array unknown cases as 1
+idx.insi.unknown.onco <- which(y.pheno.mis2[,1]==888|
+                                 y.pheno.mis2[,1]==2) 
+y.pheno.mis2[idx.insi.unknown.onco,1] <- 1
 subtypes.onco <- GenerateIntrinsicmis(y.pheno.mis2[,2],
                                       y.pheno.mis2[,3],
                                       y.pheno.mis2[,4],
                                       y.pheno.mis2[,5])
-x.covar2 <- select(onco.data,5:14)
-x.snp.all2 <- select(onco.data,26:230)
+x.covar2 <- select(onco.data,7:16)
+x.snp.all2 <- select(onco.data,17:228)
 colnames(y.pheno.mis2)
 subtypes.onco <- GenerateIntrinsicmis(y.pheno.mis2[,2],y.pheno.mis2[,3],
                                       y.pheno.mis2[,4],y.pheno.mis2[,5])
-onco.test.id <- Generatetestid(subtypes.onco)
+n.snp <- ncol(x.snp.all.train1)
 
-
-
-n.snp <- 205
 M <- 5
 log.odds.standard.all <-matrix(0,n.snp,M)
+log.odds.poly.all <-matrix(0,n.snp,M)
 log.odds.intrinsic.all <- matrix(0,n.snp,M)
-log.odds.intrinsic.dic.all <- matrix(0,n.snp,M)
 log.odds.intrinsic.eb.all <- matrix(0,n.snp,M)
-log.odds.intrinsic.la.all <- matrix(0,n.snp,M)
-log.odds.intrinsic.tree.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.ge.all <- matrix(0,n.snp,M)
+log.odds.intrinsic.ep.all <- matrix(0,n.snp,M)
+# log.odds.intrinsic.la.all <- matrix(0,n.snp,M)
+# log.odds.intrinsic.tree.all <- matrix(0,n.snp,M)
 
 for(i1 in 1:n.snp){
   load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
   
-  log.odds.standard.all[i1,] <- all.model.result[[1]][1:5]
-  log.odds.intrinsic.all[i1,] <- diag(all.model.result[[2]])
-  log.odds.intrinsic.dic.all[i1,] <- diag(all.model.result[[4]])
-  log.odds.intrinsic.eb.all[i1,] <- diag(all.model.result[[5]])
-  log.odds.intrinsic.la.all[i1,] <- diag(all.model.result[[6]])
-  log.odds.intrinsic.tree.all[i1,] <- diag(all.model.result[[8]])
+  log.odds.standard.all[i1,] <- rep(all.model.result[[1]],M)
+  log.odds.poly.all <- all.model.result[[2]]
+  log.odds.intrinsic.all[i1,] <- all.model.result[[4]]
+  log.odds.intrinsic.eb.all
+  log.odds.intrinsic.ge.all[i1,] <- all.model.result[[5]]
+  # log.odds.intrinsic.la.all[i1,] <- diag(all.model.result[[6]])
+  # log.odds.intrinsic.tree.all[i1,] <- diag(all.model.result[[8]])
 }
 
 #save(temp,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp.Rdata")

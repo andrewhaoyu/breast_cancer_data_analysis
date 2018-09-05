@@ -121,13 +121,14 @@ log.odds.intrinsic.ep <-  rep(0,M)
   x.snp.all.train2 <- x.snp.all2[onco.train,]
   
   ############### standard analysis
+  n.snp <- ncol(x.snp.all.train1)
   model1 <- glm(y.pheno.mis1.train[,1]~as.matrix(x.snp.all.train1)+as.matrix(x.covar.train1),family = binomial(link = 'logit'))
-  log.odds.icog <-as.vector(model1$coefficients)[c(2:206)]
-  sigma.icog <- as.matrix(vcov(model1)[c(2:206),c(2:206)])
+  log.odds.icog <-as.vector(model1$coefficients)[c(1:n.snp)+1]
+  sigma.icog <- as.matrix(vcov(model1)[c(1:n.snp)+1,c(1:n.snp)+1])
   
   model2 <- glm(y.pheno.mis2.train[,1]~as.matrix(x.snp.all.train2)+as.matrix(x.covar.train2),family = binomial(link = 'logit'))
-  log.odds.onco <-as.vector(model2$coefficients)[c(2:206)]
-  sigma.onco <- vcov(model2)[c(2:206),c(2:206)]
+  log.odds.onco <-as.vector(model2$coefficients)[c(1:n.snp)+1]
+  sigma.onco <- vcov(model2)[c(1:n.snp)+1,c(1:n.snp)+1]
   
   meta.result <- LogoddsMetaAnalysis(log.odds.icog,
                                      sigma.icog,
@@ -273,6 +274,8 @@ all.model.result <- list(log.odds.standard.result
                          =log.odds.intrinsic.result,
                          sigma.intrinsic.result
                          =sigma.intrinsic.result,
+                         log.odds.poly.result=
+                           log.odds.poly.result,
                          # log.odds.dic.result
                          # =log.odds.dic.result,
                          log.odds.intrinsic.eb
