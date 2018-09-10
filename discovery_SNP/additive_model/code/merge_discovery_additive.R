@@ -123,7 +123,7 @@ generate_second_stage_parameter_names = function(tumor_characteristics){
 result <-  NULL
 first.stage <- NULL
 
-for(i in 1:29){
+for(i in 1:35){
   print(i)
   load(paste0("heter_result_",i,".Rdata"))
   result <- rbind(result,heter.result[[1]])
@@ -214,7 +214,7 @@ result <- result[,-c(12,14,15:16,17:20,22,24)]
 #colnames(first.stage) <- generate_first_stage_parameter_names(tumor.characteristics,z.standard)
 
 #result <- data.frame(result)
-
+row.names(result) <- colnames(discovery.snp.icog)
 write.xlsx(result,file="./additive_model_G_age_2des.xlsx",sheetName="additive_model_2nd_stage_age")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)
 
