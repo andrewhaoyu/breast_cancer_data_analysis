@@ -41,23 +41,32 @@ colnames(z.design) <- c("Luminial A","Luminal B",
                         "Luminal B HER2Neg",
                         "HER2 Enriched",
                         "Triple Negative")
-
+load(paste0("./risk_prediction/result/split.id.rdata"))
+#icog.test.id <- Generatetestid(subtypes.icog)
+icog.train.id <- split.id[[1]]
+#onco.train.id <- split.id[[2]]
+#onco.test.id <- split.id[[3]]
+#icog.cohort.id <- split.id[[4]]
+#onco.cohort.id <- split.id[[5]]
 #Icog.order <- read.table(gzfile(subject.file))
 Icog.order <- read.table(subject.file)
 library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
-data1 <- as.data.frame(data1)
-y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
+######load in the data and take out the training data
+data1 <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
+data1 <- as.data.frame(data1[,-1])
+icog.train <- which(data1[,1]%in%icog.train.id)
+data1 <- data1[icog.train,]
+y.pheno.mis1 <- cbind(data1$Behavior,data1$ER,data1$PR,data1$HER2,data1$Grade)
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 #x.test.all.mis1 <- data1[,c(27:206)]
-SG_ID <- data1$SG_ID
-x.covar.mis1 <- data1[,c(5:14,204)]
-age <- data1[,204]
-idx.complete <- which(age!=888)
-y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
-x.covar.mis1 <- x.covar.mis1[idx.complete,]
-SG_ID <- SG_ID[idx.complete]
+SG_ID <- data1$ID
+x.covar.mis1 <- data1[,c(7:16)]
+#age <- data1[,229]
+#idx.complete <- which(age!=888)
+#y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
+#x.covar.mis1 <- x.covar.mis1[idx.complete,]
+#SG_ID <- SG_ID[idx.complete]
 rm(data1)
 gc()
 
@@ -67,7 +76,7 @@ idx.fil <- Icog.order[,1]%in%SG_ID
 idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
-load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/delta0.icog.Rdata")
+load("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/delta0.icog.Rdata")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
 z.design.support <- cbind(1,z.standard[,1])
 
@@ -88,9 +97,9 @@ num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 #     num <- countLines(geno.file)[1]
 #   }
 # )
-# size = 5
+size = 2
 #size = 1000
-size = 70
+#size = 70
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
@@ -169,11 +178,13 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         score_result[temp,] <- 0
         infor_result[temp,] <- as.vector(diag(5))
       }else{
-        Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+        Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,delta0 = delta0)
         z.standard <- Heter.result.Icog[[12]]
         M <- nrow(z.standard)
         number.of.tumor <- ncol(z.standard)
         log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
+        #delta0 = Heter.result.Icog[[1]]
+        #save(delta0, file = "./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/delta0.icog.Rdata")
         nparm <- length(Heter.result.Icog[[1]])  
         sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
         
@@ -223,7 +234,7 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-#save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog",i1,"_",i2))
+save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/intrinsic_subytpe_icog",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit",i1,"_",i2))
-save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit_resubmit",i1,"_",i2))
+#save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit_resubmit",i1,"_",i2))

@@ -9,16 +9,45 @@ TestDiff <- function(x1,s1,x2,s2){
   return(2*pnorm(abs(z),lower.tail = F))
 }
 
-
+##########baseline results main
+baseline_result <- read.csv("baseline_results_main.csv")
+low.95 <- baseline_result$Enrichment - 1.96*baseline_result$Enrichment_std_error
+high.95 <- baseline_result$Enrichment + 1.96*baseline_result$Enrichment_std_error
+baseline_result$high.95 <- high.95
+baseline_result$low.95 <- low.95
+ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
+  geom_bar(stat = "identity",
+           position = "dodge",
+           aes(fill=Subtypes)
+           )+
+  theme_minimal()+  theme(axis.text.x = element_text(angle = 0, hjust = 1)) + ylab("Enrichment") + 
+  #ggtitle("Enrichment analysis of 220 celltypes")  + 
+  theme(text = element_text(size=10),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold",hjust = 0.5,angle = 90),
+        axis.text.y = element_text(face = "bold.italic"),
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold"))+
+  coord_flip()
+  #geom_errorbar(aes(ymax = high.95, 
+   #                 ymin = low.95,
+    #                fill=Subtypes))
+  
+  #geom_hline (yintercept = -log10(0.05/220), color = "red")+
+  #xlab("Cell types")+
+  
+  #facet_grid(.~subtypes)+
+#  theme(strip.text = element_text(face = "bold"))
+#dev.off()
 
 
 ###########220 celltypes results
 
 celltypes220_lua <- read.table("220celltype.1.lumA.txt",
                                header=T)
+write.csv(celltypes220_lua,file = "celltype2220_lumA.csv")
 celltypes220_lua$log10p <- -log10(celltypes220_lua$Enrichment_p)
 
 celltypes220_TN <- read.table("220celltype.2.TN.txt",header=T)
+write.csv(celltypes220_TN,file = "celltypes220_TN.csv")
 
 
 
@@ -230,8 +259,8 @@ dev.off()
 
 #############baseline analysis
 ############################## create a data frame for gg plot2
-baseline1.lua <- read.table("baseline.1.lumA.results.txt",header=T)
-baseline2.TN <- read.table("baseline.2.TN.results.txt",header=T)
+baseline1.lua <- read.table("baseline.1.lumA.results",header=T)
+baseline2.TN <- read.table("baseline.2.TN.results",header=T)
 
 n <- nrow(baseline1.lua)
 subtypes <- rep(c("Luminal A like","Triple negative"),n)
@@ -269,15 +298,20 @@ dev.off()
 
 ############analysze the baseline results
 
-idx1 <- which(baseline1.lua$Enrichment_p<=0.05/53)
+idx1 <- which(baseline1.lua$Enrichment_p<=0.05/52)
 baseline1.lua[idx1,]
-idx2 <- which(baseline2.TN$Enrichment_p<=0.05/53)
+idx2 <- which(baseline2.TN$Enrichment_p<=0.05/52)
 baseline2.TN[idx2,]
 baseline2.TN[order(baseline2.TN$Enrichment_p),]
-result.baseline <- rbind(baseline1.lua[idx,],
-                         baseline2.TN[idx2,])
-write.csv(result.baseline,file = "sig_baseline.csv")
-
+TestDiff(baseline1.lua$Enrichment,
+         baseline1.lua$Enrichment_std_error,
+         baseline2.TN$Enrichment,
+         baseline2.TN$Enrichment_std_error)
+baseline1.lua$Enrichment-baseline2.TN$Enrichment
+sqrt(baseline1.lua$Enrichment_std_error^2+
+  baseline2.TN$Enrichment_std_error^2)
+write.csv(baseline2.TN,file = "baseline_TN.csv")
+write.csv(baseline1.lua,file = "baseline_Lua.csv")
 
 
 
