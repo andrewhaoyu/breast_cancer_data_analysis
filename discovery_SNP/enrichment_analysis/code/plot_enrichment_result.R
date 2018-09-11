@@ -11,8 +11,9 @@ TestDiff <- function(x1,s1,x2,s2){
 
 ##########baseline results main
 baseline_result <- read.csv("baseline_results_main.csv")
-low.95 <- baseline_result$Enrichment - 1.96*baseline_result$Enrichment_std_error
-high.95 <- baseline_result$Enrichment + 1.96*baseline_result$Enrichment_std_error
+
+low.95 <- baseline_result$Enrichment - baseline_result$Enrichment_std_error
+high.95 <- baseline_result$Enrichment + baseline_result$Enrichment_std_error
 baseline_result$high.95 <- high.95
 baseline_result$low.95 <- low.95
 ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
@@ -26,11 +27,15 @@ ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
         axis.text.y = element_text(face = "bold.italic"),
         axis.title.x = element_text(face = "bold"),
         axis.title.y = element_text(face = "bold"))+
-  coord_flip()
-  #geom_errorbar(aes(ymax = high.95, 
-   #                 ymin = low.95,
-    #                fill=Subtypes))
-  
+  geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
+  coord_flip()+
+  scale_y_continuous(breaks=c(-5,0,1,5,10,15,20))
+  # geom_errorbar(aes(ymax = high.95, 
+  #                     ymin = low.95,
+  #                     shape=Subtypes),
+  #                 position= "dodge")+
+  #   scale_color_manual(values=c("black","black"))
+  # 
   #geom_hline (yintercept = -log10(0.05/220), color = "red")+
   #xlab("Cell types")+
   
@@ -307,6 +312,14 @@ TestDiff(baseline1.lua$Enrichment,
          baseline1.lua$Enrichment_std_error,
          baseline2.TN$Enrichment,
          baseline2.TN$Enrichment_std_error)
+p.value <- TestDiff(baseline1.lua$Coefficient,
+                    baseline1.lua$Coefficient_std_error,
+                    baseline2.TN$Coefficient,
+                    baseline2.TN$Coefficient_std_error)
+idx <- which.min(p.value)
+order(p.value)
+baseline1.lua[idx,]
+baseline1.lua[46,]
 baseline1.lua$Enrichment-baseline2.TN$Enrichment
 sqrt(baseline1.lua$Enrichment_std_error^2+
   baseline2.TN$Enrichment_std_error^2)

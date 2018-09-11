@@ -13,8 +13,10 @@ subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order
 onco.order <- read.table(gzfile(subject.file))
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 library(data.table)
-data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+data2 <- fread("./data/PRS_subtype_Onco_euro_v10_08012018.csv",
+               header=T)
 data2 <- as.data.frame(data2)
+
 
 Onc_ID <- data2$Onc_ID
 #data2 <- as.data.frame(data2)
@@ -91,6 +93,7 @@ all.equal(snpid.result,snp.onco.extract.id)
 snpvalue.result <- snpvalue.result[,idx.match]
 extract.result <- list(snpid.result,snpvalue.result)
 colnames(snpvalue.result) <- snpid.result
+
 
 write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",row.names = F,quote=F)
 

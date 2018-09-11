@@ -163,9 +163,6 @@ plot(log.odds.standard.all[,5],log.odds.intrinsic.all[,5])
 plot(log.odds.intrinsic.all[,5],log.odds.intrinsic.eb.all[,5])
 plot(log.odds.intrinsic.all[,5],log.odds.intrinsic.ge.all[,5])
 
-log.odds.intrinsic.eb.all <- matrix(0,n.snp,M)
-log.odds.intrinsic.ge.all <- matrix(0,n.snp,M)
-log.odds.intrinsic.ep.all
 #########
 n.method <- 6
 n.subtype <- 5
