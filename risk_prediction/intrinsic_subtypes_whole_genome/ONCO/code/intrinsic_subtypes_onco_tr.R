@@ -52,8 +52,8 @@ colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
 x.covar.mis2 <- data2[,c(5:14)]
-ages <- data2[,204]
-idx.complete <- which(ages!=888)
+#ages <- data2[,204]
+#idx.complete <- which(ages!=888)
 
 y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
 x.covar.mis2 <- x.covar.mis2[idx.complete,]

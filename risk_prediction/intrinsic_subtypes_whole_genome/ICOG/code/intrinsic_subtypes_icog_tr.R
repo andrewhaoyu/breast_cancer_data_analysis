@@ -58,6 +58,10 @@ data1 <- as.data.frame(data1[,-1])
 icog.train <- which(data1[,1]%in%icog.train.id)
 data1 <- data1[icog.train,]
 y.pheno.mis1 <- cbind(data1$Behavior,data1$ER,data1$PR,data1$HER2,data1$Grade)
+table(y.pheno.mis1[,1])
+##########clean phenotype file
+idx <- which(y.pheno.mis1[,1]==888|y.pheno.mis1[,1]==2)
+y.pheno.mis1[idx,1] <- 1
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 #x.test.all.mis1 <- data1[,c(27:206)]
 SG_ID <- data1$ID
