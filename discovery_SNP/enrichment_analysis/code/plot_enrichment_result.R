@@ -44,6 +44,57 @@ ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
 #dev.off()
 
 
+
+
+
+###########baseline results with 500kb extension
+baseline_result <- read.csv("baseline_500kb.csv")
+
+low.95 <- baseline_result$Enrichment - baseline_result$Enrichment_std_error
+high.95 <- baseline_result$Enrichment + baseline_result$Enrichment_std_error
+baseline_result$high.95 <- high.95
+baseline_result$low.95 <- low.95
+ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
+  geom_bar(stat = "identity",
+           position = "dodge",
+           aes(fill=Subtypes)
+  )+
+  theme_minimal()+  theme(axis.text.x = element_text(angle = 0, hjust = 1)) + ylab("Enrichment") + 
+  #ggtitle("Enrichment analysis of 220 celltypes")  + 
+  theme(text = element_text(size=10),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold",hjust = 0.5,angle = 90),
+        axis.text.y = element_text(face = "bold.italic"),
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold"))+
+#  geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
+  coord_flip()+
+  #scale_y_continuous(breaks=c(-5,0,1,5,10,15,20))
+geom_errorbar(aes(ymax = high.95,
+                    ymin = low.95,
+                    shape=Subtypes),
+                position= "dodge")+
+  scale_color_manual(values=c("black","black"))
+# 
+#geom_hline (yintercept = -log10(0.05/220), color = "red")+
+#xlab("Cell types")+
+
+#facet_grid(.~subtypes)+
+#  theme(strip.text = element_text(face = "bold"))
+#dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ###########220 celltypes results
 
 celltypes220_lua <- read.table("220celltype.1.lumA.txt",
