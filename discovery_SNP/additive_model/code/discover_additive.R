@@ -30,7 +30,7 @@ x.test.all.mis1 <- discovery.snp.icog
 x.test.all.mis2 <- discovery.snp.onco
 
 
-
+discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 
 #if(i1<=28){
   ##analysis for Icog
@@ -47,7 +47,9 @@ x.test.all.mis2 <- discovery.snp.onco
   #x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
   x.covar.mis1 <- data1[,c(5:14)]
-   
+  if(discovery_snp$exp_freq_a1>0.5){
+    x.test.all.mis1[,i1] = 2-x.test.all.mis1[,i1]
+  }
   
   
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
@@ -201,6 +203,9 @@ x.test.all.mis2 <- discovery.snp.onco
   
  # x.test.all.mis2 <- data2[,c(27:203)]
   x.covar.mis2 <- data2[,c(5:14)]
+  if(discovery_snp$exp_freq_a1>0.5){
+    x.test.all.mis2[,i1] = 2-x.test.all.mis2[,i1]
+  }
   
   
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))

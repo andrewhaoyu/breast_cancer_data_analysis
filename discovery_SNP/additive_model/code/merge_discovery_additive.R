@@ -91,7 +91,7 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
 
 
 
-
+discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 
 
 

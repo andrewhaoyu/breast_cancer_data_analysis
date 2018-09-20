@@ -1,5 +1,6 @@
 library(devtools)
 install_github("andrewhaoyu/bc2", args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+library(bc2)
 ###1 represent Icog
 ###2 represent Onco
 

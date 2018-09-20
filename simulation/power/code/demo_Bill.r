@@ -97,7 +97,7 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
 
 
 
-
+install_github("andrewhaoyu/bc2")
 library(bc2)
 
 theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91)
@@ -124,6 +124,104 @@ G <- temp.simu[[2]]
 x_covar <- temp.simu[[3]]
 z.standard <- GenerateZstandard(y.pheno.mis,missingTumorIndicator = 888)
 M <- nrow(z.standard)
+#####################standard fixed effect two-stage model
+model.fixed <- TwoStageModel(y.pheno.mis,
+                             additive = cbind(G,x_covar),
+                             missingTumorIndicator = 888)
+#####################stage1to2.model
+#####################we want a self design second stage function for G,
+#####################for x_covar1, we want additive structure
+#####################for x_covar2, we want saturated structure
+
+################### a scractch function for design stage1to2
+Stage1To2 <- function(y,
+                      x.self.design,
+                      z.design,
+                      baselineonly = NULL,
+                      additive = NULL,
+                      pairwise.interaction = NULL,
+                      saturated = NULL,
+                      missingTumorIndicator = 888
+){
+  missing.data.vec <- GenerateMissingPosition(y,missingTumorIndicator)
+  y.pheno.complete <- y[-missing.data.vec,]
+  y <- y.pheno.complete
+  tumor.number <- ncol(y)-1
+  y.case.control <- y[,1]
+  y.tumor <- y[,2:(tumor.number+1)]
+  freq.subtypes <- GenerateFreqTable(y.pheno.complete)
+  if(CheckControlTumor(y.case.control,y.tumor)==1){
+    return(print("ERROR:The tumor characteristics for control subtypes should put as NA"))
+  }
+  tumor.names <- colnames(y.tumor)
+  if(is.null(tumor.names)){
+    tumor.names <- paste0(c(1:tumor.number))
+  }
+  tumor.character.cat = GenerateTumorCharacterCat(y.pheno.complete)
+  z.design.baselineonly <- GenerateZDesignBaselineonly(tumor.character.cat,
+                                                       tumor.number,
+                                                       tumor.names,
+                                                       freq.subtypes)
+  z.design.additive <- GenerateZDesignAdditive(tumor.character.cat,
+                                               tumor.number,
+                                               tumor.names,
+                                               freq.subtypes)
+  z.design.pairwise.interaction <- GenerateZDesignPairwiseInteraction(tumor.character.cat,
+                                                                      tumor.number,
+                                                                      tumor.names,
+                                                                      freq.subtypes)
+  z.design.saturated <- GenerateZDesignSaturated(tumor.character.cat,
+                                                 tumor.number,
+                                                 tumor.names,
+                                                 freq.subtypes)
+  full.second.stage.names <- colnames(z.design.saturated)
+  covar.names <- GenerateSelfCovarName(x.self.design,
+                                       baselineonly,
+                                       additive,
+                                       pairwise.interaction,
+                                       saturated)
+  z.all <- ZSelfDesigntoZall(x.self.design,
+                             baselineonly,
+                             additive,
+                             pairwise.interaction,
+                             saturated,
+                             z.design,
+                             z.design.baselineonly,
+                             z.design.additive,
+                             z.design.pairwise.interaction,
+                             z.design.saturated)
+  return(z.all)
+}
+
+z.standard <- GenerateZstandard(y.pheno.mis)
+M <- nrow(z.standard)
+x_covar1 <- x_covar
+x_covar2 <- x_covar+rnorm(length(x_covar1))
+####################all the ER positive as one group
+####################all the ER negative as one group 
+z.design.G <- matrix(0,M,2)
+idx.1 <- which(z.standard[,1]==0)
+z.design.G[idx.1,1] <- 1
+idx.2 <- which(z.standard[,1]==1)
+z.design.G[idx.1,2] <- 1
+stage1to2.model <- Stage1To2(y.pheno.mis,
+                          x.self.design = G,
+                          z.design = z.design.G,
+                          additive = x_covar1,
+                          saturated = x_covar2)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##########Fixed effect global test for association################ 
 ##########Get the support function for fixed effect
 #########Fixed effect supports, model fits under global null, G has no effect
