@@ -47,7 +47,7 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
   #x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
   x.covar.mis1 <- data1[,c(5:14)]
-  if(discovery_snp$exp_freq_a1>0.5){
+  if(discovery_snp$exp_freq_a1[i1]>0.5){
     x.test.all.mis1[,i1] = 2-x.test.all.mis1[,i1]
   }
   
@@ -203,7 +203,7 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
   
  # x.test.all.mis2 <- data2[,c(27:203)]
   x.covar.mis2 <- data2[,c(5:14)]
-  if(discovery_snp$exp_freq_a1>0.5){
+  if(discovery_snp$exp_freq_a1[i1]>0.5){
     x.test.all.mis2[,i1] = 2-x.test.all.mis2[,i1]
   }
   
