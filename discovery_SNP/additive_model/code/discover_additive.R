@@ -27,8 +27,8 @@ colnames(discovery.snp.icog)
 #onco.julie <- onco.julie[,-1]
 discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
 x.test.all.mis1 <- discovery.snp.icog
-x.test.all.mis2 <- discovery.snp.onco
 
+#sum(x.test.all.mis2[,11])/(2*nrow(x.test.all.mis2))
 
 discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 
@@ -46,12 +46,12 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
   
   #x.test.all.mis1 <- data1[,c(27:203)]
   ###pc1-10 and age
-  x.covar.mis1 <- data1[,c(5:14)]
+  x.covar.mis1 <- data1[,c(5:14),204]
   if(discovery_snp$exp_freq_a1[i1]>0.5){
     x.test.all.mis1[,i1] = 2-x.test.all.mis1[,i1]
   }
   
-  
+  #sum(x.test.all.mis1[,i1])/(2*nrow(x.test.all.mis1))
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   age <- data1[,204]
   idx.complete <- which(age!=888)
@@ -200,12 +200,13 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   colnames(y.pheno.mis2) = c("Behaviour","ER",
                              "PR","HER2","Grade")
-  x.test.all.mis2 <- data2[,c(27:203)]
-  x.covar.mis2 <- data2[,c(5:14)]
+  #x.test.all.mis2 <- data2[,c(27:203)]
+  x.test.all.mis2 <- discovery.snp.onco
+  x.covar.mis2 <- data2[,c(5:14,204)]
   if(discovery_snp$exp_freq_a1[i1]>0.5){
     x.test.all.mis2[,i1] = 2-x.test.all.mis2[,i1]
   }
-  
+  sum(x.test.all.mis2[,i1])/(2*nrow(x.test.all.mis2))
   
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   ages <- data2[,204]
@@ -217,7 +218,7 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
   colnames(x.all.mis2)[1] = "gene"
   
   
-  
+#  sum(x.test.all.mis2[,11])/(2*nrow(x.test.all.mis2))
   
   Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Onco[[12]]

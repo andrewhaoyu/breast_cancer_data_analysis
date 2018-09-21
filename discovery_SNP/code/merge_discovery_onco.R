@@ -92,7 +92,7 @@ all.equal(snpid.result,snp.onco.extract.id)
 snpvalue.result <- snpvalue.result[,idx.match]
 extract.result <- list(snpid.result,snpvalue.result)
 colnames(snpvalue.result) <- snpid.result
-
+#sum(snpvalue.result[,11])/(2*nrow(snpvalue.result))
 
 write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",row.names = F,quote=F)
 
