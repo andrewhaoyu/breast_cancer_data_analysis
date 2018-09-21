@@ -42,7 +42,7 @@ x.covar.mis1 <- data1[,c(7:16)]
 table(y.pheno.mis1[,1])
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 #x.test.all.mis1 <- data1[,c(27:206)]
-SG_ID <- data1$SG_ID
+SG_ID <- data1$ID
 x.covar.mis1 <- data1[,c(7:16)]
 
 
@@ -178,5 +178,5 @@ for(i in 1:inner.size){
 
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline",i1))
+save(result,file=paste0("./risk_prediction/FTOP_whole_genome/ICOG/result/ERPRHER2Grade_fixed_baseline",i1))
 
