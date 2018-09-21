@@ -13,8 +13,7 @@ subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order
 onco.order <- read.table(gzfile(subject.file))
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 library(data.table)
-data2 <- fread("./data/PRS_subtype_Onco_euro_v10_08012018.csv",
-               header=T)
+data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 
 

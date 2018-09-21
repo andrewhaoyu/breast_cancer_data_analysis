@@ -200,8 +200,7 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   colnames(y.pheno.mis2) = c("Behaviour","ER",
                              "PR","HER2","Grade")
-  
- # x.test.all.mis2 <- data2[,c(27:203)]
+  x.test.all.mis2 <- data2[,c(27:203)]
   x.covar.mis2 <- data2[,c(5:14)]
   if(discovery_snp$exp_freq_a1[i1]>0.5){
     x.test.all.mis2[,i1] = 2-x.test.all.mis2[,i1]
