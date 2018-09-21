@@ -19,14 +19,19 @@ library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
-icog.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
-icog.julie <- icog.julie[,-1]
-discovery.snp.icog <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
-onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
-onco.julie <- onco.julie[,-1]
-discovery.snp.onco <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
-x.test.all.mis1 <- as.data.frame(cbind(icog.julie,discovery.snp.icog))
-x.test.all.mis2 <- as.data.frame(cbind(onco.julie,discovery.snp.onco))
+discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog_data.csv",header=T))
+colnames(discovery.snp.icog)
+#onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
+#onco.julie <- onco.julie[,-1]
+discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
+x.test.all.mis1 <- discovery.snp.icog
+
+#sum(x.test.all.mis2[,11])/(2*nrow(x.test.all.mis2))
+
+discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
+
+#x.test.all.mis1 <- as.data.frame(cbind(icog.julie,discovery.snp.icog))
+#x.test.all.mis2 <- as.data.frame(cbind(onco.julie,discovery.snp.onco))
 
 z.design <- matrix(c(
   c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
@@ -44,18 +49,49 @@ colnames(z.design) <- c("Luminial A","Luminal B",
                         "HER2 Enriched",
                         "Triple Negative")
 
-load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/delta0.onco.Rdata")
-load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
+data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
+data1 <- as.data.frame(data1)
+y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
+colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
+# Grade1.fake <- data1$Grade1
+# Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
+# Grade1.fake[data1$Grade1==1] <- 0
+#y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
+# y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
 
-z.design.support <- cbind(1,z.standard[,1])
-z.design.test <- z.standard[,2:4]
-if(i1<=28){
+#x.test.all.mis1 <- data1[,c(27:203)]
+###pc1-10 and age
+x.covar.mis1 <- data1[,c(5:14),204]
+if(discovery_snp$exp_freq_a1[i1]>0.5){
+  x.test.all.mis1[,i1] = 2-x.test.all.mis1[,i1]
+}
+
+#sum(x.test.all.mis1[,i1])/(2*nrow(x.test.all.mis1))
+x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
+age <- data1[,204]
+idx.complete <- which(age!=888)
+y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
+x.all.mis1 <- x.all.mis1[idx.complete,]
+
+colnames(x.all.mis1)[1] <- "gene"
+
+
+#load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/delta0.onco.Rdata")
+#load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
+
+#z.design.support <- cbind(1,z.standard[,1])
+#z.design.test <- z.standard[,2:4]
+#if(i1<=28){
   ##analysis for Icog
   data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
   data1 <- as.data.frame(data1)
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
   colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
   x.covar.mis1 <- data1[,c(5:14,204)]
+  if(discovery_snp$exp_freq_a1[i1]>0.5){
+    x.test.all.mis1[,i1] = 2-x.test.all.mis1[,i1]
+  }
+  
   age <- data1[,204]
   snpvalue <- (x.test.all.mis1[,i1])
   #x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
@@ -101,14 +137,25 @@ if(i1<=28){
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   colnames(y.pheno.mis2) = c("Behaviour","ER",
                              "PR","HER2","Grade")
-  
-
+  #x.test.all.mis2 <- data2[,c(27:203)]
+  x.test.all.mis2 <- discovery.snp.onco
   x.covar.mis2 <- data2[,c(5:14,204)]
+  if(discovery_snp$exp_freq_a1[i1]>0.5){
+    x.test.all.mis2[,i1] = 2-x.test.all.mis2[,i1]
+  }
+  sum(x.test.all.mis2[,i1])/(2*nrow(x.test.all.mis2))
+  
+  x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   ages <- data2[,204]
   idx.complete <- which(ages!=888)
-  snpvalue = x.test.all.mis2[idx.complete,i1]
+  
   y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
-  x.covar.mis2 <- x.covar.mis2[idx.complete,]
+  x.all.mis2 <- x.all.mis2[idx.complete,]
+  
+  colnames(x.all.mis2)[1] = "gene"
+  
+  snpvalue = x.all.mis2[,1,drop=F]
+
   
   
   
@@ -136,4 +183,4 @@ if(i1<=28){
   
   
   
-}
+#}

@@ -55,8 +55,7 @@ x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
 
 
 
-Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
-z.standard <- Heter.result.Icog[[12]]
+z.standard <- GenerateZstandard(y.pheno.mis1)
 generate_first_stage_parameter_names = function(tumor_characteristics,z_standard){
   max.z_standard = apply(z_standard,2,max)
   idx.not.binary = which(max.z_standard!=1)
