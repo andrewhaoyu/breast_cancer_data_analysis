@@ -55,8 +55,7 @@ x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
 
 
 
-Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,
-                                  missingDataAlgorithm = "EM")
+Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 z.standard <- Heter.result.Icog[[12]]
 generate_first_stage_parameter_names = function(tumor_characteristics,z_standard){
   max.z_standard = apply(z_standard,2,max)
@@ -215,6 +214,6 @@ result <- result[,-c(12,14,15:16,17:20,22,24)]
 
 #result <- data.frame(result)
 row.names(result) <- colnames(discovery.snp.icog)
-write.xlsx(result,file="./additive_model_G_age_2des.xlsx",sheetName="additive_model_2nd_stage_age")
+write.xlsx(result,file="./additive_model_G_age_2des.xlsx",sheetName="additive_model_2nd_stage_age_minor_allele")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)
 
