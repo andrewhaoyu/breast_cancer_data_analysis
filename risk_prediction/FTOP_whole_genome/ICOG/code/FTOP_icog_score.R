@@ -25,6 +25,14 @@ subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_orde
 Icog.order <- read.table(gzfile(subject.file))
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+load(paste0("./risk_prediction/result/split.id.rdata"))
+#icog.test.id <- Generatetestid(subtypes.icog)
+icog.train.id <- split.id[[1]]
+#onco.train.id <- split.id[[2]]
+#onco.test.id <- split.id[[3]]
+#icog.cohort.id <- split.id[[4]]
+#onco.cohort.id <- split.id[[5]]
+#Icog.order <- read.table(gzfile(subject.file))
 ######load in the data and take out the training data
 data1 <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
 data1 <- as.data.frame(data1[,-1])

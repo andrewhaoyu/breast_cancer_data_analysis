@@ -18,7 +18,13 @@ print(i1)
 library(R.utils)
 library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-
+load(paste0("./risk_prediction/result/split.id.rdata"))
+#icog.test.id <- Generatetestid(subtypes.icog)
+#icog.train.id <- split.id[[1]]
+onco.train.id <- split.id[[2]]
+#onco.test.id <- split.id[[3]]
+#icog.cohort.id <- split.id[[4]]
+#onco.cohort.id <- split.id[[5]]
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
