@@ -151,7 +151,7 @@ colnames(x.all.mis1)[1] <- "gene"
   
   y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
   x.all.mis2 <- x.all.mis2[idx.complete,]
-  
+  x.covar.mis2 <- x.covar.mis2[idx.complete,]
   colnames(x.all.mis2)[1] = "gene"
   
   snpvalue = x.all.mis2[,1,drop=F]
