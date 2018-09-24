@@ -50,7 +50,9 @@ discovery_snp_new$marjor.minor <- major.minor
 
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.meta.result.Rdata"))
 
-
+idx <- which(CIMBA.BCAC.meta.result$CHR==17&
+               CIMBA.BCAC.meta.result$position==43681771)
+CIMBA.BCAC.meta.result[idx,]
 head(CIMBA.BCAC.meta.result)
 idx.fil <- which(CIMBA.BCAC.meta.result$MarkerName%in%
                    discovery_snp_new$var_name)
@@ -72,7 +74,7 @@ CI95withP <- function(effect,std){
                           exp(effect.high),")")
   return(list(p,effect.result))
 }
-
+#CI95withP(0.06653665,0.011429894)
 ############Organize CIMBA ORs with per copy of minor alleles
 CIMBA.p <- rep(0,n)
 CIMBA.OR <- rep("c",n)
@@ -106,9 +108,10 @@ colnames(final.result) <- c("rs_id",
                             "HER2 Enriched P",
                             "Triple Negative OR",
                             "Triple Negative P",
-                            
-                              "HER2 Enriched",
-                              "Triple Negative"))
+                            "global association test",
+                            "global heterogeneity test",
+                            "CIMBA OR",
+                            "CIMBA P")
 
 
 

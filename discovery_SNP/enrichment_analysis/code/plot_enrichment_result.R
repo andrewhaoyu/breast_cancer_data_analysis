@@ -29,13 +29,13 @@ ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
         axis.title.y = element_text(face = "bold"))+
   geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
   coord_flip()+
-  scale_y_continuous(breaks=c(-5,0,1,5,10,15,20))
-  # geom_errorbar(aes(ymax = high.95, 
-  #                     ymin = low.95,
-  #                     shape=Subtypes),
-  #                 position= "dodge")+
-  #   scale_color_manual(values=c("black","black"))
-  # 
+  scale_y_continuous(breaks=c(-5,0,1,5,10,15,20))+
+  geom_errorbar(aes(ymax = high.95,
+                      ymin = low.95,
+                      shape=Subtypes),
+                  position= "dodge")+
+    scale_color_manual(values=c("black","black"))
+
   #geom_hline (yintercept = -log10(0.05/220), color = "red")+
   #xlab("Cell types")+
   
@@ -103,12 +103,12 @@ ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
         axis.title.y = element_text(face = "bold"))+
  geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
   coord_flip()+
-  scale_y_continuous(breaks=c(-5,0,1,5,10,15,20))
-# geom_errorbar(aes(ymax = high.95,
-#                     ymin = low.95,
-#                     shape=Subtypes),
-#                 position= "dodge")+
-#   scale_color_manual(values=c("black","black"))
+  scale_y_continuous(breaks=c(-5,0,1,5,10,15,20))+
+geom_errorbar(aes(ymax = high.95,
+                    ymin = low.95,
+                    shape=Subtypes),
+                position= "dodge")+
+  scale_color_manual(values=c("black","black"))
 dev.off()
 
 png("baseline_results_500bp_95.png",height = 16, width  = 19.04, res = 300, units = "cm" )
