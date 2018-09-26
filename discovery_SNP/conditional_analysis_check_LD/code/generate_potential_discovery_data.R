@@ -18,14 +18,14 @@ chr.pos.dis <- paste0(discovery_snp$CHR,":",
  length(chr.pos.all[idx.fil])
  discovery_snp<-  meta_result_shared_1p[idx.fil,]
 # 
-
+save(discovery_snp,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/potential_discovery_snp.Rdata")
 
 
  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
- snp.icogs.extract.id <- as.character(discovery_snp$SNP.ICOGS)
- write.table(snp.icogs.extract.id,file = paste0("./discovery_SNP/result/extract_id_icog_discovery.txt"),quote = F,row.names=F)
+ # snp.icogs.extract.id <- as.character(discovery_snp$SNP.ICOGS)
+ # write.table(snp.icogs.extract.id,file = paste0("./discovery_SNP/result/extract_id_icog_discovery.txt"),quote = F,row.names=F)
  snp.onco.extract.id <- as.character(discovery_snp$SNP.ONCO)
- write.table(snp.onco.extract.id,file = paste0("./discovery_SNP/result/extract_id_onco_discovery.txt"),quote = F,row.names=F)
+ write.table(snp.onco.extract.id,file = paste0("./discovery_SNP/conditional_analysis_check_LD/result/extract_id_onco_discovery.txt"),quote = F,row.names=F)
  
  
  # /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/extract_id_icog_discovery.txt
@@ -42,21 +42,21 @@ chr.pos.dis <- paste0(discovery_snp$CHR,":",
  
  
  
- qctool.command <- rep("c",564)
- qctool.command <- data.frame(qctool.command,stringsAsFactors=F)
- 
- 
- for(i in 1:564){
-   geno.file <- Files[i]
-   temp <- paste0("/spin1/users/zhangh24/qctool_v1.4-linux-x86_64/qctool -g ",Files[i]," -incl-rsids /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/extract_id_icog_discovery.txt -og /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog",i,".txt")
-   qctool.command[i,1] <- temp
-   
- }
- 
- 
- write.table(qctool.command,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/code/qc_extract_discovery_icog.sh"),col.names = F,row.names = F,quote=F)
- 
- 
+ # qctool.command <- rep("c",564)
+ # qctool.command <- data.frame(qctool.command,stringsAsFactors=F)
+ # 
+ # 
+ # for(i in 1:564){
+ #   geno.file <- Files[i]
+ #   temp <- paste0("/spin1/users/zhangh24/qctool_v1.4-linux-x86_64/qctool -g ",Files[i]," -incl-rsids /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/extract_id_icog_discovery.txt -og /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog",i,".txt")
+ #   qctool.command[i,1] <- temp
+ #   
+ # }
+ # 
+ # 
+ # write.table(qctool.command,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/code/qc_extract_discovery_icog.sh"),col.names = F,row.names = F,quote=F)
+ # 
+ # 
  
  
  
@@ -74,13 +74,13 @@ chr.pos.dis <- paste0(discovery_snp$CHR,":",
  
  for(i in 1:567){
    geno.file <- Files[i]
-   temp <- paste0("/spin1/users/zhangh24/qctool_v1.4-linux-x86_64/qctool -g ",Files[i]," -incl-rsids /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/extract_id_onco_discovery.txt -og /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco",i,".txt")
+   temp <- paste0("/spin1/users/zhangh24/qctool_v1.4-linux-x86_64/qctool -g ",Files[i]," -incl-rsids /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/result/extract_id_onco_discovery.txt -og /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/result/discovery_onco",i,".txt")
    qctool.command[i,1] <- temp
    
  }
  
  
- write.table(qctool.command,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/code/qc_extract_discovery_onco.sh"),col.names = F,row.names = F,quote=F)
+ write.table(qctool.command,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/code/qc_extract_discovery_onco.sh"),col.names = F,row.names = F,quote=F)
  
  
  
