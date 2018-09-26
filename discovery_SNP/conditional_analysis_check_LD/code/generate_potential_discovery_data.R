@@ -6,27 +6,17 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ER
 discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/SNP_infor_conditional_check.csv",header=T)
 discovery_snp <- discovery_snp[1:22,]
 
-
-
-
-########5:45369617
-idx <- which(extract.list$CHR==5&
-               extract.list$position==45333860 )
-
-
-
-
-
-# chr.pos.dis <- paste0(discovery_snp$CHR,":",
-#                       discovery_snp$Pos)
-# 
-# 
-# 
-# chr.pos.all <- paste0(meta_result_shared_1p$CHR,":",
-#                       meta_result_shared_1p$position)
-# idx.fil <- which(chr.pos.all%in%chr.pos.dis)
-# length(chr.pos.all[idx.fil])
-# meta_result_shared_1p[idx.fil,]
+###############find the potential SNPs 
+chr.pos.dis <- paste0(discovery_snp$CHR,":",
+                       discovery_snp$Pos)
+ 
+ 
+ 
+ chr.pos.all <- paste0(meta_result_shared_1p$CHR,":",
+                       meta_result_shared_1p$position)
+ idx.fil <- which(chr.pos.all%in%chr.pos.dis)
+ length(chr.pos.all[idx.fil])
+ meta_result_shared_1p[idx.fil,]
 # 
 
 
