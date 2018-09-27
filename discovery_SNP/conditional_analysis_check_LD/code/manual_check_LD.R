@@ -19,8 +19,8 @@ library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/extract_result.Rdata")
+# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
+# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/extract_result.Rdata")
 
 #idx <- which(extract.result[[1]]=="rs372562666:1:120561314:G:A")
 
@@ -28,7 +28,7 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHE
 dim(extract.result[[2]])
 
 
-discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
+discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data.csv",header=T))
 #x.test.all.mis1 <- discovery.snp.icog
 
 
@@ -38,10 +38,10 @@ data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 LDandDp <- function(snp1,snp2){
   LD <- cor(snp1,snp2)^2
-  p1 <- mean(snp1)
-  p2 <- mean(snp2)
+  p1 <- mean(snp1)/2
+  p2 <- mean(snp2)/2
   #p12 <- cov(snp1,snp2)+p1*p2
-  d <- cov(snp1,snp2)
+  d <- mean(snp1*snp2)/4-p1*p2
   if(d<0){
     dmax <- min(p1*p2,(1-p1)*(1-p2))
   }else{
@@ -52,49 +52,58 @@ LDandDp <- function(snp1,snp2){
   
 }
 
-
-
-
-
-extract.result.onco <- extract.result[[2]]
-idx.match <- match(extract.list$SNP.ONCO,extract.result[[1]])
-extract.result.onco <- extract.result.onco[,idx.match]
+#######snp rs56168262:51467096:CT:C and snp rs140850326
+i.dis <- which(colnames(discovery.snp.onco)=="rs56168262:51467096:CT:C")
+i.known <- which(colnames(data2)=="rs140850326")
 idx.control <- which(data2$Behaviour1==0)
-extract.result.onco.control <- extract.result.onco[idx.control,]
-data_onco <- as.data.frame(fread("./data/ONCO_pruning.csv",header=T))
-#x.test.all.mis2 <- data2[,c(27:205)]
-
-
-# snp 5:45333860 and snp rs10941679
-i.dis <- which(extract.list$CHR==12&
-                 extract.list$position==115108136)
-i.known <- which(colnames(data_onco)=="rs1292011")
-idx.control <- which(data_onco$Behaviour1==0)
-snp1 <- extract.result.onco.control[,i.dis]
+snp1 <- discovery.snp.onco[idx.control,i.dis]
 mean(snp1)/2
-snp2 <- as.vector(data_onco[idx.control,i.known])
+snp2 <- as.vector(data2[idx.control,i.known])
 LDandDp(snp1,snp2)
-#colnames(data2)[i.known]
+
+
+#######snp rs372562666:120561314:A:G and snp rs11249433
+i.dis <- which(colnames(discovery.snp.onco)=="rs372562666:120561314:A:G")
+i.known <- which(colnames(data2)=="rs11249433")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
 
 
 
 
+#######snp rs348196:155666961:T:C and snp rs4971059
+i.dis <- which(colnames(discovery.snp.onco)=="rs348196:155666961:T:C")
+i.known <- which(colnames(data2)=="rs4971059")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
 
 
 
+#######snp rs11749176:44145931:T:A and snp rs10941679
+i.dis <- which(colnames(discovery.snp.onco)=="rs11749176:44145931:T:A")
+i.known <- which(colnames(data2)=="rs10941679")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
 
 
 
-
-
-
-
-
-
-
-
-
-
+#######snp 1:145126177 and snp rs12405132
+i.dis <- which(colnames(discovery.snp.onco)=="rs56826596:45374890:G:A")
+i.known <- which(colnames(data2)=="rs10941679")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
 
 
 

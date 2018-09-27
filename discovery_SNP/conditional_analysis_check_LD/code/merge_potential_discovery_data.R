@@ -94,29 +94,29 @@ extract.result <- list(snpid.result,snpvalue.result)
 colnames(snpvalue.result) <- snpid.result
 #sum(snpvalue.result[,11])/(2*nrow(snpvalue.result))
 
-write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",row.names = F,quote=F)
+write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data.csv",row.names = F,quote=F)
 
 
-data1 <- fread("./data/PRS_subtype_icgos_pheno_v10_euro.csv",header=T)
-#data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
-data1 <- as.data.frame(data1)
-
-names1 <- colnames(data1)[27:203]
-names2 <- colnames(data2)[c(27:203,205)]
-idx <- which(names2%in%names1==F)
-all.equal(names2[1:177],names1)
-
-
-pc2 <- data2[5:14]
-snpvalue2 <- cbind(data2[,c(c(1:177)+26,205)],snpvalue.result)
-all.equal(colnames(snpvalue2)[1:177],names1)
-age <- data2[,204]
-special.snp <- data2[,205]
-ID <- data2[,1]
-sig_snp_onco <- cbind(ID,y.pheno.mis2,
-                      pc2,
-                      snpvalue2,
-                      age,
-                      special.snp)
-write.csv(sig_snp_onco,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv")
-
+# data1 <- fread("./data/PRS_subtype_icgos_pheno_v10_euro.csv",header=T)
+# #data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
+# data1 <- as.data.frame(data1)
+# 
+# names1 <- colnames(data1)[27:203]
+# names2 <- colnames(data2)[c(27:203,205)]
+# idx <- which(names2%in%names1==F)
+# all.equal(names2[1:177],names1)
+# 
+# 
+# pc2 <- data2[5:14]
+# snpvalue2 <- cbind(data2[,c(c(1:177)+26,205)],snpvalue.result)
+# all.equal(colnames(snpvalue2)[1:177],names1)
+# age <- data2[,204]
+# special.snp <- data2[,205]
+# ID <- data2[,1]
+# sig_snp_onco <- cbind(ID,y.pheno.mis2,
+#                       pc2,
+#                       snpvalue2,
+#                       age,
+#                       special.snp)
+# write.csv(sig_snp_onco,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv")
+# 
