@@ -42,6 +42,7 @@ LDandDp <- function(snp1,snp2){
   p2 <- mean(snp2)/2
   #p12 <- cov(snp1,snp2)+p1*p2
   d <- mean(snp1*snp2)/4-p1*p2
+  d <- 2*d
   if(d<0){
     dmax <- min(p1*p2,(1-p1)*(1-p2))
   }else{
@@ -52,18 +53,8 @@ LDandDp <- function(snp1,snp2){
   
 }
 
-#######snp rs56168262:51467096:CT:C and snp rs140850326
-i.dis <- which(colnames(discovery.snp.onco)=="rs56168262:51467096:CT:C")
-i.known <- which(colnames(data2)=="rs140850326")
-idx.control <- which(data2$Behaviour1==0)
-snp1 <- discovery.snp.onco[idx.control,i.dis]
-mean(snp1)/2
-snp2 <- as.vector(data2[idx.control,i.known])
-LDandDp(snp1,snp2)
-
-
-#######snp rs372562666:120561314:A:G and snp rs11249433
-i.dis <- which(colnames(discovery.snp.onco)=="rs372562666:120561314:A:G")
+#######snp rs115761444:120622546:G:C and snp rs11249433
+i.dis <- which(colnames(discovery.snp.onco)=="rs115761444:120622546:G:C")
 i.known <- which(colnames(data2)=="rs11249433")
 idx.control <- which(data2$Behaviour1==0)
 snp1 <- discovery.snp.onco[idx.control,i.dis]
@@ -72,6 +63,161 @@ snp2 <- as.vector(data2[idx.control,i.known])
 LDandDp(snp1,snp2)
 
 
+
+
+
+#######snp rs11264454:156153043:A:Gand snp rs11249433
+i.dis <- which(colnames(discovery.snp.onco)=="rs11264454:156153043:A:G")
+i.known <- which(colnames(data2)=="rs4971059")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+mean(snp2)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
+
+
+#######snp rs11749176:44145931:T:A and snp rs10941679
+i.dis <- which(colnames(discovery.snp.onco)=="rs11749176:44145931:T:A")
+i.known <- which(colnames(data2)=="rs10941679")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+mean(snp2)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
+
+
+
+#######snp c5_pos45369617 and snp rs10941679
+i.dis <- which(colnames(discovery.snp.onco)=="c5_pos45369617")
+i.known <- which(colnames(data2)=="rs10941679")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+mean(snp2)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
+
+
+#######snp rs149663829:68152587:C:A and snp rs35951924
+i.dis <- which(colnames(discovery.snp.onco)=="rs149663829:68152587:C:A")
+i.known <- which(colnames(data2)=="rs35951924")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+
+snp2 <- as.vector(data2[idx.control,i.known])
+mean(snp2)/2
+LDandDp(snp1,snp2)
+
+
+
+#######snp rs6860806:131640536:A:G and snp rs6596100
+i.dis <- which(colnames(discovery.snp.onco)=="rs6860806:131640536:A:G")
+i.known <- which(colnames(data2)=="rs6596100")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+
+snp2 <- as.vector(data2[idx.control,i.known])
+mean(snp2)/2
+LDandDp(snp1,snp2)
+
+
+#######snp rs7760611 and snp rs2223621
+i.dis <- which(colnames(discovery.snp.onco)=="rs7760611")
+i.known <- which(colnames(data2)=="rs2223621")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+
+snp2 <- as.vector(data2[idx.control,i.known])
+mean(snp2)/2
+LDandDp(snp1,snp2)
+
+chr8_116679547_A_G
+#######snp chr8_116679547_A_G and snp rs13267382
+i.dis <- which(colnames(discovery.snp.onco)=="chr8_116679547_A_G")
+i.known <- which(colnames(data2)=="rs13267382")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+
+snp2 <- as.vector(data2[idx.control,i.known])
+mean(snp2)/2
+LDandDp(snp1,snp2)
+
+
+
+#######snp rs12765365:64848937:T:C and snp rs10995201
+i.dis <- which(colnames(discovery.snp.onco)=="rs12765365:64848937:T:C")
+i.known <- which(colnames(data2)=="rs10995201")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+
+snp2 <- as.vector(data2[idx.control,i.known])
+mean(snp2)/2
+LDandDp(snp1,snp2)
+
+
+
+#######snp 12:29140260:G:A and snp rs7297051
+i.dis <- which(colnames(discovery.snp.onco)=="12:29140260:G:A")
+i.known <- which(colnames(data2)=="rs7297051")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+
+snp2 <- as.vector(data2[idx.control,i.known])
+mean(snp2)/2
+LDandDp(snp1,snp2)
+
+
+#######snp rs1061657 and snp rs1292011
+i.dis <- which(colnames(discovery.snp.onco)=="rs1061657")
+i.known <- which(colnames(data2)=="rs1292011")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+
+snp2 <- as.vector(data2[idx.control,i.known])
+mean(snp2)/2
+LDandDp(snp1,snp2)
+
+#######snp 17:43681771:C:T and snp rs2532263
+i.dis <- which(colnames(discovery.snp.onco)=="17:43681771:C:T")
+i.known <- which(colnames(data2)=="rs2532263")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+
+snp2 <- as.vector(data2[idx.control,i.known])
+mean(snp2)/2
+LDandDp(snp1,snp2)
+#17:43681771:C:T
+
+
+
+
+#######snp rs6697258:120485335:C:A and snp rs11249433
+i.dis <- which(colnames(discovery.snp.onco)=="rs6697258:120485335:C:A")
+i.known <- which(colnames(data2)=="rs11249433")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
+
+#######snp 1:145126177:G:A and snp rs12405132
+i.dis <- which(colnames(discovery.snp.onco)=="1:145126177:G:A")
+i.known <- which(colnames(data2)=="rs12405132")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+mean(snp1)/2
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
 
 
 #######snp rs348196:155666961:T:C and snp rs4971059
@@ -135,10 +281,34 @@ snp2 <- as.vector(data2[idx.control,i.known])
 LDandDp(snp1,snp2)
 
 
+#######snp rs56826596 and snp rs10941679
+i.dis <- which(colnames(discovery.snp.onco)=="rs56826596:45374890:G:A")
+i.known <- which(colnames(data2)=="rs10941679")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
+
+#######snp rs139331653:45939294:G:A and snp rs10941679
+i.dis <- which(colnames(discovery.snp.onco)=="rs139331653:45939294:G:A")
+i.known <- which(colnames(data2)=="rs10941679")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
+
+#######snp rs34044188:65257363:C:T and snp rs10995201
+i.dis <- which(colnames(discovery.snp.onco)=="rs34044188:65257363:C:T")
+i.known <- which(colnames(data2)=="rs10995201")
+idx.control <- which(data2$Behaviour1==0)
+snp1 <- discovery.snp.onco[idx.control,i.dis]
+snp2 <- as.vector(data2[idx.control,i.known])
+LDandDp(snp1,snp2)
+
 
 #######snp rs17743054:42900892:T:C and snp rs6507583
-i.dis <- which(colnames(discovery.snp.onco)=="rs6677545:200342046:A:C")
-i.known <- which(colnames(data2)=="rs6678914")
+i.dis <- which(colnames(discovery.snp.onco)=="rs17743054:42900892:T:C")
+i.known <- which(colnames(data2)=="rs6507583")
 idx.control <- which(data2$Behaviour1==0)
 snp1 <- discovery.snp.onco[idx.control,i.dis]
 snp2 <- as.vector(data2[idx.control,i.known])
@@ -153,47 +323,9 @@ snp1 <- discovery.snp.onco[idx.control,i.dis]
 snp2 <- as.vector(data2[idx.control,i.known])
 LDandDp(snp1,snp2)
 
-
 #######snp rs16988381 and snp rs132390
 i.dis <- which(colnames(discovery.snp.onco)=="rs16988381")
 i.known <- which(colnames(data2)=="rs132390")
-idx.control <- which(data2$Behaviour1==0)
-snp1 <- discovery.snp.onco[idx.control,i.dis]
-snp2 <- as.vector(data2[idx.control,i.known])
-LDandDp(snp1,snp2)
-
-
-#######snp rs16988381 and snp rs132390
-i.dis <- which(colnames(discovery.snp.onco)=="rs16988381")
-i.known <- which(colnames(data2)=="rs132390")
-idx.control <- which(data2$Behaviour1==0)
-snp1 <- discovery.snp.onco[idx.control,i.dis]
-snp2 <- as.vector(data2[idx.control,i.known])
-LDandDp(snp1,snp2)
-
-
-#######snp 12:121435475:G:A and snp rs206966
-i.dis <- which(colnames(discovery.snp.onco)=="12:121435475:G:A")
-i.known <- which(colnames(data2)=="rs206966")
-idx.control <- which(data2$Behaviour1==0)
-snp1 <- discovery.snp.onco[idx.control,i.dis]
-snp2 <- as.vector(data2[idx.control,i.known])
-LDandDp(snp1,snp2)
-
-
-
-
-
-i.dis <- which(colnames(discovery.snp.onco)=="1:145126177:G:A")
-i.known <- which(colnames(data2)=="rs12405132")
-idx.control <- which(data2$Behaviour1==0)
-snp1 <- discovery.snp.onco[idx.control,i.dis]
-snp2 <- as.vector(data2[idx.control,i.known])
-LDandDp(snp1,snp2)
-
-#######snp 12:29140260  and snp rs7297051
-i.dis <- which(colnames(discovery.snp.onco)=="12:29140260:G:A")
-i.known <- which(colnames(data2)=="rs7297051")
 idx.control <- which(data2$Behaviour1==0)
 snp1 <- discovery.snp.onco[idx.control,i.dis]
 snp2 <- as.vector(data2[idx.control,i.known])

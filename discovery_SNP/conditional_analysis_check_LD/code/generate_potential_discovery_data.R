@@ -1,10 +1,10 @@
 ##############generate the discovery snps list
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_result_shared.Rdata")
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_result_shared.Rdata")
 # load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
 # load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/SNP_infor_conditional_check.csv",header=T)
-discovery_snp <- discovery_snp[1:22,]
+discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/SNP_infor_conditional_check.csv",header=T,sep='\t')
+#discovery_snp <- discovery_snp[1:22,]
 
 ###############find the potential SNPs 
 chr.pos.dis <- paste0(discovery_snp$CHR,":",

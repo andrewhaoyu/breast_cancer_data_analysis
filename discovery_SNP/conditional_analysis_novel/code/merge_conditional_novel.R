@@ -6,3 +6,4 @@ for(i1 in 1:11){
   p.value.twostage[i1] <- result[[1]]
   p.value.standard[i1] <- result[[2]]
 }
+names(p.value.twostage) <- c("")
