@@ -53,8 +53,38 @@ LDandDp <- function(snp1,snp2){
   
 }
 
-#######snp rs115761444:120622546:G:C and snp rs11249433
-i.dis <- which(colnames(discovery.snp.onco)=="rs115761444:120622546:G:C")
+
+#######snp rs150157076:120586681:A:C and snp rs11249433
+i.dis <- which(colnames(discovery.snp.onco)=="rs150157076:120586681:A:C")
+i.known <- which(colnames(data2)=="rs2532263")
+idx.control <- which(data2$Behaviour1==0)
+ld.vec <- rep(0,315)
+snp2 <- as.vector(data2[idx.control,i.known])
+for(i in 1:315){
+  snp1 <- discovery.snp.onco[idx.control,i]
+  ld.vec[i] <- LDandDp(snp1,snp2)[[1]]
+}
+ld.vec <- ld.vec[-143]
+ld.vec[67]
+which.min(ld.vec)
+mean(snp1)/2
+
+LDandDp(snp1,snp2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+#######snp rs150157076:120586681:A:C and snp rs11249433
+i.dis <- which(colnames(discovery.snp.onco)=="rs150157076:120586681:A:C")
 i.known <- which(colnames(data2)=="rs11249433")
 idx.control <- which(data2$Behaviour1==0)
 snp1 <- discovery.snp.onco[idx.control,i.dis]
