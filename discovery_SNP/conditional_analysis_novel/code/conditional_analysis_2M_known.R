@@ -169,6 +169,6 @@ p.value.two.stage.model <- two_data_two_stage_random(y.pheno.mis1,
 result <- list(p.value.two.stage.model=p.value.two.stage.model
                )
 
-save(result,file=paste0("./discovery_SNP/conditional_analysis_novel/novel_conditional_reuslt/result",i1,".Rdata"))
+save(result,file=paste0("./discovery_SNP/conditional_analysis_novel/novel_conditional_reuslt/result/result",i1,".Rdata"))
 
 
