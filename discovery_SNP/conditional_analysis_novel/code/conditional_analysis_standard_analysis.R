@@ -16,6 +16,7 @@ discovery_snp_infor <- discovery_snp_infor[1:20,]
 
 
 
+
 library(bc2)
 data1 <- as.data.frame(fread("./data/icogs_overall.csv",header=T))
 discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_icog_data.csv"))
