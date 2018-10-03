@@ -53,7 +53,7 @@ discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_d
 
 data2 <- as.data.frame(data2)
 idx.case2 <- which(data2$Behaviour1==2|data2$Behaviour1==888)
-data2$Behaviour1[idx.case] <- 1
+#data2$Behaviour1[idx.case2] <- 1
 y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
 y.pheno.mis2[idx.case2,1] <- 1
 #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
