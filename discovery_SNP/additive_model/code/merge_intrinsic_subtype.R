@@ -62,8 +62,9 @@ idx.match <- match(discovery_snp_new$var_name,CIMBA.BCAC.meta.result$MarkerName[
 
 
 CIMBA.BCAC.meta.result.new <- CIMBA.BCAC.meta.result[idx.fil[idx.match],]
-
-
+-0.042938989
+0.006703173
+CI95withP(-0.042938989,0.006703173)
 CI95withP <- function(effect,std){
   z <- effect/std
   p <- 2*pnorm(abs(z),lower.tail = F)

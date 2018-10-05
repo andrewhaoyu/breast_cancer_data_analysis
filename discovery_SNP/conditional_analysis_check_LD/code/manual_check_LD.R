@@ -25,7 +25,7 @@ library(data.table)
 #idx <- which(extract.result[[1]]=="rs372562666:1:120561314:G:A")
 
 
-dim(extract.result[[2]])
+#dim(extract.result[[2]])
 
 
 discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data.csv",header=T))
@@ -52,31 +52,6 @@ LDandDp <- function(snp1,snp2){
   return(list(LD,Dp))
   
 }
-
-
-#######snp rs150157076:120586681:A:C and snp rs11249433
-i.dis <- which(colnames(discovery.snp.onco)=="rs150157076:120586681:A:C")
-i.known <- which(colnames(data2)=="rs2532263")
-idx.control <- which(data2$Behaviour1==0)
-ld.vec <- rep(0,315)
-snp2 <- as.vector(data2[idx.control,i.known])
-for(i in 1:315){
-  snp1 <- discovery.snp.onco[idx.control,i]
-  ld.vec[i] <- LDandDp(snp1,snp2)[[1]]
-}
-ld.vec <- ld.vec[-143]
-ld.vec[67]
-which.min(ld.vec)
-mean(snp1)/2
-
-LDandDp(snp1,snp2)
-
-
-
-
-
-
-
 
 
 
@@ -130,8 +105,8 @@ snp2 <- as.vector(data2[idx.control,i.known])
 LDandDp(snp1,snp2)
 
 
-#######snp rs149663829:68152587:C:A and snp rs35951924
-i.dis <- which(colnames(discovery.snp.onco)=="rs149663829:68152587:C:A")
+#######snp rs141930488:51248274:G:A and snp rs35951924
+i.dis <- which(colnames(discovery.snp.onco)=="rs141930488:51248274:G:A")
 i.known <- which(colnames(data2)=="rs35951924")
 idx.control <- which(data2$Behaviour1==0)
 snp1 <- discovery.snp.onco[idx.control,i.dis]
@@ -166,7 +141,7 @@ snp2 <- as.vector(data2[idx.control,i.known])
 mean(snp2)/2
 LDandDp(snp1,snp2)
 
-chr8_116679547_A_G
+#chr8_116679547_A_G
 #######snp chr8_116679547_A_G and snp rs13267382
 i.dis <- which(colnames(discovery.snp.onco)=="chr8_116679547_A_G")
 i.known <- which(colnames(data2)=="rs13267382")

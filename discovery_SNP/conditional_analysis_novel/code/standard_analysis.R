@@ -39,12 +39,12 @@ if(discovery_snp_infor[idx.dis.infor,5]==""){
 }else{
   near.known.snp.name <- discovery_snp_infor[idx.dis.infor,c(4,5)]  
 }
-idx.known1 <- which(colnames(data1)%in%near.known.snp.name)
+#idx.known1 <- which(colnames(data1)%in%near.known.snp.name)
 
 
 #idx.known <- which(colnames(data1)%in%known.snp)
-#x.covar1 <- cbind(data1[,c(6:15)],country1)
-x.covar1 <- cbind(data1[,c(6:15)],data1[,idx.known1],country1)
+x.covar1 <- cbind(data1[,c(6:15)],country1)
+#x.covar1 <- cbind(data1[,c(6:15)],data1[,idx.known1],country1)
 gene1 <- discovery.snp.icog[,i1]
 
 
@@ -61,10 +61,10 @@ colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
 # x.test.all.mis2 <- data2[,c(27:203)]
-idx.known2 <- which(colnames(data2)%in%near.known.snp.name)
+#idx.known2 <- which(colnames(data2)%in%near.known.snp.name)
 country2 <- as.factor(data2[,4])
-#x.covar2 <- cbind(data2[,c(5:14)],country2)
-x.covar2 <- cbind(data2[,c(5:14)],data2[,idx.known2],country2)
+x.covar2 <- cbind(data2[,c(5:14)],country2)
+#x.covar2 <- cbind(data2[,c(5:14)],data2[,idx.known2],country2)
 gene2 <- discovery.snp.onco[,i1]
 #age <- data2[,204]
 
