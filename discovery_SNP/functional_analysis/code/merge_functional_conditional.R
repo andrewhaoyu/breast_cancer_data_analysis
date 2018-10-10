@@ -6,7 +6,7 @@
 
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-load(paste0("./discovery_SNP/functional_analysis/result/functional_snp_conditional.Rdata"))
+load(paste0("./discovery_SNP/functional_analysis/result/functional_snp_conditional_standard.Rdata"))
 n.raw <- 109713
 snpvalue <- rep(0,n.raw)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
