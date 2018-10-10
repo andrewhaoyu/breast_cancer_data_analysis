@@ -50,7 +50,7 @@ data1$Behaviour1[idx.case1] <- 1
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
-idx.known1 <- which(colnames(data1)==snp.known.name)
+
 country1 <- as.factor(data1[,3])
 data2 <- fread("./data/oncoarray_overall.csv",header=T)
 data2 <- as.data.frame(data2)
@@ -71,14 +71,10 @@ for(i in start:end){
   }else{
     snp.known.name <- "rs35951924"
   }
+  idx.known1 <- which(colnames(data1)==snp.known.name)
   #known.idx <- DisKnown(dis.idx)
   SNP.ICOG <- functional_snp_conditional$SNP.ICOG[i]
   
-    # Grade1.fake <- data1$Grade1
-    # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
-    # Grade1.fake[data1$Grade1==1] <- 0
-    #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
-    # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
     
   x.covar1 <- cbind(data1[,c(6:15)],data1[,idx.known1],country1)
     gene1 <- snpvalue.result.icog[,i]
