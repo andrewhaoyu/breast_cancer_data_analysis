@@ -32,7 +32,7 @@ if(length(idx.temp)!=0){
 
 num = nrow(functional_snp_conditional)
 temp = diff(functional_snp_conditional$position)
-size = 100
+size = 500
 start.end <- startend(num,size,i1)
 start = start.end[1]
 end  = start.end[2]
