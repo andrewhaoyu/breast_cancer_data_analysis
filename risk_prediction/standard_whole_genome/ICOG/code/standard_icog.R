@@ -184,5 +184,5 @@ for(i in 1:inner.size){
 
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./risk_prediction/FTOP_whole_genome/ICOG/result/ERPRHER2Grade_fixed_baseline",i1))
+save(result,file=paste0("./risk_prediction/standard_whole_genome/ICOG/result/standard",i1))
 
