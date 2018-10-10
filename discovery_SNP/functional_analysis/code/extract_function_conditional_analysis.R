@@ -1,4 +1,5 @@
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
+library(data.table)
 new_filter <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Filter_based_on_function.csv",header=T,stringsAsFactors = F)
 colnames(new_filter) <- c("SNP","position","CHR")
 #new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
