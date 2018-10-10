@@ -41,7 +41,7 @@ y.pheno.mis2[idx,1] <- 1
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
-x.covar.mis2 <- data2[,c(7:15)]
+x.covar.mis2 <- as.matrix(data2[,c(7:15)])
 #ages <- data2[,230]
 #idx.complete <- which(ages!=888)
 
@@ -60,7 +60,7 @@ snpvalue <- rep(0,n)
 idx.match <- match(Onc_ID,onco.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2)
-load("./risk_prediction/FTOP_whole_genome/ONCO/result/score.test.support.onco.ERPRHER2Grade.Rdata")
+#load("./risk_prediction/FTOP_whole_genome/ONCO/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 
 
 
@@ -97,8 +97,8 @@ geno.file <- Files[i1]
       start <- start.end[1]
       end <- start.end[2]
       inner.num <- end-start+1
-      score_result <- matrix(0,inner.num,num.of.tumor+1)
-      infor_result <- matrix(0,inner.num,(num.of.tumor+1)^2)
+      score_result <- matrix(0,inner.num,1)
+      infor_result <- matrix(0,inner.num,1)
       snpid_result <- rep("c",inner.num)
       freq.all <- rep(0,inner.num)
       temp <- 0
@@ -138,14 +138,14 @@ geno.file <- Files[i1]
             infor_result[temp,] <- 0.1
           }else{
             
-            score.test.onco<- ScoreTest(y=y.pheno.mis2,
-                                        x=snpvalue,
-                                        second.stage.structure="additive",
-                                        score.test.support=score.test.support.onco.ERPRHER2Grade,
-                                        missingTumorIndicator=888)
+            model.onco<- glm(y.pheno.mis2[,1]~snpvalue+x.covar.mis2)
+            summmary.onco<- summary(model.onco)
             
-            score_result[temp,]  <- score.test.onco[[1]]
-            infor_result[temp,] <- as.vector(score.test.onco[[2]])
+            
+            score_result[temp]  <- summmary.onco$coefficients[2,1]
+            infor_result[temp] <- summmary.onco$coefficients[2,2]^2
+            
+            
             
             
           }
@@ -170,8 +170,8 @@ geno.file <- Files[i1]
     
     
     
-    score_result <- matrix(0,num,num.of.tumor+1)
-    infor_result <- matrix(0,num,(num.of.tumor+1)^2)
+    score_result <- matrix(0,num,1)
+    infor_result <- matrix(0,num,1)
     snpid_result <- rep("c",num)
     freq.all <- rep(0,num)
     
@@ -190,4 +190,4 @@ geno.file <- Files[i1]
     
     
     result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./risk_prediction/FTOP_whole_genome/ONCO/result/ERPRHER2Grade_fixed_onco",i1))
+save(result,file=paste0("./risk_prediction/standard_whole_genome/ONCO/result/standard",i1))
