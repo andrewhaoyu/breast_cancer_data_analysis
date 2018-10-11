@@ -33,8 +33,8 @@ FunctionalFilter <- function(chr.temp,pos.temp,data){
   p.temp <- data$p.value[idx.temp]
   top.SNP <- data[idx.temp,12]
   idx <- which(data$CHR==chr.temp&
-                 data$position>=(pos.temp-50000)&
-                 data$position<=(pos.temp+50000)&
+                 data$position>=(pos.temp-500000)&
+                 data$position<=(pos.temp+500000)&
                  data$p.value<=(p.temp*100))
   lead.snp <- rep(top.SNP,length(idx))
   return(cbind(data[idx,],lead.snp))

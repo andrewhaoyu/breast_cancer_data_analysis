@@ -32,7 +32,7 @@ if(length(idx.temp)!=0){
 
 num = nrow(functional_snp_conditional)
 temp = diff(functional_snp_conditional$position)
-size = 500
+size = 1
 start.end <- startend(num,size,i1)
 start = start.end[1]
 end  = start.end[2]
@@ -62,6 +62,7 @@ colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
 for(i in start:end){
+  print(i)
   #####only two snps in the anlaysis
   #####chr 1 nearby known SNP is rs4971059
   #####chr 5 nearby known SNP is rs35951924
