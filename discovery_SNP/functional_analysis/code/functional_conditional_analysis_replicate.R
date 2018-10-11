@@ -65,8 +65,8 @@ colnames(y.pheno.mis2) = c("Behaviour","ER",
 for(i in start:end){
   print(i)
   #####only two snps in the anlaysis
-  #####chr 1 nearby known SNP is rs4971059
-  #####chr 5 nearby known SNP is rs35951924
+  #####chr 5 nearby known SNP is rs6596100
+  #####chr 5 nearby known SNP is rs6507583
   chr = functional_snp_conditional$CHR[i]
   if(chr==5){
     snp.known.name <- "rs6596100"
