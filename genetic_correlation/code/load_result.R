@@ -125,6 +125,7 @@ cor.data <-data.frame(subtypes.f,cor.vec,
 cor.data <- cor.data[order(cor.data[,2]),]
 cor.data[,1] <- factor(cor.data[,1],
                        levels=as.character(cor.data[,1]))
+library(ggplot2)
 ggplot(cor.data,aes(x=subtypes.f,y=cor.vec))+
   geom_point(size=4)+
   geom_errorbar(aes(ymax = cor.vec.high, ymin = cor.vec.low))+

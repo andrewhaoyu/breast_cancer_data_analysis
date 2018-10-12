@@ -1,6 +1,9 @@
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./discovery_SNP/functional_analysis/result/functional_snp_conditional_replicate.Rdata"))
-functional_snp_conditional <- functional_snp_conditional[1:5480,]
+dim(functional_snp_conditional)
+idx.na <- which(is.na(functional_snp_conditional$SNP.ICOG))
+
+functional_snp_conditional <- functional_snp_conditional[-idx.na,]
 total <- 0
 n <- nrow(functional_snp_conditional)
 p.value <- rep(0,n)
@@ -53,7 +56,7 @@ ccv2 <- FunctionalFilter(18,42900892,functional_snp_conditional_chr)
 ccv <- rbind(ccv1,ccv2)
 
 
-write.csv(ccv,file= "./discovery_SNP/functional_analysis/result/functional_analysis_list_standard_haoyu.csv",row.names=F,quote=F)
+write.csv(ccv,file= "./discovery_SNP/functional_analysis/result/functional_analysis_list_replicate_haoyu.csv",row.names=F,quote=F)
 
 # SNP.list <- strsplit(functional.result$rs_id,split= ":")
 # SNP <- rep("c",nrow(functional.result))
