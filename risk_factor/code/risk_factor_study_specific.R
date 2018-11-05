@@ -10,7 +10,7 @@ setwd('/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis')
 data <- as.data.frame(fread("./data/Dataset_Montse_2018-10-10.txt"))
 ##############we only focus on the invasive breast cancer cases
 idx.invasive <- which(data$status==0|data$status==1)
-data <- data[idx.invasive]
+data <- data[idx.invasive,]
 
 idx <- which(data$status==0)
 
