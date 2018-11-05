@@ -66,6 +66,9 @@ colnames(y) <- c("casecontrol",
                  "PR",
                  "HER2",
                  "Grade")
+idx <- which(data$status==0)
+y[idx,2:ncol(y)] <- NA
+
 ###########create study mat
 idx <- which(data$design_cat==0)
 study1 <- data[idx,2]
