@@ -22,28 +22,6 @@ gc()
 # 
 size <- 1000
 
-Metaoddsfunction <- function(icog_onco_score_infor_one,second.num){
-  score.icog <- as.numeric(icog_onco_score_infor_one[1:(second.num)])
-  infor.icog <- matrix(as.numeric(icog_onco_score_infor_one[(second.num+1):
-                                                              (second.num+second.num^2) ]),
-                       ncol = second.num)
-  start <- second.num+second.num^2
-  score.onco <- as.numeric(icog_onco_score_infor_one[(1+start):
-                                                       (second.num+start)])
-  infor.onco <- matrix(as.numeric(icog_onco_score_infor_one[(second.num+1+start):
-                                                              (second.num+second.num^2+start) ]),ncol=second.num)
-  
-  
-  meta.result <- ScoreMetaAnalysis(score.icog,infor.icog,
-                                   score.onco,infor.onco)
-  score.meta <- t(meta.result[[1]])
-  infor.meta <- meta.result[[2]]
-  p.meta <- DisplaySecondStageTestResult(score.meta,infor.meta)[[1]]
-  return(list(log.odds=score.meta,
-              covar = infor.meta,
-              p = p.meta))
-}
-
 
 
 #registerDoParallel(no.cores)
@@ -56,16 +34,23 @@ Metaoddsfunction <- function(icog_onco_score_infor_one,second.num){
 start.end <- startend(n,size,i1)
 start <- start.end[1]
 end <- start.end[2]
+logodds_sub <- rep(0,end-start+1)
+covar_sub <- rep(0,end-start+1)
 pvalue_sub <- rep(0,end-start+1)
 temp = 1
 for(j in start:end){
   print(j)
   
   icog_onco_score_infor_oneline <- icog_onco_score_infor[j,]
-  pvalue_sub[temp] <- Metaoddsfunction(icog_onco_score_infor_oneline,second.num)
+  result_temp <- Metaoddsfunction(icog_onco_score_infor_oneline,second.num)
+  logodds_sub[temp] <- result_temp[[1]]
+  covar_sub <- result_temp[[2]]
+  pvalue_sub[temp] <- result_temp[[3]]
   temp = temp+1
 }
 
 
-
-save(pvalue_sub,file=paste0("./ICOG/result/p_value_sub",i1,".Rdata"))
+result_sub <- list(logodds_sub,
+               covar_sub,
+               pvalue_sub)
+save(result_sub,file=paste0("./ICOG/result/result_sub_sub",i1,".Rdata"))
