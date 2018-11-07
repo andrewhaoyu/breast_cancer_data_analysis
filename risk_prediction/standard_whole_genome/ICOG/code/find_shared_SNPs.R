@@ -55,12 +55,6 @@ all.equal(icog_result_shared$rs_id,icog_result_shared$SNP.ICOGS)
 onco_result_shared <- cbind(onco_result_shared,data_c_shared)
 all.equal(onco_result_shared$rs_id,onco_result_shared$SNP.ONCO)
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/')
-# save(icog_result_shared,file="./ICOG/result/icog_result_shared.Rdata")
-# save(onco_result_shared,file="./ONCO/result/onco_result_shared.Rdata")
-
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
-
 
 
 idx.filter <- which(icog_result_shared$exp_freq_a1>=0.01&

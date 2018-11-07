@@ -3,6 +3,8 @@ Files <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.",full.names=T)
 Filesex <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.chr23",full.names=T)
 idx.sex <- Files%in%Filesex
 Files <- Files[!idx.sex]
+library(gtools)
+Files <- mixedsort(Files)
 
 Files <- gsub("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_imputed/OncoArray_european_merged_b1_15.","",Files)
 Files <- gsub(".txt.gz","",Files)
@@ -24,15 +26,14 @@ for(i in 1:length(Files)){
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
 result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ONCO/result"
-result_Files <- dir(result.dir,pattern="standard")
+result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
 result_Files <- result_Files[1:567]
 result.idx <- rep(0,length(result_Files))
 for(i in 1:length(result_Files)){
-  result_Files[i] <- gsub("standard","",result_Files[i])
+  result_Files[i] <- gsub("ERPRHER2Grade_fixed_onco","",result_Files[i])
   result.idx.temp <- as.integer(gsub(".Rdata","",result_Files[i]))
   result.idx[i] <- result.idx.temp
 }
-
 
 
 
@@ -46,7 +47,7 @@ setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standar
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
- 
+  
   load(paste0("standard",idx[i]))
   temp <- length(result[[1]])
   num.total <- num.total+temp
@@ -94,46 +95,14 @@ for(i in 1:length(Files)){
 
 
 
-num.length.info <- rep(0,length(Files))
 
-onco_info <- data.frame(snp_id = rep("c",num.total),rs_id = rep("c",num.total),
-                        position=rep(0,num.total),exp_freq_a1=rep(0,num.total),info=rep(0,num.total),
-                        certainty=rep(0,num.total),type=rep(0,num.total),info_type0=rep(0,num.total),
-                        concord_type0=rep(0,num.total),r2_type0=rep(0,num.total),stringsAsFactors=F)
-CHR <- rep(0,num.total)
-num.total <-  0
-temp.j <- 0
-for(i in 1:22){
-  print(i)
-  filedir <- paste0("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_info_files/chr",i)
-  files <- dir(filedir,pattern="txt_info",full.names=T)
-  files_num <- gsub(paste0(filedir,"/OncoArray_chr",i,"_euro15_phased_"),
-                    "",files)
-  files_num <- gsub(".txt_info","",files_num)
-  files_num <- strsplit(files_num,"_")
-  files_num <- as.integer(unlist(files_num)[seq(1,2*length(files_num),2)])
-  idx <- order(files_num)
-  for(j in 1:length(idx)){
-    temp.j <- temp.j +1
-    print(temp.j)
-    #print(j)
-    data <- read.table(files[idx[j]],header=T,stringsAsFactors=F)
-    temp <- nrow(data)
-    num.length.info[temp.j] <- temp
-    onco_info[num.total+(1:temp),1:3] <- data[,1:3]
-    onco_info[num.total+(1:temp),4:10] <- data[,6:12]
-    CHR[num.total+(1:temp)] <- i
-    num.total <- temp+num.total
-    
-  }
-  
-}
 
+
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+all.equal(onco_info$rs_id,rs_id)
+CHR <- onco_info[,11]
+onco_info <- onco_info[,1:10]
 onco_result <- data.frame(onco_info,score,infor,CHR)
 
 save(onco_result,file="./onco_result.Rdata")
-# print(1)
-# onco_result_baseline <- data.frame(onco_info,score_baseline,infor_baseline,CHR)
-# save(onco_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
-# print(2)
-

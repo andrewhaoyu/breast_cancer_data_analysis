@@ -3,8 +3,12 @@ Files <- dir(Filesdir,pattern="icogs_merged_b1_12.",full.names=T)
 Filesex <- dir(Filesdir,pattern="icogs_merged_b1_12.chr23",full.names=T)
 idx.sex <- Files%in%Filesex
 Files <- Files[!idx.sex]
+library(gtools)
+Files <- mixedsort(Files)
+
 Files <- gsub("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/icogs_merged_b1_12.","",Files)
 Files <- gsub(".txt.gz","",Files)
+
 
 Files_sub <- data.frame(chr=rep(1,length(Files)),p1=rep(0,length(Files)),p2=rep(0,length(Files)))
 
@@ -32,11 +36,11 @@ for(i in 1:length(result_Files)){
   result.idx[i] <- result.idx.temp
 }
 
-
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result")
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
-  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result")
+  
   
   load(paste0("standard",idx[i]))
   temp <- length(result[[1]])
@@ -44,7 +48,6 @@ for(i in 1:length(Files)){
 }
 
 num <-  num.total
-
 rs_id <- rep("c",num)
 number.of.tumor <- 0
 score <- matrix(0,nrow=num,ncol = (number.of.tumor+1))
@@ -71,56 +74,10 @@ for(i in 1:length(Files)){
   
 }
 
-
-
-
-
-
-
-
-
-
-
-
-#####to get the total number of SNPs from the information files
-
-
-icog_info <- data.frame(snp_id = rep("c",num.total),rs_id = rep("c",num.total),
-                        position=rep(0,num.total),exp_freq_a1=rep(0,num.total),info=rep(0,num.total),
-                        certainty=rep(0,num.total),type=rep(0,num.total),info_type0=rep(0,num.total),
-                        concord_type0=rep(0,num.total),r2_type0=rep(0,num.total),stringsAsFactors=F)
-CHR <- rep(0,num.total)
-num.total <-  0
-
-for(i in 1:22){
-  print(i)
-  filedir <- paste0("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_info_files/chr",i)
-  files <- dir(filedir,pattern="txt_info",full.names=T)
-  files_num <- gsub(paste0(filedir,"/icogs_euro12_chr",i,"_phased"),
-                    "",files)
-  files_num <- gsub(".txt_info","",files_num)
-  files_num <- strsplit(files_num,"_")
-  files_num <- as.integer(unlist(files_num)[seq(1,2*length(files_num),2)])
-  idx <- order(files_num)
-  for(j in 1:length(idx)){
-    #print(j)
-    data <- read.table(files[idx[j]],header=T,stringsAsFactors=F)
-    temp <- nrow(data)
-    icog_info[num.total+(1:temp),] <- data
-    CHR[num.total+(1:temp)] <- i
-    num.total <- temp+num.total
-  }
-  
-}
-
-
-
-
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
-# icog_info <- cbind(icog_info,CHR)
-# save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
-# icog_info <- icog_info[,1:10]
-# CHR <- icog_info[,11]
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+all.equal(rs_id,icog_info$rs_id)
+CHR <- icog_info[,11]
+icog_info <- icog_info[,1:10]
 icog_result <- data.frame(icog_info,score,infor,CHR)
 
 
@@ -130,6 +87,8 @@ setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standar
 
 
 save(icog_result,file="./Icog_result.Rdata")
+
+
 
 
 
