@@ -4,16 +4,6 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_who
 
 
 
-
-
-
-
-
-
-
-
-
-
 load("/spin1/users/zhangh24/match.Rdata")
 
 

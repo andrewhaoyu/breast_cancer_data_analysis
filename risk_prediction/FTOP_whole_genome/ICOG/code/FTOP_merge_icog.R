@@ -3,8 +3,12 @@ Files <- dir(Filesdir,pattern="icogs_merged_b1_12.",full.names=T)
 Filesex <- dir(Filesdir,pattern="icogs_merged_b1_12.chr23",full.names=T)
 idx.sex <- Files%in%Filesex
 Files <- Files[!idx.sex]
+library(gtools)
+Files <- mixedsort(Files)
+
 Files <- gsub("/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/icogs_merged_b1_12.","",Files)
 Files <- gsub(".txt.gz","",Files)
+
 
 Files_sub <- data.frame(chr=rep(1,length(Files)),p1=rep(0,length(Files)),p2=rep(0,length(Files)))
 
@@ -32,11 +36,10 @@ for(i in 1:length(result_Files)){
   result.idx[i] <- result.idx.temp
 }
 
-
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ICOG/result")
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
-  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ICOG/result")
   
   load(paste0("ERPRHER2Grade_fixed_baseline",idx[i]))
   temp <- length(result[[1]])
@@ -50,12 +53,12 @@ number.of.tumor <- 4
 score <- matrix(0,nrow=num,ncol = (number.of.tumor+1))
 infor <- matrix(0,nrow = num,ncol = (number.of.tumor+1)^2)
 freq.all <- rep(0,num)
-# score_baseline <- rep(0,num)
-# infor_baseline <- rep(0,num)
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ICOG/result")
+
+
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/")
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
@@ -65,6 +68,7 @@ for(i in 1:length(Files)){
   rs_id[num.total+(1:temp)] <- result[[1]]
   score[num.total+(1:temp),] <- result[[2]]
   infor[num.total+(1:temp),] <- result[[3]]
+  
   freq.all[num.total+(1:temp)] <- result[[4]] 
   num.total <- temp+num.total
   
@@ -73,28 +77,24 @@ for(i in 1:length(Files)){
 }
 
 
-
-
-
-
-
-
 load('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result/Icog_result.Rdata')
 icog_infor <- icog_result[,1:10]
+CHR <- icog_result[,13]
 
 
-icog_result <- data.frame(icog_info,score,infor,CHR)
+icog_result <- data.frame(icog_infor,score,infor,CHR)
 
 
 
+# CHR <- icog_result_baseline[,13]
 
-
+#icog_result[,41] <- CHR
 
 
 save(icog_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ICOG/result/Icog_result.Rdata")
-# icog_result_baseline <- data.frame(icog_info,score_baseline,infor_baseline,CHR)
-# save(icog_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
-# print(1)
-# 
+#icog_result_baseline <- data.frame(icog_info,score_baseline,infor_baseline,CHR)
+#save(icog_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
+print(1)
+
 
 

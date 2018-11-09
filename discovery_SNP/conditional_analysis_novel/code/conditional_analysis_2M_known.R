@@ -1,4 +1,4 @@
-#install_github("andrewhaoyu/bcutility",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#install_github("andrewhaoyu/bcutility",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.5"'))
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 library(data.table)
