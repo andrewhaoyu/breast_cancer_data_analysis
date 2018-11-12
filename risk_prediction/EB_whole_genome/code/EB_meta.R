@@ -33,7 +33,7 @@ for(j in start:end){
   eblogodds_sub[temp,] <- ebestimate(intri_odds,
                                  intri_covar,
                                  stan_result[j,1],
-                                 hetervar.sub[j])
+                                 hetervar.sub[temp])
   temp = temp+1
 }
 
