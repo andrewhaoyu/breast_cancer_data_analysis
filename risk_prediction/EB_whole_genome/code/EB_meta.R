@@ -11,6 +11,7 @@ meta_stan <- meta_result_shared_1p
 stan_result <- meta_stan[,c(11,12,17)]
 intrin_result <- meta_intrin[,c(11:40,45)]
 
+n <- nrow(meta_stan)
 size <- 1000
 start.end <- startend(n,size,i1)
 start <- start.end[1]
