@@ -1,6 +1,9 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
-
+library(devtools)
+############install the development R package bc2
+############the repository is called bc3, but the package is called bc2
+install_github("andrewhaoyu/bc3")
 
 library(data.table)
 library(bc2)
