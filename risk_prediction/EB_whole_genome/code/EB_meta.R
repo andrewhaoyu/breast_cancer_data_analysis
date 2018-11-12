@@ -40,3 +40,4 @@ result_sub <- list(eblogodds_sub,
                    hetervar.sub )
 
 save(result_sub,file=paste0("./EB_whole_genome/result/p_value_sub",i1,".Rdata"))
+
