@@ -21,7 +21,27 @@ rm(onco_result_shared_1p)
 gc()
 # 
 size <- 1000
-
+Metaoddsfunction <- function(icog_onco_score_infor_one,second.num){
+  score.icog <- as.numeric(icog_onco_score_infor_one[1:(second.num)])
+  infor.icog <- matrix(as.numeric(icog_onco_score_infor_one[(second.num+1):
+                                                              (second.num+second.num^2) ]),
+                       ncol = second.num)
+  start <- second.num+second.num^2
+  score.onco <- as.numeric(icog_onco_score_infor_one[(1+start):
+                                                       (second.num+start)])
+  infor.onco <- matrix(as.numeric(icog_onco_score_infor_one[(second.num+1+start):
+                                                              (second.num+second.num^2+start) ]),ncol=second.num)
+  
+  
+  meta.result <- LogoddsMetaAnalysis(score.icog,infor.icog,
+                                     score.onco,infor.onco)
+  score.meta <- as.vector(meta.result[[1]])
+  infor.meta <- meta.result[[2]]
+  p.meta <- DisplaySecondStageTestResult(score.meta,infor.meta)[[second.num*2+1]]
+  return(list(log.odds=score.meta,
+              covar = infor.meta,
+              p = p.meta))
+}
 
 
 #registerDoParallel(no.cores)
