@@ -19,15 +19,15 @@ end <- start.end[2]
 eblogodds_sub <- matrix(0,end-start+1,second.num)
 hetervar.sub <- rep(0,end-start+1)
 temp = 1
-
 for(j in start:end){
+  
   print(j)
   intri_odds <-  as.numeric(intrin_result[j,1:second.num])
   intri_covar <-   matrix(
     as.numeric(intrin_result[j,(second.num+1):
               (second.num+second.num^2)]),
     second.num,second.num)
-  hetervar.sub[j] <- HeterVarianceEstimate(
+  hetervar.sub[temp,] <- HeterVarianceEstimate(
     intri_odds,
     intri_covar)
   eblogodds_sub[temp,] <- ebestimate(intri_odds,
@@ -38,7 +38,7 @@ for(j in start:end){
 }
 
 result_sub <- list(eblogodds_sub,
-                   hetervar.sub )
+                   hetervar.sub)
 
-save(result_sub,file=paste0("./EB_whole_genome/result/p_value_sub",i1,".Rdata"))
+save(result_sub,file=paste0("./EB_whole_genome/result/result_sub",i1,".Rdata"))
 
