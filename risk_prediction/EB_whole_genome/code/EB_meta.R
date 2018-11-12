@@ -10,7 +10,7 @@ meta_stan <- meta_result_shared_1p
 
 stan_result <- meta_stan[,c(11,12,17)]
 intrin_result <- meta_intrin[,c(11:40,45)]
-
+second.num <- 5
 n <- nrow(meta_stan)
 size <- 1000
 start.end <- startend(n,size,i1)
@@ -19,7 +19,7 @@ end <- start.end[2]
 eblogodds_sub <- matrix(0,end-start+1,second.num)
 hetervar.sub <- rep(0,end-start+1)
 temp = 1
-second.num <- 5
+
 for(j in start:end){
   print(j)
   intri_odds <-  as.numeric(intrin_result[j,1:second.num])
