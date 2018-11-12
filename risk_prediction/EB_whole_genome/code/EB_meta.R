@@ -27,7 +27,7 @@ for(j in start:end){
     as.numeric(intrin_result[j,(second.num+1):
               (second.num+second.num^2)]),
     second.num,second.num)
-  hetervar.sub[temp,] <- HeterVarianceEstimate(
+  hetervar.sub[temp] <- HeterVarianceEstimate(
     intri_odds,
     intri_covar)
   eblogodds_sub[temp,] <- ebestimate(intri_odds,

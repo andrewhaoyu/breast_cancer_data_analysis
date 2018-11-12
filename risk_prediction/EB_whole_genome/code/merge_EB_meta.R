@@ -19,7 +19,7 @@ total <- 0
 for(i1 in 1:size){
   load(paste0("./EB_whole_genome/result/p_value_sub",i1,".Rdata"))
   temp <- nrow(result_sub[[1]])
-  log.odds[total+(1:temp)] <- result_sub[[1]]
+  log.odds[total+(1:temp),] <- result_sub[[1]]
   heter.var[total+(1:temp)] <- result_sub[[2]]
   total <- total + temp
 }
