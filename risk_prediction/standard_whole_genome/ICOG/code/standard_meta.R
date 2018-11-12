@@ -64,7 +64,7 @@ for(j in start:end){
   icog_onco_score_infor_oneline <- icog_onco_score_infor[j,]
   result_temp <- Metaoddsfunction(icog_onco_score_infor_oneline,second.num)
   logodds_sub[temp] <- result_temp[[1]]
-  covar_sub <- result_temp[[2]]
+  covar_sub[temp] <- result_temp[[2]]
   pvalue_sub[temp] <- result_temp[[3]]
   temp = temp+1
 }
