@@ -4,6 +4,7 @@ meta_intrin <- meta_result_shared_1p
 load('./FTOP_whole_genome/ICOG/result/meta_result_shared_1p.Rdata')
 meta_FTOP <- meta_result_shared_1p_FTOP
 load("./standard_whole_genome/ICOG/result/meta_result_shared_1p.Rdata")
+load("./EB_whole_genome/result/meta_result_shared_1p.Rdata")
 meta_stan <- meta_result_shared_1p
 all.equal(meta_intrin$rs_id,meta_FTOP$rs_id)
 all.equal(meta_stan$rs_id,meta_FTOP$rs_id)
@@ -22,7 +23,17 @@ colnames(intrin_result)[1:5] <- c("Luminial_A",
                                   "HER2_Enriched",
                                   "TN")
 colnames(intrin_result)[31] <- "in_p"
-wholge_genome <- cbind(meta_infor,
+eb_result <- meta_eb[,c(11:16)]
+colnames(eb_result)[1:5] <- paste0("eb_",
+                              c("Luminial_A",
+                                "Luminal_B",
+                                "Luminal_B_HER2Neg",
+                                "HER2_Enriched",
+                                "TN"))
+colnames(eb_result)[6] <- "heter_var"
+whole_genome <- cbind(meta_infor,
                        stan_result,
                        FTOP_result,
-                       intrin_result)
+                       intrin_result,
+                       eb_result)
+save(whole_genome,file = "./EB_whole_genome/result/whole_gonome.rdata")
