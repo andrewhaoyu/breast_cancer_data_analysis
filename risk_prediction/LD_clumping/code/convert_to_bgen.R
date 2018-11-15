@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------
 # Update Date: 11/14/2018
 # Create Date: 11/14/2018
-# Goal: convert impute gen fortmat to plink format
+# Goal: convert impute gen fortmat to bgen format
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 
