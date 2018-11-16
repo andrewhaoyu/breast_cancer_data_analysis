@@ -1,39 +1,83 @@
 #-------------------------------------------------------------------
-# Update Date: 11/14/2018
+# Update Date: 11/15/2018
 # Create Date: 11/13/2018
-# Goal: prepare sample dataset for qctool
+# Goal: prepare sample dataset for all onco
+# Goal: prepare sample dataset for subtyeps test 
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #prepare sample for all of the subjects
 library(data.table)
+library(bcutility)
 subject.file <- "/spin1/users/zhangh24/test/onco_order.txt"
 
+onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
+onco.data <- onco.data[,-1]
+library(tidyverse)
+y.pheno.mis2 <- select(onco.data,Behavior,ER,PR,HER2,Grade)
+############put onco array unknown cases as 1
+idx.insi.unknown.onco <- which(y.pheno.mis2[,1]==888|
+                                 y.pheno.mis2[,1]==2) 
+y.pheno.mis2[idx.insi.unknown.onco,1] <- 1
+subtypes.onco <- GenerateIntrinsicmis(y.pheno.mis2[,2],
+                                      y.pheno.mis2[,3],
+                                      y.pheno.mis2[,4],
+                                      y.pheno.mis2[,5])
+subtypes.onco <- GenerateIntrinsicmis(y.pheno.mis2[,2],y.pheno.mis2[,3],
+                                      y.pheno.mis2[,4],y.pheno.mis2[,5])
+disease_onco = select(onco.data,ID,Behavior) %>% 
+              cbind(subtypes.onco)
 onco.order <- read.table(subject.file)
+colnames(onco.order) <- "ID"
+
+onco.order.new <- left_join(onco.order,disease_onco,
+                          by= "ID")
+
+all.equal(onco.order.new[,1],onco.order[,1])
+subtypes.onco <- data.frame(
+                    as.character(onco.order.new[,3]),
+                            stringsAsFactors = F)
+
+# 
+# onco.order.new <- merge(onco.order,disease_onco,
+#                         by.x= "ID",
+#                         by.y = "ID",
+#                         all.x = T
+#                         )
+# idx.match <- match(as.numeric(onco.order[,1]),
+#                    as.numeric(onco.order.new[,1]))
+# onco.order.new <- onco.order.new[idx.match,]
+# 
+
 n <- nrow(onco.order)
 ID <- matrix("c",n,1)
 for(i in 1:n){
   ID[i] <- paste0("sample_",onco.order[i,1])
 }
 missing <- matrix(0,n,1)
-case <- matrix(rbinom(n,1,0.5),n,1)
+case <- onco.order.new[,2,drop=F]
 cov_1 <- matrix(rnorm(n),n,1)
 #onco.order <- matrix(paste0("sample",onco.order),n,1)
 ID <- rbind(0,ID)
 missing <- rbind(0,missing)
 case <- rbind("B",case)
 cov_1 <- rbind("C",cov_1)
+subtypes.onco <- rbind("D",
+                       subtypes.onco)
 #onco.order <- matrix(onco.order,ncol=1)
 
 sample.data <- data.frame(ID,
                           ID,
                           missing,
                           case,
-                          cov_1,stringsAsFactors = T)
+                          cov_1,
+                          subtypes.onco,
+                          stringsAsFactors = F)
 colnames(sample.data) <- c("ID_1",
                            "ID_2",
                            "missing",
                            "case",
-                           "cov_1")
+                           "cov_1",
+                           "subtypes")
 
 write.table(sample.data,file = "/spin1/users/zhangh24/test/sample.txt",
             row.names = F, quote = F,sep = " ")
@@ -50,4 +94,31 @@ test_ID <- matrix("c",n,1)
 for(i in 1:n){
   test_ID[i] <- paste0("sample_",onco.test.id[i])
 }
+library(dplyr)
+names.subtypes <-  c("Luminal_A","Luminal_B",
+                      "Luminal_B_HER2Neg",
+                      "HER2Enriched",
+                      "TripleNeg")
+#test sample Luminal A
+for(i in 1:length(names.subtypes)){
+  test.sample = sample.data%>%
+                filter(
+                  (ID_1%in%test_ID)&
+              ((subtypes=="control"|
+                    subtypes==names.subtypes[i]))
+                ) %>%
+                select(ID_1)
+  write.table(test.sample,file = 
+                paste0("/spin1/users/zhangh24/BCAC/test_sample_",
+                        names.subtypes[i]
+                        ,".txt"),
+              row.names = F, quote = F,sep = " ")
+}
 
+
+
+
+
+
+write.table(test_ID,file = "/spin1/users/zhangh24/BCAC/sample_onco_test.txt",
+            row.names = F, quote = F,sep = " ")
