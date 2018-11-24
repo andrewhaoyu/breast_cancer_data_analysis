@@ -9,8 +9,6 @@ setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction')
 load("./EB_whole_genome/result/whole_gonome.rdata")
 #######prs file need A1 to be effect_allele
 #######we need to reverse all the log odds ratio since we put A2 as effect allele
-library(dplyr)
-library(data.table)
 #whole_genome = whole_genome %>% mutate(p.min = pmin(p.value,FTOP_result))
 #head(whole_genome)
 #save(whole_genome,file = "./EB_whole_genome/result/whole_gonome.rdata")
@@ -23,6 +21,9 @@ save(whole_genome_clump,file = "./EB_whole_genome/result/whole_genome_clump.rdat
 #No need to rerun the previous code again
 
 #create prs files based on different p-threshold
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction')
+library(dplyr)
+library(data.table)
 load("./EB_whole_genome/result/whole_genome_clump.rdata")
 dim(whole_genome_clump)
 method <- c("standard","two-stage","eb")
@@ -50,18 +51,22 @@ subtypes <- c("Luminial_A",
               "TN")
 select.names <- c(subtypes,paste0("eb_",subtypes))
 
-try <- whole_genome_clump %>%  select(subtypes)
+score <- whole_genome_clump %>%  select(select.names)
+#reverse the odds ratio, since dosage use the first allele as reference
+score <- -score
+whole_genome_clump_new <- whole_genome_clump %>% mutate(SNP=SNP.ONCO) %>% select(SNP,referece_allele,p.min) %>% 
+  cbind(score)
 
-whole_genome_clump %>% mutate(SNP=SNP.ONCO,
-                              beta = -score
-)
-
-
-
-
-prs <- whole_genome_clump %>% mutate(SNP=SNP.ONCO,
-                               beta = -score
-                               ) %>%
-                     filter(p.min<=1E-06) %>% 
-  select(SNP,referece_allele,beta)
+for(i in 1:n.pthres){
+  for(j in 1:length(select.names)){
+    prs <-  whole_genome_clump_new %>%
+      filter(p.min<=pthres[i]) %>% 
+      select(SNP,referece_allele,select.names[j])
+    colnames(prs) <- c("SNP","effect_allele","beta")
+    dim(prs)
+    write.table(prs,file = paste0("/spin1/users/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file"),row.names=F,col.names=T,quote=F)
+    
+  }
+  
+}
 
