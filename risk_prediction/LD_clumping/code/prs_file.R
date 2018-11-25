@@ -13,7 +13,8 @@ load("./EB_whole_genome/result/whole_gonome.rdata")
 #head(whole_genome)
 #save(whole_genome,file = "./EB_whole_genome/result/whole_gonome.rdata")
 clump.snp <- as.data.frame(fread("/spin1/users/zhangh24/BCAC/impute_plink_onco/clump_snp",header=F))
-colnames(clump.snp) <- "SNP.ONCO"
+clump.snp <- clump.snp %>% filter(clump.snp!="SNP"&
+                                    clump.snp!="")
 dim(clump.snp)
 dim(whole_genome)
 whole_genome_clump <- left_join(clump.snp,whole_genome)
