@@ -26,7 +26,7 @@ log.odds <- whole_genome %>% select(subtypes)
 covar <- whole_genome %>% select(24:48)
 
 second.num <- 5
-n <- nrow(meta_stan)
+
 size <- 1000
 start.end <- startend(n,size,i1)
 start <- start.end[1]
@@ -48,5 +48,5 @@ for(j in start:end){
   temp = temp+1
 }
 
-save(p.heter.sub,file=paste0("./EB_whole_genome/result/result_sub",i1,".Rdata"))
+save(p.heter.sub,file=paste0("./risk_prediction/heter_whole_genome/result/p_heter_sub",i1,".Rdata"))
 
