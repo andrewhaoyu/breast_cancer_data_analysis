@@ -48,5 +48,5 @@ for(j in start:end){
   temp = temp+1
 }
 
-save(p.heter.sub,file=paste0("./risk_prediction/heter_whole_genome/result/p_heter_sub",i1,".Rdata"))
+save(p.heter.sub,file=paste0("./heter_whole_genome/result/p_heter_sub",i1,".Rdata"))
 
