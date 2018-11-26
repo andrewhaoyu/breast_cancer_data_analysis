@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------
-# Update Date: 11/23/2018
+# Update Date: 11/25/2018
 # Create Date: 11/22/2018
 # Goal: prepare different different prs files for plink
 # Author: Haoyu Zhang
