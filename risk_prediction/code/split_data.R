@@ -1,3 +1,10 @@
+#-------------------------------------------------------------------
+# Update Date: 11/26/2018
+# Create Date: 11/26/2018
+# Goal: split the BCAC data into traning, testing and cohort study design
+# Author: Haoyu Zhang
+#-------------------------------------------------------------------
+#---------------------------------------#---------------------------------------
 ########Generate intrinsic subtypes function
 SubtypesTrans <- function(casecon,ER,PR,HER2,grade){
   n <- length(casecon)

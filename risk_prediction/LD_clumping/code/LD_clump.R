@@ -5,13 +5,13 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #---------------------------------------#---------------------------------------
-r2thr = 0.1; kbpthr = 500; pthr=0.1
+r2thr = 0.05; kbpthr = 500; pthr=0.1
 #trait_name = "BCAC_metacase"
 #---------------------------------------#---------------------------------------
 LD.clump <- rep("c",22)
 LD.clump <- data.frame(LD.clump,stringsAsFactors=F)
 for(i in 1:22){
-  LD.clump.code <- paste0("/spin1/users/zhangh24/plink --bfile /spin1/users/zhangh24/BCAC/impute_plink_onco/chr",i,"_plink --clump /spin1/users/zhangh24/BCAC/impute_plink_onco/LD_assoc --clump-p1 ",pthr," --clump-p2 ", pthr," --clump-r2 ",r2thr,"  --clump-kb ",kbpthr," --out /spin1/users/zhangh24/BCAC/impute_plink_onco/chr",i,"_ld_clump")
+  LD.clump.code <- paste0("/spin1/users/zhangh24/plink --bfile /spin1/users/zhangh24/BCAC/impute_plink_onco/chr",i,"_plink --clump /spin1/users/zhangh24/BCAC/impute_plink_onco/LD_assoc --clump-p1 ",pthr," --clump-r2 ",r2thr,"  --clump-kb ",kbpthr," --out /spin1/users/zhangh24/BCAC/impute_plink_onco/chr",i,"_ld_clump")
   LD.clump[i,1] <- LD.clump.code
 }
 #write out the command and submit use cluster
