@@ -17,6 +17,10 @@ clump.snp <- clump.snp %>% filter(clump.snp!="SNP"&
                                     clump.snp!="")
 dim(clump.snp)
 dim(whole_genome)
+colnames(clump.snp) <- c("SNP.ONCO")
+#check duplicated
+idx <- which(duplicated(clump.snp$SNP.ONCO)==T)
+length(idx)
 whole_genome_clump <- left_join(clump.snp,whole_genome)
 save(whole_genome_clump,file = "./EB_whole_genome/result/whole_genome_clump.rdata")
 #No need to rerun the previous code again

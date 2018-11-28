@@ -5,6 +5,7 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #---------------------------------------#---------------------------------------
+rm clump_snp
     for i in `seq 1 22`
     do
     awk '{print $3}' /spin1/users/zhangh24/BCAC/impute_plink_onco/chr$i\_ld_clump.clumped >> /spin1/users/zhangh24/BCAC/impute_plink_onco/clump_snp

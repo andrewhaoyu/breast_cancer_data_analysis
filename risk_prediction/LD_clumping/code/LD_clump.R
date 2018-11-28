@@ -23,7 +23,7 @@ write.table(LD.clump,file = paste0("/spin1/users/zhangh24/breast_cancer_data_ana
 #merge the LD clumped SNP list
 system('rm /spin1/users/zhangh24/BCAC/impute_plink_onco/clump_snp')
 system('touch /spin1/users/zhangh24/BCAC/impute_plink_onco/clump_snp')
-system("awk '{print $3}' /spin1/users/zhangh24/BCAC/impute_plink_onco/chr$i_ld_clump.clumped >> /spin1/users/zhangh24/BCAC/impute_plink_onco/clump_snp
+system("awk '{print $3}' /spin1/users/zhangh24/BCAC/impute_plink_onco/chr$i_ld_clump.clumped > /spin1/users/zhangh24/BCAC/impute_plink_onco/clump_snp
        done")
  
 
