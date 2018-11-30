@@ -7,6 +7,7 @@
 #---------------------------------------#---------------------------------------
 load("./risk_prediction/LD_clumping/result/auc.result.rdata")
 head(auc.result)
+
 auc.result %>% filter(subtypes=="Luminal_B")
 names.subtypes <- c("Luminal_A",
                     "Luminal_B",
