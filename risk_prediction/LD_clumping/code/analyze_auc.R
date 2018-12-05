@@ -1,10 +1,11 @@
 #-------------------------------------------------------------------
-# Update Date: 11/24/2018
+# Update Date: 12/05/2018
 # Create Date: 11/24/2018
 # Goal: analyze auc
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #---------------------------------------#---------------------------------------
+library(dplyr)
 load("./risk_prediction/LD_clumping/result/auc.result.rdata")
 head(auc.result)
 

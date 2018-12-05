@@ -12,6 +12,8 @@ load("./EB_whole_genome/result/whole_gonome.rdata")
 #whole_genome = whole_genome %>% mutate(p.min = pmin(p.value,FTOP_result))
 #head(whole_genome)
 #save(whole_genome,file = "./EB_whole_genome/result/whole_gonome.rdata")
+library(data.table)
+library(dplyr)
 clump.snp <- as.data.frame(fread("/spin1/users/zhangh24/BCAC/impute_plink_onco/clump_snp",header=F))
 clump.snp <- clump.snp %>% filter(clump.snp!="SNP"&
                                     clump.snp!="")
