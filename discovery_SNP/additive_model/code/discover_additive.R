@@ -58,15 +58,16 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
   }
   
   #sum(x.test.all.mis1[,i1])/(2*nrow(x.test.all.mis1))
-  snp <- x.test.all.mis1[,i1]
-  freq <- sum(snp)/(2*length(snp))
-  #code the effect with the minor allele
-  if(freq<=0.5){
-    x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
-  }else{
-    x.all.mis1 <- as.matrix(cbind(2-x.test.all.mis1[,i1],x.covar.mis1))
-  }
-  
+  # snp <- x.test.all.mis1[,i1]
+  # freq <- sum(snp)/(2*length(snp))
+  # #code the effect with the minor allele
+  # if(freq<=0.5){
+  #   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
+  # }else{
+  #   x.all.mis1 <- as.matrix(cbind(2-x.test.all.mis1[,i1],x.covar.mis1))
+  # }
+  # 
+  x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   age <- data1[,204]
   idx.complete <- which(age!=888)
   y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
