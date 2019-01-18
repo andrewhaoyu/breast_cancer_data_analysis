@@ -142,7 +142,7 @@ if(i1<=177){
   
   
   
-  heter.result <- data.frame(second.stage.logodds.meta,second.stage.sigma.meta)
+  heter.result <- list(second.stage.logodds.meta,second.stage.sigma.meta)
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i1,".Rdata"))
   
   
@@ -182,7 +182,7 @@ if(i1<=177){
   
   
   
-  heter.result <- data.frame(log.odds.onco,sigma.log.odds.onco)
+  heter.result <- list(log.odds.onco,sigma.log.odds.onco)
   
   
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i1,".Rdata"))
