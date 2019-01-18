@@ -55,7 +55,7 @@ colnames(dis.result)[c(2*(1:n.subtypes))] <- paste0("var_",c("Luminial A","Lumin
                                                                    "Triple Negative"))
 
 
-
+##load the results for 178 known SNPs
 
 
 

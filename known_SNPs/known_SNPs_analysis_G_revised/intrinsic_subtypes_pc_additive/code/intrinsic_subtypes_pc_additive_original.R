@@ -85,8 +85,13 @@ if(i1<=177){
   beta.sigma.icog <- z.trans%*%sigma.log.odds.icog%*%t(z.trans)
   loglikelihood.icog <- Heter.result.Icog[[8]]
   
-  
-  
+  standard.result.Icog <- glm(y.pheno.mis1[,1]~
+                                cbind( x.all.mis1[,1,drop=F],
+                                       x.all.mis1[,2:ncol(x.all.mis1)]),
+                              family = binomial)
+  model.summary.icog <- summary(standard.result.Icog)
+  log.odds.icog.standard <-  model.summary.icog$coefficient[2,1]
+  var.icog.standard <- model.summary.icog$coefficient[2,2]^2
   
   
   
@@ -128,6 +133,14 @@ if(i1<=177){
   loglikelihood.onco <- Heter.result.Onco[[8]]
   
   
+  standard.result.onco <- glm(y.pheno.mis2[,1]~
+                                cbind( x.all.mis2[,1,drop=F],
+                                       x.all.mis2[,2:ncol(x.all.mis2)]),
+                              family = binomial)
+  model.summary.onco <- summary(standard.result.onco)
+  log.odds.onco.standard <-  model.summary.onco$coefficient[2,1]
+  var.onco.standard <- model.summary.onco$coefficient[2,2]^2
+  
   
   
   
@@ -141,8 +154,16 @@ if(i1<=177){
   second.stage.sigma.meta <- meta.result[[2]]
   
   
+  meta.result <- LogoddsMetaAnalysis(log.odds.icog.standard,
+                                     var.icog.standard,
+                                     log.odds.onco.standard,
+                                     var.onco.standard)
   
-  heter.result <- list(second.stage.logodds.meta,second.stage.sigma.meta)
+  standard.logodds.meta <- meta.result[[1]]
+  standard.var.meta <- meta.result[[2]]
+  
+  
+  heter.result <- list(second.stage.logodds.meta,second.stage.sigma.meta,standard.logodds.meta,standard.var.meta)
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i1,".Rdata"))
   
   
@@ -182,7 +203,18 @@ if(i1<=177){
   
   
   
-  heter.result <- list(log.odds.onco,sigma.log.odds.onco)
+  
+  standard.result.onco <- glm(y.pheno.mis2[,1]~
+                                cbind( x.all.mis2[,1,drop=F],
+                                       x.all.mis2[,2:ncol(x.all.mis2)]),
+                              family = binomial)
+  model.summary.onco <- summary(standard.result.onco)
+  log.odds.onco.standard <-  model.summary.onco$coefficient[2,1]
+  var.onco.standard <- model.summary.onco$coefficient[2,2]^2
+  
+  heter.result <- list(log.odds.onco,sigma.log.odds.onco,
+                       log.odds.onco.standard,
+                       var.onco.standard)
   
   
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i1,".Rdata"))
