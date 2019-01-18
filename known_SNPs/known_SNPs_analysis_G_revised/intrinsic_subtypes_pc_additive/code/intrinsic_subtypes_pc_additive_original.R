@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------
 # Update Date: 01/18/2019
 # Create Date: 01/18/2019
-# Goal: estimate log odds ratio and var of 178 SNPs for 5 intrinic subtypes
+# Goal: estimate log odds ratio and var of 178 SNPs for 5 intrinic subtypes and one standard
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #---------------------------------------#---------------------------------------

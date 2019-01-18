@@ -56,6 +56,13 @@ colnames(dis.result)[c(2*(1:n.subtypes))] <- paste0("var_",c("Luminial A","Lumin
 
 
 ##load the results for 178 known SNPs
+for(i in 1:178){
+  print(i)
+  load(paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i,".Rdata"))
+  result <- rbind(result,heter.result[[1]])
+  first.stage <- rbind(first.stage,heter.result[[2]])
+}
+
 
 
 
