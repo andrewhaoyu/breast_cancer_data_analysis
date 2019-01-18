@@ -74,6 +74,30 @@ print(i1)
   #heter.sigma2[i1] <- heter.variance.estimate2(meta.result[[1]],meta.result[[2]],log.odds.meta[i])
   
 }
+j <- 5
+
+log.odds.meta <- log.odds.meta.two.stage.all[,j]
+var.log.odds <- rep(0,205)
+for(i in 1:205){
+  var.log.odds[i]<-  diag(matrix(sigma.log.odds.two.stage[i,],5,5))[j]  
+}
+
+#var.odds.meta <- diag(meta.result[[2]])
+var.odds.meta <- var.log.odds
+idx.control <- which(y.pheno.mis2.train[,1]==0)
+snp.control <- x.snp.all.train2[idx.control,]
+p <- apply(snp.control,2,function(x){sum(x)/(2*length(x))})
+sum(p*(1-p)*(log.odds.meta^2-var.odds.meta))/log(2)
+new <- c(178:205)
+sum(p[new]*(1-p[new])*(log.odds.meta[new]^2-var.odds.meta[new]))/log(2)
+
+
+
+
+
+
+
+
 save(log.odds.meta.triple,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
 save(log.odds.meta.two.stage.all,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.all.Rdata")
 save(sigma.log.odds.two.stage,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")

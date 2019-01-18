@@ -31,6 +31,8 @@ colnames(y.pheno.mis2) = c("Behaviour","ER",
 
 x.covar.mis2 <- data2[,c(5:14,204)]
 ages <- data2[,204]
+idx.incomplete <- which(ages==888)
+table(y.pheno.mis2[idx.incomplete,1])
 idx.complete <- which(ages!=888)
 
 y.pheno.mis2 <- y.pheno.mis2[idx.complete,]

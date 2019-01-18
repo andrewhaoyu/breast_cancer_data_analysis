@@ -33,6 +33,8 @@ colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 SG_ID <- data1$SG_ID
 x.covar.mis1 <- data1[,c(5:14,204)]
 age <- data1[,204]
+idx.incomplete <- which(age==888)
+table(y.pheno.mis1[idx.incomplete,1])
 idx.complete <- which(age!=888)
 y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
 x.covar.mis1 <- x.covar.mis1[idx.complete,]
