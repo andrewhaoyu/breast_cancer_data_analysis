@@ -98,8 +98,8 @@ sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):
 sum(snpvalue)/(2*length(snpvalue))
 
 standard.result.Icog <- glm(y.pheno.mis1[,1]~
-                              cbind( snpvalue,
-                                     x.covar.mis1),
+                              as.matrix(cbind(snpvalue,
+                                     x.covar.mis1)),
                             family = binomial)
 model.summary.icog <- summary(standard.result.Icog)
 log.odds.icog.standard <-  model.summary.icog$coefficient[2,1]
@@ -157,8 +157,8 @@ second.stage.logodds.meta <- meta.result[[1]]
 second.stage.sigma.meta <- meta.result[[2]]
 
 standard.result.onco <- glm(y.pheno.mis2[,1]~
-                              cbind( snpvalue,
-                                     x.covar.mis2),
+                              as.matrix(cbind( snpvalue,
+                                     x.covar.mis2)),
                             family = binomial)
 model.summary.onco <- summary(standard.result.onco)
 log.odds.onco.standard <-  model.summary.onco$coefficient[2,1]
@@ -180,7 +180,7 @@ test.result.second.wald <- list(DisplaySecondStageTestResult(second.stage.logodd
                                 standard.var.meta)
                                 
 
-save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_heter",i1,".Rdata"))
+save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_heter_herita",i1,".Rdata"))
 
 
 
