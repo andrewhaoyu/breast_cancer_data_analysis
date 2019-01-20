@@ -177,7 +177,8 @@ standard.var.meta <- meta.result[[2]]
 
 
 
-test.result.second.wald <- list(DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta),
+test.result.second.wald <- list(second.stage.logodds.meta,
+                                second.stage.sigma.meta,
                                 standard.logodds.meta,
                                 standard.var.meta,freq)
                                 

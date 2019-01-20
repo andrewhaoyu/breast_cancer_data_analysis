@@ -8,6 +8,7 @@
 result <- NULL
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 result_standard <- matrix(0,35,2)
+freq = rep(0,35)
 for(i1 in 1:35){
   load(paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_heter_herita",i1,".Rdata"))
  # load(paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_herita_",i1,".Rdata"))
@@ -15,6 +16,7 @@ for(i1 in 1:35){
   #######plug in the log odds ratio and var from standard logistic regression
   result_standard[i1,1] <- test.result.second.wald[[2]]
   result_standard[i1,2] <- test.result.second.wald[[3]]
+  freq[i1] = test.result.second.wald[[4]]
 }
 #SNP <- c(colnames(icog.julie),colnames(discovery.snp.icog)[1:18])
 
@@ -34,9 +36,11 @@ idx.match <- match(chr.pos.paper,
 discovery_snp_new <- discovery_snp[idx.match,]
 result <- result[idx.match,]
 result_standard <- result_standard[idx.match,]
+freq = freq[idx.match]
 ###remove 3 SNP after conditional p-value threshold becomes 1e-06
 result <- result[-c(7,24,33),]
 result_standard <- result_standard[-c(7,24,33),]
+freq = freq[-c(7,24,33)]
 ###convert the result to log odds ratio
 n.snp <- 32
 n.subtypes <- 5
@@ -60,10 +64,10 @@ colnames(dis.result)[c(2*(1:n.subtypes))] <- paste0("var_",c("Luminial A","Lumin
                                                                    "Triple Negative"))
 colnames(result_standard) <- c("logoddsd_standard",
                                "var_standard")
-dis.result <- cbind(dis.result,result_standard)
+dis.result <- cbind(dis.result,result_standard,freq)
 
 ##load the results for 178 known SNPs
-known.result <- matrix(0,178,12)
+known.result <- matrix(0,178,13)
 colnames(known.result) <- colnames(dis.result)
 
 Outvec <- function(heter.result){
@@ -71,7 +75,7 @@ Outvec <- function(heter.result){
   var.log <- diag(heter.result[[2]])
   standard.log <- heter.result[[3]]
   var.standard <- heter.result[[4]]
-  result.vec <- rep(0,12)
+  result.vec <- rep(0,13)
   temp = 1
   for(i in 1:5){
   result.vec[temp] = logodds[i]
@@ -82,6 +86,8 @@ Outvec <- function(heter.result){
   result.vec[temp] = standard.log
   temp = temp + 1
   result.vec[temp] = var.standard
+  temp = temp + 1
+  result.vec[temp] = heter.result[[5]]
   return(result.vec)
 }
 
@@ -92,11 +98,23 @@ for(i in 1:178){
   known.result[i,] <- Outvec(heter.result)
 }
 
+#all snp.result
+all.result <- rbind(known.result,dis.result)
 #load in the heritability estimate
+heri.est <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/BCAC_heritability.csv")
+#reorder heri.est 
+heri.est <- heri.est[c(2,4,5,3,1),c(2,4,5,3,1)]
+gwas.heri <- diag(as.matrix(heri.est))
+SigmaEst <- function(beta,sigma,p){
+  n <- length(p)
+  result <- sum(2*p*(1-p)*(beta^2-sigma))
+  return(result)
+}
+all.snp.explain <- rep(0,5)
 
-
-
-
+for(i in 1:5){
+  all.snp.explain[i] = SigmaEst(all.result[,2*i-1],all.result[,2*i],all.result[,13]) 
+}
 
 
 
