@@ -1,10 +1,10 @@
 #-------------------------------------------------------------------
-# Update Date: 01/18/2019
+# Update Date: 01/20/2019
 # Create Date: 01/18/2019
 # Goal: estimate log odds ratio and var of 178 SNPs for 5 intrinic subtypes and one standard
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
-#---------------------------------------#---------------------------------------
+#---------------------------------------
 result <- NULL
 #install_github("andrewhaoyu/bc2", args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 ###1 represent Icog
@@ -111,14 +111,14 @@ if(i1<=177){
                              "ER","HER2","Grade")
   
   x.test.all.mis2 <- data2[,c(27:203)]
-  x.test.all.mis2 <- 2-x.test.all.mis2
+  x.test.all.mis2 <- x.test.all.mis2
   x.covar.mis2 <- data2[,c(5:14)]
   
   
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
-  
-  
+  idx.control <- which(y.pheno.mis2[,1]==0)
+  freq = sum(x.test.all.mis2[idx.control,i1])/(2*length(idx.control))
   
   
   Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = x.all.mis2[,1,drop=F],z.design = z.design,baselineonly = NULL,additive = x.all.mis2[,2:ncol(x.all.mis2)],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
@@ -163,7 +163,8 @@ if(i1<=177){
   standard.var.meta <- meta.result[[2]]
   
   
-  heter.result <- list(second.stage.logodds.meta,second.stage.sigma.meta,standard.logodds.meta,standard.var.meta)
+  heter.result <- list(second.stage.logodds.meta,second.stage.sigma.meta,standard.logodds.meta,standard.var.meta,
+                       freq)
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i1,".Rdata"))
   
   
@@ -185,6 +186,8 @@ if(i1<=177){
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
   
+  idx.control <- which(y.pheno.mis2[,1]==0)
+  freq = sum(x.test.all.mis2[idx.control,idxi1])/(2*length(idx.control))
   
   
   
@@ -214,7 +217,8 @@ if(i1<=177){
   
   heter.result <- list(log.odds.onco,sigma.log.odds.onco,
                        log.odds.onco.standard,
-                       var.onco.standard)
+                       var.onco.standard,
+                       freq)
   
   
   save(heter.result,file=paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i1,".Rdata"))

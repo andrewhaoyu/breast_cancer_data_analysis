@@ -138,6 +138,8 @@ colnames(x.all.mis2)[1] = "gene"
 snpvalue = x.all.mis2[,1,drop=F]
 
 
+idx.control <- which(y.pheno.mis2[,1]==0)
+freq = sum(x.test.all.mis2[idx.control,i1])/(2*length(idx.control))
 
 
 
@@ -177,7 +179,7 @@ standard.var.meta <- meta.result[[2]]
 
 test.result.second.wald <- list(DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta),
                                 standard.logodds.meta,
-                                standard.var.meta)
+                                standard.var.meta,freq)
                                 
 
 save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_heter_herita",i1,".Rdata"))
