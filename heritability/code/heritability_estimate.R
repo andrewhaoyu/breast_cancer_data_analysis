@@ -5,18 +5,43 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #---------------------------------------#---------------------------------------
+Outvec <- function(heter.result){
+  logodds <- heter.result[[1]]
+  var.log <- diag(heter.result[[2]])
+  standard.log <- heter.result[[3]]
+  var.standard <- heter.result[[4]]
+  result.vec <- rep(0,13)
+  temp = 1
+  for(i in 1:5){
+    result.vec[temp] = logodds[i]
+    temp = temp+1
+    result.vec[temp] = var.log[i]
+    temp = temp+1
+  }
+  result.vec[temp] = standard.log
+  temp = temp + 1
+  result.vec[temp] = var.standard
+  temp = temp + 1
+  result.vec[temp] = heter.result[[5]]
+  return(result.vec)
+}
+
+
 result <- NULL
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 result_standard <- matrix(0,35,2)
+result <- matrix(0,35,10)
 freq = rep(0,35)
 for(i1 in 1:35){
   load(paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_heter_herita",i1,".Rdata"))
  # load(paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_herita_",i1,".Rdata"))
-  result <- rbind(result,test.result.second.wald[[1]])
+  temp = Outvec(test.result.second.wald)
+  result[i1,] <- temp[1:10]
+  freq[i1] <- temp[13]
   #######plug in the log odds ratio and var from standard logistic regression
-  result_standard[i1,1] <- test.result.second.wald[[2]]
-  result_standard[i1,2] <- test.result.second.wald[[3]]
-  freq[i1] = test.result.second.wald[[4]]
+  result_standard[i1,1] <- temp[11]
+  result_standard[i1,2] <- temp[12]
+  
 }
 #SNP <- c(colnames(icog.julie),colnames(discovery.snp.icog)[1:18])
 
@@ -44,15 +69,15 @@ freq = freq[-c(7,24,33)]
 ###convert the result to log odds ratio
 n.snp <- 32
 n.subtypes <- 5
-dis.result <- matrix(0,n.snp,2*n.subtypes)
-for(i in 1:n.snp){
-  for(j in c(2*(1:n.subtypes)-1)){
-    dis.result[i,j] <- log(as.numeric(strsplit(result[i,j],"\\(")[[1]][1]))
-    
-  }
-}
-dis.result[,c(2*(1:n.subtypes))] <-as.matrix(result[,c(2*(1:n.subtypes))])
-dis.result <- as.data.frame(dis.result)
+dis.result <- result
+# for(i in 1:n.snp){
+#   for(j in c(2*(1:n.subtypes)-1)){
+#     dis.result[i,j] <- log(as.numeric(strsplit(result[i,j],"\\(")[[1]][1]))
+#     
+#   }
+# }
+# dis.result[,c(2*(1:n.subtypes))] <-as.matrix(result[,c(2*(1:n.subtypes))])
+# dis.result <- as.data.frame(dis.result)
 
 colnames(dis.result)[c(2*(1:n.subtypes))-1] <- paste0("logodds_",c("Luminial A","Luminal B",
                         "Luminal B HER2-",
@@ -69,27 +94,6 @@ dis.result <- cbind(dis.result,result_standard,freq)
 ##load the results for 178 known SNPs
 known.result <- matrix(0,178,13)
 colnames(known.result) <- colnames(dis.result)
-
-Outvec <- function(heter.result){
-  logodds <- heter.result[[1]]
-  var.log <- diag(heter.result[[2]])
-  standard.log <- heter.result[[3]]
-  var.standard <- heter.result[[4]]
-  result.vec <- rep(0,13)
-  temp = 1
-  for(i in 1:5){
-  result.vec[temp] = logodds[i]
-  temp = temp+1
-  result.vec[temp] = var.log[i]
-  temp = temp+1
-  }
-  result.vec[temp] = standard.log
-  temp = temp + 1
-  result.vec[temp] = var.standard
-  temp = temp + 1
-  result.vec[temp] = heter.result[[5]]
-  return(result.vec)
-}
 
 
 for(i in 1:178){
@@ -110,20 +114,41 @@ SigmaEst <- function(beta,sigma,p){
   result <- sum(2*p*(1-p)*(beta^2-sigma))
   return(result)
 }
+#five subtypes
 all.snp.explain <- rep(0,5)
 
 for(i in 1:5){
   all.snp.explain[i] = SigmaEst(all.result[,2*i-1],all.result[,2*i],all.result[,13]) 
 }
 
+#overall
+i <- 6
+all.snp.explain.overall <- SigmaEst(all.result[,2*i-1],all.result[,2*i],all.result[,13]) 
+print(all.snp.explain.overall)
+new.snp.explain <- rep(0,5)
 
+for(i in 1:5){
+  new.snp.explain[i] = SigmaEst(dis.result[,2*i-1],dis.result[,2*i],dis.result[,13]) 
+}
+#overall
+i <- 6
+new.snp.explain.overall <- SigmaEst(dis.result[,2*i-1],dis.result[,2*i],dis.result[,13]) 
+print(new.snp.explain.overall)
+#the heritability explained for two-fold increase of family risk
 
-
-
-
-
-
-
-
-
-
+#overall heritability based on oncoarray paper
+#summarize the result
+result.sum <- cbind(c(all.snp.explain.overall,all.snp.explain),
+      c(new.snp.explain.overall,new.snp.explain),
+      c(2*log(2)*0.41,gwas.heri),
+      c(all.snp.explain.overall,all.snp.explain)/c(2*log(2)*0.41,gwas.heri))
+row.names(result.sum) <- c("overall",
+               "Luminial A","Luminal B",
+               "Luminal B HER2-",
+               "HER2 Enriched",
+               "Triple Negative")
+colnames(result.sum) <- c("simga_all_identified_snps",
+                          "sigma_new_identified_snps",
+                          "sigma_gwas",
+                          "all_gwas_proportion")
+write.csv(result.sum,file = "./heritability/result/result.sum.csv")
