@@ -60,23 +60,9 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlati
 #
 #
 ##################only based on BCAC
-intrinsic_result <- read.csv("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/BCAC.csv",header=F)
-correlation.matrix <- intrinsic_result[1:5,2:6]
-correlation.matrix.se <- intrinsic_result[6:10,2:6]
-
-correlation.95 <- get_cor_95(correlation.matrix,correlation.matrix.se)
-colnames(correlation.matrix) <- intrinsic_result[1:5,1]
-rownames(correlation.matrix) <- intrinsic_result[1:5,1]
-
-colnames(correlation.95) <- intrinsic_result[1:5,1]
-rownames(correlation.95) <- intrinsic_result[1:5,1]
-correlation.95 <- correlation.95[c(2,5,4,3,1),c(2,5,4,3,1)]
-write.csv(correlation.95,file="correlation_95_BCAC.csv",quote=F)
 places <- 3
+intrinsic_result <- read.csv("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/BCAC.csv",header=F)
 
-#get results for CIMBA+ BCAC
-setwd("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/")
-intrinsic_result <- read.csv("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/CIMBA_BCAC.csv",header=F)
 correlation.matrix <- intrinsic_result[1:5,2:6]
 correlation.matrix.se <- intrinsic_result[6:10,2:6]
 correlation.matrix <- correlation.matrix[c(2,5,4,3,1),c(2,5,4,3,1)]
@@ -91,7 +77,31 @@ rownames(correlation.95) <- names
 
 correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
 correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
+write.csv(correlation.95,file="correlation_95_BCAC.csv",quote=F)
 
+
+#get results for CIMBA+ BCAC
+ setwd("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/")
+ intrinsic_result <- read.csv("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/CIMBA_BCAC.csv",header=F)
+ correlation.matrix <- intrinsic_result[1:5,2:6]
+ correlation.matrix.se <- intrinsic_result[6:10,2:6]
+ correlation.matrix <- correlation.matrix[c(2,5,4,3,1),c(2,5,4,3,1)]
+ correlation.matrix.se <- correlation.matrix.se[c(2,5,4,3,1),c(2,5,4,3,1)]
+ correlation.95 <- get_cor_95(correlation.matrix,correlation.matrix.se)
+ names <- as.character(intrinsic_result[c(2,5,4,3,1),1])
+ colnames(correlation.matrix) <- names
+ rownames(correlation.matrix) <- names
+
+ colnames(correlation.95) <- names
+ rownames(correlation.95) <- names
+
+ correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
+ correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
+
+
+#
+# write.csv(correlation.95,file="correlation_95_CIMBA_BCAC.csv",quote=F)
+# places <- 3
 
 
 
@@ -145,10 +155,6 @@ ggplot(cor.data,aes(x=subtypes.f,y=cor.vec))+
   # theme(strip.text = element_text(face = "bold"))
 
 
-
-
-write.csv(correlation.95,file="correlation_95_CIMBA_BCAC.csv",quote=F)
-places <- 3
 
 
 
@@ -212,18 +218,30 @@ my.color <- colorRampPalette(c("white", "dodgerblue4"))(paletteLength)
 myBreaks <- c(seq(0, max(correlation.matrix), length.out=floor(paletteLength)))
 
 png(filename="meta_heatmap_two_stage.png",width=10,heigh=10,units="in",res=600)
-corrplot(as.matrix(correlation.matrix), 
+colnames(correlation.matrix) <- c("HR+, HER2-, low grade",
+                                  "HR+, HER2-, high grade",
+                                  "HR+, HER2+",
+                                  "HR-, HER2+",
+                                  "HR-, HER2-")
+rownames(correlation.matrix) <- c("HR+, HER2-, low grade",
+                                  "HR+, HER2-, high grade",
+                                  "HR+, HER2+",
+                                  "HR-, HER2+",
+                                  "HR-, HER2-")
+corrplot(as.matrix(correlation.matrix),
+         method = "circle",
          #p.mat = p.value,
          #insig = "label_sig",
-         low=as.matrix(correlation.matrix.low),
-         upp= as.matrix(correlation.matrix.high),
+         #low=as.matrix(correlation.matrix.low),
+         #upp= as.matrix(correlation.matrix.high),
          
          #rect.col = "navy", plotC = "rect", cl.pos = "n",
          #col = my.color,
-         method = "color",
+        # method = "color",
          addrect=2, 
+        order = "hclust",
          tl.col = "black", 
-         #tl.srt = 30,
+         tl.srt = 30,
          cl.lim = c(0, 1),
          #sig.level = c(0.005,0.01,0.05),
          pch.cex = .9, pch.col = "white"

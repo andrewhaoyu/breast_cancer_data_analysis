@@ -6,7 +6,7 @@
 #-------------------------------------------------------------------
 #---------------------------------------
 
-n <- 30
+n <- 100
 x1 = rnorm(n)
 x2 = rnorm(n)
 
@@ -34,6 +34,12 @@ ab <- ab_fun(beta)
 ggplot(data,aes(x1,x2)) + geom_point(aes(color = y))+
   geom_abline(intercept= ab[1],
               slope = ab[2])
+y_predict <- ifelse(logit_inv(predict(model))>0.5,1,0)
+error <- mean((y-y_predict)^2)
+
+
+
+
 
 
 theta_old = c(0,1,1)
