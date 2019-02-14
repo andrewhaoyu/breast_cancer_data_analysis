@@ -18,7 +18,7 @@ dyn.load(sof)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
 
-pheno  <- read.csv("/data/zhangh20/breast_cancer/known_SNPs_anlysis/Onco_euro_v10_05242017.csv",1)
+pheno  <- read.csv("/data/zhangh24/breast_cancer/known_SNPs_anlysis/Onco_euro_v10_05242017.csv",1)
 idx.fil <- onco.order[,1]%in%pheno$Onc_ID
 n <- length(idx.fil)
 snpvalue <- rep(0,n)

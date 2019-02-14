@@ -24,9 +24,9 @@ n <- 109713
 snpvalue <- rep(0,n)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 Icog.order <- read.table(gzfile(subject.file))
-pheno.file <- "/home/zhangh20/breast_cancer/V10/pheno_Icog.Rdata"
+pheno.file <- "/home/zhangh24/breast_cancer/V10/pheno_Icog.Rdata"
 load(pheno.file)
-pheno <- read.csv("/data/zhangh20/breast_cancer/known_SNPs_anlysis/iCOGS_euro_v10_05242017.csv",1)
+pheno <- read.csv("/data/zhangh24/breast_cancer/known_SNPs_anlysis/iCOGS_euro_v10_05242017.csv",1)
 
 idx.fil <- Icog.order[,1]%in%pheno$SG_ID
 idx.match <- match(pheno$SG_ID,Icog.order[idx.fil,1])
