@@ -1,6 +1,7 @@
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 result <- NULL
 for(i1 in 1:35){
-  load(paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_",i1,".Rdata"))
+  load(paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_hr_",i1,".Rdata"))
   result <- rbind(result,test.result.second.wald)
 }
 #SNP <- c(colnames(icog.julie),colnames(discovery.snp.icog)[1:18])
@@ -20,6 +21,7 @@ idx.match <- match(chr.pos.paper,
                    chr.pos)
 discovery_snp_new <- discovery_snp[idx.match,]
 result <- result[idx.match,]
+cbind(discovery_snp_new,result)
 # colnames(result)[c(2*(1:n.subtypes))-1] <- paste0("logodds_",c("Luminial_A","Luminal_B",
 #                                                                    "Luminal_B_HER2-",
 #                                                                    "HER2_Enriched",
@@ -30,14 +32,14 @@ result <- result[idx.match,]
 #                                                              "Triple Negative"))
 #   
 #   
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
 
 n <- nrow(discovery_snp_new)
 major.minor <- rep("c",n)
@@ -56,7 +58,8 @@ discovery_snp_new$marjor.minor <- major.minor
 
 
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.meta.result.Rdata"))
-
+idx <- which(CIMBA.BCAC.meta.result$CHR==17&
+               CIMBA.BCAC.meta.result$position==7571752)
 idx <- which(CIMBA.BCAC.meta.result$CHR==17&
                CIMBA.BCAC.meta.result$position==43681771)
 CIMBA.BCAC.meta.result[idx,]
@@ -65,9 +68,14 @@ idx.fil <- which(CIMBA.BCAC.meta.result$MarkerName%in%
                    discovery_snp_new$var_name)
 idx.match <- match(discovery_snp_new$var_name,CIMBA.BCAC.meta.result$MarkerName[idx.fil])
 
+-0.3495
+0.1033
+-0.3790843
+0.00445735
 
-
-
+var_new = (1/0.1033^2 + 1/0.00445735)^-1
+beta_new = var_new*(1/0.1033^2*-0.3495+1/0.00445735*-0.3790843)
+CI95withP(beta_new,sqrt(var_new))
 CIMBA.BCAC.meta.result.new <- CIMBA.BCAC.meta.result[idx.fil[idx.match],]
 -0.042938989
 0.006703173
@@ -88,8 +96,8 @@ CIMBA.p <- rep(0,n)
 CIMBA.OR <- rep("c",n)
 for(i in 1:n){
   if(discovery_snp_new$exp_freq_a1[i]>0.5){
-   effect <-  -CIMBA.BCAC.meta.result.new$Effect[i]
-   std <- CIMBA.BCAC.meta.result.new$StdErr[i]
+    effect <-  -CIMBA.BCAC.meta.result.new$Effect[i]
+    std <- CIMBA.BCAC.meta.result.new$StdErr[i]
   }else{
     effect <-  CIMBA.BCAC.meta.result.new$Effect[i]
     std <- CIMBA.BCAC.meta.result.new$StdErr[i]

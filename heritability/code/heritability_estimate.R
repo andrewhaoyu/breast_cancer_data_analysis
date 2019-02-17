@@ -63,9 +63,23 @@ result <- result[idx.match,]
 result_standard <- result_standard[idx.match,]
 freq = freq[idx.match]
 ###remove 3 SNP after conditional p-value threshold becomes 1e-06
+discovery_snp_new <- discovery_snp_new[-c(7,24,33),]
 result <- result[-c(7,24,33),]
 result_standard <- result_standard[-c(7,24,33),]
 freq = freq[-c(7,24,33)]
+#load the results from Oncoarray paper
+all_result <- fread("./data/oncoarray_bcac_public_release_oct17.txt",header=T)
+all_result <- all_result %>% 
+  mutate(chrpos=paste0(chr,":",position_b37))
+discovery_snp_new <- left_join(discovery_snp_new,all_result,
+                               by= "var_name")
+# result_standard <- cbind(as.numeric(discovery_snp_new$bcac_onco_icogs_gwas_beta),
+#                          as.numeric(discovery_snp_new$bcac_onco_icogs_gwas_se^2))
+result_standard <- cbind(as.numeric(discovery_snp_new$bcac_onco2_beta),
+                         as.numeric(discovery_snp_new$bcac_onco2_se)^2)
+  #discovery_snp_new %>% 
+  #select(bcac_onco_icogs_gwas_beta,
+   #      bcac_onco_icogs_gwas_se)
 ###convert the result to log odds ratio
 n.snp <- 32
 n.subtypes <- 5
@@ -78,11 +92,11 @@ dis.result <- result
 # }
 # dis.result[,c(2*(1:n.subtypes))] <-as.matrix(result[,c(2*(1:n.subtypes))])
 # dis.result <- as.data.frame(dis.result)
-
-colnames(dis.result)[c(2*(1:n.subtypes))-1] <- paste0("logodds_",c("Luminial A","Luminal B",
-                        "Luminal B HER2-",
-                        "HER2 Enriched",
-                        "Triple Negative"))
+dis.result <- as.data.frame(dis.result)
+colnames(dis.result)[c(2*(1:n.subtypes))-1] <- paste0("logodds_",c("Luminial_A","Luminal_B",
+                        "Luminal_B_HER2-",
+                        "HER2_Enriched",
+                        "Triple_Negative"))
 colnames(dis.result)[c(2*(1:n.subtypes))] <- paste0("var_",c("Luminial A","Luminal B",
                                                                    "Luminal B HER2-",
                                                                    "HER2 Enriched",
@@ -90,6 +104,12 @@ colnames(dis.result)[c(2*(1:n.subtypes))] <- paste0("var_",c("Luminial A","Lumin
 colnames(result_standard) <- c("logoddsd_standard",
                                "var_standard")
 dis.result <- cbind(dis.result,result_standard,freq)
+#dis.result[,c(11,12)] <- result_standard
+
+
+
+
+
 
 ##load the results for 178 known SNPs
 known.result <- matrix(0,178,13)
@@ -101,6 +121,19 @@ for(i in 1:178){
   load(paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i,".Rdata"))
   known.result[i,] <- Outvec(heter.result)
 }
+#Onco array paper doens't have the 178th known SNP 
+temp.result <- known.result[178,c(11:12)]
+###load Onco array results
+fine_map <- read.csv("./data/fine_mapping_annotated_clean.csv")
+fine_map <- fine_map %>% 
+  mutate(chrpos = paste0(CHR,":",position))
+fine_map_new <- left_join(fine_map,all_result,by="chrpos")
+#one snp duplicated
+fine_map_new <- fine_map_new[-c(62,120),]
+known.result[,c(11,12)] <- cbind(as.numeric(fine_map_new$bcac_onco2_beta),as.numeric(fine_map_new$bcac_onco2_se)^2)
+known.result[178,c(11,12)] <- temp.result
+
+
 
 #all snp.result
 all.result <- rbind(known.result,dis.result)

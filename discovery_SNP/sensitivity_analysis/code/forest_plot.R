@@ -9,8 +9,8 @@ n.coun <- 20
 all.countries[n.coun+1] <- "Summary"
 
 discover.casecase <- read.csv("./data/discovery_snp_casecase.csv",header = T)
-new.order <- c(1,9,15,13,2,6,5,8,17,4,10,18,
-                 3,14,7,19)
+new.order <- c(9,13,5,17,4,18,
+                 14,3,19)
 discover.casecase <- discover.casecase[,]
 
 library(forestplot)
@@ -73,12 +73,12 @@ grid.arrange(plot.list[[1]],plot.list[[2]],plot.list[[3]],plot.list[[4]],plot.li
 dev.off()
 png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot2.png",width=width,
     height= height, units="cm", res= 600)
-grid.arrange(plot.list[[7]],plot.list[[8]],plot.list[[9]],plot.list[[10]],plot.list[[11]],plot.list[[12]],nrow=3,ncol=2)
+grid.arrange(plot.list[[7]],plot.list[[8]],plot.list[[9]],nrow=2,ncol=2)
 dev.off()
-png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot3.png",width=width,
-    height= (height*2/3), units="cm", res= 600)
-grid.arrange(plot.list[[13]],plot.list[[14]],plot.list[[15]],plot.list[[16]],nrow=2,ncol=2)
-dev.off()
+# png("./discovery_SNP/sensitivity_analysis/result/sensitivity_plot3.png",width=width,
+#     height= (height*2/3), units="cm", res= 600)
+# grid.arrange(plot.list[[13]],plot.list[[14]],plot.list[[15]],plot.list[[16]],nrow=2,ncol=2)
+# dev.off()
 
 
 dev.off()

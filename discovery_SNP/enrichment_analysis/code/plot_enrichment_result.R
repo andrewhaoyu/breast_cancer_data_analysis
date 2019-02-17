@@ -369,7 +369,7 @@ names(annotation_colors) <- "Cell type"
 my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
 myBreaks <- c(seq(min(celltype220_data_H3K27ac), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(celltype220_data_H3K27ac)/paletteLength, max(celltype220_data_H3K27ac), length.out=floor(paletteLength/2)))
-png("H3K27_z.png", height = 24, width  = 18.5, units="cm",res = 300)
+png("H3K27_z.png", height = 1290, width  = 1017)
 #par(font.axis = 2)
 pheatmap(
   mat               = celltype220_data_H3K27ac,
@@ -385,7 +385,8 @@ pheatmap(
   # annotation_col    = mat_col,
   # annotation_colors = mat_colors,
   # drop_levels       = TRUE,
-  fontsize          = 12
+  fontsize          = 13,
+  cellwidth=220, cellheight=16
   # main              = "Default Heatmap"
 )
 #axis(side = 2, font = 2)
@@ -410,7 +411,7 @@ names(annotation_colors) <- "Cell type"
 my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
 myBreaks <- c(seq(min(celltype220_data_H3K4me1), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(celltype220_data_H3K4me1)/paletteLength, max(celltype220_data_H3K4me1), length.out=floor(paletteLength/2)))
-png("H3K4me1_z.png", height = 32, width  = 20, units="cm",res = 300)
+png("H3K4me1_z.png", height = 1290, width  = 1195)
 pheatmap(
   mat               = celltype220_data_H3K4me1,
   color             = my.color,
@@ -425,7 +426,8 @@ pheatmap(
   # annotation_col    = mat_col,
   # annotation_colors = mat_colors,
   # drop_levels       = TRUE,
-  fontsize          = 12
+  fontsize          = 11,
+  cellwidth=180, cellheight=10
   # main              = "Default Heatmap"
 )
 dev.off()
@@ -453,7 +455,7 @@ names(annotation_colors) <- "Cell type"
 my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
 myBreaks <- c(seq(min(celltype220_data_H3K4me3), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(celltype220_data_H3K4me3)/paletteLength, max(celltype220_data_H3K4me3), length.out=floor(paletteLength/2)))
-png("H3K4me3_z.png", height = 32, width  = 18.5, units="cm",res = 300)
+png("H3K4me3_z.png", height = 1290, width  = 1195)
 pheatmap(
   mat               = celltype220_data_H3K4me3,
   color             = my.color,
@@ -468,7 +470,8 @@ pheatmap(
   # annotation_col    = mat_col,
   # annotation_colors = mat_colors,
   # drop_levels       = TRUE,
-  fontsize          = 12
+  fontsize          = 11,
+  cellwidth=180, cellheight=10
   # main              = "Default Heatmap"
 )
 dev.off()
