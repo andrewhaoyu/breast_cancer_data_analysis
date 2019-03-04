@@ -50,9 +50,20 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
 #SNP <- discovery_snp$SNP.ICOGS
 
 ################match the discovery snps to the order in the paper
+data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+data2 <- as.data.frame(data2)
+y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+#y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+colnames(y.pheno.mis2) = c("Behaviour","ER",
+                           "PR","HER2","Grade")
+#x.test.all.mis2 <- data2[,c(27:203)]
+discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
+
+x.test.all.mis.dis <- discovery.snp.onco
+
 discovery_snp_paper_order <- read.csv("./data/discovery_snp_paper_order.csv",header=T)
 chr.pos.paper <- paste0(discovery_snp_paper_order$CHR,":",discovery_snp_paper_order$position)
-
+library(tidyverse)
 
 chr.pos <- paste0(discovery_snp$CHR.x,":",discovery_snp$position)
 
@@ -62,16 +73,20 @@ discovery_snp_new <- discovery_snp[idx.match,]
 result <- result[idx.match,]
 result_standard <- result_standard[idx.match,]
 freq = freq[idx.match]
+x.test.all.mis.dis <- x.test.all.mis.dis[,idx.match]
 ###remove 3 SNP after conditional p-value threshold becomes 1e-06
 discovery_snp_new <- discovery_snp_new[-c(7,24,33),]
 result <- result[-c(7,24,33),]
 result_standard <- result_standard[-c(7,24,33),]
 freq = freq[-c(7,24,33)]
+x.test.all.mis.dis <- x.test.all.mis.dis[,-c(7,24,33)]
 #load the results from Oncoarray paper
+library(data.table)
 all_result <- fread("./data/oncoarray_bcac_public_release_oct17.txt",header=T)
 all_result <- all_result %>% 
   mutate(chrpos=paste0(chr,":",position_b37))
-discovery_snp_new <- left_join(discovery_snp_new,all_result,
+discovery_snp_new <- left_join(discovery_snp_new,
+                               all_result,
                                by= "var_name")
 # result_standard <- cbind(as.numeric(discovery_snp_new$bcac_onco_icogs_gwas_beta),
 #                          as.numeric(discovery_snp_new$bcac_onco_icogs_gwas_se^2))
@@ -153,6 +168,9 @@ all.snp.explain <- rep(0,5)
 for(i in 1:5){
   all.snp.explain[i] = SigmaEst(all.result[,2*i-1],all.result[,2*i],all.result[,13]) 
 }
+############temp results for the Lumianl A like and standard log odds ratio of all the 210 identified SNPs
+write.csv(all.result,file="./heritability/result/all_snps_log_odds.csv")
+
 
 #overall
 i <- 6
@@ -185,3 +203,56 @@ colnames(result.sum) <- c("simga_all_identified_snps",
                           "sigma_gwas",
                           "all_gwas_proportion")
 write.csv(result.sum,file = "./heritability/result/result.sum.csv")
+
+############PRS for the top 1% increase risk compared to the standard
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+load(paste0("./risk_prediction/result/split.id.rdata"))
+#icog.test.id <- Generatetestid(subtypes.icog)
+#icog.train.id <- split.id[[1]]
+#onco.train.id <- split.id[[2]]
+onco.test.id <- split.id[[5]]
+
+
+
+data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+data2 <- as.data.frame(data2)
+y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
+onco.test <- c(1:nrow(y.pheno.mis2))
+#onco.test <- which(data2[,1]%in%onco.test.id)
+y.pheno.mis2 <- y.pheno.mis2[onco.test,]
+#y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+colnames(y.pheno.mis2) = c("Behaviour","PR",
+                           "ER","HER2","Grade")
+
+x.test.all.mis2_known <- data2[onco.test,c(27:203,205)]
+########all the 210 SNPs
+x.test.all.mis_dis <- x.test.all.mis.dis[onco.test,]
+x.test.all.mis2.all <- as.matrix(cbind(x.test.all.mis2_known,x.test.all.mis_dis))
+n <- nrow(y.pheno.mis2)
+#####PRS for everyone in OncoArray
+PRS <- matrix(0,n,6)
+#PRS_temp <- PRS[,1]
+for(i in 1:6){
+  PRS[,i] <- x.test.all.mis2.all%*%all.result[,2*i-1]
+}
+#####risk of top 1% vs. population average 
+
+RelativeRisk <- function(PRS_temp){
+  idx.control <- which(y.pheno.mis2[,1]==0)
+  PRS_temp_control <- PRS_temp[idx.control]
+idx <- which(PRS_temp >= quantile(PRS_temp_control,c(0.48))& PRS_temp <= quantile(PRS_temp_control,c(0.52)))
+  odds1 <- sum(y.pheno.mis2[idx,1])/(length(idx)-sum(y.pheno.mis2[idx,1]))
+  idx2 <- which(PRS_temp >= quantile(PRS_temp,0.99))
+  odds2 <- sum(y.pheno.mis2[idx2,1])/(length(idx2)-sum(y.pheno.mis2[idx2,1]))
+  or <- odds2/odds1
+  p <- 0.124
+  rr <- or/(1-p+(p*or))
+  return(rr)
+}
+idx.case <- which(y.pheno.mis2[,1]==1)
+PRS_temp_case <- PRS_temp[idx.case]
+PRS_temp <- PRS[,6]
+relative.risk.all <- rep(0,6)
+for(i in 1:6){
+  relative.risk.all[i] <- RelativeRisk(PRS[,i])
+}
