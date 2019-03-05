@@ -17,9 +17,10 @@ Meta95 <- function(p_vec,sample_vec){
   if(meta_p_high>=1){
     meta_p_high <- 1
   }
-  return(c(meta_p,meta_p_low,meta_p_high))
+  Q = sum((p_vec-meta_p)^2/var_vec)
+  p = pchisq(Q,n-1, lower.tail = F)
+  return(c(meta_p,meta_p_low,meta_p_high,p))
 }
-
 CI95 <- function(p,sample){
   if(p==1){
     p=0.99
@@ -90,37 +91,7 @@ ggplot(new.data,aes(x=label,y=Sensitivity,ymin=low,ymax=high,shape=Type,colour=T
 
 
 sensi <- read.csv("./data/CEDM_MRI_specificity.csv")
-Meta95 <- function(p_vec,sample_vec){
-  n <- length(p_vec)
-  var_vec <- rep(0,n)
-  for(i in 1:n){
-    p <- p_vec[i]
-    if(p==1){
-      p= 0.99
-    }
-    var_vec[i] <- p*(1-p)/sample_vec[i]
-  }
-  meta_var <- sum(1/var_vec)^-1
-  meta_p <- meta_var*sum(p_vec/var_vec)
-  meta_p_high <- meta_p+1.96*sqrt(meta_var)
-  meta_p_low <- meta_p-1.96*sqrt(meta_var)
-  if(meta_p_high>=1){
-    meta_p_high <- 1
-  }
-  return(c(meta_p,meta_p_low,meta_p_high))
-}
 
-CI95 <- function(p,sample){
-  if(p==1){
-    p=0.99
-  }
-  low <- p-1.96*sqrt(p*(1-p)/sample)
-  high <- p+1.96*sqrt(p*(1-p)/sample)
-  if(high>=1){
-    high = 1
-  }
-  return(c(low,high))
-}
 n <- nrow(sensi)
 MRI.95 <- matrix(0,nrow(sensi),2)
 for(i in 1:n){

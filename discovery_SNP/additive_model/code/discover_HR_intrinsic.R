@@ -82,11 +82,11 @@ y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
 #x.all.mis1 <- x.all.mis1[idx.complete,]
 x.covar.mis1 <- x.covar.mis1[idx.complete,]
 #colnames(x.all.mis1)[1] <- "gene"
-
-GenerateSelfXAll(y=y.pheno.mis1,
-                 x.self.design=snpvalue,
-                 baselineonly=NULL,additive=x.covar.mis1,
-                 pairwise.interaction=NULL,saturated=NULL)
+# 
+# GenerateSelfXAll(y=y.pheno.mis1,
+#                  x.self.design=snpvalue,
+#                  baselineonly=NULL,additive=x.covar.mis1,
+#                  pairwise.interaction=NULL,saturated=NULL)
 Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 z.standard <- Heter.result.Icog[[12]]
 M <- nrow(z.standard)
@@ -154,7 +154,7 @@ second.stage.sigma.meta <- meta.result[[2]]
 
 test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
 
-save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_hr_",i1,".Rdata"))
+save(test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_hr_",i1,".Rdata"))
 
 
 

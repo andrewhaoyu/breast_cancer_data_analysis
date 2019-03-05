@@ -21,7 +21,16 @@ idx.match <- match(chr.pos.paper,
                    chr.pos)
 discovery_snp_new <- discovery_snp[idx.match,]
 result <- result[idx.match,]
-cbind(discovery_snp_new,result)
+result <- cbind(discovery_snp_new,result)
+result <- result[,c(3,21:26)]
+colnames(result) <- c("SNP",
+                      "HR OR",
+                      "HR P",
+                      "HER2 enriched OR",
+                      "HER2 enriched p",
+                      "TN OR",
+                      "TN p")
+write.csv(result,file = "./discovery_SNP/additive_model/result/intrinsic_hr.csv")
 # colnames(result)[c(2*(1:n.subtypes))-1] <- paste0("logodds_",c("Luminial_A","Luminal_B",
 #                                                                    "Luminal_B_HER2-",
 #                                                                    "HER2_Enriched",

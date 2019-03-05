@@ -71,6 +71,11 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
   age <- data1[,204]
   idx.complete <- which(age!=888)
   y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
+ ##########
+ idx.case <- which(y.pheno.mis1[,1]==1)
+  age = age[idx.complete]
+  mean(age[idx.case])
+  
   x.all.mis1 <- x.all.mis1[idx.complete,]
   
   colnames(x.all.mis1)[1] <- "gene"

@@ -50,6 +50,8 @@ discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/dat
 #SNP <- discovery_snp$SNP.ICOGS
 
 ################match the discovery snps to the order in the paper
+
+library(data.table)
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
@@ -246,12 +248,24 @@ idx <- which(PRS_temp >= quantile(PRS_temp_control,c(0.48))& PRS_temp <= quantil
   odds2 <- sum(y.pheno.mis2[idx2,1])/(length(idx2)-sum(y.pheno.mis2[idx2,1]))
   or <- odds2/odds1
   p <- 0.124
-  rr <- or/(1-p+(p*or))
+   rr <- or/(1-p+(p*or))
   return(rr)
 }
 idx.case <- which(y.pheno.mis2[,1]==1)
-PRS_temp_case <- PRS_temp[idx.case]
 PRS_temp <- PRS[,6]
+idx.control <- which(y.pheno.mis2[,1]==0)
+PRS_temp_case <- PRS_temp[idx.case]
+PRS_temp_control <- PRS_temp[idx.control]
+qnorm(0.99,mean(PRS_temp_control),sd(PRS_temp_control))
+
+pnorm(1.376025,mean=mean(PRS_temp_control)+var(PRS_temp_control),sd = sd(PRS_temp_control),lower.tail = F)/pnorm(1.376025,mean=mean(PRS_temp_control),sd = sd(PRS_temp_control),lower.tail = F)
+
+
+
+
+# 
+# mean(PRS_temp_case)
+# sd(PRS_temp_case)
 relative.risk.all <- rep(0,6)
 for(i in 1:6){
   relative.risk.all[i] <- RelativeRisk(PRS[,i])
