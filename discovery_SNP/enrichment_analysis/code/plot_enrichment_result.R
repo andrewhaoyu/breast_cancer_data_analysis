@@ -11,11 +11,22 @@ TestDiff <- function(x1,s1,x2,s2){
 
 ##########baseline results main
 baseline_result <- read.csv("baseline_results_main.csv")
-png("baseline_main_results.png", height = 16, width  = 19.04, res = 300, units = "cm")
-low.95 <- baseline_result$Enrichment - baseline_result$Enrichment_std_error
-high.95 <- baseline_result$Enrichment + baseline_result$Enrichment_std_error
-baseline_result$high.95 <- high.95
-baseline_result$low.95 <- low.95
+#png("baseline_main_results.png", height = 16, width  = 19.04, res = 300, units = "cm")
+colnames(baseline_result)[12] <- "Subtypes_ori"
+library(tidyverse)
+baseline_result <- baseline_result %>% 
+  mutate(Subtypes=ifelse(Subtypes_ori=="HR+, HER2-, low grade",
+                         "Luminal A-like","TN")) %>% 
+  mutate(Enrichment = ifelse(Enrichment<=0,0,Enrichment)) %>% 
+  mutate(low.95 = Enrichment-Enrichment_std_error) %>% 
+  mutate(high.95 = Enrichment+Enrichment_std_error)
+  #mutate(low.95 = ifelse(low.95<=0,0,low.95))
+  
+    
+# low.95 <- baseline_result$Enrichment - baseline_result$Enrichment_std_error
+# high.95 <- baseline_result$Enrichment + baseline_result$Enrichment_std_error
+# baseline_result$high.95 <- high.95
+# baseline_result$low.95 <- low.95
 ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
   geom_bar(stat = "identity",
            position = "dodge",
@@ -26,10 +37,11 @@ ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
   theme(text = element_text(size=10),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold",hjust = 0.5,angle = 90),
         axis.text.y = element_text(face = "bold.italic"),
         axis.title.x = element_text(face = "bold"),
-        axis.title.y = element_text(face = "bold"))+
+        axis.title.y = element_text(face = "bold"),
+        legend.text=element_text(size=12))+
   geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
   coord_flip()+
-  scale_y_continuous(breaks=c(-5,0,1,5,10,15,20))+
+  scale_y_continuous(breaks=c(0,5,10,15,20))+
   geom_errorbar(aes(ymax = high.95,
                       ymin = low.95,
                       shape=Subtypes),
@@ -45,11 +57,19 @@ dev.off()
 
 
 baseline_result <- read.csv("baseline_results_main.csv")
+colnames(baseline_result)[12] <- "Subtypes_ori"
+baseline_result <- baseline_result %>% 
+  mutate(Subtypes=ifelse(Subtypes_ori=="HR+, HER2-, low grade",
+                         "Luminal A-like","TN")) %>% 
+  mutate(Enrichment = ifelse(Enrichment<=0,0,Enrichment)) %>% 
+  mutate(low.95 = Enrichment-Enrichment_std_error) %>% 
+  mutate(high.95 = Enrichment+Enrichment_std_error)
+
 png("baseline_main_results_95.png", height = 16, width  = 19.04, res = 300, units = "cm")
-low.95 <- baseline_result$Enrichment - baseline_result$Enrichment_std_error
-high.95 <- baseline_result$Enrichment + baseline_result$Enrichment_std_error
-baseline_result$high.95 <- high.95
-baseline_result$low.95 <- low.95
+# low.95 <- baseline_result$Enrichment - baseline_result$Enrichment_std_error
+# high.95 <- baseline_result$Enrichment + baseline_result$Enrichment_std_error
+# baseline_result$high.95 <- high.95
+# baseline_result$low.95 <- low.95
 ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
   geom_bar(stat = "identity",
            position = "dodge",
@@ -60,15 +80,16 @@ ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
   theme(text = element_text(size=10),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold",hjust = 0.5,angle = 90),
         axis.text.y = element_text(face = "bold.italic"),
         axis.title.x = element_text(face = "bold"),
-        axis.title.y = element_text(face = "bold"))+
-  #geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
+        axis.title.y = element_text(face = "bold"),
+        legend.text=element_text(size=12))+
+  geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
   coord_flip()+
-  scale_y_continuous(breaks=c(-5,0,5,10,15,20))+
- geom_errorbar(aes(ymax = high.95, 
-                     ymin = low.95,
-                     shape=Subtypes),
-                 position= "dodge")+
-   scale_color_manual(values=c("black","black"))
+  scale_y_continuous(breaks=c(0,5,10,15,20))+
+  geom_errorbar(aes(ymax = high.95,
+                    ymin = low.95,
+                    shape=Subtypes),
+                position= "dodge")+
+  scale_color_manual(values=c("black","black"))
 # 
 #geom_hline (yintercept = -log10(0.05/220), color = "red")+
 #xlab("Cell types")+
@@ -83,11 +104,19 @@ dev.off()
 
 ###########baseline results with 500kb extension
 baseline_result <- read.csv("baseline_500kb.csv")
+colnames(baseline_result)[12] <- "Subtypes_ori"
+baseline_result <- baseline_result %>% 
+  mutate(Subtypes=ifelse(Subtypes_ori=="HR+, HER2-, low grade",
+                         "Luminal A-like","TN")) %>% 
+  mutate(Enrichment = ifelse(Enrichment<=0,0,Enrichment)) %>% 
+  mutate(low.95 = Enrichment-Enrichment_std_error) %>% 
+  mutate(high.95 = Enrichment+Enrichment_std_error)
 
-low.95 <- baseline_result$Enrichment - baseline_result$Enrichment_std_error
-high.95 <- baseline_result$Enrichment + baseline_result$Enrichment_std_error
-baseline_result$high.95 <- high.95
-baseline_result$low.95 <- low.95
+# 
+# low.95 <- baseline_result$Enrichment - baseline_result$Enrichment_std_error
+# high.95 <- baseline_result$Enrichment + baseline_result$Enrichment_std_error
+# baseline_result$high.95 <- high.95
+# baseline_result$low.95 <- low.95
 
 png("baseline_results_500bp.png",height = 16, width  = 19.04, res = 300, units = "cm" )
 ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
@@ -111,27 +140,27 @@ geom_errorbar(aes(ymax = high.95,
   scale_color_manual(values=c("black","black"))
 dev.off()
 
-png("baseline_results_500bp_95.png",height = 16, width  = 19.04, res = 300, units = "cm" )
-ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
-  geom_bar(stat = "identity",
-           position = "dodge",
-           aes(fill=Subtypes)
-  )+
-  theme_minimal()+  theme(axis.text.x = element_text(angle = 0, hjust = 1)) + ylab("Enrichment") + 
-  #ggtitle("Enrichment analysis of 220 celltypes")  + 
-  theme(text = element_text(size=10),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold",hjust = 0.5,angle = 0),
-        axis.text.y = element_text(face = "bold.italic"),
-        axis.title.x = element_text(face = "bold"),
-        axis.title.y = element_text(face = "bold"))+
-  #geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
-  coord_flip()+
-  scale_y_continuous(breaks=c(-5,0,5,10,15,20))+
-geom_errorbar(aes(ymax = high.95,
-                     ymin = low.95,
-                     shape=Subtypes),
-                 position= "dodge")+
-   scale_color_manual(values=c("black","black"))
-dev.off()
+# png("baseline_results_500bp_95.png",height = 16, width  = 19.04, res = 300, units = "cm" )
+# ggplot(data=baseline_result,aes(x=Annotation,y=Enrichment))+
+#   geom_bar(stat = "identity",
+#            position = "dodge",
+#            aes(fill=Subtypes)
+#   )+
+#   theme_minimal()+  theme(axis.text.x = element_text(angle = 0, hjust = 1)) + ylab("Enrichment") + 
+#   #ggtitle("Enrichment analysis of 220 celltypes")  + 
+#   theme(text = element_text(size=10),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold",hjust = 0.5,angle = 0),
+#         axis.text.y = element_text(face = "bold.italic"),
+#         axis.title.x = element_text(face = "bold"),
+#         axis.title.y = element_text(face = "bold"))+
+#   #geom_hline(yintercept = 1, linetype="dashed", color = "blue")+
+#   coord_flip()+
+#   scale_y_continuous(breaks=c(-5,0,5,10,15,20))+
+# geom_errorbar(aes(ymax = high.95,
+#                      ymin = low.95,
+#                      shape=Subtypes),
+#                  position= "dodge")+
+#    scale_color_manual(values=c("black","black"))
+# dev.off()
 
 
 
@@ -142,7 +171,7 @@ baseline1.lua <- read.table("baseline.1.lumA.results",header=T)
 baseline2.TN <- read.table("baseline.2.TN.results",header=T)
 
 n <- nrow(baseline1.lua)
-subtypes <- rep(c("Luminal A like","Triple negative"),n)
+subtypes <- rep(c("Luminal A-like","TN"),n)
 cell_types <- rep("c",2*n)
 log10p <- rep(0,2*n)
 for(i in 1:n){
@@ -352,7 +381,8 @@ names(annotation_colors_full$group) <- c("Adipose",
 
 ###############generate the plot for H3K27ac
 idx <- which(celltypes220_lua$mark=="H3K27ac")
-
+head(celltype220_data)
+colnames(celltype220_data) <- c("Luminal A-like","TN")
 celltype220_data_H3K27ac <- celltype220_data[idx,]
 row.names(celltype220_data_H3K27ac) <- as.character(celltypes220_lua$cell_type[idx])
 group_H3K27ac <- data.frame(group = as.character(cell_type_10[idx,]),stringsAsFactors = F)
@@ -369,7 +399,7 @@ names(annotation_colors) <- "Cell type"
 my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
 myBreaks <- c(seq(min(celltype220_data_H3K27ac), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(celltype220_data_H3K27ac)/paletteLength, max(celltype220_data_H3K27ac), length.out=floor(paletteLength/2)))
-png("H3K27_z.png", height = 1290, width  = 1017)
+png("H3K27_z.png", height = 32, width  = 32, units="cm",res = 450)
 #par(font.axis = 2)
 pheatmap(
   mat               = celltype220_data_H3K27ac,
@@ -411,7 +441,7 @@ names(annotation_colors) <- "Cell type"
 my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
 myBreaks <- c(seq(min(celltype220_data_H3K4me1), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(celltype220_data_H3K4me1)/paletteLength, max(celltype220_data_H3K4me1), length.out=floor(paletteLength/2)))
-png("H3K4me1_z.png", height = 1290, width  = 1195)
+png("H3K4me1_z.png", height = 32, width  = 32, units="cm",res = 450)
 pheatmap(
   mat               = celltype220_data_H3K4me1,
   color             = my.color,
@@ -455,7 +485,7 @@ names(annotation_colors) <- "Cell type"
 my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
 myBreaks <- c(seq(min(celltype220_data_H3K4me3), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(celltype220_data_H3K4me3)/paletteLength, max(celltype220_data_H3K4me3), length.out=floor(paletteLength/2)))
-png("H3K4me3_z.png", height = 1290, width  = 1195)
+png("H3K4me3_z.png", height = 32, width  = 32, units="cm",res = 450)
 pheatmap(
   mat               = celltype220_data_H3K4me3,
   color             = my.color,
@@ -497,7 +527,7 @@ names(annotation_colors) <- "Cell type"
 my.color <- colorRampPalette(c("dodgerblue4", "white", "#c0392b"))(paletteLength)
 myBreaks <- c(seq(min(celltype220_data_H3K9ac), 0, length.out=ceiling(paletteLength/2) + 1), 
               seq(max(celltype220_data_H3K9ac)/paletteLength, max(celltype220_data_H3K9ac), length.out=floor(paletteLength/2)))
-png("H3K9ac_z.png", height = 32, width  = 18.5, units="cm",res = 300)
+png("H3K9ac_z.png",  height = 32, width  = 32, units="cm",res = 450)
 pheatmap(
   mat               = celltype220_data_H3K9ac,
   color             = my.color,

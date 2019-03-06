@@ -113,11 +113,11 @@ combn.list <- combn(M,2)
 n <- ncol(combn.list)
 cor.vec.high <- cor.vec.low <- cor.vec <- rep(0,n)
 subtypes <- rep("c",n)
-names <- c("HR+, HER2-, low grade",
-           "HR+, HER2-, high grade",
-           "HR+, HER2+",
-           "HR-, HER2+",
-           "HR-, HER2-")
+names <- c("Luminal A-like",
+           "Luminal B, HER2-negative-like",
+           "Luminal B-like ",
+           "HER2-enriched-like ",
+           "TN")
 for(i in n:1){
   subtypes[i] <- paste0(names[combn.list[1,i]],
                      " vs ",
@@ -136,18 +136,21 @@ cor.data <- cor.data[order(cor.data[,2]),]
 cor.data[,1] <- factor(cor.data[,1],
                        levels=as.character(cor.data[,1]))
 library(ggplot2)
+
+png(filename="genetic_correlation_plot_ci.png",width=13,heigh=9.5,units="in",res=600)
 ggplot(cor.data,aes(x=subtypes.f,y=cor.vec))+
   geom_point(size=4)+
   geom_errorbar(aes(ymax = cor.vec.high, ymin = cor.vec.low))+
   theme_minimal()+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylab("Genetic correlation") + 
   ggtitle("Genetic correlation between five intrinsic subtypes")  + 
-  theme(text = element_text(size=10),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold"),
+  theme(text = element_text(size=18),plot.title = element_text(hjust = 0.5,face = "bold"),axis.text.x = element_text(face = "bold"),
         axis.text.y = element_text(face = "bold.italic"),
         axis.title.x = element_text(face = "bold"),
         axis.title.y = element_text(face = "bold"))+
   xlab("Intrinsic subtypes")+
   scale_y_continuous(limits=c(0,1))+
   coord_flip()
+dev.off()
   #geom_hline (yintercept = -log10(0.05/220), color = "red")+
   
   # coord_flip()+
@@ -218,16 +221,16 @@ my.color <- colorRampPalette(c("white", "dodgerblue4"))(paletteLength)
 myBreaks <- c(seq(0, max(correlation.matrix), length.out=floor(paletteLength)))
 
 png(filename="meta_heatmap_two_stage.png",width=10,heigh=10,units="in",res=600)
-colnames(correlation.matrix) <- c("HR+, HER2-, low grade",
-                                  "HR+, HER2-, high grade",
-                                  "HR+, HER2+",
-                                  "HR-, HER2+",
-                                  "HR-, HER2-")
-rownames(correlation.matrix) <- c("HR+, HER2-, low grade",
-                                  "HR+, HER2-, high grade",
-                                  "HR+, HER2+",
-                                  "HR-, HER2+",
-                                  "HR-, HER2-")
+colnames(correlation.matrix) <- c("Luminal A-like",
+                                  "Luminal B, HER2-negative-like",
+                                  "Luminal B-like ",
+                                  "HER2-enriched-like ",
+                                  "TN")
+rownames(correlation.matrix) <- c("Luminal A-like",
+                                  "Luminal B, HER2-negative-like",
+                                  "Luminal B-like ",
+                                  "HER2-enriched-like ",
+                                  "TN")
 corrplot(as.matrix(correlation.matrix),
          method = "circle",
          #p.mat = p.value,
@@ -238,6 +241,7 @@ corrplot(as.matrix(correlation.matrix),
          #rect.col = "navy", plotC = "rect", cl.pos = "n",
          #col = my.color,
         # method = "color",
+        tl.cex=1.2,
          addrect=2, 
         order = "hclust",
          tl.col = "black", 

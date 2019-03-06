@@ -257,9 +257,10 @@ idx.control <- which(y.pheno.mis2[,1]==0)
 PRS_temp_case <- PRS_temp[idx.case]
 PRS_temp_control <- PRS_temp[idx.control]
 qnorm(0.99,mean(PRS_temp_control),sd(PRS_temp_control))
+qnorm(0.01,mean(PRS_temp_control),sd(PRS_temp_control))
+result <- pnorm(1.376025,mean=mean(PRS_temp_control)+var(PRS_temp_control),sd = sd(PRS_temp_control),lower.tail = F)/pnorm(1.376025,mean=mean(PRS_temp_control),sd = sd(PRS_temp_control),lower.tail = F)
 
-pnorm(1.376025,mean=mean(PRS_temp_control)+var(PRS_temp_control),sd = sd(PRS_temp_control),lower.tail = F)/pnorm(1.376025,mean=mean(PRS_temp_control),sd = sd(PRS_temp_control),lower.tail = F)
-
+result2 <- pnorm(-1.437285,mean=mean(PRS_temp_control)+var(PRS_temp_control),sd = sd(PRS_temp_control),lower.tail = T)/pnorm(-1.437285,mean=mean(PRS_temp_control),sd = sd(PRS_temp_control),lower.tail = T)
 
 
 
