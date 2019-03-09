@@ -11,5 +11,11 @@ for(i in 1:178){
                                                       heter.result[[2]]))
 }
 result <- result[,c(1:6)]
-
+colnames(result) <- c("HR OR",
+                      "HR p",
+                      "HER2 enriched OR",
+                      "HER2 enriched P",
+                      "TN OR",
+                      "TN p")
+write.csv(result,file="./heter_result_hr.csv")
 
