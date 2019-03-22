@@ -208,10 +208,11 @@ colnames(baseline_data) <- c("Category",
 ############analysze the baseline results
 
 idx1 <- which(baseline1.lua$Enrichment_p<=0.05/52)
-baseline1.lua[idx1,]
+baseline1.lua.sig <- baseline1.lua[idx1,]
+baseline1.lua.sig[order(baseline1.lua.sig$Enrichment_p),]
 idx2 <- which(baseline2.TN$Enrichment_p<=0.05/52)
-baseline2.TN[idx2,]
-baseline2.TN[order(baseline2.TN$Enrichment_p),]
+baseline2.TN.sig <- baseline2.TN[idx2,]
+baseline2.TN.sig[order(baseline2.TN.sig$Enrichment_p),]
 TestDiff(baseline1.lua$Enrichment,
          baseline1.lua$Enrichment_std_error,
          baseline2.TN$Enrichment,

@@ -150,10 +150,70 @@ fine_map_new <- fine_map_new[-c(62,120),]
 known.result[,c(11,12)] <- cbind(as.numeric(fine_map_new$bcac_onco2_beta),as.numeric(fine_map_new$bcac_onco2_se)^2)
 known.result[178,c(11,12)] <- temp.result
 
+#########load onco array dataset
+data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+data2 <- as.data.frame(data2)
+y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+#y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+colnames(y.pheno.mis2) = c("Behaviour","ER",
+                           "PR","HER2","Grade")
+names2 = colnames(data2)
+idxi1 = which(names2=="rs554219")
+x.test.all.mis2 <- data2[,c(27:203,idxi1)]
+#LD pruning and position pruning
+known.snp.infor <- fine_map[,c(1,3,4)]
+discovery.snp.infor <- discovery_snp_new[,c(3,4,5)]
+colnames(known.snp.infor) <- colnames(discovery.snp.infor) <- 
+  c("SNP","chr","position")
+all.snp.infor <- rbind(known.snp.infor,discovery.snp.infor)
+x.test.all <- cbind(x.test.all.mis2,x.test.all.mis.dis)
+colnames(x.test.all) <- all.snp.infor[,1]
+p.value.known <- fine_map_new$bcac_onco_icogs_gwas_P1df
+
+idx.control <- which(y.pheno.mis2[,1]==0)
+
+LD2 <- cor(x.test.all.mis2[idx.control,])^2
+known.snp.infor.p <- cbind(known.snp.infor,p.value.known)
+colnames(known.snp.infor.p) <- c("SNP","CHR","position",
+                                 "p.value")
+known.snp.infor.pruned <- LD_pruning(known.snp.infor.p,LD2)
+
+idx.fil <- which(known.snp.infor.p$SNP%in%known.snp.infor.pruned$SNP)
+
+
+
+
+LD_pruning = function(sig_SNPs,LD2){
+  sig_SNPs_temp =sig_SNPs
+  filter_result = NULL
+  LD2.temp =LD2
+  temp.ind = 1
+  while(nrow(sig_SNPs_temp)!=0){
+    
+    idx = which.min(sig_SNPs_temp$p.value)
+    filter_result = rbind(filter_result,sig_SNPs_temp[idx,])
+    LD2.single = LD2.temp[idx,]
+    idx.cut = which( LD2.single>=0.1)
+    position.range <- 500*10^3
+    filter_result_position = sig_SNPs_temp$position[idx]
+    filter_CHR = sig_SNPs_temp$CHR[idx]
+    idx.cut2 <- which((sig_SNPs_temp$position>=filter_result_position-position.range)&(sig_SNPs_temp$position<=filter_result_position+position.range)&(sig_SNPs_temp$CHR==filter_CHR ))
+    idx.cut <- c(idx.cut,idx.cut2)
+    idx.cut <- unique(idx.cut)
+    LD2.temp = LD2.temp[-idx.cut,-idx.cut]
+    LD2.temp = as.matrix(LD2.temp)
+    sig_SNPs_temp = sig_SNPs_temp[-idx.cut,]
+    temp.ind = temp.ind+1
+  }
+  return(filter_result)
+}
+
+
+
 
 
 #all snp.result
-all.result <- rbind(known.result,dis.result)
+all.result <- rbind(known.result[idx.fil,],dis.result)
 #load in the heritability estimate
 heri.est <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/BCAC_heritability.csv")
 #reorder heri.est 

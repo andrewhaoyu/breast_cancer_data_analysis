@@ -1,12 +1,18 @@
 library(data.table)
 library(bc2)
 #data <- fread("./data/dataset_montse_20180522.txt")
-setwd('/Users/haoyuzhang/GoogleDrive/breast_cancer_data_analysis (1)')
-data <- fread("./data/Dataset_Montse_2018-10-10.txt")
+setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
+data <- fread("./data/Dataset_Montse_20190320.txt")
+#data <- fread("./data/Dataset_Montse_2018-10-10.txt")
 ##############we only focus on the invasive breast cancer cases
 idx.invasive <- which(data$status==0|data$status==1)
 data <- data[idx.invasive]
 
+
+idx.try <- which(data$design_cat==0&data$molgroup==2)
+data.new <- data[idx.try,]
+table(data.new$ER_status1,data.new$PR_status1,
+      data.new$HER2_status1,data.new$Grade1)
 
 #############put the missing tumor characteristics as 888
 idx.ER.mis <- which(data$status==1&is.na(data$ER_status1))
@@ -68,6 +74,11 @@ write.xlsx(model.1[[5]]
            sheetName = "population_based_second_stage")
 
 
+############ population based study
+idx1 <- which(data$design_cat==0)
+data1 <- data[idx1,]
+model1 <- multinom(molgroup~as.factor(breastmos_cat)+as.factor(parity_cat)+as.factor(agefftp_cat)+study+refage,data=data1, maxit= 500)
+coef(model1)
 
 
 
@@ -78,7 +89,7 @@ write.xlsx(model.1[[5]]
 
 
 
-
+############non population based study
 idx2 <- which(data$design_cat==1)
 data2 <- data[idx2,]
 model.2 <- multinom(molgroup~as.factor(breastmos_cat)+study+refage,data=data2, maxit= 500)
@@ -87,7 +98,3 @@ coef(model.2)
 
 
 
-
-
-model1 <- multinom(molgroup~as.factor(breastmos_cat)+as.factor(parity_cat)+as.factor(agefftp_cat)+study+refage,data=data1, maxit= 500)
-coef(model1)
