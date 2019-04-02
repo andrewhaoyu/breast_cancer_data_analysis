@@ -4,7 +4,7 @@ i1 = as.numeric(args[[1]])
 library(data.table)
 library(bc2)
 #data <- fread("./data/dataset_montse_20180522.txt")
-setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 data <- fread("./data/Dataset_Montse_20190322.txt")
 #data <- fread("./data/Dataset_Montse_2018-10-10.txt")
 
@@ -62,6 +62,15 @@ imp <- mice(all.covariates,m=1,seed=i1,print=FALSE)
 
 all.covariates.c <- complete(imp,1)
 new.data1 <- data.frame(data1$molgroup,all.covariates.c)
+colnames(new.data1) <- c("molgroup",
+                         "agemenarche_cat",
+                         "parity_cat",
+                         "mensagelast_cat",
+                         "agefftp_cat",
+                         "breastmos_cat",
+                         "lastchildage_cat",
+                         "study",
+                         "refage")
 model1 <- multinom(molgroup~as.factor(agemenarche_cat)+
                      as.factor(parity_cat)+
                      as.factor(mensagelast_cat)+
@@ -72,7 +81,7 @@ model1 <- multinom(molgroup~as.factor(agemenarche_cat)+
 coef.1 <- coef(model1)
 covar.1 <- vcov(model1)
 result <- list(coef.1,covar.1)
-save(result)
+save(result,file=paste0("./risk_factor/result/poly_imp",i1,".Rdata"))
 
 
 

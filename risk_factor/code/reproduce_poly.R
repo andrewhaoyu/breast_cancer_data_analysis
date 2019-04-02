@@ -44,6 +44,18 @@ colnames(coef.1)[1:26] <- c("Intercept",
 
 
 
+#reorganize the covariance matrix to match coef data.frame
+#columns are the variables
+n.var <- ncol(coef.1)
+#rows are the 5 intrinsic subtypes plus 9 
+n.sub <- 6
+var.1 <- coef.1
+for(i in 1:n.var){
+  var.1[,i] <- diag(covar.1[c(i+n.var*(0:(n.sub-1))),c(i+n.var*(0:(n.sub-1)))])
+}
+
+GenerateP <- function(coef,)
+
 
 
 
@@ -89,6 +101,7 @@ all.covariates <- data.frame(as.factor(agemenarche_cat),
                                as.factor(lastchildage_cat),
                                study,
                               refage)
+
 # time1 = proc.time()
 # imp <- mice(all.covariates,m=1,seed=1,print=FALSE)
 # time = proc.time()-time1
