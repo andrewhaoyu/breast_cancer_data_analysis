@@ -1,3 +1,6 @@
+args = commandArgs(trailingOnly = T)
+i1 = as.numeric(args[[1]])
+
 library(data.table)
 library(bc2)
 #data <- fread("./data/dataset_montse_20180522.txt")
@@ -25,41 +28,6 @@ library(dplyr)
 data1 = data %>% filter(design_cat==0)
 ###############polytomous model 
 library(nnet)
-model1 <- multinom(molgroup~as.factor(agemenarche_cat)+
-                     as.factor(parity_cat)+
-                     as.factor(mensagelast_cat)+
-                     as.factor(agefftp_cat)+
-                     as.factor(breastmos_cat)+
-                     as.factor(lastchildage_cat)+
-                     +study+refage,data=data1, maxit= 500)
-coef.1 <- coef(model1)
-covar.1 <- vcov(model1)
-colnames(coef.1)[1:26] <- c("Intercept",
-                            paste0("agemenarche_cat",c(1,2,3,9)),
-                            paste0("parity_cat",c(1,2,3,4,9)),
-                            paste0("mensagelast_cat",c(1,2,9)),
-                            paste0("agefftp_cat",c(2,3,4,9)),
-                            paste0("breastmos_cat",c(2,3,4,5,9)),
-                            paste0("lastchildage_cat",c(2,3,4,9)))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#delete <- na.action(model1)
-#print(delete)
-
-
 ######puting all of the missing data as NA for mice package to run
 agemenarche_cat <- data1$agemenarche_cat
 idx <- which(agemenarche_cat==9)
@@ -82,13 +50,44 @@ lastchildage_cat[idx] <- NA
 study <- data1$study
 refage <- data1$refage
 all.covariates <- data.frame(as.factor(agemenarche_cat),
-                               as.factor(parity_cat),
-                               as.factor(mensagelast_cat),
-                               as.factor(agefftp_cat),
-                               as.factor(breastmos_cat),
-                               as.factor(lastchildage_cat),
-                               study,
-                              refage)
+                             as.factor(parity_cat),
+                             as.factor(mensagelast_cat),
+                             as.factor(agefftp_cat),
+                             as.factor(breastmos_cat),
+                             as.factor(lastchildage_cat),
+                             study,
+                             refage)
+library(mice)
+imp <- mice(all.covariates,m=1,seed=i1,print=FALSE)
+
+all.covariates.c <- complete(imp,1)
+new.data1 <- data.frame(data1$molgroup,all.covariates.c)
+model1 <- multinom(molgroup~as.factor(agemenarche_cat)+
+                     as.factor(parity_cat)+
+                     as.factor(mensagelast_cat)+
+                     as.factor(agefftp_cat)+
+                     as.factor(breastmos_cat)+
+                     as.factor(lastchildage_cat)+
+                     +study+refage,data=new.data1, maxit= 500)
+coef.1 <- coef(model1)
+covar.1 <- vcov(model1)
+result <- list(coef.1,covar.1)
+save(result)
+
+
+
+
+
+# colnames(coef.1)[1:26] <- c("Intercept",
+#                             paste0("agemenarche_cat",c(1,2,3,9)),
+#                             paste0("parity_cat",c(1,2,3,4,9)),
+#                             paste0("mensagelast_cat",c(1,2,9)),
+#                             paste0("agefftp_cat",c(2,3,4,9)),
+#                             paste0("breastmos_cat",c(2,3,4,5,9)),
+#                             paste0("lastchildage_cat",c(2,3,4,9)))
+# 
+
+
 # time1 = proc.time()
 # imp <- mice(all.covariates,m=1,seed=1,print=FALSE)
 # time = proc.time()-time1
@@ -185,13 +184,13 @@ idx1 <- which(data$design_cat==0)
 ###########two-stage model based on population based study
 model.1 <- TwoStageModel(y=y[idx1,],
                          additive = cbind(agefftp_mat,
-                                         breast_mat,
-                                         parity_mat,
-                                         refage)[idx1,],
+                                          breast_mat,
+                                          parity_mat,
+                                          refage)[idx1,],
                          missingTumorIndicator = 888
-                         )
+)
 write.xlsx(model.1[[4]]
-  ,file = "risk_factor_result_110118.xlsx",
+           ,file = "risk_factor_result_110118.xlsx",
            sheetName = "population_based_second_stage")
 write.xlsx(model.1[[5]]
            ,file = "risk_factor_result_110118.xlsx",
