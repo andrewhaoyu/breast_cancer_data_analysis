@@ -76,7 +76,7 @@ model1 <- multinom(molgroup~as.factor(agemenarche_cat)+
                      as.factor(mensagelast_cat)+
                      as.factor(agefftp_cat)+
                      as.factor(breastmos_cat)+
-                     as.factor(lastchildage_cat)+
+                    # as.factor(lastchildage_cat)+
                      +study+refage,data=new.data1, maxit= 500)
 coef.1 <- coef(model1)
 covar.1 <- vcov(model1)
@@ -133,95 +133,95 @@ save(result,file=paste0("./risk_factor/result/poly_imp",i1,".Rdata"))
 ###########create the dummy variable for breastmos_cat
 ###########create the dummy variable for agefftp_cat
 ###########create the dummy variable for lastchildage_mat
-agemenarche_mat <- model.matrix(~as.factor(data1$agemenarche_cat)-1)[,-1]
-colnames(agemenarche_mat) <- paste0("agemenarche_cat",c(1:3,9))
-parity_mat <- model.matrix(~as.factor(data1$parity_cat)-1)[,-1]
-colnames(parity_mat) <- paste0("parity_cat",c(1:4,9))
-mensagelast_mat <- model.matrix(~as.factor(data1$mensagelast_cat)-1)[,-1]
-colnames(mensagelast_mat) <- paste0("mensagelast_cat",c(1:2,9))
-agefftp_mat <- model.matrix(~as.factor(data1$agefftp_cat)-1)[,-1]
-colnames(agefftp_mat) <- paste0("agefftp",c(1:4,9))
-breastmos_mat <- model.matrix(~as.factor(data1$breastmos_cat)-1)[,-1]
-colnames(breastmos_mat) <- paste0("breastmos_cat",c(1:5,9))
-lastchildage_mat <- model.matrix(~as.factor(data1$lastchildage_cat)-1)[,-1]
-colnames(lastchildage_mat) <- paste0("lastchildage_cat",c(1:4,9))
-refage <- data$refage
-
-
-
-
-
-# idx.try <- which(data$design_cat==0&data$molgroup==2)
-# data.new <- data[idx.try,]
-# table(data.new$ER_status1,data.new$PR_status1,
-#       data.new$HER2_status1,data.new$Grade1)
-
-#############put the missing tumor characteristics as 888
-idx.ER.mis <- which(data$status==1&is.na(data$ER_status1))
-data$ER_status1[idx.ER.mis] <- 888
-idx.PR.mis <- which(data$status==1&is.na(data$PR_status1))
-data$PR_status1[idx.PR.mis] <- 888
-idx.HER2.mis <- which(data$status==1&is.na(data$HER2_status1))
-data$HER2_status1[idx.HER2.mis] <- 888
-idx.grade.mis <- which(data$status==1&is.na(data$Grade1))
-data$Grade1[idx.grade.mis] <- 888
-#############put the subject BCAC-16687664 HER2 status as 1
-idx <- which(data$HER2_status1==2)
-data$HER2_status1[idx] <- 1
-#############check the result
-table(data$status,data$ER_status1)
-table(data$status,data$PR_status1)
-table(data$status,data$HER2_status1)
-table(data$status,data$Grade1)
-library(nnet)
-############collapes breast mos cat 0,1
-############collapes age fftp cat 0,1
-data$breastmos_cat[data$breastmos_cat==0] <- 1
-data$agefftp_cat[data$agefftp_cat==0] <- 1
-###########create the phenotype file
-y <- cbind(data$status,data$ER_status1,data$PR_status1,
-           data$HER2_status1,data$Grade1)
-colnames(y) <- c("casecontrol",
-                 "ER",
-                 "PR",
-                 "HER2",
-                 "Grade")
-
-############don't adjust for study
-############population based study
-idx1 <- which(data$design_cat==0)
-###########two-stage model based on population based study
-model.1 <- TwoStageModel(y=y[idx1,],
-                         additive = cbind(agefftp_mat,
-                                          breast_mat,
-                                          parity_mat,
-                                          refage)[idx1,],
-                         missingTumorIndicator = 888
-)
-write.xlsx(model.1[[4]]
-           ,file = "risk_factor_result_110118.xlsx",
-           sheetName = "population_based_second_stage")
-write.xlsx(model.1[[5]]
-           ,file = "risk_factor_result_110118.xlsx",
-           sheetName = "population_based_second_stage")
-
-
-############ population based study
-
-
-
-
-# model.1 <- multinom(molgroup~as.factor(agefftp_cat)+as.factor(breastmos_cat)+as.factor(parity_cat)+study+refage,data=data1, maxit= 500)
-# coef(model.1)
-
-
-
-
-############non population based study
-idx2 <- which(data$design_cat==1)
-data2 <- data[idx2,]
-model.2 <- multinom(molgroup~as.factor(breastmos_cat)+study+refage,data=data2, maxit= 500)
-coef(model.2)
+# agemenarche_mat <- model.matrix(~as.factor(data1$agemenarche_cat)-1)[,-1]
+# colnames(agemenarche_mat) <- paste0("agemenarche_cat",c(1:3,9))
+# parity_mat <- model.matrix(~as.factor(data1$parity_cat)-1)[,-1]
+# colnames(parity_mat) <- paste0("parity_cat",c(1:4,9))
+# mensagelast_mat <- model.matrix(~as.factor(data1$mensagelast_cat)-1)[,-1]
+# colnames(mensagelast_mat) <- paste0("mensagelast_cat",c(1:2,9))
+# agefftp_mat <- model.matrix(~as.factor(data1$agefftp_cat)-1)[,-1]
+# colnames(agefftp_mat) <- paste0("agefftp",c(1:4,9))
+# breastmos_mat <- model.matrix(~as.factor(data1$breastmos_cat)-1)[,-1]
+# colnames(breastmos_mat) <- paste0("breastmos_cat",c(1:5,9))
+# lastchildage_mat <- model.matrix(~as.factor(data1$lastchildage_cat)-1)[,-1]
+# colnames(lastchildage_mat) <- paste0("lastchildage_cat",c(1:4,9))
+# refage <- data$refage
+# 
+# 
+# 
+# 
+# 
+# # idx.try <- which(data$design_cat==0&data$molgroup==2)
+# # data.new <- data[idx.try,]
+# # table(data.new$ER_status1,data.new$PR_status1,
+# #       data.new$HER2_status1,data.new$Grade1)
+# 
+# #############put the missing tumor characteristics as 888
+# idx.ER.mis <- which(data$status==1&is.na(data$ER_status1))
+# data$ER_status1[idx.ER.mis] <- 888
+# idx.PR.mis <- which(data$status==1&is.na(data$PR_status1))
+# data$PR_status1[idx.PR.mis] <- 888
+# idx.HER2.mis <- which(data$status==1&is.na(data$HER2_status1))
+# data$HER2_status1[idx.HER2.mis] <- 888
+# idx.grade.mis <- which(data$status==1&is.na(data$Grade1))
+# data$Grade1[idx.grade.mis] <- 888
+# #############put the subject BCAC-16687664 HER2 status as 1
+# idx <- which(data$HER2_status1==2)
+# data$HER2_status1[idx] <- 1
+# #############check the result
+# table(data$status,data$ER_status1)
+# table(data$status,data$PR_status1)
+# table(data$status,data$HER2_status1)
+# table(data$status,data$Grade1)
+# library(nnet)
+# ############collapes breast mos cat 0,1
+# ############collapes age fftp cat 0,1
+# data$breastmos_cat[data$breastmos_cat==0] <- 1
+# data$agefftp_cat[data$agefftp_cat==0] <- 1
+# ###########create the phenotype file
+# y <- cbind(data$status,data$ER_status1,data$PR_status1,
+#            data$HER2_status1,data$Grade1)
+# colnames(y) <- c("casecontrol",
+#                  "ER",
+#                  "PR",
+#                  "HER2",
+#                  "Grade")
+# 
+# ############don't adjust for study
+# ############population based study
+# idx1 <- which(data$design_cat==0)
+# ###########two-stage model based on population based study
+# model.1 <- TwoStageModel(y=y[idx1,],
+#                          additive = cbind(agefftp_mat,
+#                                           breast_mat,
+#                                           parity_mat,
+#                                           refage)[idx1,],
+#                          missingTumorIndicator = 888
+# )
+# write.xlsx(model.1[[4]]
+#            ,file = "risk_factor_result_110118.xlsx",
+#            sheetName = "population_based_second_stage")
+# write.xlsx(model.1[[5]]
+#            ,file = "risk_factor_result_110118.xlsx",
+#            sheetName = "population_based_second_stage")
+# 
+# 
+# ############ population based study
+# 
+# 
+# 
+# 
+# # model.1 <- multinom(molgroup~as.factor(agefftp_cat)+as.factor(breastmos_cat)+as.factor(parity_cat)+study+refage,data=data1, maxit= 500)
+# # coef(model.1)
+# 
+# 
+# 
+# 
+# ############non population based study
+# idx2 <- which(data$design_cat==1)
+# data2 <- data[idx2,]
+# model.2 <- multinom(molgroup~as.factor(breastmos_cat)+study+refage,data=data2, maxit= 500)
+# coef(model.2)
 
 
 

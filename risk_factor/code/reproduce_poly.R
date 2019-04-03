@@ -30,7 +30,7 @@ model1 <- multinom(molgroup~as.factor(agemenarche_cat)+
                      as.factor(mensagelast_cat)+
                      as.factor(agefftp_cat)+
                      as.factor(breastmos_cat)+
-                     as.factor(lastchildage_cat)+
+                    # as.factor(lastchildage_cat)+
                      +study+refage,data=data1, maxit= 500)
 coef.1 <- coef(model1)
 covar.1 <- vcov(model1)
