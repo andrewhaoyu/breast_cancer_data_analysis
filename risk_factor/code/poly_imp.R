@@ -54,7 +54,7 @@ all.covariates <- data.frame(as.factor(agemenarche_cat),
                              as.factor(mensagelast_cat),
                              as.factor(agefftp_cat),
                              as.factor(breastmos_cat),
-                             as.factor(lastchildage_cat),
+                             #as.factor(lastchildage_cat),
                              study,
                              refage)
 library(mice)

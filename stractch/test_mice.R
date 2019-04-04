@@ -77,7 +77,10 @@ alpha2 <- 1
 alpha3 <- 0
 p <- alpha1+logit_trans(y1)*alpha2+logit_trans(y2)*alpha3
 r <- 1- rbinom(n,1,p)
-y_new <- y1[r,]
-
+idx <- which(r==1)
+y1_new <- y1
+y2_new <- y2[idx]
+boxplot(y1,y2)
+boxplot(y1_new,y2_new)
 
 

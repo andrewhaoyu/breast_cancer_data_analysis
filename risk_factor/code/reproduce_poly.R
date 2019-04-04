@@ -1,3 +1,5 @@
+#goal:reproduce jenny's group polytomous model reuslts, missing indicator methods
+
 library(data.table)
 library(bc2)
 #data <- fread("./data/dataset_montse_20180522.txt")
@@ -11,8 +13,8 @@ data <- fread("./data/Dataset_Montse_20190322.txt")
 ##reproduce Jenny's group polytomous model
 ############collapes breast mos cat 0,1
 ############collapes age fftp cat 0,1
-##############we only focus on the invasive breast cancer cases
-data$staus[data$status==2|data$status==3] <- 1
+##############we only focus on the invasive nbreast cancer cases
+data$status[data$status==2|data$status==3] <- 1
 data$breastmos_cat[data$breastmos_cat==0] <- 1
 data$agefftp_cat[data$agefftp_cat==0] <- 1
 data$lastchildage_cat[data$lastchildage_cat==0] <- 1
@@ -34,13 +36,17 @@ model1 <- multinom(molgroup~as.factor(agemenarche_cat)+
                      +study+refage,data=data1, maxit= 500)
 coef.1 <- coef(model1)
 covar.1 <- vcov(model1)
-colnames(coef.1)[1:26] <- c("Intercept",
+result <- list(coef.1,covar.1)
+save(result,file = paste0("./risk_factor/result/poly/poly_result.Rdata"))
+#interested in first 22 variable
+n.in <- 22
+colnames(coef.1)[1:n.in] <- c("Intercept",
                             paste0("agemenarche_cat",c(1,2,3,9)),
                             paste0("parity_cat",c(1,2,3,4,9)),
                             paste0("mensagelast_cat",c(1,2,9)),
                             paste0("agefftp_cat",c(2,3,4,9)),
-                            paste0("breastmos_cat",c(2,3,4,5,9)),
-                            paste0("lastchildage_cat",c(2,3,4,9)))
+                            paste0("breastmos_cat",c(2,3,4,5,9)))
+                           # paste0("lastchildage_cat",c(2,3,4,9)))
 
 
 
@@ -54,7 +60,97 @@ for(i in 1:n.var){
   var.1[,i] <- diag(covar.1[c(i+n.var*(0:(n.sub-1))),c(i+n.var*(0:(n.sub-1)))])
 }
 
-GenerateP <- function(coef,)
+result <- GenerateP(coef.1,var.1)
+p <- result[[1]]
+low.95 <- result[[2]]
+high.95 <- result[[3]]
+
+coef.1.n <- coef.1[,2:n.in]
+var.1.n <- var.1[,2:n.in]
+p.n <- p[,2:n.in]
+low.95.n <- low.95[,2:n.in]
+high.95.n <- high.95[,2:n.in]
+
+coef.l <- as.vector(t(coef.1.n))
+var.l <- as.vector(t(var.1.n))
+p.l <- as.vector(t(p.n))
+low.95.l <- as.vector(t(low.95.n))
+high.95.l <- as.vector(t(high.95.n))
+variable.l <- rep(colnames(coef.1.n),n.sub)
+subtypes.l <- c(rep("Luminal A-like",ncol(coef.1.n)),
+                  rep("Luminal B,HER2-negative-like",ncol(coef.1.n)),
+                  rep("Luminal B-like",ncol(coef.1.n)),
+                  rep("HER2 enriched-like",ncol(coef.1.n)),
+                  rep("TN",ncol(coef.1.n)),
+                  rep("missing",ncol(coef.1.n)))
+#create the variable category for colour
+variable.cat <- substr(variable.l,1,nchar(variable.l)-1)
+
+new.data <- data.frame(variable.l,subtypes.l,
+                       coef.l,
+                       var.l,
+                       p.l,
+                       low.95.l,
+                       high.95.l,
+                       exp(coef.l),
+                       exp(low.95.l),
+                       exp(high.95.l),
+                       variable.cat,
+                       stringsAsFactors = F)
+colnames(new.data) <- c("variable",
+                        "subtypes",
+                        "coef",
+                        "variance",
+                        "p-value",
+                        "low95.coef",
+                        "high95.coef",
+                        "OR",
+                        "ORlow95",
+                        "ORhigh95",
+                        "variable_cat")
+###########take out all the missing data for comparasion
+new.data.c <- new.data[-grep("9",variable.l),]
+subtypes <- c("Luminal A-like","Luminal B,HER2-negative-like",
+              "Luminal B-like",
+              "HER2 enriched-like",
+              "TN")
+for(i in 1:length(subtypes)){
+  subtype.temp = subtypes[i]
+  png(paste0("./risk_factor/result/poly/poly_result_",subtype.temp,".png"),height=20,width = 15,res=300,units="cm")
+  new.data.plot <- new.data.c %>% filter(subtypes==subtype.temp)
+  print(
+    ggplot(new.data.plot,aes(x=variable,y=OR,ymin=ORlow95,ymax=ORhigh95,colour=variable_cat))+
+    geom_pointrange()+
+    #scale_colour_manual(values=c("#386cb0","#fdb462"))+
+    #geom_line(yintercept=1,lty=2)+
+    coord_flip()+
+    theme_bw()+
+    geom_hline(yintercept=1,size=1,lty=2)+
+    theme(legend.position="none")+
+    ylab("Odds ratio")+
+    #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
+    #xlab("SNP")+
+    # facet_grid(.~method)+
+    ggtitle(paste0("Forest plot for odds ratio of ",subtype.temp)
+    )+
+    theme(plot.title = element_text(hjust=0.5,face="bold"),
+          axis.text=element_text(face="bold"),
+          axis.title.x = element_text(face="bold"),
+          axis.title.y = element_text(face="bold"))
+  )
+  dev.off()
+  
+}
+
+
+
+GenerateP <- function(coef,sigma){
+  z <- coef/sqrt(sigma)
+  p <- 2*pnorm(-abs(z),lower.tail = T)
+  low.95 <- coef-1.96*sqrt(sigma)
+  high.95 <- coef+1.96*sqrt(sigma)
+  return(list(p,low.95,high.95))
+}
 
 
 

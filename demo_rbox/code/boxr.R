@@ -4,6 +4,8 @@
 #gSKdYKLd65aQpZGrq9x4QVUNnn5C8qqm
 library(boxr)
 box_auth()
+box_dir()
+
 data <- box_read(419308975889)
 library(ggplot2)
-ggplot(data)+geom_point(aes(AgeDiagIndex,AgeDiag1))
+ggplot(data)+geom_bar(aes(AgeDiag1))
