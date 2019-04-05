@@ -38,6 +38,7 @@ coef.1 <- coef(model1)
 covar.1 <- vcov(model1)
 result <- list(coef.1,covar.1)
 save(result,file = paste0("./risk_factor/result/poly/poly_result.Rdata"))
+load("./risk_factor/result/poly/poly_result.Rdata")
 #interested in first 22 variable
 n.in <- 22
 colnames(coef.1)[1:n.in] <- c("Intercept",
@@ -114,6 +115,7 @@ subtypes <- c("Luminal A-like","Luminal B,HER2-negative-like",
               "Luminal B-like",
               "HER2 enriched-like",
               "TN")
+write.csv(new.data.c,file = "./risk_factor/result/poly.csv")
 for(i in 1:length(subtypes)){
   subtype.temp = subtypes[i]
   png(paste0("./risk_factor/result/poly/poly_result_",subtype.temp,".png"),height=20,width = 15,res=300,units="cm")

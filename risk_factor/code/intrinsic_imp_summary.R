@@ -1,17 +1,16 @@
-##goal:create plot for poly multiple imputation result
+#goal summary the results from intrinsic multiple imputation
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
-load(paste0("./risk_factor/result/poly_imp/poly_imp_merge.Rdata"))
+load(paste0("./risk_factor/result/intrinsic_imp/intrinsic_imp_merge.Rdata"))
 
 coef.1 <- result[[1]]
 covar.1 <- result[[2]]
 #interested in first 17 variable
-n.in <- 17
-colnames(coef.1)[1:n.in] <- c("Intercept",
-                            paste0("agemenarche_cat",c(1,2,3)),
-                            paste0("parity_cat",c(1,2,3,4)),
-                            paste0("mensagelast_cat",c(1,2)),
-                            paste0("agefftp_cat",c(2,3,4)),
-                            paste0("breastmos_cat",c(2,3,4,5)))
+n.in <- 16
+colnames(coef.1)[1:n.in] <- c(paste0("agemenarche_cat",c(1,2,3)),
+                              paste0("parity_cat",c(1,2,3,4)),
+                              paste0("mensagelast_cat",c(1,2)),
+                              paste0("agefftp_cat",c(2,3,4)),
+                              paste0("breastmos_cat",c(2,3,4,5)))
 # paste0("lastchildage_cat",c(2,3,4,9)))
 
 
@@ -20,22 +19,19 @@ colnames(coef.1)[1:n.in] <- c("Intercept",
 #columns are the variables
 n.var <- ncol(coef.1)
 #rows are the 5 intrinsic subtypes plus 9 
-n.sub <- 6
-var.1 <- coef.1
-for(i in 1:n.var){
-  var.1[,i] <- diag(covar.1[c(i+n.var*(0:(n.sub-1))),c(i+n.var*(0:(n.sub-1)))])
-}
+n.sub <- 5
+var.1 <- matrix(diag(covar.1),nrow=n.sub)
 
 result <- GenerateP(coef.1,var.1)
 p <- result[[1]]
 low.95 <- result[[2]]
 high.95 <- result[[3]]
 
-coef.1.n <- coef.1[,2:n.in]
-var.1.n <- var.1[,2:n.in]
-p.n <- p[,2:n.in]
-low.95.n <- low.95[,2:n.in]
-high.95.n <- high.95[,2:n.in]
+coef.1.n <- coef.1[,1:n.in]
+var.1.n <- var.1[,1:n.in]
+p.n <- p[,1:n.in]
+low.95.n <- low.95[,1:n.in]
+high.95.n <- high.95[,1:n.in]
 
 coef.l <- as.vector(t(coef.1.n))
 var.l <- as.vector(t(var.1.n))
@@ -47,8 +43,8 @@ subtypes.l <- c(rep("Luminal A-like",ncol(coef.1.n)),
                 rep("Luminal B,HER2-negative-like",ncol(coef.1.n)),
                 rep("Luminal B-like",ncol(coef.1.n)),
                 rep("HER2 enriched-like",ncol(coef.1.n)),
-                rep("TN",ncol(coef.1.n)),
-                rep("missing",ncol(coef.1.n)))
+                rep("TN",ncol(coef.1.n)))
+                #rep("missing",ncol(coef.1.n)))
 #create the variable category for colour
 variable.cat <- substr(variable.l,1,nchar(variable.l)-1)
 
@@ -80,10 +76,10 @@ subtypes <- c("Luminal A-like","Luminal B,HER2-negative-like",
               "HER2 enriched-like",
               "TN")
 new.data.c <- new.data
-write.csv(new.data.c,file = "./risk_factor/result/poly_imp.csv")
+write.csv(new.data.c,file = "./risk_factor/result/intrinsic_imp.csv")
 for(i in 1:length(subtypes)){
   subtype.temp = subtypes[i]
-  png(paste0("./risk_factor/result/poly_imp/poly_imp_result_",subtype.temp,".png"),height=20,width = 15,res=300,units="cm")
+  png(paste0("./risk_factor/result/intrinsic_imp/intrinic_imp_result_",subtype.temp,".png"),height=20,width = 15,res=300,units="cm")
   new.data.plot <- new.data.c %>% filter(subtypes==subtype.temp)
   print(
     ggplot(new.data.plot,aes(x=variable,y=OR,ymin=ORlow95,ymax=ORhigh95,colour=variable_cat))+
