@@ -1,4 +1,4 @@
-#goal:merge additive model results from multiple imputation
+#goal:merge TN interaction model results from multiple imputation
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 
 coef.all <- list()
@@ -7,7 +7,7 @@ n.imp <- 100
 n.sub <- 23
 
 for(i1 in 1:n.imp){
-  load(paste0("./risk_factor/result/additive_imp",i1,".Rdata"))  
+  load(paste0("./risk_factor/result/TN_interaction_imp",i1,".Rdata"))  
   coef.all[[i1]] <- model[[1]]
   sigma.all[[i1]] <- model[[2]]
 }

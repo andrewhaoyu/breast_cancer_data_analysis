@@ -124,7 +124,6 @@ colnames(y) <- c("casecontrol",
 # y[idx,2:ncol(y)] <- NA
 z.standard <- GenerateZstandard(y)
 z.ER <- cbind(1,z.standard[,1])
-z.design <- z.additive = cbind(1,z.standard)
 idx <- which(z.standard[,1]==0&
                z.standard[,2]==0&
                z.standard[,3]==0)
