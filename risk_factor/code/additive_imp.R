@@ -124,7 +124,7 @@ colnames(y) <- c("casecontrol",
 # y[idx,2:ncol(y)] <- NA
 z.standard <- GenerateZstandard(y)
 z.ER <- cbind(1,z.standard[,1])
-z.design <- z.additive = cbind(1,z.standard)
+z.design = z.additive = cbind(1,z.standard)
 
 #idx <- which(data$design_cat==0)
 model <- EMmvpolySelfDesignnew(y=y,

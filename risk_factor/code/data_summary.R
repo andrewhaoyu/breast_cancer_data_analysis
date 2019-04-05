@@ -1,7 +1,6 @@
 #Goal: generate summary information for the data
 
-args = commandArgs(trailingOnly = T)
-i1 = as.numeric(args[[1]])
+
 
 library(data.table)
 library(bc2)
@@ -17,7 +16,7 @@ data <- fread("./data/Dataset_Montse_20190322.txt")
 ############collapes breast mos cat 0,1
 ############collapes age fftp cat 0,1
 ##############we only focus on the invasive breast cancer cases
-data$staus[data$status==2|data$status==3] <- 1
+data$status[data$status==2|data$status==3] <- 1
 data$breastmos_cat[data$breastmos_cat==0] <- 1
 data$agefftp_cat[data$agefftp_cat==0] <- 1
 data$lastchildage_cat[data$lastchildage_cat==0] <- 1
@@ -59,8 +58,36 @@ all.covariates <- data.frame(as.factor(agemenarche_cat),
                              #as.factor(lastchildage_cat),
                              study,
                              refage)
+all.covariates.plot <- all.covariates[,1:5]
+colnames(all.covariates.plot) <- c("agemenarche",
+                                   "parity",
+                                   "mensagelat",
+                                   "agefftp",
+                                   "breastmos")
 library(mice)
-md.pattern(all.covariates)
+library(VIM)
+#plot covariates missing pattern
+png(paste0("./risk_factor/result/missing_data_covariates.png"),height=15,width = 20,res=300,units="cm")
+print(aggr(all.covariates.plot,prop=F,numbers=T))
+dev.off()
+#############put the subject BCAC-16687664 HER2 status as 1
+idx <- which(data1$HER2_status1==2)
+data1$HER2_status1[idx] <- 1
+#############check the result
+table(data1$status,data1$ER_status1)
+table(data1$status,data1$PR_status1)
+table(data1$status,data1$HER2_status1)
+table(data1$status,data1$Grade1)
+
+y.tumor <- cbind(data1$ER_status1,data1$PR_status1,data1$HER2_status1,
+                 data1$Grade1)
+idx <- which(data1$status==1)
+y.tumor <- y.tumor[idx,]
+colnames(y.tumor) <- c("ER","PR","HER2","Grade")
+png(paste0("./risk_factor/result/missing_data_tumor.png"),height=15,width = 20,res=300,units="cm")
+print(aggr(y.tumor,prop=F,numbers=T))
+dev.off()
+#md.pattern(all.covariates.plot,rotate.names=T)
 #imp <- mice(all.covariates,m=1,seed=i1,print=FALSE)
 
 #all.covariates.c <- complete(imp,1)
