@@ -1,4 +1,4 @@
-#Goal: use additive two-stage model to produce the second stage parameters for risk factors multiple imputation
+#Goal: use TN-interaction two-stage model to produce the second stage parameters for risk factors multiple imputation
 
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
