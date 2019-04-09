@@ -41,6 +41,8 @@ save(result,file = paste0("./risk_factor/result/poly/poly_result.Rdata"))
 load("./risk_factor/result/poly/poly_result.Rdata")
 #interested in first 22 variable
 n.in <- 22
+coef.1 <- result[[1]]
+covar.1 <- result[[2]]
 colnames(coef.1)[1:n.in] <- c("Intercept",
                             paste0("agemenarche_cat",c(1,2,3,9)),
                             paste0("parity_cat",c(1,2,3,4,9)),
@@ -116,6 +118,13 @@ subtypes <- c("Luminal A-like","Luminal B,HER2-negative-like",
               "HER2 enriched-like",
               "TN")
 write.csv(new.data.c,file = "./risk_factor/result/poly.csv")
+
+average.width <- rep(0,length(subtypes))
+for(i in 1:length(subtypes)){
+  idx <- which(new.data.c$subtypes==subtypes[i])
+  average.width[i] <- mean(new.data.c$ORhigh95[idx]-new.data.c$ORlow95[idx])
+}
+
 for(i in 1:length(subtypes)){
   subtype.temp = subtypes[i]
   png(paste0("./risk_factor/result/poly/poly_result_",subtype.temp,".png"),height=20,width = 15,res=300,units="cm")

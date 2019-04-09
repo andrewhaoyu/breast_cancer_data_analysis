@@ -4,8 +4,9 @@
 #gSKdYKLd65aQpZGrq9x4QVUNnn5C8qqm
 library(boxr)
 box_auth()
-box_dir()
+#box_dir()
 
-data <- box_read(419308975889)
+data <- box_read('419308975889')
+data[1:10,1:10]
 library(ggplot2)
 ggplot(data)+geom_bar(aes(AgeDiag1))

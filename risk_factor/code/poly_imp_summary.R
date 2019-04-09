@@ -80,6 +80,12 @@ subtypes <- c("Luminal A-like","Luminal B,HER2-negative-like",
               "HER2 enriched-like",
               "TN")
 new.data.c <- new.data
+average.width <- rep(0,length(subtypes))
+for(i in 1:length(subtypes)){
+  idx <- which(new.data.c$subtypes==subtypes[i])
+  average.width[i] <- mean(new.data.c$ORhigh95[idx]-new.data.c$ORlow95[idx])
+}
+
 write.csv(new.data.c,file = "./risk_factor/result/poly_imp.csv")
 for(i in 1:length(subtypes)){
   subtype.temp = subtypes[i]

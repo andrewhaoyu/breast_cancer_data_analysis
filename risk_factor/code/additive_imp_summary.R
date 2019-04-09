@@ -1,6 +1,6 @@
 #goal summary the results from additive multiple imputation
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
-load(paste0("./risk_factor/result/intrinsic_imp/additive_imp_merge.Rdata"))
+load(paste0("./risk_factor/result/additive_imp/additive_imp_merge.Rdata"))
 
 coef.1 <- result[[1]]
 covar.1 <- result[[2]]

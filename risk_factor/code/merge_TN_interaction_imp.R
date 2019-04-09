@@ -12,14 +12,14 @@ for(i1 in 1:n.imp){
   sigma.all[[i1]] <- model[[2]]
 }
 result.temp <- RubinPool(coef.all,sigma.all,n.imp)
-coef.temp <- matrix(result.temp[[1]][(n.sub+1):(n.sub+length(model[[3]]))],nrow=5)
+coef.temp <- matrix(result.temp[[1]][(n.sub+1):(n.sub+length(model[[3]]))],nrow=6)
 colnames(coef.temp) <- colnames(model[[3]])
 rownames(coef.temp) <- rownames(model[[3]])
 rownames(coef.temp)[1] <- "baseline effect"
 sigma.temp <- result.temp[[2]][(n.sub+1):(n.sub+length(model[[3]])),
                                (n.sub+1):(n.sub+length(model[[3]]))]
 result <- list(coef.temp,sigma.temp)
-save(result,file = paste0("./risk_factor/result/additive_imp_merge.Rdata"))
+save(result,file = paste0("./risk_factor/result/TN_interaction_imp_merge.Rdata"))
 RubinPool <- function(coef.all,sigma.all,n.imp){
   coef.result.sum <- coef.all[[1]]
   sigma.result.sum <- sigma.all[[1]]

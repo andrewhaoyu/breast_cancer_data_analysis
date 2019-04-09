@@ -1,6 +1,6 @@
-#goal summary the results from intrinsic multiple imputation
+#goal summary the results from additive multiple imputation
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
-load(paste0("./risk_factor/result/intrinsic_imp/intrinsic_imp_merge.Rdata"))
+load(paste0("./risk_factor/result/TN_interaction_imp/TN_interaction_imp_merge.Rdata"))
 
 coef.1 <- result[[1]]
 covar.1 <- result[[2]]
@@ -13,13 +13,47 @@ colnames(coef.1)[1:n.in] <- c(paste0("agemenarche_cat",c(1,2,3)),
                               paste0("breastmos_cat",c(2,3,4,5)))
 # paste0("lastchildage_cat",c(2,3,4,9)))
 
+#joint test for the variables
+var.cat <- c("agemenarche_cat",
+             "parity_cat",
+             "mensagelast_cat",
+             "agefftp_cat",
+             "breastmos_cat")
+subtypes <- c("baseline effect",
+              "ER main effect",
+              "PR main effect",
+              "HER2 main effect",
+              "Grade main effect",
+              "TN interaction")
+ChiSquareTest <- function(coef,sigma){
+  Q = t(coef)%*%solve(sigma)%*%coef
+  p = pchisq(Q,df = length(coef),lower.tail = F)
+  return(p)
+}
+coef.vec <- as.vector(coef.1)
+p.joint <- matrix(0,nrow=length(subtypes),ncol=length(varaible.cat))
+for(i in 1:length(subtypes)){
+  for(j in 1:length(var.cat)){
+    ####take out the correpsonding covariates
+    idx <- grep(varaible.cat[j],colnames(coef.1))  
+    coef.temp <- coef.1[i,idx]
+    jdx <- which(coef.vec%in%coef.temp)
+    covar.temp <- covar.1[jdx,jdx]
+    p.joint[i,j] <- ChiSquareTest(coef.temp,covar.temp)
+  }
+  
+}
 
+p.joint <- as.data.frame(p.joint)
+colnames(p.joint) <- var.cat
+rownames(p.joint) <- subtypes
+write.csv(p.joint,file = paste0("./risk_factor/result/TN_interaction_joint.csv"))
 
 #reorganize the covariance matrix to match coef data.frame
 #columns are the variables
 n.var <- ncol(coef.1)
-#rows are the 5 intrinsic subtypes plus 9 
-n.sub <- 5
+
+n.sub <- 6
 var.1 <- matrix(diag(covar.1),nrow=n.sub)
 
 result <- GenerateP(coef.1,var.1)
@@ -39,12 +73,13 @@ p.l <- as.vector(t(p.n))
 low.95.l <- as.vector(t(low.95.n))
 high.95.l <- as.vector(t(high.95.n))
 variable.l <- rep(colnames(coef.1.n),n.sub)
-subtypes.l <- c(rep("Luminal A-like",ncol(coef.1.n)),
-                rep("Luminal B,HER2-negative-like",ncol(coef.1.n)),
-                rep("Luminal B-like",ncol(coef.1.n)),
-                rep("HER2 enriched-like",ncol(coef.1.n)),
-                rep("TN",ncol(coef.1.n)))
-                #rep("missing",ncol(coef.1.n)))
+subtypes.l <- c(rep("baseline effect",ncol(coef.1.n)),
+                rep("ER main effect",ncol(coef.1.n)),
+                rep("PR main effect",ncol(coef.1.n)),
+                rep("HER2 main effect",ncol(coef.1.n)),
+                rep("Grade main effect",ncol(coef.1.n)),
+                rep("TN interaction",ncol(coef.1.n)))
+#rep("missing",ncol(coef.1.n)))
 #create the variable category for colour
 variable.cat <- substr(variable.l,1,nchar(variable.l)-1)
 
@@ -71,21 +106,18 @@ colnames(new.data) <- c("variable",
                         "ORhigh95",
                         "variable_cat")
 
-subtypes <- c("Luminal A-like","Luminal B,HER2-negative-like",
-              "Luminal B-like",
-              "HER2 enriched-like",
-              "TN")
+subtypes <- c("baseline effect",
+              "ER main effect",
+              "PR main effect",
+              "HER2 main effect",
+              "Grade main effect",
+              "TN interaction")
 new.data.c <- new.data
-average.width <- rep(0,length(subtypes))
-for(i in 1:length(subtypes)){
-  idx <- which(new.data.c$subtypes==subtypes[i])
-  average.width[i] <- mean(new.data.c$ORhigh95[idx]-new.data.c$ORlow95[idx])
-}
-
-write.csv(new.data.c,file = "./risk_factor/result/intrinsic_imp.csv")
+library(ggplot2)
+write.csv(new.data.c,file = "./risk_factor/result/TN_interaction_imp.csv")
 for(i in 1:length(subtypes)){
   subtype.temp = subtypes[i]
-  png(paste0("./risk_factor/result/intrinsic_imp/intrinic_imp_result_",subtype.temp,".png"),height=20,width = 15,res=300,units="cm")
+  png(paste0("./risk_factor/result/TN_interaction_imp/TN_interaction_imp_result_",subtype.temp,".png"),height=20,width = 15,res=300,units="cm")
   new.data.plot <- new.data.c %>% filter(subtypes==subtype.temp)
   print(
     ggplot(new.data.plot,aes(x=variable,y=OR,ymin=ORlow95,ymax=ORhigh95,colour=variable_cat))+

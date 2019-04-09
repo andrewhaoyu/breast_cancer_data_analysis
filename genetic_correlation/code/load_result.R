@@ -52,7 +52,7 @@ get_cor_95_list <- function(correlation.matrix,correlation.matrix.se){
 
 
 
-setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/ICOG/result/breast_cancer_ldsc/two-stage-model-intrinsic_subtype/')
+setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
 # load("./breast_cancer_ldsc/ICOG_ldsc_result.rda")
 # load("./breast_cancer_ldsc/ONCO_ldsc_result.rda")
 #load("./breast_cancer_ldsc/two-stage-model-intrinsic_subtype/meta_ldsc_result.rda")
@@ -61,7 +61,7 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlati
 #
 ##################only based on BCAC
 places <- 3
-intrinsic_result <- read.csv("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/BCAC.csv",header=F)
+intrinsic_result <- read.csv("./genetic_correlation/result/BCAC.csv",header=F)
 
 correlation.matrix <- intrinsic_result[1:5,2:6]
 correlation.matrix.se <- intrinsic_result[6:10,2:6]
@@ -80,23 +80,23 @@ correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.
 write.csv(correlation.95,file="correlation_95_BCAC.csv",quote=F)
 
 
-#get results for CIMBA+ BCAC
- setwd("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/")
- intrinsic_result <- read.csv("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/CIMBA_BCAC.csv",header=F)
- correlation.matrix <- intrinsic_result[1:5,2:6]
- correlation.matrix.se <- intrinsic_result[6:10,2:6]
- correlation.matrix <- correlation.matrix[c(2,5,4,3,1),c(2,5,4,3,1)]
- correlation.matrix.se <- correlation.matrix.se[c(2,5,4,3,1),c(2,5,4,3,1)]
- correlation.95 <- get_cor_95(correlation.matrix,correlation.matrix.se)
- names <- as.character(intrinsic_result[c(2,5,4,3,1),1])
- colnames(correlation.matrix) <- names
- rownames(correlation.matrix) <- names
-
- colnames(correlation.95) <- names
- rownames(correlation.95) <- names
-
- correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
- correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
+# #get results for CIMBA+ BCAC
+#  setwd("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/")
+#  intrinsic_result <- read.csv("/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/genetic_correlation/result/CIMBA_BCAC.csv",header=F)
+#  correlation.matrix <- intrinsic_result[1:5,2:6]
+#  correlation.matrix.se <- intrinsic_result[6:10,2:6]
+#  correlation.matrix <- correlation.matrix[c(2,5,4,3,1),c(2,5,4,3,1)]
+#  correlation.matrix.se <- correlation.matrix.se[c(2,5,4,3,1),c(2,5,4,3,1)]
+#  correlation.95 <- get_cor_95(correlation.matrix,correlation.matrix.se)
+#  names <- as.character(intrinsic_result[c(2,5,4,3,1),1])
+#  colnames(correlation.matrix) <- names
+#  rownames(correlation.matrix) <- names
+# 
+#  colnames(correlation.95) <- names
+#  rownames(correlation.95) <- names
+# 
+#  correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
+#  correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
 
 
 #
@@ -198,7 +198,7 @@ dev.off()
 library(tidyverse)
 library(reshape2)
 library(ggplot2)
-library(gplots)
+#library(gplots)
 
 
 
@@ -231,6 +231,10 @@ rownames(correlation.matrix) <- c("Luminal A-like",
                                   "Luminal B-like ",
                                   "HER2-enriched-like ",
                                   "TN")
+corrplot.mixed(as.matrix(correlation.matrix),
+               lower.col = "black", number.cex = .7)
+correlation.matrix <- correlation.matrix[c(3,2,1,4,5),c(3,2,1,4,5)]
+
 corrplot(as.matrix(correlation.matrix),
          method = "circle",
          #p.mat = p.value,
