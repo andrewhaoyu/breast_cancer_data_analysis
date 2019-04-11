@@ -1,8 +1,7 @@
 #goal: demonstrate box r in BCAC
-#https://cran.r-project.org/web/packages/boxr/vignettes/boxr.html
-#627lww8un9twnoa8f9rjvldf7kb56q1m
-#gSKdYKLd65aQpZGrq9x4QVUNnn5C8qqm
-library(boxr)
+#https://cran.r-project.org/web/packages/boxr/vignettes/boxr.htm?l
+#627lww8un9twnoa8f9rjvldf7kb56q1m？
+#gSKdYKLd？？ry(boxr)
 box_auth()
 #box_dir()
 
