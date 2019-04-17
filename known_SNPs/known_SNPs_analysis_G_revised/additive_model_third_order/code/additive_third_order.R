@@ -68,7 +68,11 @@ if(i1<=177){
   ###pc1-10 and age
   x.covar.mis1 <- data1[,c(5:14)]
   
-  
+  idx.control <- which(y.pheno.mis1[,1]==0)
+  maf <- sum(x.test.all.mis1[idx.control,i1])/(2*length(idx.control))
+  if(maf>=0.5){
+    x.test.all.mis1[,i1] < 2 - x.test.all.mis1[,i1]
+  }
   
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
@@ -155,6 +159,9 @@ if(i1<=177){
   x.test.all.mis2 <- data2[,c(27:203)]
   x.covar.mis2 <- data2[,c(5:14)]
   
+  if(maf>=0.5){
+    x.test.all.mis2[,i1] <- 2-x.test.all.mis2[,i1]
+  }
   
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"

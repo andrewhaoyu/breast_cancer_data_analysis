@@ -119,6 +119,11 @@ if(i1<=177){
   x.test.all.mis2 <- x.test.all.mis2
   x.covar.mis2 <- data2[,c(5:14)]
   
+  if(maf>=0.5){
+    x.test.all.mis2[,i1] <- 2-x.test.all.mis2[,i1]
+  }
+  
+  
   
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
