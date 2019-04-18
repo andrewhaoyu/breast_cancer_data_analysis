@@ -434,7 +434,7 @@ if(i1<=177){
   
   
   
-    Heter.result.Onco = TwoStageModel(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,missingDataAlgorithm = "EM")
+    Heter.result.Onco = TwoStageModel(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Onco[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
   M <- nrow(z.standard)

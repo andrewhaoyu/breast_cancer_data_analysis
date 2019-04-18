@@ -1,3 +1,4 @@
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 result <- NULL
 for(i1 in 1:35){
   load(paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_",i1,".Rdata"))
@@ -98,14 +99,25 @@ for(i in 1:n){
   CIMBA.p[i] <- result.temp[[1]]
   CIMBA.OR[i] <- result.temp[[2]]
 }
-
+maf <-  apply(matrix(discovery_snp_new$exp_freq_a1,ncol=1),1,function(x){
+  min(x,1-x)
+})
+  
 final.result <- cbind(discovery_snp_new$rs_id,
+                      discovery_snp_new$CHR.x,
+                      discovery_snp_new$Pos,
+                     maf,
+                      discovery_snp_new$marjor.minor,
                       result,
                       CIMBA.OR,
                       CIMBA.p)
 
 
 colnames(final.result) <- c("rs_id",
+                            "CHR",
+                            "Pos",
+                            "MAF",
+                            "Major/Minor",
                             "Luminial A OR",
                             "Luminial A P",
                             "Luminal B OR",

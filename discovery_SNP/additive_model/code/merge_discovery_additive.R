@@ -1,6 +1,3 @@
-#-------------------------------------------------------------------
-# Update Date: 12/07/2018
-# Create Date: 12/07/2018
 # Goal: merge the additive two-stage model results
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
@@ -98,6 +95,15 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
 
 discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 
+discovery_snp_paper_order <- read.csv("./data/discovery_snp_paper_order.csv",header=T)
+chr.pos.paper <- paste0(discovery_snp_paper_order$CHR,":",discovery_snp_paper_order$position)
+
+
+chr.pos <- paste0(discovery_snp$CHR.x,":",discovery_snp$position)
+
+idx.match <- match(chr.pos.paper,
+                   chr.pos)
+discovery_snp_new <- discovery_snp[idx.match,]
 
 
 
@@ -139,14 +145,14 @@ tumor.characteristics <- c("ER","PR","HER2","Grade")
 generate_second_stage_parameter_names(tumor.characteristics)
 colnames(result) <- generate_second_stage_parameter_names(tumor.characteristics)
 #take out the 5 SNPs after we changed the threshold to 5E-08
-new_discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new_Dec07.csv")
+#new_discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new_Dec07.csv")
 library(dplyr)
-new.chr.pos = paste0(new_discovery_snp$CHR,":",new_discovery_snp$Pos)
-old.chr.pos = as.character(discovery_snp$chr.pos)
-idx <- which(old.chr.pos%in%
-               new.chr.pos)
-snp.names <- discovery_snp[idx,"SNP.ICOGS"]
-result <- result[idx,]
+#new.chr.pos = paste0(new_discovery_snp$CHR,":",new_discovery_snp$Pos)
+#old.chr.pos = as.character(discovery_snp$chr.pos)
+#idx <- which(old.chr.pos%in%
+ #              new.chr.pos)
+#snp.names <- discovery_snp[idx,"SNP.ICOGS"]
+result <- result[idx.match,]
 
 p.wald.assoc <- result[,11]
 p.wald.assoc[is.na(p.wald.assoc)] <- 0
@@ -218,7 +224,9 @@ result <- data.frame(result,pvalue)
 #colnames(first.stage) <- generate_first_stage_parameter_names(tumor.characteristics,z.standard)
 
 #result <- data.frame(result)
-row.names(result) <- snp.names
-write.xlsx(result,file="./additive_model_G_age_2des.xlsx",sheetName="additive_model_2nd_stage_age_minor_allele")
+row.names(result) <- discovery_snp_paper_order$SNP
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+write.csv(result,file = "./discovery_SNP/additive_model/result/additive_model_result.csv")
+#write.xlsx(result,file="./additive_model_G_age_2des.xlsx",sheetName="additive_model_2nd_stage_age_minor_allele")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)
 
