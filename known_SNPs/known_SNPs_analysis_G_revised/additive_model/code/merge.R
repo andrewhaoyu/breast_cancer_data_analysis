@@ -54,9 +54,7 @@ x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
 
 
 
-Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,
-                                  missingDataAlgorithm = "EM")
-z.standard <- Heter.result.Icog[[12]]
+z.standard <- GenerateZstandard(y.pheno.mis1)
 generate_first_stage_parameter_names = function(tumor_characteristics,z_standard){
   max.z_standard = apply(z_standard,2,max)
   idx.not.binary = which(max.z_standard!=1)
@@ -205,7 +203,7 @@ colnames(result) <- full.names
 
 
 
-
+write.csv(result,file="known_additive_result.csv")
 
 
 
@@ -214,6 +212,6 @@ colnames(result) <- full.names
 
 #result <- data.frame(result)
 
-write.xlsx(result,file="./additive_model_G_new.xlsx",sheetName="additive_model_2nd_stage")
+#write.xlsx(result,file="./additive_model_G_new.xlsx",sheetName="additive_model_2nd_stage")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)
 
