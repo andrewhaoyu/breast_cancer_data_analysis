@@ -11,12 +11,14 @@ library(bc3)
 #setwd('/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis')
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 data <- as.data.frame(fread("./data/Dataset_Montse_20190322.txt"))
+idx <- which(data1$parity==0)
+
 ##############we only focus on the invasive breast cancer cases
 ##############collapse breastmost_cat 0 agefftp 0 and lastchildage 0 as 1, otherwise there will be collinearity issue with parity. Since women with no children will also fall into these categoriess
 data$status[data$status==2|data$status==3] <- 1
 data$breastmos_cat[data$breastmos_cat==0] <- 1
 data$agefftp_cat[data$agefftp_cat==0] <- 1
-data$lastchildage_cat[data$lastchildage_cat==0] <- 1
+data$lastchildage_cat[data$lastchildage_cat==0] <- table(data1$ageFFTP[idx])
 
 
 ##############only focus on population based study

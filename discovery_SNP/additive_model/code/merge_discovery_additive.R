@@ -169,11 +169,11 @@ p.wald.heter.adjust <- p.adjust(p.wald.heter,method="BH")
 # p.mixed.heter.baseline.fixed.adjust <- 
 #   p.adjust(p.mixed.heter.baseline.fixed,
 #            method="BH")
-p.mixed.assoc.baselineER.fixed <- result[,13]
+p.mixed.assoc.baselineER.fixed <- result[,16]
 p.mixed.assoc.baselineER.fixed.adjust <- 
   p.adjust(p.mixed.assoc.baselineER.fixed,
            method="BH")
-p.mixed.heter.baselineER.fixed <- result[,14]
+p.mixed.heter.baselineER.fixed <- result[,17]
 p.mixed.heter.baselineER.fixed.adjust <- 
   p.adjust(p.mixed.heter.baselineER.fixed,
            method="BH")

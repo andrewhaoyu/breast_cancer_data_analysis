@@ -203,7 +203,7 @@ colnames(result) <- full.names
 
 
 
-write.csv(result,file="known_additive_result.csv")
+write.csv(result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/additive_model/result/known_additive_result.csv")
 
 
 
