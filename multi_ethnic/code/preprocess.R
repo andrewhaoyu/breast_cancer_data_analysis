@@ -46,6 +46,7 @@ for(i in 1:22){
   
 }
 
+
 colnames(snp.pruned) <- "rs_id"
 
 all.snp <- as.data.frame(fread("/spin1/users/zhangh24/KG.vcf/MAF_result/all.freq",header=T))
