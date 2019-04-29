@@ -28,26 +28,14 @@ z.design <- matrix(c(
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
 rowSums(z.design)
-load(paste0("./risk_prediction/result/split.id.rdata"))
-#icog.test.id <- Generatetestid(subtypes.icog)
-#icog.train.id <- split.id[[1]]
-onco.train.id <- split.id[[2]]
-#onco.test.id <- split.id[[3]]
-#icog.cohort.id <- split.id[[4]]
-#onco.cohort.id <- split.id[[5]]
-
 #subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt"
 #onco.order <- read.table(gzfile(subject.file))
 onco.order <- read.table(subject.file)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-data2 <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
-data2 <- data2[,-1]
-#data2 <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
-#data2 <- data2[,-1]
-onco.train <- which(data2[,1]%in%onco.train.id)
-data2 <- data2[onco.train,]
-y.pheno.mis2 <- cbind(data2$Behavior,data2$ER,data2$PR,data2$HER2,data2$Grade)
+data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+data2 <- as.data.frame(data2)
+y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
 #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
@@ -181,12 +169,12 @@ result.list <- foreach(job.i = 1:2)%dopar%{
           nparm <- length(Heter.result.Onco[[1]])
           sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
         }
-          ,
-          error = function(e){
-            log.odds.onco = rep(0,1+number.of.tumor);
-            sigma.log.odds.onco <- diag(1+number.of.tumor)
-          }
-          
+        ,
+        error = function(e){
+          log.odds.onco = rep(0,1+number.of.tumor);
+          sigma.log.odds.onco <- diag(1+number.of.tumor)
+        }
+        
         )
         
         score_result[temp,]  <- log.odds.onco
