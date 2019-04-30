@@ -1,9 +1,12 @@
-#simulate phenotypes data for AFR and EUR
+#Goal: Generate cau genotyped data for simulation
+#simulate phenotypes data for AFR, EUR, AMR
 #MAF based on 1000KG
-#sample size EUR n =100000
-#sample size AFR n = 15000
+#sample size EUR n =120000
+#sample size AFR n = 18000
+#sample size AMR n = 18000
 #heritability for EUR 0.8
 #heritability for AFR 0.8
+#heritability for AMR 0.8
 #5000 causal SNPs for each population
 #4000 shared causal SNPs
 #Genetic correlation for the shared SNPs is 0.6
@@ -13,14 +16,67 @@
 #  n.snp <- nrow(pruned.snp.clean)
 #  pruned.snp.permu <- pruned.snp.clean[sample(c(1:n.snp),n.snp),]
 #  save(pruned.snp.permu,file = "/spin1/users/zhangh24/KG.vcf/MAF_result/pruned_MAF_permu.Rdata")
+arg <- commandArgs(trailingOnly=T)
+i1 <- as.numeric(arg[[1]])
 
 load("/spin1/users/zhangh24/KG.vcf/MAF_result/pruned_MAF_permu.Rdata")
-set.seed(666)
-idx <- which.min(pruned.snp.permu$all.snp.AFR.MAF.AFR[1:5000])
-pruned.snp.permu[idx,]
-library(RcppArmadillo)
+set.seed(i1)
+# idx <- which.min(pruned.snp.permu$MAF.AFR[1:5000])
+# pruned.snp.permu[idx,]
+
+n.snp <- nrow(pruned.snp.permu)
+library(bc2)
+
+GenearteGenotype <- function(n.sub,n.snp,MAF){
+  result <- matrix(rbinom(n.sub*n.snp,2,MAF),n.sub,n.snp,byrow = T)
+  return(result)
+}
+#split the genotype data into 500 different files
+#1 is the causal genotype
+#2:499 are the noncausal genotype
+size <- 499
 MAF.EUR <- pruned.snp.permu$MAF.EUR
-MAF.AFR <- pruned.snp.permu$all.snp.AFR.MAF.AFR
+MAF.AFR <- pruned.snp.permu$MAF.AFR
+MAF.AMR <- pruned.snp.permu$MAF.AMR
+n.cau <- 7000
+start.end <- startend(n.snp-n.cau,size,i1)
+start <- start.end[1]+n.cau
+end <- start.end[2]+n.cau
+n.EUR <- 120000
+n.AFR <- 18000
+n.AMR <- 18000
+#since the SNP MAF data is permutated
+#for EUR and AFR, we will use 1:4000 as shared SNPs
+#use 4000:5000 as nonshared SNPs for EUR
+#5000:6000 as nonshared SNPs for AFR
+#7000:8000 as nonshared SNPs for AMR
+n.noncau <- end-start+1
+genotype_EUR <- GenearteGenotype(n.EUR,n.noncau, MAF.EUR[start:end])
+genotype_AFR <- GenearteGenotype(n.AFR,n.noncau,MAF.AFR[start:end])
+genotype_AMR <- GenearteGenotype(n.AMR,n.noncau,MAF.AMR[start:end])
+
+genotype <- list(genotype_EUR,
+                 genotype_AFR,
+                 genotype_AMR)
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
+save(genotype,file = paste0("./multi_ethnic/result/pruned_geno/geno_",i1))
+
+
+
+#start.end <- startend(n.snp,23,1)
+
+
+
+
+
+
+
+
+
+
+
+
+library(RcppArmadillo)
 n.EUR <- 120000
 n.AFR <- 18000
 n.train.EUR <- 100000
@@ -61,7 +117,7 @@ G_AFR_effect <- cbind(G_AFR_shared,G_AFR_nonshare)
 
 #shared beta coefcients
 beta_shared <- rmvnorm(n.shared,c(0,0),
-                sigma=Sigma)
+                       sigma=Sigma)
 #non shared beta coefcients
 beta_nonshared <- matrix(0,two_nonshare,2)
 beta_nonshared[1:n.nonshare,1] <- rnorm(n.nonshare,0,sd=sqrt(her.EUR/n.cau))
@@ -127,6 +183,6 @@ for(i in 1:(n.snp-n.cau)){
 
 temp.result <- list(beta_summary_train,
                     beta_summary_test,
-                     )
+)
 
 
