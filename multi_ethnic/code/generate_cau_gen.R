@@ -52,7 +52,7 @@ genotype <- list(genotype_EUR,
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
 save(genotype,file = paste0("./multi_ethnic/result/pruned_geno/geno_",1))
 
-
+load(paste0("./multi_ethnic/result/pruned_geno/geno_",3))
 
 #start.end <- startend(n.snp,23,1)
 

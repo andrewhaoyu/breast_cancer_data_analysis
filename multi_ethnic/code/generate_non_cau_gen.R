@@ -1,4 +1,4 @@
-#Goal: Generate cau genotyped data for simulation
+#Goal: Generate non causal genotyped data for simulation
 #simulate phenotypes data for AFR, EUR, AMR
 #MAF based on 1000KG
 #sample size EUR n =120000
