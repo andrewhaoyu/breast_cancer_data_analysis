@@ -9,10 +9,13 @@
 #heritability for AMR 0.8
 #5000 causal SNPs for each population
 #4000 shared causal SNPs
-#Genetic correlation for the shared SNPs is 0.6
+#Genetic correlation for the between EUR and AFR is 0.4
+#Genetic correlation for the between EUR and LAC is 0.6
+#Genetic correlation for the between LAC and AFR is 0.6
 #1000 SNPs for each as independent causal
 # load("/spin1/users/zhangh24/KG.vcf/MAF_result/pruned_MAF.Rdata")
 #  set.seed(666)
+#  colnames(pruned.snp.clean)[8] <- "MAF.LAC"
 #  n.snp <- nrow(pruned.snp.clean)
 #  pruned.snp.permu <- pruned.snp.clean[sample(c(1:n.snp),n.snp),]
 #  save(pruned.snp.permu,file = "/spin1/users/zhangh24/KG.vcf/MAF_result/pruned_MAF_permu.Rdata")
@@ -31,7 +34,7 @@ GenearteGenotype <- function(n.sub,n.snp,MAF){
 }
 MAF.EUR <- pruned.snp.permu$MAF.EUR
 MAF.AFR <- pruned.snp.permu$MAF.AFR
-MAF.AMR <- pruned.snp.permu$MAF.AMR
+MAF.LAC <- pruned.snp.permu$MAF.LAC
 n.cau <- 7000
 n.EUR <- 120000
 n.AFR <- 18000
@@ -44,15 +47,15 @@ n.AMR <- 18000
 
 genotype_EUR <- GenearteGenotype(n.EUR,n.cau, MAF.EUR[1:n.cau])
 genotype_AFR <- GenearteGenotype(n.AFR,n.cau,MAF.AFR[1:n.cau])
-genotype_AMR <- GenearteGenotype(n.AMR,n.cau,MAF.AMR[1:n.cau])
+genotype_LAC <- GenearteGenotype(n.AMR,n.cau,MAF.LAC[1:n.cau])
 
 genotype <- list(genotype_EUR,
                  genotype_AFR,
-                 genotype_AMR)
+                 genotype_LAC)
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
 save(genotype,file = paste0("./multi_ethnic/result/pruned_geno/geno_",1))
 
-load(paste0("./multi_ethnic/result/pruned_geno/geno_",3))
+#load(paste0("./multi_ethnic/result/pruned_geno/geno_",3))
 
 #start.end <- startend(n.snp,23,1)
 

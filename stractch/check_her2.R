@@ -16,8 +16,8 @@ intrin <- meta_result_shared_1p
 # all.equal(mixed$rs_id,fixed$rs_id)
 # all.equal(mixed$rs_id,intrin$rs_id)
 idx <- which(mixed$CHR==11&
-               mixed$position>=74459913
-             &mixed$position<= 74553458)
+               mixed$position>=74248849
+             &mixed$position<= 75342413)
 snp.info <- mixed[idx,c(1:14)]
 mixed.p <- mixed[idx,c(15)]
 fixed.p <- fixed[idx,c(15)]
@@ -41,3 +41,9 @@ new.data <- cbind(snp.info,mixed.p,fixed.p,intrin.result[,1:10])
 colnames(new.data)[c(15,16)] <- c("Mixed model global association test",
                                   "Fixed model global association test")
 write.csv(new.data,file="/spin1/users/zhangh24/breast_cancer_data_analysis/data/HER2_check.csv",quote=F,row.names=F)
+
+
+
+
+
+

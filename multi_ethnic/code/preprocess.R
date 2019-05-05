@@ -5,7 +5,7 @@
 
 result <- matrix("c",22,1)
 for(i in 1:22){
-  result[i,1] <- paste0("/spin1/users/zhangh24/plink --vcf ALL.chr",i,".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz --indep-pairwise 1000'kb' 1 0.1 --out /spin1/users/zhangh24/KG.vcf/prunded_result/chr_",i)
+  result[i,1] <- paste0("/spin1/users/zhangh24/plink --vcf ALL.chr",i,".phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz --keep /spin1/users/zhangh24/KG.vcf/ID.EUR --indep-pairwise 1000'kb' 1 0.1 --out /spin1/users/zhangh24/KG.vcf/prunded_result/chr_",i)
 }
 write.table(result,
   file="/spin1/users/zhangh24/KG.vcf/LD_pruned.sh",
@@ -137,7 +137,7 @@ colnames(all.snp)[c(7,8)] <- c("MAF.AFR",
 all.snp <- all.snp[,-6]
 all.snp.update = all.snp %>% 
   filter(MAF.EUR>=0.05)
-save(all.snp,file = "/spin1/users/zhangh24/KG.vcf/MAF_result/all_snp_MAF.Rdata")
+save(all.snp.update,file = "/spin1/users/zhangh24/KG.vcf/MAF_result/all_snp_MAF.Rdata")
 # all.snp.update = %>% all.snp %>% 
 #   select(c(CHR,SNP,A1,A2,MAF.EUR,
 #            all.snp.AFR.MAF.AFR))
