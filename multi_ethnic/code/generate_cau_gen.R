@@ -4,9 +4,9 @@
 #sample size EUR n =120000
 #sample size AFR n = 18000
 #sample size AMR n = 18000
-#heritability for EUR 0.8
-#heritability for AFR 0.8
-#heritability for AMR 0.8
+#heritability for EUR 0.5
+#heritability for AFR 0.5
+#heritability for AMR 0.5
 #5000 causal SNPs for each population
 #4000 shared causal SNPs
 #Genetic correlation for the between EUR and AFR is 0.4

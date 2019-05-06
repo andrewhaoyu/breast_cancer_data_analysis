@@ -4,9 +4,9 @@
 #sample size EUR n =120000
 #sample size AFR n = 18000
 #sample size LAC n = 18000
-#heritability for EUR 0.8
-#heritability for AFR 0.8
-#heritability for LAC 0.8
+#heritability for EUR 0.5
+#heritability for AFR 0.5
+#heritability for LAC 0.5
 #5000 causal SNPs for each population
 #4000 shared causal SNPs
 #Genetic correlation for the between EUR and AFR is 0.4
@@ -61,7 +61,7 @@ genotype <- list(genotype_EUR,
                  genotype_AFR,
                  genotype_LAC)
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
-save(genotype,file = paste0("./multi_ethnic/result/pruned_geno/geno_",i1))
+save(genotype,file = paste0("./multi_ethnic/result/pruned_geno/geno_",i1+1))
 
 
 
