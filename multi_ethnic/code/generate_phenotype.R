@@ -33,21 +33,20 @@ GenSigma <- function(her1,her2,her3,
 
 n.shared <- 4000
 n.nonshare <- 1000
-n.cau <- n.shared+3*n.nonshare
-her.EUR <- 0.5/n.cau
-her.AFR <- 0.5/n.cau
-her.LAC <- 0.5/n.cau
+n.cau <- n.shared+n.nonshare
+her.EUR <- 0.5
+her.AFR <- 0.5
+her.LAC <- 0.5
 gr.EUR.AFR <- 0.4
 gr.EUR.LAC <- 0.6
 gr.LAC.AFR <- 0.6
-Sigma <- GenSigma(her.EUR,
-                  her.AFR,
-                  her.LAC,
+Sigma <- GenSigma(her.EUR/n.cau,
+                  her.AFR/n.cau,
+                  her.LAC/n.cau,
                   gr.EUR.AFR,
                   gr.EUR.LAC,
                   gr.LAC.AFR)
 library(mvtnorm)
-
 
 #since the SNP MAF data is permutated
 #for EUR and AFR, we will use 1:4000 as shared SNPs
@@ -66,7 +65,18 @@ beta_nonshared[1:n.nonshare,1] <- rnorm(n.nonshare,0,sd=sqrt(her.EUR/n.cau))
 beta_nonshared[(n.nonshare+1):(n.nonshare*2),2] <- rnorm(n.nonshare,0,sd=sqrt(her.AFR/n.cau))
 beta_nonshared[(n.nonshare*2+1):(all_nonshare),3] <- rnorm(n.nonshare,0,sd=sqrt(her.LAC/n.cau))
 beta <- rbind(beta_shared,beta_nonshared)
-
+#beta is standardized genotype effect size
+#b is orignal effect size
+load("/spin1/users/zhangh24/KG.vcf/MAF_result/pruned_MAF_permu.Rdata")
+MAF.EUR <- pruned.snp.permu$MAF.EUR
+MAF.AFR <- pruned.snp.permu$MAF.AFR
+MAF.LAC <- pruned.snp.permu$MAF.LAC
+b <- beta
+#n.all are all the SNPs in the three populations with non-zero effects
+n.all <- n.shared+all_nonshare
+b[,1] <- beta[,1]/sqrt(2*(MAF.EUR*(1-MAF.EUR))[1:n.all])
+b[,2] <- beta[,2]/sqrt(2*(MAF.AFR*(1-MAF.AFR))[1:n.all])
+b[,3] <- beta[,3]/sqrt(2*(MAF.LAC*(1-MAF.LAC))[1:n.all])
 #######save effect size for the causal SNPs
 save(beta,file = "./multi_ethnic/result/pruned_geno/effect_size.Rdata")
 
@@ -77,95 +87,19 @@ save(beta,file = "./multi_ethnic/result/pruned_geno/effect_size.Rdata")
 
 
 
-load(paste0("./multi_ethnic/result/pruned_geno/geno_",1))
 n.EUR <- nrow(genotype[[1]])
 n.AFR <- nrow(genotype[[2]])
 n.LAC <- nrow(genotype[[3]])
 
-y_EUR <- genotype[[1]]%*%beta[,1]+rnorm(n.EUR,0,sd=sqrt(1-her.EUR))
-y_AFR <- genotype[[2]]%*%beta[,2]+rnorm(n.AFR,0,sd=sqrt(1-her.AFR))
-y_LAC <- genotype[[3]]%*%beta[,3]+rnorm(n.LAC,0,sd=sqrt(1-her.LAC))
+y_EUR <- genotype[[1]]%*%b[,1]+rnorm(n.EUR,0,sd=sqrt(1-her.EUR))
+y_AFR <- genotype[[2]]%*%b[,2]+rnorm(n.AFR,0,sd=sqrt(1-her.AFR))
+y_LAC <- genotype[[3]]%*%b[,3]+rnorm(n.LAC,0,sd=sqrt(1-her.LAC))
 
 y <- list(y_EUR,y_AFR,y_LAC)
-save(y,file = paste0("./multi_ethnic/result/y_",i1))
+save(y,file = paste0("./multi_ethnic/result/y_",1))
 
-
-
-
-
-
-
-
-
-
-
-y_EUR_train <- y_EUR[1:n.train.EUR]
-y_AFR_train <- y_AFR[1:n.train.AFR]
-y_EUR_test <- y_EUR[(n.train.EUR+1):(n.train.EUR+n.test.EUR)]
-y_AFR_test <- y_AFR[(n.train.AFR+1):(n.train.AFR+n.test.AFR)]
-
-
-####regression on the training and testing dataset
-####record the summary level statistics
-####first on the effect SNPs
-####simulate the other SNPs and record the summary level statistics
-n.snp <- nrow(pruned.snp.permu)
-beta_summary_train <- matrix(0,n.snp,6)
-beta_summary_test <- matrix(0,n.snp,6)
-colnames(beta_summary_train) <- c("beta_EUR","sd_EUR","p_EUR",
-                                  "beta_AFR","sd_AFR","p_AFR")
-colnames(beta_summary_test) <- colnames(beta_summary_train)
-
-
-FitLinearmodel <- function(y,x){
-  model <- fastLm(X=cbind(1,x),y=y)
-  if(is.na(coef(model)[2])){
-    result <- c(0,1,1)
-  }else{
-    result <- coef(summary(model))[2,c(1,2,4)]  
-  }
-  
-  return(result)
-}
-temp=1
-for(i in 1:n.cau){
-  if(i%%100==0){
-    print(i)
-  }
-  beta_summary_train[temp,1:3] <- FitLinearmodel(y_EUR_train,G_EUR_effect[1:n.train.EUR,i])
-  beta_summary_test[temp,1:3] <-  FitLinearmodel(y_EUR_test,G_EUR_effect[(n.train.EUR+1):(n.train.EUR+n.test.EUR),i])
-  beta_summary_train[temp,4:6] <- FitLinearmodel(y_AFR_train,G_AFR_effect[1:n.train.AFR,i])
-  beta_summary_test[temp,4:6] <-  FitLinearmodel(y_AFR_test,G_AFR_effect[(n.train.AFR+1):(n.train.AFR+n.test.AFR),i])
-  temp = temp+1
-}
-
-for(i in 1:(n.snp-n.cau)){
-  if(i%%100==0){
-    print(i)
-  }
-  G_EUR <- rbinom(n.EUR,2,MAF.EUR[n.cau+i])
-  G_AFR <- rbinom(n.AFR,2,MAF.AFR[n.cau+i])
-  beta_summary_train[temp,1:3] <- FitLinearmodel(y_EUR_train,G_EUR[1:n.train.EUR])
-  beta_summary_test[temp,1:3] <-  FitLinearmodel(y_EUR_test,G_EUR[(n.train.EUR+1):(n.train.EUR+n.test.EUR)])
-  beta_summary_train[temp,4:6] <- FitLinearmodel(y_AFR_train,G_AFR[1:n.train.AFR])
-  beta_summary_test[temp,4:6] <-  FitLinearmodel(y_AFR_test,G_AFR[(n.train.AFR+1):(n.train.AFR+n.test.AFR)])
-  temp = temp+1
-}
-
-
-temp.result <- list(beta_summary_train,
-                    beta_summary_test,
-)
-
-
-
-
-
-
-
-
-
-
+try <-  genotype_EUR%*%b[1:5000,1]
+mean(try)
 
 
 

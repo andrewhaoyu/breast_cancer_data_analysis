@@ -61,8 +61,8 @@ Fitmodelall <- function(y,G,ind){
       result.temp <- FitLinearmodel(y[[i]][(1:n.test)+n.train],
                                     G[[i]][(1:n.test)+n.train,ind])
       result.test <- c(result.test,result.temp)
-      result.temp <- FitLinearmodel(y[[i]][(1:n.vad)++n.test+n.train],
-                                    G[[i]][(1:n.vad)++n.test+n.train,ind])
+      result.temp <- FitLinearmodel(y[[i]][(1:n.vad)+n.test+n.train],
+                                    G[[i]][(1:n.vad)+n.test+n.train,ind])
       result.vad <- c(result.vad,result.temp)
   }
   return(list(result.train,result.test,result.vad))
