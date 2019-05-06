@@ -6,7 +6,7 @@
 #sample size LAC n = 18000
 #heritability for EUR 0.5
 #heritability for AFR 0.5
-#heritability for LAC 0.5
+#heritability for LAC 0.5ls
 #5000 causal SNPs for each population
 #4000 shared causal SNPs
 #Genetic correlation for the between EUR and AFR is 0.4

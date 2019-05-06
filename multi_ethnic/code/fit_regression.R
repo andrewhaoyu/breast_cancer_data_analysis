@@ -1,16 +1,17 @@
 #Goal: Generate phenotypes data for
-#simulate phenotypes data for AFR, EUR, AMR
+#simulate phenotypes data for AFR, EUR, LAC
 #MAF based on 1000KG
 #sample size EUR n =120000
 #sample size AFR n = 18000
-#sample size AMR n = 18000
-#heritability for EUR 0.8
-#heritability for AFR 0.8
-#heritability for AMR 0.8
+#sample size LAC n = 18000
+#heritability for EUR 0.5
+#heritability for AFR 0.5
+#heritability for LAC 0.5
 #5000 causal SNPs for each population
 #4000 shared causal SNPs
-#Genetic correlation for the shared SNPs is 0.6
-#1000 SNPs for each as independent causal
+#Genetic correlation for the between EUR and AFR is 0.4
+#Genetic correlation for the between EUR and LAC is 0.6
+#Genetic correlation for the between LAC and AFR is 0.6
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
@@ -29,7 +30,7 @@ beta_summary_vad <- matrix(0,n.snp,9)
 
 
 colnames(beta_summary_train) <- c("beta_EUR","sd_EUR","p_EUR",
-                                  "beta_AFR","sd_AFR","p_AFR", "beta_AMR","sd_AMR","p_AMR")
+                                  "beta_AFR","sd_AFR","p_AFR", "beta_LAC","sd_LAC","p_LAC")
 colnames(beta_summary_vad) = colnames(beta_summary_test) = colnames(beta_summary_train)
 library(RcppArmadillo)
 
@@ -46,7 +47,7 @@ Fitmodelall <- function(y,G,ind){
   result.train <- NULL
   result.test <- NULL
   result.vad <- NULL
-  #i from 1 to 3 represent EUR, AFR, AMR
+  #i from 1 to 3 represent EUR, AFR, LAC
   for(i in 1:3){
 
       n.sub <- nrow(y[[i]])
@@ -74,9 +75,9 @@ for(i in 1:n.snp){
     print(i)
   }
   temp_result <- Fitmodelall(y,genotype,i)
-  beta_summary_train <- temp_result[[1]]
-  beta_summary_test <- temp_result[[2]]
-  beta_summary_vad <- temp_result[[2]]
+  beta_summary_train[i,] <- temp_result[[1]]
+  beta_summary_test[i,] <- temp_result[[2]]
+  beta_summary_vad[i,] <- temp_result[[2]]
 }
  
 
