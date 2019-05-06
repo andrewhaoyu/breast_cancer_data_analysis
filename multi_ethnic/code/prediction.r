@@ -40,6 +40,24 @@ LDP <- function(y,beta.train,beta.test,beta.vad,p.train,
   prop <- rep(0,length(p.thr))
   n.snp.sec <- rep(0,length(p.thr))
   prs.mat <- matrix(0,n.test+n.vad,length(p.thr))
+  
+  # for(i in 1:500){
+  #   load(paste0("./multi_ethnic/result/pruned_geno/geno_",i))
+  #   geno <- genotype[[pop.ind]][,colnum[i]]
+  #   prs.temp <- beta.train[idx[i]]*geno
+  #   prs <- prs+prs.temp  
+  # }
+  # 
+  # 
+  # 
+  
+  
+  
+  
+  
+  
+  
+  
   for(k in 1:length(p.thr)){
     #print(k)
     idx <- which(p.train<=p.thr[k])
@@ -90,7 +108,7 @@ LDP <- function(y,beta.train,beta.test,beta.vad,p.train,
   result <- list(n.snp.sec,prop,
                  r2.test,r2.vad,
                  prs.mat)
-  return(list)
+  return(result)
   
 }
   
