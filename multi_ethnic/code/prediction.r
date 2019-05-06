@@ -41,15 +41,24 @@ LDP <- function(y,beta.train,beta.test,beta.vad,p.train,
   n.snp.sec <- rep(0,length(p.thr))
   prs.mat <- matrix(0,n.test+n.vad,length(p.thr))
   
+  
+  # n.snp <- 0
   # for(i in 1:500){
   #   load(paste0("./multi_ethnic/result/pruned_geno/geno_",i))
-  #   geno <- genotype[[pop.ind]][,colnum[i]]
-  #   prs.temp <- beta.train[idx[i]]*geno
-  #   prs <- prs+prs.temp  
+  #   temp <- ncol(genotype[[pop.ind]])
+  #   for(j in 1:temp){
+  #     jdx <- which(p.train[n.snp+temp]<=p.thr)
+  #       if(length(jdx)!=0){
+  #         prs.temp <- genotype[[pop.ind]][,j]*beta.train[n.snp+temp]
+  #         prs.mat[,jdx] <- prs.mat[,jdx]+
+  #           prs.temp[n.train+(1:(n.test+n.vad))]
+  #       }
+  #   }
+  #   n.snp <- n.snp+temp
   # }
-  # 
-  # 
-  # 
+
+
+
   
   
   
@@ -68,7 +77,8 @@ LDP <- function(y,beta.train,beta.test,beta.vad,p.train,
       r2.vad[k] <- 0
     }else{
       n.snp.sec[k] <- length(idx)
-      prop[k] <- sum(idx<=5000)/length(idx)
+      cau.snp <- c(1:4000,4000+c(1:1000)*pop.ind)
+      prop[k] <- sum(idx%in%cau.snp)/length(idx)
       prs <- rep(0,n.sub)
       temp.result <- Findfilenum(idx,all.cut)
       filenum <- temp.result[[1]]
