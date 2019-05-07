@@ -83,17 +83,101 @@ LDP <- function(y_all,beta.train,beta.test,beta.vad,p.train,
                  prs.mat)
   return(result)
 }  
+#LDP EUR
+LDPEUR <- function(y_all,
+                beta.train,
+                beta.test,
+                beta.vad,
+                p.train,
+                p.thr,
+                pop.ind){
+  y = y_all[[pop.ind]]
+  n.sub <- length(y)
+  n.train <- n.sub*10/12
+  n.test <- n.sub/12
+  n.vad <- n.sub/12
+  y.test <- y[n.train+(1:n.test)]
+  y.vad <- y[(n.train+n.test)+(1:n.vad)]
+  r2.vad <- r2.test <- rep(0,length(p.thr))
+  prop <- rep(0,length(p.thr))
+  n.snp.sec <- rep(0,length(p.thr))
+  prs.mat <- matrix(0,n.test+n.vad,length(p.thr))
+  n.sub2 <- length(y_all[[2]])
+  n.test2 <- n.sub2/12
+  n.vad2 <- n.sub2/12
+  prs.mat2 <- matrix(0,n.test+n.vad,length(p.thr))
+  n.sub3 <- length(y_all[[3]])
+  n.test3 <- n.sub3/12
+  n.vad3 <- n.sub3/12
+  prs.mat3 <- matrix(0,n.test+n.vad,length(p.thr))
+  
+  n.snp <- 0
+  for(i in 1:500){
+    print(i)
+    load(paste0("./multi_ethnic/result/pruned_geno/geno_",i))
+    file.snp <- ncol(genotype[[pop.ind]])
+    for(j in 1:file.snp){
+      jdx <- which(p.train[n.snp+j]<=p.thr)
+      if(length(jdx)!=0){
+        prs.temp <- genotype[[pop.ind]][,j]*beta.train[n.snp+j]
+        prs.mat[,jdx] <- prs.mat[,jdx]+
+          prs.temp[n.train+(1:(n.test+n.vad))]
+        prs.temp2 <- genotype[[2]][,j]*beta.train[n.snp+j] 
+        prs.mat2[,jdx] <- prs.mat2[,jdx]+
+          prs.temp2[n.train+(1:(n.test+n.vad))]
+        prs.temp3 <- genotype[[3]][,j]*beta.train[n.snp+j] 
+        prs.mat3[,jdx] <- prs.mat3[,jdx]+
+          prs.temp3[n.train+(1:(n.test+n.vad))]
+      }
+    }
+    n.snp <- n.snp+file.snp
+  }
+  
+  for(k in 1:length(p.thr)){
+    idx <- which(p.train<=p.thr[k])
+    if(length(idx)==0){
+      n.snp.sec[k] <- 0
+      prop[k] <- 0
+      r2.test[k] <- 0
+      r2.vad[k] <- 0
+    }else{
+      n.snp.sec[k] <- length(idx)
+      cau.snp <- c(1:4000,4000+c(1:1000)+1000*(pop.ind-1))
+      prop[k] <- sum(idx%in%cau.snp)/length(idx)
+      prs.test <- prs.mat[(1:n.test),k]
+      prs.vad <- prs.mat[n.test+(1:n.vad),k]
+      model1 <- lm(y.test~prs.test)
+      r2.test[k] <- summary(model1)$adj.r.squared
+      model2 <- lm(y.vad~prs.vad)
+      r2.vad[k] <- summary(model2)$adj.r.squared
+    }
+  }
+  
+  result <- list(n.snp.sec,prop,
+                 r2.test,r2.vad,
+                 prs.mat,
+                 prs.mat2,
+                 prs.mat3)
+  return(result)
+}  
 p.thr <- c(10^-8,10^-7,10^-6,10^-5,10^-4,10^-3,10^-2,0.1,0.3,0.5)
 beta.train <- beta_result[[1]][,3*pop.ind-2]
 beta.test <- beta_result[[2]][,3*pop.ind-2]
 beta.vad <- beta_result[[3]][,3*pop.ind-2]
+
 p.train <- beta_result[[1]][,3*pop.ind]
+
+if(pop.ind==1){
+  LDP.result <-  LDPEUR(y_all,beta.train,beta.test,beta.vad,p.train,p.thr,pop.ind)
+}else{
+  LDP.result <-  LDP(y_all,beta.train,beta.test,beta.vad,p.train,p.thr,pop.ind)
+}
+
 
 LDP.result <-  LDP(y,beta.train,beta.test,beta.vad,p.train,p.thr,pop.ind)
 save(LDP.result,file = paste0("./multi_ethnic/result/LDP.result_",pop.ind))
   
-# try <- genotype[[pop.ind]][,idx]%*%beta.train[idx]
-# try2 <- try[n.train+(1:(n.test+n.vad))]
+
 # 
 #   
 # LDP <- function(y_all,beta.train,beta.test,beta.vad,p.train,
