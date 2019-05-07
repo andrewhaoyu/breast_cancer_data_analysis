@@ -2,8 +2,8 @@
 #method1: LD pruning and threshold
 #method2: weighted combination of the three
 #method3: E-Bayes
-args <- commandArgs(trailingOnly = T)
-pop.ind <- as.numeric(args[[1]])
+arg <- commandArgs(trailingOnly=T)
+pop.ind <- as.numeric(arg[[1]])
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
 load(paste0("./multi_ethnic/result/y_",1))
 y_all = y
@@ -27,7 +27,7 @@ load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",1,".Rdata"))
 
 
 #pop.ind population indicator 1 EUR, 2 AFR, 3 LAC
-LDP2 <- function(y_all,beta.train,beta.test,beta.vad,p.train,
+LDP <- function(y_all,beta.train,beta.test,beta.vad,p.train,
                 p.thr,pop.ind){
   y = y_all[[pop.ind]]
   n.sub <- length(y)
