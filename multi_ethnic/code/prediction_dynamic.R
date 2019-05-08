@@ -1,7 +1,7 @@
 #goal: implement the dynamic p-value methods
 PostBeta <- function(beta,Sigma,Sigma0){
   n <- length(beta)
-  beta_post <- solve(solve(Sigma)+solve(Sigma0))%*%(solve(Sigma)%*%beta)
+  beta_post <- solve(Sigma_inv+solve(Sigma0))%*%(Sigma_inv%*%beta)
   return(beta_post)
 }
 
@@ -130,9 +130,6 @@ LDPDyW <- function(y_all,
                        n.snp.sec,
                        prop)
   
-  result <- list(n.snp.sec,prop,
-                 r2.test,r2.vad,
-                 prs.mat)
   return(result)
 }  
 
@@ -230,9 +227,6 @@ LDPDy <- function(y_all,
                        n.snp.sec,
                        prop)
   
-  result <- list(n.snp.sec,prop,
-                 r2.test,r2.vad,
-                 prs.mat)
   return(result)
 }  
 
@@ -262,9 +256,9 @@ alpha <- c(1,0.5,0.3,0.15,0.1,0.01,10^-3)
 beta.ref <- beta_train1
 p.ref <- p_train1
 sd.ref <- sd_train1
-p.train <- beta_train[,2*pop.ind]
-beta.train <- beta_train[,2*pop.ind-2]
-sd.train <- beta_train[,2*pop.ind-1]
+p.train <- beta_train[,3*pop.ind]
+beta.train <- beta_train[,3*pop.ind-2]
+sd.train <- beta_train[,3*pop.ind-1]
 if(i3==1){
   result <- LDPDy(y_all,
         beta.train,
