@@ -27,7 +27,7 @@ load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",1,".Rdata"))
 
 
 #pop.ind population indicator 1 EUR, 2 AFR, 3 LAC
-LDP <- function(y_all,beta.train,beta.test,beta.vad,p.train,
+LDP <- function(y_all,beta.train,p.train,
                 p.thr,pop.ind){
   y = y_all[[pop.ind]]
   n.sub <- length(y)
@@ -86,8 +86,6 @@ LDP <- function(y_all,beta.train,beta.test,beta.vad,p.train,
 #LDP EUR
 LDPEUR <- function(y_all,
                 beta.train,
-                beta.test,
-                beta.vad,
                 p.train,
                 p.thr,
                 pop.ind){
@@ -103,13 +101,15 @@ LDPEUR <- function(y_all,
   n.snp.sec <- rep(0,length(p.thr))
   prs.mat <- matrix(0,n.test+n.vad,length(p.thr))
   n.sub2 <- length(y_all[[2]])
+  n.train2 <- n.sub2*10/12
   n.test2 <- n.sub2/12
   n.vad2 <- n.sub2/12
-  prs.mat2 <- matrix(0,n.test+n.vad,length(p.thr))
+  prs.mat2 <- matrix(0,n.test2+n.vad2,length(p.thr))
   n.sub3 <- length(y_all[[3]])
+  n.train3 <- n.sub3*10/12
   n.test3 <- n.sub3/12
   n.vad3 <- n.sub3/12
-  prs.mat3 <- matrix(0,n.test+n.vad,length(p.thr))
+  prs.mat3 <- matrix(0,n.test2+n.vad2,length(p.thr))
   
   n.snp <- 0
   for(i in 1:500){
@@ -124,10 +124,10 @@ LDPEUR <- function(y_all,
           prs.temp[n.train+(1:(n.test+n.vad))]
         prs.temp2 <- genotype[[2]][,j]*beta.train[n.snp+j] 
         prs.mat2[,jdx] <- prs.mat2[,jdx]+
-          prs.temp2[n.train+(1:(n.test+n.vad))]
+          prs.temp2[n.train2+(1:(n.test2+n.vad2))]
         prs.temp3 <- genotype[[3]][,j]*beta.train[n.snp+j] 
         prs.mat3[,jdx] <- prs.mat3[,jdx]+
-          prs.temp3[n.train+(1:(n.test+n.vad))]
+          prs.temp3[n.train3+(1:(n.test3+n.vad3))]
       }
     }
     n.snp <- n.snp+file.snp
@@ -168,13 +168,12 @@ beta.vad <- beta_result[[3]][,3*pop.ind-2]
 p.train <- beta_result[[1]][,3*pop.ind]
 
 if(pop.ind==1){
-  LDP.result <-  LDPEUR(y_all,beta.train,beta.test,beta.vad,p.train,p.thr,pop.ind)
+  LDP.result <-  LDPEUR(y_all,beta.train,p.train,p.thr,pop.ind)
 }else{
-  LDP.result <-  LDP(y_all,beta.train,beta.test,beta.vad,p.train,p.thr,pop.ind)
+  LDP.result <-  LDP(y_all,beta.train,p.train,p.thr,pop.ind)
 }
 
 
-LDP.result <-  LDP(y,beta.train,beta.test,beta.vad,p.train,p.thr,pop.ind)
 save(LDP.result,file = paste0("./multi_ethnic/result/LDP.result_",pop.ind))
   
 
