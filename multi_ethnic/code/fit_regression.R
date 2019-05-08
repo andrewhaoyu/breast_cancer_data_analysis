@@ -18,7 +18,7 @@ i1 <- as.numeric(arg[[1]])
 
 load(paste0("./multi_ethnic/result/pruned_geno/geno_",i1))
 for(k in 1:100){
-  load(paste0("./multi_ethnic/result/y_",1))
+  load(paste0("./multi_ethnic/result/y_",k))
   
   ####regression on the training,testing and validation dataset
   ####the ratio between training,testing and validation is 10:1:1
