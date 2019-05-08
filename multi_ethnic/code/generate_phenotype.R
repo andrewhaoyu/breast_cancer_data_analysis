@@ -81,10 +81,11 @@ load("/spin1/users/zhangh24/KG.vcf/MAF_result/pruned_MAF_permu.Rdata")
 MAF.EUR <- pruned.snp.permu$MAF.EUR
 MAF.AFR <- pruned.snp.permu$MAF.AFR
 MAF.LAC <- pruned.snp.permu$MAF.LAC
-b <- beta
+all_nonshare <- 3*n.nonshare
 #n.all are all the SNPs in the three populations with non-zero effects
 n.all <- n.shared+all_nonshare
 load("./multi_ethnic/result/pruned_geno/effect_size.Rdata")
+b <- beta
 b[,1] <- beta[,1]/sqrt(2*(MAF.EUR*(1-MAF.EUR))[1:n.all])
 b[,2] <- beta[,2]/sqrt(2*(MAF.AFR*(1-MAF.AFR))[1:n.all])
 b[,3] <- beta[,3]/sqrt(2*(MAF.LAC*(1-MAF.LAC))[1:n.all])

@@ -86,11 +86,7 @@ for(k in 1:100){
                       beta_summary_test,
                       beta_summary_vad)
   save(beta_result,file = paste0("./multi_ethnic/result/pruned_geno/beta_estimate_",k,"_",i1,".Rdata"))
-  
-  
-  
-  
-}
+  }
 
 
 
