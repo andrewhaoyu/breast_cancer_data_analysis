@@ -26,7 +26,7 @@ for(k in 1:100){
     if(i1%%50==0){
       print(i1)  
     }
-    load(paste0("./multi_ethnic/result/pruned_geno/beta_estimate_",i1,".Rdata"))
+    load(paste0("./multi_ethnic/result/pruned_geno/beta_estimate_",k,"_",i1,".Rdata"))
     temp <- nrow(beta_result[[1]])
     beta_summary_train[n.snp+(1:temp),] <- beta_result[[1]]
     beta_summary_test[n.snp+(1:temp),] <- beta_result[[2]]
