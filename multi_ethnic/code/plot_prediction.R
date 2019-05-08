@@ -12,11 +12,10 @@ pop <- c("European",
          "African",
          "Latino")
 for(i in 1:3){
-  load(paste0("./multi_ethnic/result/LDP.result_",i)) 
-  n.snp.result[i,] <- LDP.result[[1]]
-  prop.result[i,] <- LDP.result[[2]]
-  idx <- which.max(LDP.result[[3]])
-  vad.r2[i] <- LDP.result[[4]][idx]
+  load(paste0("./multi_ethnic/result/LDP_summary_",i)) 
+  n.snp.result[i,] <- round(LDP.result[[1]],0)
+  prop.result[i,] <- round(LDP.result[[2]],2)
+  vad.r2[i] <- mean(LDP.result[[5]])
   r2.test <- LDP.result[[3]]
   data <- data.frame(p.thr,r2.test)
   colnames(data) <- c("Pthr","R2")

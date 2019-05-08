@@ -1,33 +1,4 @@
 #goal: implement the dynamic p-value methods
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
-load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",1,".Rdata"))
-load(paste0("./multi_ethnic/result/y_",1))
-y_all <- y
-beta_train <- beta_result[[1]]
-sd_train1 <- beta_train[,2]
-p_train1 <- beta_train[,3]
-
-sd_train2 <- beta_train[,5]
-p_train2 <- beta_train[,6]
-
-sd_train3 <- beta_train[8]
-p_train3 <- beta_train[,9]
-beta_train1 <- beta_train[,1]
-beta_train2 <- beta_train[,4]
-beta_train3 <- beta_train[,7]
-
-
-p.thr <- c(10^-8,10^-7,10^-6,10^-5,10^-4,10^-3,10^-2,0.1,0.3,0.5)
-alpha <- c(1,0.5,0.3,0.15,0.1,0.01,10^-3)
-p.train <- p_train2
-beta.train <- beta_train2
-beta.ref <- beta_train1
-p.ref <- p_train1
-p.train <- p_train2
-sd.train <- sd_train2
-sd.ref <- sd_train1
-
-
 PostBeta <- function(beta,Sigma,Sigma0){
   n <- length(beta)
   beta_post <- solve(solve(Sigma)+solve(Sigma0))%*%(solve(Sigma)%*%beta)
@@ -264,4 +235,58 @@ LDPDy <- function(y_all,
                  prs.mat)
   return(result)
 }  
+
+
+arg <- commandArgs(trailingOnly=T)
+i1 <- as.numeric(arg[[1]])
+pop.ind <- as.numeric(arg[[2]])
+i3 <- as.numeric(arg[[3]])
+
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
+load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",i1,".Rdata"))
+load(paste0("./multi_ethnic/result/y_",i1))
+y_all <- y
+beta_train <- beta_result[[1]]
+sd_train1 <- beta_train[,2]
+p_train1 <- beta_train[,3]
+sd_train2 <- beta_train[,5]
+p_train2 <- beta_train[,6]
+sd_train3 <- beta_train[8]
+p_train3 <- beta_train[,9]
+beta_train1 <- beta_train[,1]
+beta_train2 <- beta_train[,4]
+beta_train3 <- beta_train[,7]
+
+p.thr <- c(10^-8,10^-7,10^-6,10^-5,10^-4,10^-3,10^-2,0.1,0.3,0.5)
+alpha <- c(1,0.5,0.3,0.15,0.1,0.01,10^-3)
+beta.ref <- beta_train1
+p.ref <- p_train1
+sd.ref <- sd_train1
+p.train <- beta_train[,2*pop.ind]
+beta.train <- beta_train[,2*pop.ind-2]
+sd.train <- beta_train[,2*pop.ind-1]
+if(i3==1){
+  result <- LDPDy(y_all,
+        beta.train,
+        p.train,
+        p.thr,
+        pop.ind,
+        beta.ref,
+        p.ref,
+        alpha)
+save(result,file=paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3))  
+  
+}else{
+  result <- LDPDyW(y_all,
+                     beta.train,
+                     sd.train,
+                     p.train,
+                     p.thr,
+                     pop.ind,
+                     beta.ref,
+                     sd.ref,
+                     p.ref,
+                     alpha)
+  save(result,file=paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3))  
+}            
 
