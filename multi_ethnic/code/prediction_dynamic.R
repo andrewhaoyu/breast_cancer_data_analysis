@@ -1,7 +1,7 @@
 #goal: implement the dynamic p-value methods
 PostBeta <- function(beta,Sigma,Sigma0){
   n <- length(beta)
-  beta_post <- solve(Sigma+solve(Sigma0))%*%(Sigma%*%beta)
+  beta_post <- solve(solve(Sigma)+solve(Sigma0))%*%(solve(Sigma)%*%beta)
   return(beta_post)
 }
 
