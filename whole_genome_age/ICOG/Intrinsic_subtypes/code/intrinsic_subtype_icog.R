@@ -90,7 +90,7 @@ num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 # )
 # size = 5
 #size = 1000
-size = 3
+size = 6
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
@@ -223,7 +223,7 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog",i1,"_",i2))
+save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_size6_",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit_resubmit",i1,"_",i2))
