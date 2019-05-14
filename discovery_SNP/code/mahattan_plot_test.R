@@ -6,8 +6,40 @@ library(dplyr)
 data <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))
 
 gwas_result <- data %>%
-  filter(p.meta<=10^-4) %>% 
+  #filter(p.meta<=10^-4) %>% 
   select(c(SNP.Onco,chr.Onco,Position.Onco,p.meta))
+colnames(gwas_result) <- c("SNP","CHR",
+                           "BP",
+                           "P")
+Calculatelambda <- function(x,stat_type){
+  if(stat_type!="CHISQ4"&
+     stat_type!="CHISQ5"){
+    if (stat_type == "Z")
+      z = x
+    
+    if (stat_type == "CHISQ")
+      z = sqrt(x)
+    
+    if (stat_type == "PVAL")
+      z = qnorm(x / 2)
+    lambda = round(median(z^2) / qchisq(0.5,1), 3)
+    return(lambda)
+    
+  }else{
+    if(stat_type =="CHISQ5"){  z = qchisq(x,5,lower.tail = F)
+    lambda = round(median(z) / qchisq(0.5,5), 3)}
+    if(stat_type =="CHISQ4"){  z = qchisq(x,4,lower.tail = F)
+    lambda = round(median(z) / qchisq(0.5,4), 3)}
+    return(lambda)
+  }
+  
+  }
+Calculatelambda(gwas_result$P,"PVAL")
+Calculatelambda(mtop.p,"CHISQ4")
+Calculatelambda(ftop.p,"CHISQ5")
+gwas_result = gwas_result %>%
+ mutate(P= ifelse(P==0,1E-20,P))
+
 
 fine_mapping <- read.csv("./data/filter_regions_standard.csv",header= T)
 idx_cut <- NULL
@@ -37,9 +69,12 @@ head(gwas_result_filter[idx.sig,])
 gwas_sig <- gwas_result_filter[idx.sig,]
 head(gwas_result_filter[idx.sig,])
 gwas_sig[150:550,]
-manhattan(gwas_result_filter, col= c("blue4", "orange3"),
+manhattan(gwas_result, col= c("blue4", "orange3"),
           cex = 0.6,suggestiveline = F)
+qq(gwas_result$P)
+library(GenABEL)
 
+estlambda(Pvalues, method="median")
 library("CMplot")
 CMplot(gwas_result_filter,plot.type="c")
 
@@ -49,12 +84,59 @@ ftop <- meta_result_shared_1p
 load("./data/whole_genome_mtop_1p.Rdata")
 mtop <- meta_result_shared_1p
 ftop.p <- ftop$p.value
-subtypes.p <- apply(cbind(ftop.p,mtop.p),1,min)
-
-ftop$subtypes.p <- subtypes.p
+ftop$subtypes.p <- ftop$p.value
+ftop =  ftop %>% 
+  mutate(subtypes.p.new = ifelse((is.nan(subtypes.p)==T)|(subtypes.p==0),1E-20,subtypes.p))
 subtypes_gwas_result <- ftop %>%
   filter(subtypes.p<=1E-04) %>% 
-  select(SNP.ONCO,CHR,position,subtypes.p)
+  select(SNP.ONCO,CHR,position,subtypes.p.new)
+
+colnames(subtypes_gwas_result) <- c("SNP",
+                                    "CHR",
+                                    "BP",
+                                    "P")
+manhattan(subtypes_gwas_result, col= c("blue4", "orange3"),
+          cex = 0.6,suggestiveline = F)  
+
+
+mtop$subtypes.p <- mtop$p.value
+mtop =  mtop %>% 
+  mutate(subtypes.p.new = ifelse((is.nan(subtypes.p)==T)|(subtypes.p==0),1E-20,subtypes.p))
+subtypes_gwas_result <- ftop %>%
+  filter(subtypes.p<=1E-04) %>% 
+  select(SNP.ONCO,CHR,position,subtypes.p.new)
+
+colnames(subtypes_gwas_result) <- c("SNP",
+                                    "CHR",
+                                    "BP",
+                                    "P")
+manhattan(subtypes_gwas_result, col= c("blue4", "orange3"),
+          cex = 0.6,suggestiveline = F) 
+
+
+
+
+
+
+
+
+subtypes.p <- apply(cbind(ftop.p,mtop.p),1,min)
+subtypes.p <- ifelse(is.na(subtypes.p),1E-20,subtypes.p)
+ftop.p <- ifelse(is.nan(ftop.p),1E-20,ftop.p)
+Calculatelambda(ftop.p,"PVAL")
+Calculatelambda(mtop.p,"PVAL")
+
+
+idx <- which(is.nan(ftop$subtypes.p))
+ftop[idx,]
+
+
+ftop$subtypes.p <- subtypes.p
+ftop =  ftop %>% 
+  mutate(subtypes.p.new = ifelse((is.nan(subtypes.p)==T)|(subtypes.p==0),1E-20,subtypes.p))
+subtypes_gwas_result <- ftop %>%
+  filter(subtypes.p<=1E-04) %>% 
+  select(SNP.ONCO,CHR,position,subtypes.p.new)
 
 colnames(subtypes_gwas_result) <- c("SNP",
                                            "CHR",
@@ -80,7 +162,8 @@ idx_cut <- unique(idx_cut)
 subtypes_gwas_result_filter <- subtypes_gwas_result[-idx_cut,]
 manhattan(subtypes_gwas_result_filter, col= c("blue4", "orange3"),
           cex = 0.6,suggestiveline = F)     
-  
+manhattan(subtypes_gwas_result, col= c("blue4", "orange3"),
+          cex = 0.6,suggestiveline = F)   
 gwas_sig <- subtypes_gwas_result_filter %>% filter(P<=5E-08)
 gwas_sig[order(gwas_sig$CHR),]
 
