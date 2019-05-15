@@ -171,10 +171,17 @@ gwas_sig[order(gwas_sig$CHR),]
 #####mahattan plot for CIMBA BRCA1 META
 library(data.table)
 # cimba_result <- fread("./data/brca1_bcac_tn_ma1.txt",header = T) 
-# temp <- strsplit(cimba_result$MarkerName,
+
+# write.table(cimba_result,file = "./data/brca1_bcac_tn_meta.txt",row.names = F,
+#             col.names=T,quote=F)
+cimba_result_all <- as.data.frame(fread("./data/brca1_bcac_tn_meta.txt",header = T))
+# idx <- which(cimba_result_all$CHR==11&
+#                cimba_result_all$position==132959475)
+# cimba_result_all[7617599:7617603,]
+# temp <- strsplit(cimba_result_all$MarkerName,
 #                  "_")
-# temp[[1]][1]
-# n.snp <- nrow(cimba_result)
+# #temp[[1]][1]
+# n.snp <- nrow(cimba_result_all)
 # CHR <- rep(0,n.snp)
 # pos <- rep(0,n.snp)
 # for(i in 1:n.snp){
@@ -184,16 +191,9 @@ library(data.table)
 #   CHR[i] <- as.numeric(temp[[i]][1])
 #   pos[i] <- as.numeric(temp[[i]][2])
 # }
-# cimba_result$CHR <- CHR
-# cimba_result$position <- pos
-# cimba_result <- as.data.frame(cimba_result)
-# write.table(cimba_result,file = "./data/brca1_bcac_tn_meta.txt",row.names = F,
-#             col.names=T,quote=F)
-cimba_result_all <- as.data.frame(fread("./data/brca1_bcac_tn_meta.txt",header = T))
-# idx <- which(cimba_result_all$CHR==11&
-#                cimba_result_all$position==132959475)
-# cimba_result_all[7617599:7617603,]
-
+# cimba_result_all$CHR <- CHR
+# cimba_result_all$position <- pos
+# cimba_result_all <- as.data.frame(cimba_result)
 
 colnames(cimba_result_all)[10] <- "P"
 cimba_result = cimba_result_all %>% 

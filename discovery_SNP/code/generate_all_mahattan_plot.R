@@ -105,11 +105,34 @@ if(i1 ==1){
       dev.off()
     }
 }else if(i3==1){
-  cimba_result_all <- (fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/brca1_bcac_tn_meta.txt",header = T))
+  cimba_result_all <- as.data.frame(fread("./data/brca1_bcac_tn_meta.txt",header = T))
   # idx <- which(cimba_result_all$CHR==11&
   #                cimba_result_all$position==132959475)
   # cimba_result_all[7617599:7617603,]
+  # temp <- strsplit(cimba_result_all$MarkerName,
+  #                  "_")
+  # #temp[[1]][1]
+  # n.snp <- nrow(cimba_result_all)
+  # CHR <- rep(0,n.snp)
+  # pos <- rep(0,n.snp)
+  # for(i in 1:n.snp){
+  #   if(i%%10000==0){
+  #     print(i)
+  #   }
+  #   CHR[i] <- as.numeric(temp[[i]][1])
+  #   pos[i] <- as.numeric(temp[[i]][2])
+  # }
+  # cimba_result_all$CHR <- CHR
+  # cimba_result_all$position <- pos
+  # cimba_result_all <- as.data.frame(cimba_result)
   
+  colnames(cimba_result_all)[10] <- "P"
+  cimba_result = cimba_result_all %>% 
+    filter(P<=1E-04&
+             Freq1>=0.008&
+             Freq1<=0.992) %>% 
+    select(MarkerName,CHR,
+           position,P)
   
   colnames(cimba_result_all)[10] <- "P"
   cimba_result = cimba_result_all %>% 
