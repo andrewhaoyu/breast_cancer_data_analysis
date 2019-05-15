@@ -67,7 +67,7 @@ LDPDyW <- function(y_all,
     for(j in 1:length(p.thr)){
       print(j)
      #find the corresponding SNPs
-      idx <- which(p.train<=p.thr[j]&
+      idx <- which(p.train<=p.thr[j]|
                      p.ref<=p.thr2[k])
       #if less than 3 snp, can't calculate covariance matrix
       if(length(idx)>=3)
@@ -100,10 +100,11 @@ LDPDyW <- function(y_all,
     file.snp <- ncol(genotype[[pop.ind]])
     for(k in 1:length(p.thr2)){
       for(j in 1:file.snp){
-        if((p.ref[n.snp+j]<=p.thr2[k])){
+        #the p-value should be smaller than either of the two
+        if((p.ref[n.snp+j]>=p.thr2[k])){
           jdx <- which((p.train[n.snp+j]<=p.thr))  
         }else{
-          jdx <- NULL
+          jdx <- c(1:length(p.thr))
         }
         
         if(length(jdx)!=0){
@@ -128,7 +129,7 @@ LDPDyW <- function(y_all,
   temp <- 1
   for(j in 1:length(p.thr2)){
     for(k in 1:length(p.thr)){
-      idx <- which((p.train<=p.thr[k])&
+      idx <- which((p.train<=p.thr[k])|
                      (p.ref<=p.thr2[j]))
       if(length(idx)==0){
         n.snp.sec[temp] <- 0
@@ -206,10 +207,10 @@ LDPDy <- function(y_all,
     for(k in 1:length(p.thr2)){
       #p.update <- p.mat[,k]
       for(j in 1:file.snp){
-        if((p.ref[n.snp+j]<=p.thr2[k])){
+        if((p.ref[n.snp+j]>=p.thr2[k])){
           jdx <- which((p.train[n.snp+j]<=p.thr))  
         }else{
-          jdx <- NULL
+          jdx <- c(1:length(p.thr))
         }
         
         #jdx <- which(p.update[n.snp+j]<=p.thr)
@@ -228,7 +229,7 @@ LDPDy <- function(y_all,
   temp <- 1
   for(j in 1:length(p.thr2)){
     for(k in 1:length(p.thr)){
-      idx <- which((p.train<=p.thr[k])&
+      idx <- which((p.train<=p.thr[k])|
                      (p.ref<=p.thr2[j]))
       if(length(idx)==0){
         n.snp.sec[temp] <- 0
