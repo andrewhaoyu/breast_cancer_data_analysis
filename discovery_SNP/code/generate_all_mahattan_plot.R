@@ -28,9 +28,9 @@ FilterSNP <- function(gwas_result,fine_mapping){
   gwas_result_filter <- gwas_result[-idx_cut,]
   return(gwas_result_filter)
 }
-
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis")
 if(i1 ==1){
-  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis")
+
   data <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))
   gwas_result <- data %>%
     # filter(p.meta<=10^-4) %>% 
@@ -105,7 +105,7 @@ if(i1 ==1){
       dev.off()
     }
 }else if(i3==1){
-  cimba_result_all <- as.data.frame(fread("./data/brca1_bcac_tn_meta.txt",header = T))
+  cimba_result_all <- (fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/brca1_bcac_tn_meta.txt",header = T))
   # idx <- which(cimba_result_all$CHR==11&
   #                cimba_result_all$position==132959475)
   # cimba_result_all[7617599:7617603,]

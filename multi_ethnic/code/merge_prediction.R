@@ -2,7 +2,7 @@
 #simulation number 100
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
 n.s <- 100
-p.thr <- c(10^-8,10^-7,10^-6,10^-5,10^-4,10^-3,10^-2,0.1,0.3,0.5)
+p.thr <- c(10^-8,5E-8,10^-7,5E-7,10^-6,5E-6,10^-5,5E-5,10^-4,5E-4,10^-3,5E-3,10^-2,0.1,0.3,0.5)
 n.p <- length(p.thr)
 n.snp.mat <- matrix(0,n.s,n.p)
 prop.mat <- matrix(0,n.s,n.p)
