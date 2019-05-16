@@ -104,7 +104,7 @@ if(i1 ==1){
       qq(subtypes_gwas_result_filter$P)
       dev.off()
     }
-}else if(i3==1){
+}else if(i1==3){
   cimba_result_all <- as.data.frame(fread("./data/brca1_bcac_tn_meta.txt",header = T))
   # idx <- which(cimba_result_all$CHR==11&
   #                cimba_result_all$position==132959475)
@@ -159,11 +159,11 @@ if(i1 ==1){
               cex = 0.6,suggestiveline = F)
     dev.off()
   }else if(i2==3){
-    png(paste0("./discovery_SNP/result/manhattan_plot/qq_subtypes.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/qq_cimba.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
     qq(cimba_result$P)
     dev.off()
   }else if(i2==4){
-    png(paste0("./discovery_SNP/result/manhattan_plot/qq_subtypes_filter.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/qq_cimba_filter.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
     qq(cimba_result_filter$P)
     dev.off()
   }
