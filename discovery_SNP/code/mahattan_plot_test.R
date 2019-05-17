@@ -8,7 +8,8 @@ data <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_
 gwas_result <- data %>%
   #filter(p.meta<=10^-4) %>% 
   select(c(SNP.Onco,chr.Onco,Position.Onco,p.meta))
-colnames(gwas_result) <- c("SNP","CHR",
+colnames(gwas_result) <- c("SNP",
+                           "CHR",
                            "BP",
                            "P")
 Calculatelambda <- function(x,stat_type){
@@ -26,7 +27,7 @@ Calculatelambda <- function(x,stat_type){
     return(lambda)
     
   }else{
-    if(stat_type =="CHISQ5"){  z = qchisq(x,5,lower.tail = F)
+    if(stat_type =="CHISQ5"){ z = qchisq(x,5,lower.tail = F)
     lambda = round(median(z) / qchisq(0.5,5), 3)}
     if(stat_type =="CHISQ4"){  z = qchisq(x,4,lower.tail = F)
     lambda = round(median(z) / qchisq(0.5,4), 3)}
@@ -34,6 +35,7 @@ Calculatelambda <- function(x,stat_type){
   }
   
   }
+
 Calculatelambda(gwas_result$P,"PVAL")
 Calculatelambda(mtop.p,"CHISQ4")
 Calculatelambda(ftop.p,"CHISQ5")
