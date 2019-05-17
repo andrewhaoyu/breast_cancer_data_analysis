@@ -52,15 +52,20 @@ Fitmodelall <- function(y,G,ind){
 }
 
 arg <- commandArgs(trailingOnly=T)
+#i1 is for genotype file
 i1 <- as.numeric(arg[[1]])
+#i2 is for phenotype file
 i2 <- as.numeric(arg[[2]])
+#gr is for genetic correlation pattern
+gr <- as.numeric(arg[[3]])
 print(i1)
 print(i2)
+#paste0("./multi_ethnic/result/y_",i1,"_",i2)
 #since first file is large, we use double args to parrallel the jobs
 if(i1 ==1){
   load(paste0("./multi_ethnic/result/pruned_geno/geno_",i1))
   k <- i2
-    load(paste0("./multi_ethnic/result/y_",k))
+  load(paste0("./multi_ethnic/result/y_",k,"_",gr))
     
     ####regression on the training,testing and validation dataset
     ####the ratio between training,testing and validation is 10:1:1
@@ -90,11 +95,11 @@ if(i1 ==1){
     beta_result <- list(beta_summary_train,
                         beta_summary_test,
                         beta_summary_vad)
-    save(beta_result,file = paste0("./multi_ethnic/result/pruned_geno/beta_estimate_",k,"_",i1,".Rdata"))
+    save(beta_result,file = paste0("./multi_ethnic/result/pruned_geno/beta_estimate_",k,"_",i1,"_",gr,".Rdata"))
 }else{
   load(paste0("./multi_ethnic/result/pruned_geno/geno_",i1))
   for(k in 1:100){
-    load(paste0("./multi_ethnic/result/y_",k))
+    load(paste0("./multi_ethnic/result/y_",k,"_",gr))
     
     ####regression on the training,testing and validation dataset
     ####the ratio between training,testing and validation is 10:1:1
@@ -126,7 +131,7 @@ if(i1 ==1){
     beta_result <- list(beta_summary_train,
                         beta_summary_test,
                         beta_summary_vad)
-    save(beta_result,file = paste0("./multi_ethnic/result/pruned_geno/beta_estimate_",k,"_",i1,".Rdata"))
+    save(beta_result,file = paste0("./multi_ethnic/result/pruned_geno/beta_estimate_",k,"_",i1,"_",gr,".Rdata"))
   }
   
   

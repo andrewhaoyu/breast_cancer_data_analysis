@@ -14,6 +14,7 @@
 #Genetic correlation for the between LAC and AFR is 0.6
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
+#i2 is for genetic correlation structure
 i2 = as.numeric(args[[2]])
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
 load(paste0("./multi_ethnic/result/pruned_geno/geno_",1))
