@@ -57,7 +57,7 @@ i1 <- as.numeric(arg[[1]])
 #i2 is for phenotype file
 i2 <- as.numeric(arg[[2]])
 #gr is for genetic correlation pattern
-gr <- as.numeric(arg[[3]])
+gr <- 2
 print(i1)
 print(i2)
 #paste0("./multi_ethnic/result/y_",i1,"_",i2)
