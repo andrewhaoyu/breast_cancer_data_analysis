@@ -268,17 +268,22 @@ LDPDy <- function(y_all,
 
 
 arg <- commandArgs(trailingOnly=T)
+#i1 represent phenotype file
 i1 <- as.numeric(arg[[1]])
+#pop.ind represent population
 pop.ind <- as.numeric(arg[[2]])
+#i3 represent orginal method or EB
 i3 <- as.numeric(arg[[3]])
+#i4 represent genetic correlation pattern
+gr <- as.numeric(arg[[4]])
 
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
 load("/spin1/users/zhangh24/KG.vcf/MAF_result/pruned_MAF_permu.Rdata")
 MAF.EUR <- pruned.snp.permu$MAF.EUR
 MAF.AFR <- pruned.snp.permu$MAF.AFR
 MAF.LAC <- pruned.snp.permu$MAF.LAC
-load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",i1,".Rdata"))
-load(paste0("./multi_ethnic/result/y_",i1))
+load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",i1,"_",gr,".Rdata"))
+load(paste0("./multi_ethnic/result/y_",i1,"_",gr))
 y_all <- y
 beta_train <- beta_result[[1]]
 sd_train1 <- beta_train[,2]
@@ -318,7 +323,7 @@ if(i3==1){
         beta.ref,
         p.ref,
         p.thr2)
-save(result,file=paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3))  
+save(result,file=paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3,"_",gr))  
   
 }else{
   result <- LDPDyW(y_all,
@@ -333,6 +338,6 @@ save(result,file=paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3
                       p.thr2,
                       MAF.train,
                       MAF.ref)
-  save(result,file=paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3))  
+  save(result,file=paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3,"_",gr))  
 }            
 
