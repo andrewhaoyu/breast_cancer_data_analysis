@@ -10,10 +10,11 @@ r2.test.mat <- matrix(0,n.s,n.p)
 r2.vad.mat <- matrix(0,n.s,n.p)
 #the best testing threshold adjusted r2 on validation data
 best.vad <- rep(0,n.s)
+gr <- 2
 for(pop.ind in 1:3){
 for(i1 in 1:n.s){
-    
-      load(paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind))
+ load( paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind,"_",gr))
+      #load(paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind))
       n.snp.mat[i1,] <- LDP.result[[1]]
       prop.mat[i1,] <- LDP.result[[2]]
       r2.test.mat[i1,] <- LDP.result[[3]]
@@ -38,7 +39,7 @@ for(i1 in 1:n.s){
                        r2.test,
                        r2.vad,
                        best.vad)
-    save(LDP.result, file = paste0("./multi_ethnic/result/LDP_summary_",pop.ind))
+    save(LDP.result, file = paste0("./multi_ethnic/result/LDP_summary_",pop.ind,"_",gr))
 }
 
 

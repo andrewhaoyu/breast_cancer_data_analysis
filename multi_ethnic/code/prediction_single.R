@@ -2,10 +2,12 @@
 #select SNPs based on EUR, then use target population regression coef
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
+gr <- as.numeric(arg[[2]])
 #pop.ind <- as.numeric(arg[[2]])
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
-load(paste0("./multi_ethnic/result/y_",i1))
-load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",i1,".Rdata"))
+load(paste0("./multi_ethnic/result/y_",i1,"_",gr))
+load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",i1,"_",gr,".Rdata"))
+#load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",i1,".Rdata"))
 
 y_all = y
 
@@ -139,7 +141,7 @@ p.train <- beta_result[[1]][,3*pop.ind]
 #}
 
 
-save(LDP.result,file = paste0("./multi_ethnic/result/LDP.result_single",i1,"_",pop.ind))
+save(LDP.result,file = paste0("./multi_ethnic/result/LDP.result_single",i1,"_",pop.ind,"_",gr))
 
 
 # 

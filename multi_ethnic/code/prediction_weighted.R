@@ -3,12 +3,13 @@ n.s <- 100
 #vadlidation results for AFR and LAT
 r2.2 <- rep(0,n.s)
 r2.3 <- rep(0,n.s)
+gr <- 2
 for(i1 in 1:100){
   setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
   pop.ind <- 1
-  load(paste0("./multi_ethnic/result/y_",i1))
+  load(paste0("./multi_ethnic/result/y_",i1,"_",gr))
   y_all = y
-  load(paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind))
+  load(paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind,"_",gr))
   prs.mat2 <- LDP.result[[6]]
   prs.mat3 <- LDP.result[[7]]
   r2.test <- LDP.result[[3]]
@@ -18,7 +19,7 @@ for(i1 in 1:100){
   
   #weighted combination on AFR
   pop.ind <- 2
-  load(paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind))
+  load(paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind,"_",gr))
   r2.test <- LDP.result[[3]]
   idx.best <-which.max(r2.test)
   prs.AFR <- LDP.result[[5]][,idx.best]
@@ -43,7 +44,7 @@ for(i1 in 1:100){
   r2.2[i1] <- r2.adusted.2
   #weighted combination on LAC
   pop.ind <- 3
-  load(paste0("./multi_ethnic/result/LDP.result_",pop.ind)) 
+  load(paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind,"_",gr)) 
   r2.test <- LDP.result[[3]]
   idx.best <-which.max(r2.test)
   prs.LAC <- LDP.result[[5]][,idx.best]

@@ -11,8 +11,9 @@ vad.r2 <- rep(0,3)
 pop <- c("European",
          "African",
          "Latino")
+gr = 2
 for(i in 1:3){
-  load(paste0("./multi_ethnic/result/LDP_summary_",i)) 
+  load(paste0("./multi_ethnic/result/LDP_summary_",i,"_",gr)) 
   n.snp.result[i,] <- round(LDP.result[[1]],0)
   prop.result[i,] <- round(LDP.result[[2]],2)
   vad.r2[i] <- mean(LDP.result[[5]])
@@ -21,7 +22,7 @@ for(i in 1:3){
   colnames(data) <- c("Pthr","R2","Prop")
   
   
-  png(paste0("./multi_ethnic/result/prediction_",pop[i],".png"),width = 24, height=12,unit = "cm",res = 300)
+  png(paste0("./multi_ethnic/result/prediction_",pop[i],"_",gr,".png"),width = 24, height=12,unit = "cm",res = 300)
  print({
    ggplot(data)+geom_line(aes(-log10(Pthr),R2))+
      fte_theme()+
@@ -31,7 +32,7 @@ for(i in 1:3){
      scale_x_discrete(limit= log10P)
  }) 
  dev.off()
- png(paste0("./multi_ethnic/result/proportion_",pop[i],".png"),width = 24, height=12,unit = "cm",res = 300)
+ png(paste0("./multi_ethnic/result/proportion_",pop[i],"_",gr,".png"),width = 24, height=12,unit = "cm",res = 300)
  print({
    ggplot(data)+geom_line(aes(-log10(Pthr),Prop))+
      fte_theme()+
@@ -43,6 +44,7 @@ for(i in 1:3){
  dev.off() 
   
 }
+
 write.csv(n.snp.result,"./multi_ethnic/result/number_of_selected_SNP.csv")
 write.csv(prop.result,"./multi_ethnic/result/causal_proportion.csv")
 
