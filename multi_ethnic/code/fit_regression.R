@@ -95,6 +95,9 @@ if(i1 ==1){
     beta_result <- list(beta_summary_train,
                         beta_summary_test,
                         beta_summary_vad)
+    #k represent phenotype
+    #i1 represent genotype
+    #gr represent genetic correlation
     save(beta_result,file = paste0("./multi_ethnic/result/pruned_geno/beta_estimate_",k,"_",i1,"_",gr,".Rdata"))
 }else{
   load(paste0("./multi_ethnic/result/pruned_geno/geno_",i1))

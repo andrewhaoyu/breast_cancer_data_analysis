@@ -3,11 +3,16 @@
 #method2: weighted combination of the three
 #method3: E-Bayes
 arg <- commandArgs(trailingOnly=T)
+#i1 represent phenotype file
 i1 <- as.numeric(arg[[1]])
+#pop.ind represent population type
 pop.ind <- as.numeric(arg[[2]])
+#gr represent gentic correlation
+gr <- as.numeric(arg[[3]])
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis')
-load(paste0("./multi_ethnic/result/y_",i1))
-load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",i1,".Rdata"))
+load(paste0("./multi_ethnic/result/y_",i1,"_",gr))
+load(paste0("./multi_ethnic/result/pruned_geno/beta_all_",i1,"_",gr,".Rdata"))
+
 
 y_all = y
 
@@ -176,7 +181,7 @@ if(pop.ind==1){
 }
 
 
-save(LDP.result,file = paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind))
+save(LDP.result,file = paste0("./multi_ethnic/result/LDP.result_",i1,"_",pop.ind,"_",gr))
   
 
 # 
