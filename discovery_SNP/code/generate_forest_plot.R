@@ -1,5 +1,5 @@
 #goal generate forest plot for discovery SNPs
-
+library(data.table)
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
 library(data.table)
 data <- as.data.frame(fread("./discovery_SNP/result/discovery_snp_analysis.csv"))
@@ -46,7 +46,7 @@ casecon.car <- c("Luminal A-like","Luminal B,HER2-negative-like",
 ########plot intrinsic subtyeps and case-case plor for each snp
 for(i in 1:n.sub){
   snp.temp <- data$rs_id[i]
-  png(paste0("./discovery_SNP/result/forest_plot/casecase_",snp.temp,".png"),height=20,width = 15,res=300,units="cm")
+  png(paste0("./discovery_SNP/result/forest_plot/casecase_",snp.temp,".png"),height=15,width = 17,res=300,units="cm")
   data.plot.snp1 = data.plot%>% filter(SNP==snp.temp) %>% filter(Var%in%case.char)
   temp.case.char <- factor(data.plot.snp1$Var)
   data.plot.snp1$Var <- factor(temp.case.char,levels(temp.case.char)[c(2,3,4,1)])
@@ -59,20 +59,26 @@ for(i in 1:n.sub){
       theme_bw()+
       geom_hline(yintercept=1,size=1,lty=2)+
       theme(legend.position="none")+
-      ylab("Case-case odds ratio")+
-      xlab("Tumor characteristis")+
+      #ylab("Case-case odds ratio")+
+      #xlab("Tumor characteristics")+
+      #ylim(0.90, 1.65)+
+      
       #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
       #xlab("SNP")+
       # facet_grid(.~method)+
-      ggtitle(paste0("Case-case OR for ",snp.temp)
+      ggtitle(paste0("Case-case OR of ",snp.temp)
       )+
-      theme(plot.title = element_text(hjust=0.5,face="bold"),
-            axis.text=element_text(face="bold"),
-            axis.title.x = element_text(face="bold"),
-            axis.title.y = element_text(face="bold"))
+      theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
+            axis.text=element_text(face="bold",size=20),
+            axis.title.x = element_text(face="bold",size=19),
+            axis.title.y = element_text(face="bold"))+
+      theme(axis.title.x=element_blank(),
+            axis.text.y=element_blank(),
+            axis.title.y=element_blank())
   )
   dev.off()
-  png(paste0("./discovery_SNP/result/forest_plot/casecontrol_",snp.temp,".png"),height=20,width = 15,res=300,units="cm")
+  
+  png(paste0("./discovery_SNP/result/forest_plot/casecontrol_",snp.temp,".png"),height=15,width = 17,res=300,units="cm")
   data.plot.snp2 = data.plot%>% filter(SNP==snp.temp) %>% filter(Var%in%casecon.car)
   temp.case.char <- factor(data.plot.snp2$Var)
   data.plot.snp2$Var <- factor(temp.case.char,levels(temp.case.char)[c(1,6,2,4,5,3)])
@@ -85,19 +91,122 @@ for(i in 1:n.sub){
       theme_bw()+
       geom_hline(yintercept=1,size=1,lty=2)+
       theme(legend.position="none")+
-      ylab("Case-case odds ratio")+
-      xlab("Tumor characteristis")+
+      #ylab("Case-control odds ratio")+
+      #xlab("Intrinsic subtypes")+
+      #ylim(0.65, 1.65)+
       #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
       #xlab("SNP")+
       # facet_grid(.~method)+
       ggtitle(paste0("Case-control OR of ",snp.temp)
       )+
-      theme(plot.title = element_text(hjust=0.5,face="bold"),
-            axis.text=element_text(face="bold"),
-            axis.title.x = element_text(face="bold"),
-            axis.title.y = element_text(face="bold"))
+      theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
+            axis.text=element_text(face="bold",size=20),
+            axis.title.x = element_text(face="bold",size=10),
+            axis.title.y = element_text(face="bold",size=10))+
+      theme(axis.title.x=element_blank(),
+            axis.text.y=element_blank(),
+            axis.title.y=element_blank())
   )
   dev.off()
   
 }
+#adjust for specific snp rs7924772
+i <- 26
+snp.temp <- data$rs_id[i]
+png(paste0("./discovery_SNP/result/forest_plot/casecontrol_",snp.temp,".png"),height=15,width = 17,res=300,units="cm")
+data.plot.snp2 = data.plot%>% filter(SNP==snp.temp) %>% filter(Var%in%casecon.car)
+temp.case.char <- factor(data.plot.snp2$Var)
+data.plot.snp2$Var <- factor(temp.case.char,levels(temp.case.char)[c(1,6,2,4,5,3)])
+print(
+  ggplot(data.plot.snp2,aes(x=Var,y=OR,ymin=low,ymax=high,colour=Var))+
+    geom_pointrange()+
+    #scale_colour_manual(values=c("#386cb0","#fdb462"))+
+    #geom_line(yintercept=1,lty=2)+
+    coord_flip()+
+    theme_bw()+
+    geom_hline(yintercept=1,size=1,lty=2)+
+    theme(legend.position="none")+
+    #ylab("Case-control odds ratio")+
+    #xlab("Intrinsic subtypes")+
+    ylim(0.89, 1.07)+
+    #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
+    #xlab("SNP")+
+    # facet_grid(.~method)+
+    ggtitle(paste0("Case-control OR of ",snp.temp)
+    )+
+    theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
+          axis.text=element_text(face="bold",size=20),
+          axis.title.x = element_text(face="bold",size=10),
+          axis.title.y = element_text(face="bold",size=10))+
+    theme(axis.title.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.y=element_blank())
+)
+dev.off()
 
+
+i <- 28
+snp.temp <- data$rs_id[i]
+png(paste0("./discovery_SNP/result/forest_plot/casecontrol_",snp.temp,".png"),height=15,width = 17,res=300,units="cm")
+data.plot.snp2 = data.plot%>% filter(SNP==snp.temp) %>% filter(Var%in%casecon.car)
+temp.case.char <- factor(data.plot.snp2$Var)
+data.plot.snp2$Var <- factor(temp.case.char,levels(temp.case.char)[c(1,6,2,4,5,3)])
+print(
+  ggplot(data.plot.snp2,aes(x=Var,y=OR,ymin=low,ymax=high,colour=Var))+
+    geom_pointrange()+
+    #scale_colour_manual(values=c("#386cb0","#fdb462"))+
+    #geom_line(yintercept=1,lty=2)+
+    coord_flip()+
+    theme_bw()+
+    geom_hline(yintercept=1,size=1,lty=2)+
+    theme(legend.position="none")+
+    #ylab("Case-control odds ratio")+
+    #xlab("Intrinsic subtypes")+
+    ylim(0.90, 1.07)+
+    #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
+    #xlab("SNP")+
+    # facet_grid(.~method)+
+    ggtitle(paste0("Case-control OR of ",snp.temp)
+    )+
+    theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
+          axis.text=element_text(face="bold",size=20),
+          axis.title.x = element_text(face="bold",size=10),
+          axis.title.y = element_text(face="bold",size=10))+
+    theme(axis.title.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.y=element_blank())
+)
+dev.off()
+i <- 29
+snp.temp <- data$rs_id[i]
+png(paste0("./discovery_SNP/result/forest_plot/casecase_",snp.temp,".png"),height=15,width = 17,res=300,units="cm")
+data.plot.snp1 = data.plot%>% filter(SNP==snp.temp) %>% filter(Var%in%case.char)
+temp.case.char <- factor(data.plot.snp1$Var)
+data.plot.snp1$Var <- factor(temp.case.char,levels(temp.case.char)[c(2,3,4,1)])
+print(
+  ggplot(data.plot.snp1,aes(x=Var,y=OR,ymin=low,ymax=high,colour=Var))+
+    geom_pointrange()+
+    #scale_colour_manual(values=c("#386cb0","#fdb462"))+
+    #geom_line(yintercept=1,lty=2)+
+    coord_flip()+
+    theme_bw()+
+    geom_hline(yintercept=1,size=1,lty=2)+
+    theme(legend.position="none")+
+    #ylab("Case-case odds ratio")+
+    #xlab("Tumor characteristics")+
+    ylim(0.89, 1.02)+
+    
+    #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
+    #xlab("SNP")+
+    # facet_grid(.~method)+
+    ggtitle(paste0("Case-case OR of ",snp.temp)
+    )+
+    theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
+          axis.text=element_text(face="bold",size=20),
+          axis.title.x = element_text(face="bold",size=19),
+          axis.title.y = element_text(face="bold"))+
+    theme(axis.title.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.title.y=element_blank())
+)
+dev.off()

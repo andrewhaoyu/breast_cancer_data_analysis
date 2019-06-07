@@ -23,11 +23,12 @@ r2.all.test <- matrix(0,length(p.thr)*length(p.thr2),4*n.s)
 #pop.ind 3 is LAT
 temp <- 1
 temp2 = 1 
+gr <- 2
 for(i3 in 1:2){
   for(pop.ind in 2:3){
   
     for(i1 in 1:100){
-      load(paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3))
+      load(paste0("./multi_ethnic/result/Dy_result_",i1,"_",pop.ind,"_",i3,"_",gr))
       idx <- which.max(result[,3])
       p.thr.mat[i1,temp] <- result[idx,1]
       p.thr2.mat[i1,temp] <- result[idx,2]
@@ -66,6 +67,12 @@ colMeans(n.snp.mat)
 colMeans(prop.mat)
 
 
+#
+Pfunction <- fucntion(beta, beta_low,beta_high){
+  sd_beta = (log(beta_high)-log(beta_low))/(2*qnorm(0.975))
+  z = log(beta)/sd_beta
+  p = 2*pnorm(-abs(z))
+}
 #calibrated coefficents
 i3 = 2
 

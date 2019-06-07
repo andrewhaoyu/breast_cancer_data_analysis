@@ -13,16 +13,16 @@ data <- fread("./data/Dataset_Montse_20190322.txt")
 ##reproduce Jenny's group polytomous model
 ############collapes breast mos cat 0,1
 ############collapes age fftp cat 0,1
-##############we only focus on the invasive nbreast cancer cases
-data$status[data$status==2|data$status==3] <- 1
 data$breastmos_cat[data$breastmos_cat==0] <- 1
 data$agefftp_cat[data$agefftp_cat==0] <- 1
-data$lastchildage_cat[data$lastchildage_cat==0] <- 1
+#data$lastchildage_cat[data$lastchildage_cat==0] <- 1
 
+##############we only should focus on the invasive nbreast cancer cases
+##############however, we need to add in in-situ and unknown status people to reproduce Audrey's results
+##############check this with Audrey in BCAC meeting
+data$status[data$status==2|data$status==3] <- 1
 
 ##############only focus on population based study
-
-
 library(dplyr)
 data1 = data %>% filter(design_cat==0)
 ###############polytomous model 
