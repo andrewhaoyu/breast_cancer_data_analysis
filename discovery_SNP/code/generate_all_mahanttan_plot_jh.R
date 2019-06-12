@@ -42,24 +42,25 @@ if(i1 ==1){
   
   fine_mapping <- read.csv("./data/filter_regions_standard.csv",header= T)
   gwas_result_filter <- FilterSNP(gwas_result,fine_mapping) 
-  
+  dim(gwas_result)
+  idx <- sample(c(1:10760767),100000)
   if(i2==1){
-    png(paste0("./discovery_SNP/result/manhattan_plot/man_standard.png"),width = 7.635,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/man_standard.png"),width = 7.635,height =4.7175,units = "in",res = 300,type="cairo")
     manhattan(gwas_result, col= c("blue4", "orange3"),
               cex = 0.6,suggestiveline = F)
     dev.off()
     
   }else if(i2==2){
-    png(paste0("./discovery_SNP/result/manhattan_plot/man_standard_filter.png"),width = 7.635,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/man_standard_filter.png"),width = 7.635,height =4.7175,units = "in",res = 300,type="cairo")
     manhattan(gwas_result_filter, col= c("blue4", "orange3"),
               cex = 0.6,suggestiveline = F)
     dev.off()
   }else if(i2==3){
-    png(paste0("./discovery_SNP/result/manhattan_plot/qq_standard.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/qq_standard.png"),width = 4.7175,height =4.7175,units = "in",res = 300,type="cairo")
     qq(gwas_result$P)
     dev.off()
   }else if(i2==4){
-    png(paste0("./discovery_SNP/result/manhattan_plot/qq_standard_filter.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/qq_standard_filter.png"),width = 4.7175,height =4.7175,units = "in",res = 300,type="cairo")
     qq(gwas_result_filter$P)
     dev.off()
   }
@@ -87,22 +88,22 @@ if(i1 ==1){
   subtypes_gwas_result_filter <- FilterSNP(subtypes_gwas_result,fine_mapping) 
   
   if(i2==1){
-    png(paste0("./discovery_SNP/result/manhattan_plot/man_subtypes.png"),width = 7.635,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/man_subtypes.png"),width = 7.635,height =4.7175,units = "in",res = 300,type="cairo")
     manhattan(subtypes_gwas_result, col= c("blue4", "orange3"),
               cex = 0.6,suggestiveline = F)
     dev.off()
     
   }else if(i2==2){
-    png(paste0("./discovery_SNP/result/manhattan_plot/man_subtypes_filter.png"),width = 7.635,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/man_subtypes_filter.png"),width = 7.635,height =4.7175,units = "in",res = 300,type="cairo")
     manhattan(subtypes_gwas_result_filter, col= c("blue4", "orange3"),
               cex = 0.6,suggestiveline = F)
     dev.off()
   }else if(i2==3){
-    png(paste0("./discovery_SNP/result/manhattan_plot/qq_subtypes.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/qq_subtypes.png"),width = 4.7175,height =4.7175,units = "in",res = 300,type="cairo")
     qq(subtypes_gwas_result$P)
     dev.off()
   }else if(i2==4){
-    png(paste0("./discovery_SNP/result/manhattan_plot/qq_subtypes_filter.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/qq_subtypes_filter.png"),width = 4.7175,height =4.7175,units = "in",res = 300,type="cairo")
     qq(subtypes_gwas_result_filter$P)
     dev.off()
   }
@@ -150,22 +151,22 @@ if(i1 ==1){
   fine_mapping <- read.csv("./data/filter_regions_cimba.csv",header= T)
   cimba_result_filter <- FilterSNP(cimba_result,fine_mapping) 
   if(i2==1){
-    png(paste0("./discovery_SNP/result/manhattan_plot/man_cimba.png"),width = 7.635,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/man_cimba.png"),width = 7.635,height =4.7175,units = "in",res = 300,type="cairo")
     manhattan(cimba_result, col= c("blue4", "orange3"),
               cex = 0.6,suggestiveline = F)
     dev.off()
     
   }else if(i2==2){
-    png(paste0("./discovery_SNP/result/manhattan_plot/man_cimba_filter.png"),width = 7.635,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/man_cimba_filter.png"),width = 7.635,height =4.7175,units = "in",res = 300,type="cairo")
     manhattan(cimba_result_filter, col= c("blue4", "orange3"),
               cex = 0.6,suggestiveline = F)
     dev.off()
   }else if(i2==3){
-    png(paste0("./discovery_SNP/result/manhattan_plot/qq_cimba.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/qq_cimba.png"),width = 4.7175,height =4.7175,units = "in",res = 300,type="cairo")
     qq(cimba_result$P)
     dev.off()
   }else if(i2==4){
-    png(paste0("./discovery_SNP/result/manhattan_plot/qq_cimba_filter.png"),width = 4.7175,height =4.7175,units = "in",res = 300)
+    png(paste0("./discovery_SNP/result/manhattan_plot/qq_cimba_filter.png"),width = 4.7175,height =4.7175,units = "in",res = 300,type="cairo")
     qq(cimba_result_filter$P)
     dev.off()
   }
