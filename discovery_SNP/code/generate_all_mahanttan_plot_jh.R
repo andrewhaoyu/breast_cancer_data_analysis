@@ -75,9 +75,10 @@ if(i1 ==1){
   mtop <- meta_result_shared_1p
   mtop.p <- mtop$p.value
   subtypes.p <- apply(cbind(ftop.p,mtop.p),1,min)
+  idx <- which(is.na(ftop.p))
   ftop$subtypes.p <- subtypes.p
   ftop =  ftop %>% 
-    mutate(subtypes.p.new = ifelse((is.nan(subtypes.p)==T)|(subtypes.p==0),1E-20,subtypes.p))
+    mutate(subtypes.p.new = ifelse((is.nan(subtypes.p)==T)|(subtypes.p==0)|is.na(subtypes.p),1E-20,subtypes.p))
   subtypes_gwas_result <- ftop %>%
     select(rs_id,CHR,position,subtypes.p.new)
   colnames(subtypes_gwas_result) <- c("SNP",
@@ -178,7 +179,7 @@ if(i1 ==1){
   subtypes.p <- ftop.p
   ftop$subtypes.p <- ftop$p.value
   ftop =  ftop %>% 
-    mutate(subtypes.p.new = ifelse((is.nan(subtypes.p)==T)|(subtypes.p==0),1E-20,subtypes.p))
+    mutate(subtypes.p.new = ifelse((is.nan(subtypes.p)==T)|(subtypes.p==0)|is.na(subtypes.p),1E-20,subtypes.p))
   subtypes_gwas_result <- ftop %>%
     select(rs_id,CHR,position,subtypes.p.new)
   colnames(subtypes_gwas_result) <- c("SNP",
