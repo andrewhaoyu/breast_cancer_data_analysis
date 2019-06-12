@@ -9,8 +9,8 @@ n.var <- c(rep("ER",n.sub),
            rep("HER2",n.sub),
            rep("Grade",n.sub),
            rep("Luminal A-like",n.sub),
-           rep("Luminal B,HER2-negative-like",n.sub),
            rep("Luminal B-like",n.sub),
+           rep("Luminal B,HER2-negative-like",n.sub),
              rep("HER2 enriched-like",n.sub),
              rep("TN",n.sub),
            rep("BRCA1 carriers",n.sub)
@@ -44,6 +44,7 @@ casecon.car <- c("Luminal A-like","Luminal B,HER2-negative-like",
                  "TN",
                  "BRCA1 carriers" )
 ########plot intrinsic subtyeps and case-case plor for each snp
+scaleFUN <- function(x) sprintf("%.2f", x)
 for(i in 1:n.sub){
   snp.temp <- data$rs_id[i]
   png(paste0("./discovery_SNP/result/forest_plot/casecase_",snp.temp,".png"),height=15,width = 17,res=300,units="cm")
@@ -58,6 +59,7 @@ for(i in 1:n.sub){
       coord_flip()+
       theme_bw()+
       geom_hline(yintercept=1,size=1,lty=2)+
+      scale_y_continuous(labels=scaleFUN)+
       theme(legend.position="none")+
       #ylab("Case-case odds ratio")+
       #xlab("Tumor characteristics")+
@@ -66,7 +68,7 @@ for(i in 1:n.sub){
       #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
       #xlab("SNP")+
       # facet_grid(.~method)+
-      ggtitle(paste0("Case-case OR of ",snp.temp)
+      ggtitle(paste0(snp.temp)
       )+
       theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
             axis.text=element_text(face="bold",size=20),
@@ -90,6 +92,7 @@ for(i in 1:n.sub){
       coord_flip()+
       theme_bw()+
       geom_hline(yintercept=1,size=1,lty=2)+
+      scale_y_continuous(labels=scaleFUN)+
       theme(legend.position="none")+
       #ylab("Case-control odds ratio")+
       #xlab("Intrinsic subtypes")+
@@ -97,7 +100,7 @@ for(i in 1:n.sub){
       #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
       #xlab("SNP")+
       # facet_grid(.~method)+
-      ggtitle(paste0("Case-control OR of ",snp.temp)
+      ggtitle(paste0(snp.temp)
       )+
       theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
             axis.text=element_text(face="bold",size=20),
@@ -125,14 +128,15 @@ print(
     coord_flip()+
     theme_bw()+
     geom_hline(yintercept=1,size=1,lty=2)+
+    scale_y_continuous(labels=scaleFUN)+
     theme(legend.position="none")+
     #ylab("Case-control odds ratio")+
     #xlab("Intrinsic subtypes")+
-    ylim(0.89, 1.07)+
+    ylim(0.89, 1.08)+
     #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
     #xlab("SNP")+
     # facet_grid(.~method)+
-    ggtitle(paste0("Case-control OR of ",snp.temp)
+    ggtitle(paste0(snp.temp)
     )+
     theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
           axis.text=element_text(face="bold",size=20),
@@ -159,6 +163,7 @@ print(
     coord_flip()+
     theme_bw()+
     geom_hline(yintercept=1,size=1,lty=2)+
+    scale_y_continuous(labels=scaleFUN)+
     theme(legend.position="none")+
     #ylab("Case-control odds ratio")+
     #xlab("Intrinsic subtypes")+
@@ -166,7 +171,7 @@ print(
     #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
     #xlab("SNP")+
     # facet_grid(.~method)+
-    ggtitle(paste0("Case-control OR of ",snp.temp)
+    ggtitle(paste0(snp.temp)
     )+
     theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
           axis.text=element_text(face="bold",size=20),
@@ -188,18 +193,19 @@ print(
     geom_pointrange()+
     #scale_colour_manual(values=c("#386cb0","#fdb462"))+
     #geom_line(yintercept=1,lty=2)+
+    scale_y_continuous(labels=scaleFUN)+
     coord_flip()+
     theme_bw()+
     geom_hline(yintercept=1,size=1,lty=2)+
     theme(legend.position="none")+
     #ylab("Case-case odds ratio")+
     #xlab("Tumor characteristics")+
-    ylim(0.89, 1.02)+
+    ylim(0.89, 1.03)+
     
     #scale_y_continuous(breaks=c(0,1,2.5,5,8))+
     #xlab("SNP")+
     # facet_grid(.~method)+
-    ggtitle(paste0("Case-case OR of ",snp.temp)
+    ggtitle(paste0(snp.temp)
     )+
     theme(plot.title = element_text(hjust=0.5,face="bold",size = 20),
           axis.text=element_text(face="bold",size=20),

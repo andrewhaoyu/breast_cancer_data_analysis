@@ -12,4 +12,4 @@ length(table(data.1$Region2))
 data.2 = data %>% filter(FINAL.INQ.SCORE.LEVEL5==1
                          &Analysis1=="overall-analysis")
 length(table(data.2$Target.gene3))
-length(table(data.1$Region2))
+length(table(data.2$Region2))
