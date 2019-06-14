@@ -12,7 +12,7 @@ snp.infor$chr.pos <- paste0(snp.infor$CHR.x.x,"_",snp.infor$BP.x)
 library(dplyr)
 library(data.table)
 #load in all SNPs information
-all.snp <- fread("./ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt",header=T)
+all.snp <- fread("../breast_cancer_data_analysis/discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt",header=T)
 
 all.snp = all.snp %>% 
   mutate(chr.pos=paste0(chr.Onco,"_",Position.Onco))
@@ -46,7 +46,7 @@ colnames(BCAC.meta.result.new[[1]]) <- c("SNP",
                                          "Position",
                                          "Reference_allele",
                                          "Effect_allele")
-BCAC.meta.result.new[[2]] <- snp.infor.merge.update[,c(12:16,96)]
+BCAC.meta.result.new[[2]] <- snp.infor.merge.update[,c(7:11,96)]
 colnames(BCAC.meta.result.new[[2]]) <- c(colnames(BCAC.meta.result[[2]]),"CIMBA_BRCA1")
 head(BCAC.meta.result.new[[1]])
 head(BCAC.meta.result.new[[2]])

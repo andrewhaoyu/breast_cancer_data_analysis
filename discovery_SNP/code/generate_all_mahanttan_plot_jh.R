@@ -134,7 +134,8 @@ if(i1 ==1){
   cimba_result = cimba_result_all %>% 
     filter(P<=1E-04&
              Freq1>=0.008&
-             Freq1<=0.992) %>% 
+             Freq1<=0.992&
+             CHR!=23) %>% 
     select(MarkerName,CHR,
            position,P)
   
