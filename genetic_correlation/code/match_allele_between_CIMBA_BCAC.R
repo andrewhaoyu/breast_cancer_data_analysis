@@ -30,14 +30,27 @@ snp.infor.merge$alleles4[idx] <- snp.infor.merge$Effect.Meta[idx]
 
 
 #load CIMBA data
-load("./CIMBA/CIMBA.result.Rdata")
+load("./whole_genome_breast_cancer_results/CIMBA_result.Rdata")
 head(CIMBA.result)
+str.temp <- strsplit(CIMBA.result$MarkerName,"_")
+n <- nrow(CIMBA.result)
+CHR <- rep(0,n)
+position <- rep(0,n)
+for(i in 1:n){
+  CHR[i] <- as.numeric(str.temp[[i]][1])
+  position[i] <- as.numeric(str.temp[[i]][2])
+}
+CIMBA.result$CHR <- CHR
+CIMBA.result$Position <- position
 CIMBA.result = CIMBA.result %>% mutate(chr.pos = paste0(CHR,"_",Position))
 
 #library(data.table)
 #merge CIMBA and BCAC data together
 snp.infor.merge.update <- merge(snp.infor.merge,CIMBA.result,by.x = "chr.pos")
 
+idx <- which(as.character(snp.infor.merge.update$alleles4)!=snp.infor.merge.update$EffectAllele)
+
+snp.infor.merge.update <- snp.infor.merge.update[-idx,]
 
 BCAC.meta.result.new <- list()
 BCAC.meta.result.new[[1]] <- snp.infor.merge.update[,2:6]
@@ -46,13 +59,14 @@ colnames(BCAC.meta.result.new[[1]]) <- c("SNP",
                                          "Position",
                                          "Reference_allele",
                                          "Effect_allele")
-BCAC.meta.result.new[[2]] <- snp.infor.merge.update[,c(7:11,96)]
+BCAC.meta.result.new[[2]] <- snp.infor.merge.update[,c(7:11,95)]
 colnames(BCAC.meta.result.new[[2]]) <- c(colnames(BCAC.meta.result[[2]]),"CIMBA_BRCA1")
 head(BCAC.meta.result.new[[1]])
 head(BCAC.meta.result.new[[2]])
-BCAC.meta.result.new[[3]] <- snp.infor.merge.update[,c(12:36,97)]
+BCAC.meta.result.new[[3]] <- snp.infor.merge.update[,c(12:36,96)]
 colnames(BCAC.meta.result.new[[3]])[26] <- "CIMBA_BRCA1_var"
-BCAC.meta.result.new[[4]] <- snp.infor.merge.update[,c(37:38)]
+BCAC.meta.result.new[[4]] <- snp.infor.merge.update[,c(37:38,94)]
+colnames(BCAC.meta.result.new[[4]])[3] <- "freq_CIMBA"
 save(BCAC.meta.result.new,file="./two_stage_model_results/BCAC_CIMBABRCA1.Rdata")
 # idx <- which(snp.infor.merge.update$alleles3!=snp.infor.merge.update$Allele1)
 # snp.infor.merge.update[idx,]

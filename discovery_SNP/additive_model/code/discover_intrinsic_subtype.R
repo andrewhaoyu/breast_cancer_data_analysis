@@ -13,14 +13,16 @@ rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-
+#setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
-discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog_data.csv",header=T))
+#discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog_data.csv",header=T))
+
+discovery.snp.icog <- as.data.frame(fread("./data/discovery_icog_data.csv",header=T))
 colnames(discovery.snp.icog)
 #onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
 #onco.julie <- onco.julie[,-1]
@@ -28,7 +30,7 @@ x.test.all.mis1 <- discovery.snp.icog
 
 #sum(x.test.all.mis2[,11])/(2*nrow(x.test.all.mis2))
 
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
+discovery_snp <- read.csv("./data/discovery_snp_summary_new.csv",header=T)
 
 #x.test.all.mis1 <- as.data.frame(cbind(icog.julie,discovery.snp.icog))
 #x.test.all.mis2 <- as.data.frame(cbind(onco.julie,discovery.snp.onco))
@@ -104,7 +106,8 @@ colnames(z.design) <- c("Luminial A","Luminal B",
   colnames(y.pheno.mis2) = c("Behaviour","ER",
                              "PR","HER2","Grade")
   #x.test.all.mis2 <- data2[,c(27:203)]
-  discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
+  discovery.snp.onco <- as.data.frame(fread("./data/discovery_onco_data.csv",header=T))
+ # discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
   
   x.test.all.mis2 <- discovery.snp.onco
   x.covar.mis2 <- data2[,c(5:14,204)]
