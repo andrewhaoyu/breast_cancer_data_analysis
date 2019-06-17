@@ -61,14 +61,14 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
 #
 ##################only based on BCAC
 places <- 3
-intrinsic_result <- read.csv("./genetic_correlation/result/BCAC.csv",header=F)
+load("./genetic_correlation/result/ldsc_result_meta.rda")
 
-correlation.matrix <- intrinsic_result[1:5,2:6]
-correlation.matrix.se <- intrinsic_result[6:10,2:6]
-correlation.matrix <- correlation.matrix[c(2,5,4,3,1),c(2,5,4,3,1)]
-correlation.matrix.se <- correlation.matrix.se[c(2,5,4,3,1),c(2,5,4,3,1)]
+correlation.matrix <- ldsc_result[[2]]
+correlation.matrix.se <- ldsc_result[[4]]
+correlation.matrix <- correlation.matrix[c(2,5,4,3,1,6),c(2,5,4,3,1,6)]
+correlation.matrix.se <- correlation.matrix.se[c(2,5,4,3,1,6),c(2,5,4,3,1,6)]
 correlation.95 <- get_cor_95(correlation.matrix,correlation.matrix.se)
-names <- as.character(intrinsic_result[c(2,5,4,3,1),1])
+names <- colnames(ldsc_result[[2]])[c(2,5,4,3,1,6)]
 colnames(correlation.matrix) <- names
 rownames(correlation.matrix) <- names
 
@@ -77,7 +77,7 @@ rownames(correlation.95) <- names
 
 correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
 correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
-write.csv(correlation.95,file="correlation_95_BCAC.csv",quote=F)
+write.csv(correlation.95,file="./genetic_correlation/result/correlation_95_BCAC_CIMBA.csv",quote=F)
 
 
 # #get results for CIMBA+ BCAC
@@ -117,7 +117,8 @@ names <- c("Luminal A-like",
            "Luminal B, HER2-negative-like",
            "Luminal B-like ",
            "HER2-enriched-like ",
-           "TN")
+           "TN",
+           "CIMBA BRCA1")
 for(i in n:1){
   subtypes[i] <- paste0(names[combn.list[1,i]],
                      " vs ",
@@ -137,7 +138,7 @@ cor.data[,1] <- factor(cor.data[,1],
                        levels=as.character(cor.data[,1]))
 library(ggplot2)
 
-png(filename="genetic_correlation_plot_ci.png",width=13,heigh=9.5,units="in",res=600)
+png(filename="./genetic_correlation/result/genetic_correlation_plot_ci.png",width=13,heigh=9.5,units="in",res=600)
 ggplot(cor.data,aes(x=subtypes.f,y=cor.vec))+
   geom_point(size=4)+
   geom_errorbar(aes(ymax = cor.vec.high, ymin = cor.vec.low))+
@@ -195,7 +196,7 @@ dev.off()
 # write.csv(covariance.matrix.icog,file="./covariance_matrix_icog.csv",quote=F)
 # write.csv(correlation.matrix.new,file="./correlation_matrix_icog.csv",quote=F)
 
-library(tidyverse)
+library(dplyr)
 library(reshape2)
 library(ggplot2)
 #library(gplots)
@@ -212,6 +213,8 @@ library(ggplot2)
 library(corrplot)
 
 
+
+
 pal.breaks <- seq(0.5,1,0.01)
 col <- colorRampPalette(c("white","red"))(length(pal.breaks)-1)
 
@@ -220,21 +223,39 @@ paletteLength <- 50
 my.color <- colorRampPalette(c("white", "dodgerblue4"))(paletteLength)
 myBreaks <- c(seq(0, max(correlation.matrix), length.out=floor(paletteLength)))
 
-png(filename="meta_heatmap_two_stage.png",width=10,heigh=10,units="in",res=600)
+png(filename="./genetic_correlation/result/meta_heatmap_two_stage.png",width=10,heigh=10,units="in",res=600)
 colnames(correlation.matrix) <- c("Luminal A-like",
                                   "Luminal B, HER2-negative-like",
                                   "Luminal B-like ",
                                   "HER2-enriched-like ",
-                                  "TN")
+                                  "TN",
+                                  "CIMBA BRCA1")
 rownames(correlation.matrix) <- c("Luminal A-like",
                                   "Luminal B, HER2-negative-like",
                                   "Luminal B-like ",
                                   "HER2-enriched-like ",
-                                  "TN")
-corrplot.mixed(as.matrix(correlation.matrix),
-               lower.col = "black", number.cex = .7)
-correlation.matrix <- correlation.matrix[c(3,2,1,4,5),c(3,2,1,4,5)]
+                                  "TN",
+                                  "CIMBA BRCA1")
+#corrplot.mixed(as.matrix(correlation.matrix),
+             #  lower.col = "black", number.cex = .7)
+correlation.matrix <- correlation.matrix[c(3,2,1,4,5,6),c(3,2,1,4,5,6)]
+correlation.matrix.se <- correlation.matrix.se[c(3,2,1,4,5,6),c(3,2,1,4,5,6)]
 
+
+M <- 6
+correlation.result <- matrix(rep("c",M^2),M,M)
+for(i in 1:M){
+  for(j in 1:M){
+    correlation.result[i,j] <- paste0(
+      round(correlation.matrix[i,j],2)," (",
+      round(correlation.matrix.se[i,j],2),")")
+  }
+}
+colnames(correlation.result) <- colnames(correlation.matrix) 
+rownames(correlation.result) <- rownames(correlation.matrix)
+  
+  
+write.csv(correlation.result,file="./genetic_correlation/result/plot_order_BCAC_CIMBA_gc.csv")
 corrplot(as.matrix(correlation.matrix),
          method = "circle",
          #p.mat = p.value,
@@ -244,19 +265,20 @@ corrplot(as.matrix(correlation.matrix),
          
          #rect.col = "navy", plotC = "rect", cl.pos = "n",
          #col = my.color,
-        # method = "color",
-        tl.cex=1.2,
+         # method = "color",
+         tl.cex=1.2,
          addrect=2, 
-        order = "hclust",
+         order = "hclust",
          tl.col = "black", 
          tl.srt = 30,
          cl.lim = c(0, 1),
          #sig.level = c(0.005,0.01,0.05),
          pch.cex = .9, pch.col = "white"
-         )
+)
 # heatmap.2(correlation.matrix,tracecol=NA,cexRow=1,cexCol=1,margins=c(10,12),col = col,breaks=pal.breaks,key.ylab="",key.title = "",
 #           main=" Genetic Correlation Heatmap",dendrogram="row",density.info="none",lwid = c(1.5,4))
 dev.off()
+
 
 
 ER_result <- as.data.frame(fread("ER_genetic_correlation_result.csv",header=F))
@@ -271,6 +293,8 @@ colnames(correlation.95) <- c("ER pos","ER neg")
 rownames(correlation.95) <- c("ER pos","ER neg")
 write.csv(correlation.95,file="covariance_95_ER.csv",quote=F)
 places <- 3
+
+
 
 
 
