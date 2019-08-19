@@ -53,7 +53,7 @@ for(i1 in 1:length(new.order)){
     theme(legend.position="none")+
     ylab("Odds Ratio (95% CI)")+
     #scale_y_continuous(limits=c(0.90,1.1))+
-    xlab("Removed Countries")+
+    xlab("Countries")+
     facet_grid(.~tumor)+
     ggtitle(paste0("Forest plot of ", discover.casecase[new.order[i1],1])
     )+

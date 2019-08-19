@@ -130,14 +130,6 @@ if(i1 ==1){
   # cimba_result_all$position <- pos
   # cimba_result_all <- as.data.frame(cimba_result)
   
-  colnames(cimba_result_all)[10] <- "P"
-  cimba_result = cimba_result_all %>% 
-    filter(P<=1E-04&
-             Freq1>=0.008&
-             Freq1<=0.992&
-             CHR!=23) %>% 
-    select(MarkerName,CHR,
-           position,P)
   
   colnames(cimba_result_all)[10] <- "P"
   cimba_result = cimba_result_all %>% 

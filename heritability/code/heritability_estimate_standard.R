@@ -81,6 +81,6 @@ colnames(meta_result) <- c("snpid",
                            "info",
                            "freq")
 write.table(meta_result,file="./heritability/result/meta_result.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats meta_result.txt --N 56922.07 --out meta --merge-alleles w_hm3.snplist --info-min 0.3
+./munge_sumstats.py --sumstats meta_result.txt --N 61404.89 --out meta --merge-alleles w_hm3.snplist --info-min 0.3
 ./ldsc.py --h2 meta.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta
 less meta.log

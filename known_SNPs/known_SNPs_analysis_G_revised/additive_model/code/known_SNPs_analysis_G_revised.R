@@ -29,6 +29,15 @@ if(i1<=177){
   #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
   # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
   
+  y.pheno.complete1 = as.data.frame(y.pheno.mis1) %>% 
+    filter(Behavior==1) %>% 
+    filter(ER!=888&PR!=888&HER2!=888) %>% 
+    select(ER,PR,HER2)
+  cor(y.pheno.complete1)
+  
+  
+  
+  
   x.test.all.mis1 <- data1[,c(27:203)]
   x.test.all.mis1 <- x.test.all.mis1
   ###pc1-10 and age
