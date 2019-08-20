@@ -93,80 +93,101 @@ freq.all <- rep(0,num)
 rs_id <- rep("c",num)
 
 
-resubimt_resubmimt_id <- c(48,47,148,147,150,151,353,369,494,504,506,514,515,548,552,553)
-
-resubmit_id <- matrix(0,100,2)
-resubmit_temp <- 0
+# resubimt_resubmimt_id <- c(48,47,148,147,150,151,353,369,494,504,506,514,515,548,552,553)
+# 
+# resubmit_id <- matrix(0,100,2)
+# resubmit_temp <- 0
 num.total <- 0
-for(i in 1:length(Files)){
+for(i in 219:length(Files)){
   print(i)
-  file_load = paste0("intrinsic_subytpe_icog_resubmit",idx[i],"_",1)
-  if(idx[i]%in%resubimt_resubmimt_id){
-    for(k in 1:70){
-      load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit_resubmit",idx[i],"_",k))
-      temp <- nrow(result[[2]])
-      rs_id[num.total+(1:temp)] <- result[[1]]
-      score[num.total+(1:temp),] <- result[[2]]
-      infor[num.total+(1:temp),] <- result[[3]]
-      num.total <- temp+num.total
-      if(sum(result[[1]]=="c")!=0){
-        resubmit_temp <- resubmit_temp+1
-        resubmit_id[resubmit_temp,1] <- idx[i]
-        resubmit_id[resubmit_temp,2] <- k
-      }
-    }
-  }else if(idx[i]==413){
-    for(k in 1:1000){
-      load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit",idx[i],"_",k))
-      temp <- nrow(result[[2]])
-      rs_id[num.total+(1:temp)] <- result[[1]]
-      score[num.total+(1:temp),] <- result[[2]]
-      infor[num.total+(1:temp),] <- result[[3]]
-      num.total <- temp+num.total
-      if(sum(result[[1]]=="c")!=0){
-        resubmit_temp <- resubmit_temp+1
-        resubmit_id[resubmit_temp,1] <- idx[i]
-        resubmit_id[resubmit_temp,2] <- k
-      }
-    }
-  }else if(file_load%in%result_files){
-    for(k in 1:15){
-      load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit",idx[i],"_",k))
-      temp <- nrow(result[[2]])
-      rs_id[num.total+(1:temp)] <- result[[1]]
-      score[num.total+(1:temp),] <- result[[2]]
-      infor[num.total+(1:temp),] <- result[[3]]
-      num.total <- temp+num.total
-      if(sum(result[[1]]=="c")!=0){
-        resubmit_temp <- resubmit_temp+1
-        resubmit_id[resubmit_temp,1] <- idx[i]
-        resubmit_id[resubmit_temp,2] <- k
-      }
-    }
-  }else{
-    for(k in 1:5){
-      load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog",idx[i],"_",k))
-      temp <- nrow(result[[2]])
-      rs_id[num.total+(1:temp)] <- result[[1]]
-      score[num.total+(1:temp),] <- result[[2]]
-      infor[num.total+(1:temp),] <- result[[3]]
-      # for(j in 1:temp){
-      #   infor_j <- result[[3]][(number.of.tumor*j-(number.of.tumor-1)):((number.of.tumor)*j),]
-      #   infor[num.total+j,] <- as.vector(infor_j)
-      # }
-      # if(num.total< 12327300&(num.total+temp)> 12327300){
-      #   print(c(i,k))
-      # }
-      num.total <- temp+num.total
-      if(sum(result[[1]]=="c")!=0){
-        resubmit_temp <- resubmit_temp+1
-        resubmit_id[resubmit_temp,1] <- idx[i]
-        resubmit_id[resubmit_temp,2] <- k
-      }
-  }
+  for(k in 1:6){
+    load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_size6_",idx[i],"_",k))
+    temp <- nrow(result[[2]])
+    rs_id[num.total+(1:temp)] <- result[[1]]
+    score[num.total+(1:temp),] <- result[[2]]
+    infor[num.total+(1:temp),] <- result[[3]]
+    # for(j in 1:temp){
+    #   infor_j <- result[[3]][(number.of.tumor*j-(number.of.tumor-1)):((number.of.tumor)*j),]
+    #   infor[num.total+j,] <- as.vector(infor_j)
+    # }
+    # if(num.total< 12327300&(num.total+temp)> 12327300){
+    #   print(c(i,k))
+    # }
+    num.total <- temp+num.total
+  #   if(sum(result[[1]]=="c")!=0){
+  #     resubmit_temp <- resubmit_temp+1
+  #     resubmit_id[resubmit_temp,1] <- idx[i]
+  #     resubmit_id[resubmit_temp,2] <- k
+  #   }
+   }
+  
+  # file_load = paste0("intrinsic_subytpe_icog_resubmit",idx[i],"_",1)
+  # if(idx[i]%in%resubimt_resubmimt_id){
+  #   for(k in 1:70){
+  #     load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit_resubmit",idx[i],"_",k))
+  #     temp <- nrow(result[[2]])
+  #     rs_id[num.total+(1:temp)] <- result[[1]]
+  #     score[num.total+(1:temp),] <- result[[2]]
+  #     infor[num.total+(1:temp),] <- result[[3]]
+  #     num.total <- temp+num.total
+  #     if(sum(result[[1]]=="c")!=0){
+  #       resubmit_temp <- resubmit_temp+1
+  #       resubmit_id[resubmit_temp,1] <- idx[i]
+  #       resubmit_id[resubmit_temp,2] <- k
+  #     }
+  #   }
+  # }else if(idx[i]==413){
+  #   for(k in 1:1000){
+  #     load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit",idx[i],"_",k))
+  #     temp <- nrow(result[[2]])
+  #     rs_id[num.total+(1:temp)] <- result[[1]]
+  #     score[num.total+(1:temp),] <- result[[2]]
+  #     infor[num.total+(1:temp),] <- result[[3]]
+  #     num.total <- temp+num.total
+  #     if(sum(result[[1]]=="c")!=0){
+  #       resubmit_temp <- resubmit_temp+1
+  #       resubmit_id[resubmit_temp,1] <- idx[i]
+  #       resubmit_id[resubmit_temp,2] <- k
+  #     }
+  #   }
+  # }else if(file_load%in%result_files){
+  #   for(k in 1:15){
+  #     load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit",idx[i],"_",k))
+  #     temp <- nrow(result[[2]])
+  #     rs_id[num.total+(1:temp)] <- result[[1]]
+  #     score[num.total+(1:temp),] <- result[[2]]
+  #     infor[num.total+(1:temp),] <- result[[3]]
+  #     num.total <- temp+num.total
+  #     if(sum(result[[1]]=="c")!=0){
+  #       resubmit_temp <- resubmit_temp+1
+  #       resubmit_id[resubmit_temp,1] <- idx[i]
+  #       resubmit_id[resubmit_temp,2] <- k
+  #     }
+  #   }
+  # }else{
+  #   for(k in 1:5){
+  #     load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog",idx[i],"_",k))
+  #     temp <- nrow(result[[2]])
+  #     rs_id[num.total+(1:temp)] <- result[[1]]
+  #     score[num.total+(1:temp),] <- result[[2]]
+  #     infor[num.total+(1:temp),] <- result[[3]]
+  #     # for(j in 1:temp){
+  #     #   infor_j <- result[[3]][(number.of.tumor*j-(number.of.tumor-1)):((number.of.tumor)*j),]
+  #     #   infor[num.total+j,] <- as.vector(infor_j)
+  #     # }
+  #     # if(num.total< 12327300&(num.total+temp)> 12327300){
+  #     #   print(c(i,k))
+  #     # }
+  #     num.total <- temp+num.total
+  #     if(sum(result[[1]]=="c")!=0){
+  #       resubmit_temp <- resubmit_temp+1
+  #       resubmit_id[resubmit_temp,1] <- idx[i]
+  #       resubmit_id[resubmit_temp,2] <- k
+  #     }
+  # }
    
     
-  }
+  #}
 
 
   
