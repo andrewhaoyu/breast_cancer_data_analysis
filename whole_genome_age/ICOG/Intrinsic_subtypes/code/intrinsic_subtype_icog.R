@@ -1,5 +1,8 @@
 rm(list=ls())
-#install_github("andrewhaoyu/bc2", ref = "development",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#library(withr)
+#library(devtools)
+#with_libpaths(new = "/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6", install_github("andrewhaoyu/bc2"))
+#install_github("andrewhaoyu/bc2", args =c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6"'))
 #install_github("andrewhaoyu/bc2",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 #args=(commandArgs(TRUE))
 #for(p in 1:length(args)){
@@ -66,7 +69,7 @@ gc()
 idx.fil <- Icog.order[,1]%in%SG_ID
 idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/delta0.icog.Rdata")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
 z.design.support <- cbind(1,z.standard[,1])
@@ -90,7 +93,8 @@ num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 # )
 # size = 5
 #size = 1000
-size = 6
+#size = 6
+size = 700
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
