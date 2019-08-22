@@ -97,15 +97,56 @@ rs_id <- rep("c",num)
 # 
 # resubmit_id <- matrix(0,100,2)
 # resubmit_temp <- 0
+resubmit_id <- c(218)
 num.total <- 0
-for(i in 219:length(Files)){
+temp.i = NULL
+temp.k = NULL
+for(i in 1:length(Files)){
   print(i)
-  for(k in 1:6){
-    load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_size6_",idx[i],"_",k))
-    temp <- nrow(result[[2]])
-    rs_id[num.total+(1:temp)] <- result[[1]]
-    score[num.total+(1:temp),] <- result[[2]]
-    infor[num.total+(1:temp),] <- result[[3]]
+  if(i %in% resubmit_id){
+    for(k in 1:700){
+      load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_size700_",idx[i],"_",k))
+      if(length(which(result[[1]]=="c"))>=1){
+        temp.i = c(temp.i,i)
+        temp.k = c(temp.k,k)
+      } 
+      temp <- nrow(result[[2]])
+      rs_id[num.total+(1:temp)] <- result[[1]]
+      score[num.total+(1:temp),] <- result[[2]]
+      infor[num.total+(1:temp),] <- result[[3]]
+      num.total <- temp+num.total
+    }}else{
+      for(k in 1:6){
+        load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_size6_",idx[i],"_",k))
+        if(length(which(result[[1]]=="c"))>=1){
+          temp.i = c(temp.i,i)
+          temp.k = c(temp.k,k)
+        }
+        temp <- nrow(result[[2]])
+        rs_id[num.total+(1:temp)] <- result[[1]]
+        score[num.total+(1:temp),] <- result[[2]]
+        infor[num.total+(1:temp),] <- result[[3]]
+        num.total <- temp+num.total    
+    }
+    }
+}
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+# icog_info <- cbind(icog_info,CHR)
+# save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+idx <- which(icog_info$rs_id!=rs_id)
+all.equal(icog_info$rs_id,rs_id)
+#idx.diff <- which(icog_info$rs_id!=rs_id)
+CHR <- icog_info[,11]
+icog_info <- icog_info[,1:10]
+
+icog_result_casecase <- data.frame(icog_info,score,infor,CHR)
+
+
+
+
+
+
+save(icog_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/Icog_result_intrinsic_subtype_082119.Rdata")
     # for(j in 1:temp){
     #   infor_j <- result[[3]][(number.of.tumor*j-(number.of.tumor-1)):((number.of.tumor)*j),]
     #   infor[num.total+j,] <- as.vector(infor_j)
@@ -113,13 +154,13 @@ for(i in 219:length(Files)){
     # if(num.total< 12327300&(num.total+temp)> 12327300){
     #   print(c(i,k))
     # }
-    num.total <- temp+num.total
+   
   #   if(sum(result[[1]]=="c")!=0){
   #     resubmit_temp <- resubmit_temp+1
   #     resubmit_id[resubmit_temp,1] <- idx[i]
   #     resubmit_id[resubmit_temp,2] <- k
   #   }
-   }
+  # }
   
   # file_load = paste0("intrinsic_subytpe_icog_resubmit",idx[i],"_",1)
   # if(idx[i]%in%resubimt_resubmimt_id){
@@ -192,7 +233,7 @@ for(i in 219:length(Files)){
 
   
   
-}
+
 # resubmit_id <- resubmit_id[1:resubmit_temp,]
 # unique(resubmit_id[,1])
 
@@ -238,22 +279,7 @@ for(i in 219:length(Files)){
 #   
 # }
 # 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
-# icog_info <- cbind(icog_info,CHR)
-# save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
-all.equal(icog_info$rs_id,rs_id)
-#idx.diff <- which(icog_info$rs_id!=rs_id)
-CHR <- icog_info[,11]
-icog_info <- icog_info[,1:10]
 
-icog_result_casecase <- data.frame(icog_info,score,infor,CHR)
-
-
-
-
-
-
-save(icog_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/Icog_result_intrinsic_subtype.Rdata")
 # icog_result_baseline <- data.frame(icog_info,score_baseline,infor_baseline,CHR)
 # save(icog_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
 # print(1)

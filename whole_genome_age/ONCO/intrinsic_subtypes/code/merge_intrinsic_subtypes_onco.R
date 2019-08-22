@@ -69,111 +69,131 @@ freq.all <- rep(0,num)
 #resubmit_id <- matrix(0,100,2)
 #resubmit_temp <- 0
 
+resubmit_id <- c(218,219,280)
 num.total <- 0
-for(i in 281:567){
+for(i in 1:567){
   print(i)
-  k = 1
   
-  for(k in 1:6){
-    load(
-      paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_size6_",idx[i],"_",k))
-     # paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco",idx[i],"_",k)
-    #)
-    # temp <- nrow(result[[2]])
-    # rs_id[num.total+(1:temp)] <- result[[1]]
-    # score[num.total+(1:temp),] <- result[[2]]
-    # infor[num.total+(1:temp),] <- result[[3]]
-    # freq.all[num.total+(1:temp)] <- result[[4]]
-    # num.total <- temp+num.total
-    # if(sum(result[[1]]=="c")!=0){
-    #   resubmit_temp <- resubmit_temp+1
-    #   resubmit_id[resubmit_temp,1] <- idx[i]
-    #   resubmit_id[resubmit_temp,2] <- k
-    # }
-  
-  
-  
-  
-  
-  # file_load = paste0("intrinsic_subytpe_onco_resubmit",idx[i],"_",k)
-  # if(idx[i]%in%resubimt_resubmimt_id){
-  #   for (k in 1:70) {
-  #     #print(k)
-  #     load(
-  #       paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit_resubmit",idx[i],"_",k)
-  #     )
-  #     temp <- nrow(result[[2]])
-  #     rs_id[num.total+(1:temp)] <- result[[1]]
-  #     score[num.total+(1:temp),] <- result[[2]]
-  #     infor[num.total+(1:temp),] <- result[[3]]
-  #     freq.all[num.total+(1:temp)] <- result[[4]] 
-  #     num.total <- temp+num.total
-  #     if(sum(result[[1]]=="c")!=0){
-  #       resubmit_temp <- resubmit_temp+1
-  #       resubmit_id[resubmit_temp,1] <- idx[i]
-  #       resubmit_id[resubmit_temp,2] <- k
-  #     }
-  #   }
-  # }else if(idx[i]==327){
-  #   for (k in 1:1000) {
-  #     #print(k)
-  #     load(
-  #       paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit",idx[i],"_",k)
-  #     )
-  #     temp <- nrow(result[[2]])
-  #     rs_id[num.total+(1:temp)] <- result[[1]]
-  #     score[num.total+(1:temp),] <- result[[2]]
-  #     infor[num.total+(1:temp),] <- result[[3]]
-  #     freq.all[num.total+(1:temp)] <- result[[4]] 
-  #     num.total <- temp+num.total
-  #     if(sum(result[[1]]=="c")!=0){
-  #       resubmit_temp <- resubmit_temp+1
-  #       resubmit_id[resubmit_temp,1] <- idx[i]
-  #       resubmit_id[resubmit_temp,2] <- k
-  #     }
-  #   }
-  # }else if(file_load%in%result_files){
-  #   for (k in 1:15) {
-  #     #print(k)
-  #     load(
-  #       paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit",idx[i],"_",k)
-  #     )
-  #     temp <- nrow(result[[2]])
-  #     rs_id[num.total+(1:temp)] <- result[[1]]
-  #     score[num.total+(1:temp),] <- result[[2]]
-  #     infor[num.total+(1:temp),] <- result[[3]]
-  #     freq.all[num.total+(1:temp)] <- result[[4]] 
-  #     num.total <- temp+num.total
-  #     if(sum(result[[1]]=="c")!=0){
-  #       resubmit_temp <- resubmit_temp+1
-  #       resubmit_id[resubmit_temp,1] <- idx[i]
-  #       resubmit_id[resubmit_temp,2] <- k
-  #     }
-  #   }  
-  # }else{
-  #   for(k in 1:5){
-  #     load(
-  #       paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco",idx[i],"_",k)
-  #     )
-  #     temp <- nrow(result[[2]])
-  #     rs_id[num.total+(1:temp)] <- result[[1]]
-  #     score[num.total+(1:temp),] <- result[[2]]
-  #     infor[num.total+(1:temp),] <- result[[3]]
-  #     freq.all[num.total+(1:temp)] <- result[[4]]
-  #     num.total <- temp+num.total
-  #     if(sum(result[[1]]=="c")!=0){
-  #       resubmit_temp <- resubmit_temp+1
-  #       resubmit_id[resubmit_temp,1] <- idx[i]
-  #       resubmit_id[resubmit_temp,2] <- k
-  #     }
-  #   }
-    
+  if(i %in% resubmit_id){
+    for(k in 1:700){
+      load(
+        paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_size700_",idx[i],"_",k))
+      temp <- nrow(result[[2]])
+      rs_id[num.total+(1:temp)] <- result[[1]]
+      score[num.total+(1:temp),] <- result[[2]]
+      infor[num.total+(1:temp),] <- result[[3]]
+      freq.all[num.total+(1:temp)] <- result[[4]]
+      num.total <- temp+num.total
+    }
+  }else{
+    for(k in 1:6){
+      load(
+        paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_size6_",idx[i],"_",k))
+      temp <- nrow(result[[2]])
+      rs_id[num.total+(1:temp)] <- result[[1]]
+      score[num.total+(1:temp),] <- result[[2]]
+      infor[num.total+(1:temp),] <- result[[3]]
+      freq.all[num.total+(1:temp)] <- result[[4]]
+      num.total <- temp+num.total
+    }
+   
   }
+}  
   
   
-  
-  
-}
+
+
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+
+all.equal(onco_info$rs_id,rs_id)
+idx <- which(onco_info$rs_id!=rs_id)
+# idx.diff <- which(onco_info$rs_id!=rs_id)
+# length(idx.diff)
+# length(which(rs_id=="c"))
+CHR <- onco_info[,11]
+onco_info <- onco_info[,1:10]
+
+
+onco_result_casecase <- data.frame(onco_info,score,infor,CHR)
+
+save(onco_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_intrinsic_subtype_082119.Rdata")
+print(1)
+
+# paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco",idx[i],"_",k)
+#)
+# temp <- nrow(result[[2]])
+# rs_id[num.total+(1:temp)] <- result[[1]]
+# score[num.total+(1:temp),] <- result[[2]]
+# infor[num.total+(1:temp),] <- result[[3]]
+# freq.all[num.total+(1:temp)] <- result[[4]]
+# num.total <- temp+num.total
+# if(sum(result[[1]]=="c")!=0){
+#   resubmit_temp <- resubmit_temp+1
+#   resubmit_id[resubmit_temp,1] <- idx[i]
+#   resubmit_id[resubmit_temp,2] <- k
+# }
+
+
+
+
+
+# file_load = paste0("intrinsic_subytpe_onco_resubmit",idx[i],"_",k)
+# if(idx[i]%in%resubimt_resubmimt_id){
+#   for (k in 1:70) {
+#     #print(k)
+#     load(
+#       paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit_resubmit",idx[i],"_",k)
+#     )
+#     temp <- nrow(result[[2]])
+#     rs_id[num.total+(1:temp)] <- result[[1]]
+#     score[num.total+(1:temp),] <- result[[2]]
+#     infor[num.total+(1:temp),] <- result[[3]]
+#     freq.all[num.total+(1:temp)] <- result[[4]] 
+#     num.total <- temp+num.total
+#     if(sum(result[[1]]=="c")!=0){
+#       resubmit_temp <- resubmit_temp+1
+#       resubmit_id[resubmit_temp,1] <- idx[i]
+#       resubmit_id[resubmit_temp,2] <- k
+#     }
+#   }
+# }else if(idx[i]==327){
+#   for (k in 1:1000) {
+#     #print(k)
+#     load(
+#       paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit",idx[i],"_",k)
+#     )
+#     temp <- nrow(result[[2]])
+#     rs_id[num.total+(1:temp)] <- result[[1]]
+#     score[num.total+(1:temp),] <- result[[2]]
+#     infor[num.total+(1:temp),] <- result[[3]]
+#     freq.all[num.total+(1:temp)] <- result[[4]] 
+#     num.total <- temp+num.total
+#     if(sum(result[[1]]=="c")!=0){
+#       resubmit_temp <- resubmit_temp+1
+#       resubmit_id[resubmit_temp,1] <- idx[i]
+#       resubmit_id[resubmit_temp,2] <- k
+#     }
+#   }
+# }else if(file_load%in%result_files){
+#   for (k in 1:15) {
+#     #print(k)
+#     load(
+#       paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit",idx[i],"_",k)
+#     )
+#     temp <- nrow(result[[2]])
+#     rs_id[num.total+(1:temp)] <- result[[1]]
+#     score[num.total+(1:temp),] <- result[[2]]
+#     infor[num.total+(1:temp),] <- result[[3]]
+#     freq.all[num.total+(1:temp)] <- result[[4]] 
+#     num.total <- temp+num.total
+#     if(sum(result[[1]]=="c")!=0){
+#       resubmit_temp <- resubmit_temp+1
+#       resubmit_id[resubmit_temp,1] <- idx[i]
+#       resubmit_id[resubmit_temp,2] <- k
+#     }
+#   }  
+# }else{
+
 
 # resubmit_id <- resubmit_id[1:resubmit_temp,]
 # unique(resubmit_id[,1])
@@ -228,17 +248,3 @@ for(i in 281:567){
 
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
-
-all.equal(onco_info$rs_id,rs_id)
-# idx.diff <- which(onco_info$rs_id!=rs_id)
-# length(idx.diff)
-# length(which(rs_id=="c"))
-CHR <- onco_info[,11]
-onco_info <- onco_info[,1:10]
-
-
-onco_result_casecase <- data.frame(onco_info,score,infor,CHR)
-
-save(onco_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_intrinsic_subtype.Rdata")
-print(1)
