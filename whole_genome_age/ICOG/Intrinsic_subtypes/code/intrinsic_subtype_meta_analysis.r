@@ -53,7 +53,7 @@ icog_onco_score_infor <- icog_onco_score_infor_casecase
 
 
 
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 
 rm(icog_result_shared_1p)
 rm(onco_result_shared_1p)
@@ -90,6 +90,18 @@ temp = 1
 for(j in start:end){
   #print(j)
   icog_onco_score_infor_oneline <- icog_onco_score_infor[j,]
+  #some SNPs were put infor and score are 0 because of unconvergence
+  icog_infor <- matrix(icog_onco_score_infor_oneline[(second.num+1):(second.num+second.num^2)],second.num,second.num)
+  onco_infor <- matrix(icog_onco_score_infor_oneline[(second.num+second.num^2+second.num+1):(second.num+second.num^2+second.num+second.num^2)],second.num,second.num)
+  if(det(icog_infor)==0){
+    print(j)
+    icog_onco_score_infor_oneline[(second.num+1):(second.num+second.num^2)] <- as.vector(diag(10000,second.num))
+  }
+  if(det(onco_infor)==0){
+    print(j)
+    icog_onco_score_infor_oneline[(second.num+second.num^2+second.num+1):(second.num+second.num^2+second.num+second.num^2)] <- as.vector(diag(10000,second.num))
+  }
+  
   result_temp <- MetaFixedPfunction_temp(icog_onco_score_infor_oneline,second.num)
   result_summary[temp,1:second.num] <- as.vector(result_temp[[1]])
   result_summary[temp,(second.num+1):(second.num+second.num^2)] <- as.vector(result_temp[[2]])
@@ -117,7 +129,7 @@ for(j in start:end){
 
 #meta_result_shared_1p <- cbind(meta_result_shared_1p,pvalue)
 
-save(result_summary,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/reuslt_summary_sub",i1,".Rdata"))
+save(result_summary,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/reuslt_summary_sub_082119",i1,".Rdata"))
 
 
 
