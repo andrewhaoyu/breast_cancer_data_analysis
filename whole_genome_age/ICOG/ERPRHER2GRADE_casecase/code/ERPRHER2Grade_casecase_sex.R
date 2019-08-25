@@ -49,7 +49,7 @@ gc()
 idx.fil <- Icog.order[,1]%in%SG_ID
 idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/delta0.icog.Rdata")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
 z.design.support <- cbind(1,z.standard[,1])
@@ -65,13 +65,13 @@ geno.file <- Files[i1]
 
 # tryCatch(
 #   {
-    num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 #   },
 #   error=function(cond){
 #     num <- countLines(geno.file)[1]
 #   }
 # )
-size = 5
+size = 30
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
@@ -144,35 +144,35 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       
       # tryCatch(
       #   {
-          
-          if(freq<0.006|freq>0.994){
-            
-            score_result[temp,] <- 0
-            infor_result[temp,] <- 0
-          }else{
-            score.test.support.icog.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis1,
-                                                                                     x.self.design = snpvalue,
-                                                                                     z.design = z.design.support,
-                                                                           additive=x.covar.mis1,
-                                                                           missingTumorIndicator = 888,
-                                                                           delta0=delta0)
-            
-            score.test.icog.casecase<- ScoreTestMixedModel(y=y.pheno.mis1,
-                                                           x=snpvalue,
-                                                           z.design = z.design.test,
-                                                           
-                                                           score.test.support= score.test.support.icog.casecase,
-                                                           missingTumorIndicator=888)
-            
-            score_result[temp,]  <- score.test.icog.casecase[[1]]
-            infor_result[temp,] <- as.vector(score.test.icog.casecase[[2]])
-           
-            
-          }
-          
+      
+      if(freq<0.006|freq>0.994){
+        
+        score_result[temp,] <- 0
+        infor_result[temp,] <- 0
+      }else{
+        score.test.support.icog.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis1,
+                                                                                 x.self.design = snpvalue,
+                                                                                 z.design = z.design.support,
+                                                                                 additive=x.covar.mis1,
+                                                                                 missingTumorIndicator = 888,
+                                                                                 delta0=delta0)
+        
+        score.test.icog.casecase<- ScoreTestMixedModel(y=y.pheno.mis1,
+                                                       x=snpvalue,
+                                                       z.design = z.design.test,
+                                                       
+                                                       score.test.support= score.test.support.icog.casecase,
+                                                       missingTumorIndicator=888)
+        
+        score_result[temp,]  <- score.test.icog.casecase[[1]]
+        infor_result[temp,] <- as.vector(score.test.icog.casecase[[2]])
+        
+        
+      }
       
       
-    
+      
+      
     }
     
     
@@ -209,5 +209,5 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase",i1,"_",i2))
+save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_sex",i1,"_",i2))
 

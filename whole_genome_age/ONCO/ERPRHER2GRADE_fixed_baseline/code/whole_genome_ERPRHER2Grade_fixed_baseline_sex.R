@@ -13,59 +13,66 @@ rm(list=ls())
 #pheno is ICOGS,data2 is onco_array
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
-
+#i1 <- i
 print(i1)
 library(R.utils)
 library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
-n <- 109713
-snpvalue <- rep(0,n)
-subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
-Icog.order <- read.table(gzfile(subject.file))
-
+subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
+onco.order <- read.table(gzfile(subject.file))
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
-data1 <- as.data.frame(data1)
-y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
-colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
-#x.test.all.mis1 <- data1[,c(27:206)]
-SG_ID <- data1$SG_ID
-x.covar.mis1 <- data1[,c(5:14,204)]
-age <- data1[,204]
-idx.incomplete <- which(age==888)
-table(y.pheno.mis1[idx.incomplete,1])
-idx.complete <- which(age!=888)
-y.pheno.mis1 <- y.pheno.mis1[idx.complete,]
-x.covar.mis1 <- x.covar.mis1[idx.complete,]
-SG_ID <- SG_ID[idx.complete]
+data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+data2 <- as.data.frame(data2)
+y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+#y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+colnames(y.pheno.mis2) = c("Behaviour","ER",
+                           "PR","HER2","Grade")
+
+x.covar.mis2 <- data2[,c(5:14,204)]
+ages <- data2[,204]
+idx.incomplete <- which(ages==888)
+table(y.pheno.mis2[idx.incomplete,1])
+idx.complete <- which(ages!=888)
+
+y.pheno.mis2 <- y.pheno.mis2[idx.complete,]
+x.covar.mis2 <- x.covar.mis2[idx.complete,]
+Onc_ID <- data2$Onc_ID
+Onc_ID <- Onc_ID[idx.complete]
+rm(data2)
+gc()
 
 
 
-
-idx.fil <- Icog.order[,1]%in%SG_ID
-idx.match <- match(SG_ID,Icog.order[idx.fil,1])
+idx.fil <- onco.order[,1]%in%Onc_ID
+n <- length(idx.fil)
+snpvalue <- rep(0,n)
+idx.match <- match(Onc_ID,onco.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
-load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/score.test.support.icog.ERPRHER2Grade.Rdata")
+load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 
 
-Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/"
-Files <- dir(Filesdir,pattern="icogs_merged_b1_12.",full.names=T)
-Filesex <- dir(Filesdir,pattern="icogs_merged_b1_12.chr23",full.names=T)
+
+
+
+Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_imputed"
+Files <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.",full.names=T)
+Filesex <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.chr23",full.names=T)
 idx.sex <- Files%in%Filesex
-Files <- Files[idx.sex]
 library(gtools)
+Files <- Files[idx.sex]
 Files <- mixedsort(Files)
 geno.file <- Files[i1]
-
 
 num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 
 
-num.of.tumor <- ncol(y.pheno.mis1)-1
-n.sub <- nrow(y.pheno.mis1)
-idx.control <- which(y.pheno.mis1[,1]==0)
+
+
+num.of.tumor <- ncol(y.pheno.mis2)-1
+n.sub <- nrow(y.pheno.mis2)
+idx.control <- which(y.pheno.mis2[,1]==0)
 n.control <- length(idx.control)
 
 library(doParallel)
@@ -88,9 +95,9 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
   con <- gzfile(geno.file)
   open(con)
   for(i in 1:num){
-   #if(i%%500==0){
-    print(i)
-    #}
+    if(i%%500==0){
+      print(i)
+    }
     oneLine <- readLines(con,n=1)
     
     if(i>=start){
@@ -113,30 +120,30 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
       freq.all[temp] <- freq
       #print(paste0("freq",freq))
       
-
-          
-          if(freq<0.006|freq>0.994){
-            
-            score_result[temp,] <- 0
-            infor_result[temp,] <- 0.1
-          }else{
-            
-            score.test.icog<- ScoreTest(y=y.pheno.mis1,
-                                        x=snpvalue,
-                                        second.stage.structure="additive",
-                                        score.test.support=score.test.support.icog.ERPRHER2Grade,
-                                        missingTumorIndicator=888)
-            
-            score_result[temp,]  <- score.test.icog[[1]]
-            infor_result[temp,] <- as.vector(score.test.icog[[2]])
-            
-            
-          }
-          
-   
+      
+      
+      if(freq<0.006|freq>0.994){
+        
+        score_result[temp,] <- 0
+        infor_result[temp,] <- 0.1
+      }else{
+        
+        score.test.onco<- ScoreTest(y=y.pheno.mis2,
+                                    x=snpvalue,
+                                    second.stage.structure="additive",
+                                    score.test.support=score.test.support.onco.ERPRHER2Grade,
+                                    missingTumorIndicator=888)
+        
+        score_result[temp,]  <- score.test.onco[[1]]
+        infor_result[temp,] <- as.vector(score.test.onco[[2]])
+        
+        
+      }
+      
+      
       
     }
-   
+    
     if(i==end){
       break
     }
@@ -145,7 +152,7 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
   close(con)
   result <- list(snpid_result,score_result,infor_result,freq.all)
   return(result)
-  }
+}
 
 stopImplicitCluster()
 
@@ -166,12 +173,11 @@ for(i in 1:inner.size){
   score_result[total+(1:temp),] <- result.temp[[2]]
   infor_result[total+(1:temp),] <- result.temp[[3]]
   freq.all[total+(1:temp)] <- result.temp[[4]]
-   total <- total+temp
+  total <- total+temp
 }
 
 
 
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline_sex",i1))
-
+save(result,file=paste0("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_onco_sex",i1))

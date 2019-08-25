@@ -1,5 +1,9 @@
 rm(list=ls())
-#install_github("andrewhaoyu/bc2", ref = "master",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
+#library(withr)
+#library(devtools)
+#with_libpaths(new = "/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6", install_github("andrewhaoyu/bc2"))
+#install_github("andrewhaoyu/bc2", args =c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6"'))
+#install_github("andrewhaoyu/bc2",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 #args=(commandArgs(TRUE))
 #for(p in 1:length(args)){
 #       eval(parse(text=args[[p]]))
@@ -23,9 +27,26 @@ setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 n <- 109713
 snpvalue <- rep(0,n)
-subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
+#subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
+subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt"
+z.design <- matrix(c(
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
+  c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0),
+  c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
+  c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
+),ncol=5)
+rowSums(z.design)
 
-Icog.order <- read.table(gzfile(subject.file))
+
+
+colnames(z.design) <- c("Luminial A","Luminal B",
+                        "Luminal B HER2Neg",
+                        "HER2 Enriched",
+                        "Triple Negative")
+
+#Icog.order <- read.table(gzfile(subject.file))
+Icog.order <- read.table(subject.file)
 library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
@@ -45,11 +66,10 @@ gc()
 
 
 
-
 idx.fil <- Icog.order[,1]%in%SG_ID
 idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/delta0.icog.Rdata")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
 z.design.support <- cbind(1,z.standard[,1])
@@ -65,13 +85,16 @@ geno.file <- Files[i1]
 
 # tryCatch(
 #   {
-    num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 #   },
 #   error=function(cond){
 #     num <- countLines(geno.file)[1]
 #   }
 # )
-size = 5
+# size = 5
+#size = 1000
+#size = 6
+size = 30
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
@@ -86,7 +109,7 @@ idx.control <- which(y.pheno.mis1[,1]==0)
 n.control <- length(idx.control)
 
 
-z.design.test <- z.standard[,2:4]
+
 
 
 no.cores <- 2
@@ -104,8 +127,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   inner.file.num <- inner.end-inner.start+1
   true.start <- start+inner.start-1
   true.end <- start+inner.end-1
-  score_result <- matrix(0,inner.file.num,num.of.tumor-1)
-  infor_result <- matrix(0,inner.file.num,(num.of.tumor-1)^2)
+  score_result <- matrix(0,inner.file.num,num.of.tumor+1)
+  infor_result <- matrix(0,inner.file.num,(num.of.tumor+1)^2)
   snpid_result <- rep("c",inner.file.num)
   freq.all <- rep(0,inner.file.num)
   temp <- 0
@@ -144,35 +167,30 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       
       # tryCatch(
       #   {
-          
-          if(freq<0.006|freq>0.994){
-            
-            score_result[temp,] <- 0
-            infor_result[temp,] <- 0
-          }else{
-            score.test.support.icog.casecase <- ScoreTestSupportMixedModelSelfDesign(y=y.pheno.mis1,
-                                                                                     x.self.design = snpvalue,
-                                                                                     z.design = z.design.support,
-                                                                           additive=x.covar.mis1,
-                                                                           missingTumorIndicator = 888,
-                                                                           delta0=delta0)
-            
-            score.test.icog.casecase<- ScoreTestMixedModel(y=y.pheno.mis1,
-                                                           x=snpvalue,
-                                                           z.design = z.design.test,
-                                                           
-                                                           score.test.support= score.test.support.icog.casecase,
-                                                           missingTumorIndicator=888)
-            
-            score_result[temp,]  <- score.test.icog.casecase[[1]]
-            infor_result[temp,] <- as.vector(score.test.icog.casecase[[2]])
-           
-            
-          }
-          
+      
+      if(freq<0.006|freq>0.994|snpid=="rs17465085:36645884:T:C"){
+        
+        score_result[temp,] <- 0
+        infor_result[temp,] <- as.vector(diag(5))
+      }else{
+        Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+        z.standard <- Heter.result.Icog[[12]]
+        M <- nrow(z.standard)
+        number.of.tumor <- ncol(z.standard)
+        log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
+        nparm <- length(Heter.result.Icog[[1]])  
+        sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
+        
+        score_result[temp,]  <- log.odds.icog
+        infor_result[temp,] <- as.vector(sigma.log.odds.icog)
+        
+        
+        
+      }
       
       
-    
+      
+      
     }
     
     
@@ -190,8 +208,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 stopImplicitCluster()
 
-score_result <- matrix(0.1,file.num,num.of.tumor-1)
-infor_result <- matrix(0.1,file.num,(num.of.tumor-1)^2)
+score_result <- matrix(0.1,file.num,num.of.tumor+1)
+infor_result <- matrix(0.1,file.num,(num.of.tumor+1)^2)
 snpid_result <- rep("c",file.num)
 
 freq.all <- rep(0,file.num)
@@ -209,5 +227,8 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase",i1,"_",i2))
-
+save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_sex_",i1,"_",i2))
+#save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_size6_",i1,"_",i2))
+#save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit",i1,"_",i2))
+#save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit",i1,"_",i2))
+#save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit_resubmit",i1,"_",i2))

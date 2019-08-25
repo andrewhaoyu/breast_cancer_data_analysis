@@ -88,7 +88,7 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
   con <- gzfile(geno.file)
   open(con)
   for(i in 1:num){
-   #if(i%%500==0){
+    #if(i%%500==0){
     print(i)
     #}
     oneLine <- readLines(con,n=1)
@@ -113,30 +113,30 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
       freq.all[temp] <- freq
       #print(paste0("freq",freq))
       
-
-          
-          if(freq<0.006|freq>0.994){
-            
-            score_result[temp,] <- 0
-            infor_result[temp,] <- 0.1
-          }else{
-            
-            score.test.icog<- ScoreTest(y=y.pheno.mis1,
-                                        x=snpvalue,
-                                        second.stage.structure="additive",
-                                        score.test.support=score.test.support.icog.ERPRHER2Grade,
-                                        missingTumorIndicator=888)
-            
-            score_result[temp,]  <- score.test.icog[[1]]
-            infor_result[temp,] <- as.vector(score.test.icog[[2]])
-            
-            
-          }
-          
-   
+      
+      
+      if(freq<0.006|freq>0.994){
+        
+        score_result[temp,] <- 0
+        infor_result[temp,] <- 0.1
+      }else{
+        
+        score.test.icog<- ScoreTest(y=y.pheno.mis1,
+                                    x=snpvalue,
+                                    second.stage.structure="additive",
+                                    score.test.support=score.test.support.icog.ERPRHER2Grade,
+                                    missingTumorIndicator=888)
+        
+        score_result[temp,]  <- score.test.icog[[1]]
+        infor_result[temp,] <- as.vector(score.test.icog[[2]])
+        
+        
+      }
+      
+      
       
     }
-   
+    
     if(i==end){
       break
     }
@@ -145,7 +145,7 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
   close(con)
   result <- list(snpid_result,score_result,infor_result,freq.all)
   return(result)
-  }
+}
 
 stopImplicitCluster()
 
@@ -166,12 +166,12 @@ for(i in 1:inner.size){
   score_result[total+(1:temp),] <- result.temp[[2]]
   infor_result[total+(1:temp),] <- result.temp[[3]]
   freq.all[total+(1:temp)] <- result.temp[[4]]
-   total <- total+temp
+  total <- total+temp
 }
 
 
 
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline_sex",i1))
+save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline",i1))
 
