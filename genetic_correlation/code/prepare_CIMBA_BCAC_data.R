@@ -4,7 +4,7 @@ library(data.table)
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.clean.Rdata"))
 CIMBA <- CIMBA.clean
 ###########load BCAC intrinsic subtype data
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p.Rdata"))
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
 
 
 N.TN <- 1/(meta_result_shared_1p[,45]*2*meta_result_shared_1p[,4]*(1-meta_result_shared_1p[,4]))
@@ -57,7 +57,7 @@ colnames(BCAC_subtypes_result)[7:31] <- c(paste0("log_or_",subtypes),
                                            paste0("effect_sample_size_",subtypes),
                                            paste0("p_value_",subtypes))
 colnames(BCAC_subtypes_result)
-save(BCAC_subtypes_result,file= paste0("./genetic_correlation/result/BCAC_subtypes_result.Rdata"))
+save(BCAC_subtypes_result,file= paste0("./genetic_correlation/result/BCAC_subtypes_result_082119.Rdata"))
 head(meta_result_shared_1p)
 
 #############prepare data for CIMBA to genetic correlation analysis

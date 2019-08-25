@@ -1,6 +1,7 @@
 #Goal: match the allele between CIMBA and BCAC
 
 setwd("/dcl01/chatterj/data/hzhang1/breast_intrinsic/")
+
 #load BCAC data
 load("./two_stage_model_results/BCAC.meta.result.Rdata")
 #merge BCAC results as snp.infor
@@ -29,6 +30,36 @@ idx <- which(is.na(snp.infor.merge$alleles4))
 snp.infor.merge$alleles4[idx] <- snp.infor.merge$Effect.Meta[idx]
 
 
+#load updated BCAC data whole genome 082119
+load("/dcl01/chatterj/data/hzhang1/breast_intrinsic/whole_genome_breast_cancer_results/meta_result_shared_1p_082119.Rdata")
+#merge the two datasets
+colnames(snp.infor.merge)[12:36] <- paste0("cov",c(1:25))
+snp.infor.merge.update <- merge(snp.infor.merge,meta_result_shared_1p,by="var_name")
+
+#reorder the log odds ratio and covariance matrix based on snp.infor.merge
+#meta_result_shared_1p used the order c("Luminial_A","Luminal_B","Luminal_B_HER2Neg","HER2_Enriched","Triple_Negative")
+#snp.infor.merge used the order c("Triple_Negative","Luminial_A","HER2_Enriched","Luminal_B","Luminal_B_HER2Neg")
+log.odds <- snp.infor.merge.update[,105:109][,c(5,1,4,2,3)]
+log.odds.sigma <- matrix(0,
+                         nrow(log.odds),
+                         ncol(log.odds)^2)
+for(l in 1:nrow(log.odds)){
+  if(l%%1000==0){
+    print(l)  
+  }
+  
+  temp.mat <- matrix(as.numeric(snp.infor.merge.update[l,c(110:134)]),ncol(log.odds),ncol(log.odds))
+  temp.mat <- temp.mat[c(5,1,4,2,3),c(5,1,4,2,3)]
+  log.odds.sigma[l,] <- as.vector(temp.mat)
+}
+snp.infor.merge.update[,c(8:12)] <- log.odds
+snp.infor.merge.update[,c(13:37)] <- log.odds.sigma
+snp.infor.merge.temp <- snp.infor.merge.update[,c(1:90)]
+# names.ori <- colnames(snp.infor.merge)
+# names.temp <- colnames(snp.infor.merge.temp)
+# idx.match <- match(names.ori,names.temp)
+
+
 #load CIMBA data
 load("./whole_genome_breast_cancer_results/CIMBA_result.Rdata")
 head(CIMBA.result)
@@ -42,11 +73,11 @@ for(i in 1:n){
 }
 CIMBA.result$CHR <- CHR
 CIMBA.result$Position <- position
-CIMBA.result = CIMBA.result %>% mutate(chr.pos = paste0(CHR,"_",Position))
+#CIMBA.result = CIMBA.result %>% mutate(chr.pos = paste0(CHR,"_",Position))
 
 #library(data.table)
 #merge CIMBA and BCAC data together
-snp.infor.merge.update <- merge(snp.infor.merge,CIMBA.result,by.x = "chr.pos")
+snp.infor.merge.update2 <- merge(snp.infor.merge.temp,CIMBA.result,by.x = "var_name",by.y = "MarkerName")
 
 idx <- which(as.character(snp.infor.merge.update$alleles4)!=snp.infor.merge.update$EffectAllele)
 

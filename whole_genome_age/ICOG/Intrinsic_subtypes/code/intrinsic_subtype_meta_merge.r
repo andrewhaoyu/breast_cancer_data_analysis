@@ -1,7 +1,9 @@
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_only_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_only_shared_1p.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_shared_1p_082119.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_shared_1p_082119.Rdata")
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_shared.Rdata")
+#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_shared.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_only_shared_1p_082119.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_only_shared_1p_082119.Rdata")
 
 
 meta_result_shared_1p <- icog_result_shared_1p[,c(1:10,(ncol(icog_result_shared_1p)-3):ncol(icog_result_shared_1p))]
@@ -23,7 +25,7 @@ log.odds <- matrix(0,n,5)
 sigma <- matrix(0,n,25)
 for(i1 in 1:1000){
 print(i1)  
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/reuslt_summary_sub",i1,".Rdata"))
+  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/reuslt_summary_sub_082119",i1,".Rdata"))
   temp <- nrow(result_summary)
   
   p.value[total+(1:temp)] <- result_summary[,31]
@@ -35,7 +37,9 @@ print(i1)
 
 
 meta_result_shared_1p <- cbind(meta_result_shared_1p_no_pvalue,p.value,log.odds,sigma)
-save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p.Rdata"))
+save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
+
+
 fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_regions.csv",header= T)
 
 idx <- which(intrinsic_subtype_triple_negative_results$position==7571752&intrinsic_subtype_triple_negative_results$CHR==17)
@@ -45,7 +49,7 @@ intrinsic_subtype_triple_negative_results <- meta_result_shared_1p[,c(2,13,14,3,
 colnames(intrinsic_subtype_triple_negative_results) <- 
   c("rs_id","SNP_ICOGs","SNP_ONCO","position",
     "CHR","freq_a1","imputation_quality","log_odds_triple_negative","variance_triple_negative")
-save(intrinsic_subtype_triple_negative_results,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subtype_triple_negative_results.Rdata"))
+#save(intrinsic_subtype_triple_negative_results,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subtype_triple_negative_results_082119.Rdata"))
 alleles.ICOG <- as.character(intrinsic_subtype_triple_negative_results$SNP_ICOGs)
 total <- nrow(intrinsic_subtype_triple_negative_results)
 alleles1 <- rep("c",total)
@@ -102,7 +106,7 @@ length(idx)
 head(intrinsic_subtype_triple_negative_results[idx,])
 head(alleles.data[idx,])
 intrinsic_subtype_triple_negative_results[idx[1:100],]
-save(intrinsic_subtype_triple_negative_results,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subtype_triple_negative_results.Rdata"))
+save(intrinsic_subtype_triple_negative_results,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subtype_triple_negative_results_082119.Rdata"))
 # (intrinsic_subtype_triple_negative_results[idx[1:10],])
 
 
