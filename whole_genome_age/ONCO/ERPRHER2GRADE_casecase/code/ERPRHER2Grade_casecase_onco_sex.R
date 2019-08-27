@@ -210,3 +210,4 @@ for(i in 1:inner.size){
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
 save(result,file=paste0("./whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco_sex",i1,"_",i2))
+

@@ -21,9 +21,9 @@ library(R.utils)
 
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
-n <- 109713
+n <- 104473
 snpvalue <- rep(0,n)
-subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
+subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order_23.txt.gz"
 
 Icog.order <- read.table(gzfile(subject.file))
 library(data.table)

@@ -54,7 +54,7 @@ Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_imputed/
 Files <- dir(Filesdir,pattern="icogs_merged_b1_12.",full.names=T)
 Filesex <- dir(Filesdir,pattern="icogs_merged_b1_12.chr23",full.names=T)
 idx.sex <- Files%in%Filesex
-Files <- Files[idx.sex]
+Files <- Files[!idx.sex]
 library(gtools)
 Files <- mixedsort(Files)
 geno.file <- Files[i1]
@@ -173,5 +173,5 @@ for(i in 1:inner.size){
 
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline_sex",i1))
+save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline",i1))
 
