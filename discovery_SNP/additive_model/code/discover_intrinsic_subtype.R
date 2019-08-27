@@ -20,9 +20,9 @@ library(devtools)
 library(CompQuadForm)
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 library(data.table)
-#discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog_data.csv",header=T))
+discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_icog_data.csv",header=T))
 
-discovery.snp.icog <- as.data.frame(fread("./data/discovery_icog_data.csv",header=T))
+#discovery.snp.icog <- as.data.frame(fread("./data/discovery_icog_data.csv",header=T))
 colnames(discovery.snp.icog)
 #onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
 #onco.julie <- onco.julie[,-1]
@@ -106,8 +106,8 @@ colnames(z.design) <- c("Luminial A","Luminal B",
   colnames(y.pheno.mis2) = c("Behaviour","ER",
                              "PR","HER2","Grade")
   #x.test.all.mis2 <- data2[,c(27:203)]
-  discovery.snp.onco <- as.data.frame(fread("./data/discovery_onco_data.csv",header=T))
- # discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
+ # discovery.snp.onco <- as.data.frame(fread("./data/discovery_onco_data.csv",header=T))
+  discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
   
   x.test.all.mis2 <- discovery.snp.onco
   x.covar.mis2 <- data2[,c(5:14,204)]
