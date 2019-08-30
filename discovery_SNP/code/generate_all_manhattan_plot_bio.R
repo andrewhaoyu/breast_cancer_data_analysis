@@ -28,7 +28,7 @@ FilterSNP <- function(gwas_result,fine_mapping){
   gwas_result_filter <- gwas_result[-idx_cut,]
   return(gwas_result_filter)
 }
-setwd("/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis")
+setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 if(i1 ==1){
   
   data <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))
@@ -67,11 +67,11 @@ if(i1 ==1){
   
 }else if(i1==2){
   #load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
-  meta_result_shared_1p <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/meta_result_shared_1p_fixed.txt",header=T))
+  meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt",header=T))
   ftop <- meta_result_shared_1p
   ftop.p <- ftop$p.value
   #load("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
-  meta_result_shared_1p <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/meta_result_shared_1p_mixed.txt",header=T))
+  meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_mixed.txt",header=T))
   mtop <- meta_result_shared_1p
   mtop.p <- mtop$p.value
   subtypes.p <- apply(cbind(ftop.p,mtop.p),1,min)
@@ -109,7 +109,7 @@ if(i1 ==1){
     dev.off()
   }
 }else if(i1==3){
-  cimba_result_all <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/CIMBA_BCAC_meta_analysis_083019.txt",header = T))
+  cimba_result_all <- as.data.frame(fread("./data/CIMBA_BCAC_meta_analysis_083019.txt",header = T))
   # idx <- which(cimba_result_all$CHR==11&
   #                cimba_result_all$position==132959475)
   # cimba_result_all[7617599:7617603,]
@@ -166,7 +166,7 @@ if(i1 ==1){
   }
 }else if(i1==4){
   #load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
-  meta_result_shared_1p <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/meta_result_shared_1p_fixed.txt",header=T))
+  meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt",header=T))
   ftop <- meta_result_shared_1p
   ftop.p <- ftop$p.value
   subtypes.p <- ftop.p
@@ -204,7 +204,7 @@ if(i1 ==1){
   }
 }else if(i1==4){
   #load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
-  meta_result_shared_1p <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/meta_result_shared_1p_fixed.txt",header=T))
+  meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_mixed.txt",header=T))
   ftop <- meta_result_shared_1p
   ftop.p <- ftop$p.value
   subtypes.p <- ftop.p
