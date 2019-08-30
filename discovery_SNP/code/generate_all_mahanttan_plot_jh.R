@@ -109,7 +109,7 @@ if(i1 ==1){
     dev.off()
   }
 }else if(i1==3){
-  cimba_result_all <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/brca1_bcac_tn_meta.txt",header = T))
+  cimba_result_all <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/CIMBA_BCAC_meta_analysis_083019.txt",header = T))
   # idx <- which(cimba_result_all$CHR==11&
   #                cimba_result_all$position==132959475)
   # cimba_result_all[7617599:7617603,]
@@ -134,8 +134,7 @@ if(i1 ==1){
   colnames(cimba_result_all)[10] <- "P"
   cimba_result = cimba_result_all %>% 
     filter(Freq1>=0.008&
-             Freq1<=0.992&
-             CHR!=23) %>% 
+             Freq1<=0.992) %>% 
     select(MarkerName,CHR,
            position,P)
   

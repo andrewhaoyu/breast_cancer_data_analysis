@@ -72,3 +72,6 @@ meta_result_shared_1p_final = rbind(
   meta_result_shared_1p_sex[,c(1:3,6:15)] )
 meta_result_shared_1p <- meta_result_shared_1p_final
 save(meta_result_shared_1p,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_final.Rdata")
+meta_result_shared_1p <- meta_result_shared_1p[,c(2,9,3,13)]
+write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt"),row.names = F,
+            quote=F)
