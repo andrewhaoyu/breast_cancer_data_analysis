@@ -42,12 +42,6 @@ save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data
 
 
 
-idx <- which(meta_result_shared_1p$CHR==1&
-               meta_result_shared_1p$position==110222901)
-meta_result_shared_1p[idx,]
-
-
-
 
 
 
