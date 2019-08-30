@@ -242,7 +242,7 @@ if(i1 ==1){
   }
 }else if(i1==5){
   #load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
-  meta_result_shared_1p <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/meta_result_shared_1p_mixed.txt",header=T))
+  meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_mixed.txt",header=T))
   mtop <- meta_result_shared_1p
   mtop.p <- mtop$p.value
   #just for easy coding, put mtop as ftop
