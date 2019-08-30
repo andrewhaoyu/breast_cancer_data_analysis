@@ -1,6 +1,7 @@
 #test mahattan plot package to see which one looks best
 library(qqman)
-manhattan(gwasResults, chr="CHR", bp="BP", snp="SNP", p="P" )
+manhattan(gwasResults, chr="CHR", bp="BP", snp="SNP", p="P",ylim =c(0,12))
+qq(gwasResults$P,ylim  = c(0,12))
 library(data.table)
 library(dplyr)
 data <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))
