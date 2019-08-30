@@ -67,6 +67,9 @@ n <- nrow(icog_onco_score_infor)
 
 #n <- nrow(icog_onco_score_infor)
 
+size <- 1000
+#n <- nrow(icog_onco_score_infor)
+
 
 fixed.second.num <- 2
 random.second.num <- 3
@@ -77,9 +80,9 @@ random.second.num <- 3
 #pvalue.list <- foreach(i=1:size)%dopar%
 #{
 #print(i)
-
-start <- 1
-end <- nrow(icog_onco_score_infor)
+start.end <- startend(n,size,i1)
+start <- start.end[1]
+end <- start.end[2]
 pvalue_sub <- rep(0,end-start+1)
 temp = 1
 for(j in start:end){
