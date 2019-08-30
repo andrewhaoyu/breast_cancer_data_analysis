@@ -131,8 +131,23 @@ save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data
 
 
 
+load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subtype_triple_negative_results_082119.Rdata"))
+
+meta_result_shared_1p_final = rbind(
+  meta_result_shared_1p[,c(1:8,11:15)],
+  meta_result_shared_1p_sex[,c(1:3,6:15)] )
+meta_result_shared_1p <- meta_result_shared_1p_final
+save(meta_result_shared_1p,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_final.Rdata")
+
+
+
+
 colnames(meta_result_shared_1p)[21:45] <- 
   paste0("cov",c(1:25))
+
+
+
+
 
 
 

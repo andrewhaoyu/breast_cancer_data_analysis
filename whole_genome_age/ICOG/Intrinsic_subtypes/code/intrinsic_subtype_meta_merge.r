@@ -40,6 +40,25 @@ meta_result_shared_1p <- cbind(meta_result_shared_1p_no_pvalue,p.value,log.odds,
 save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
 
 
+
+
+idx <- which(meta_result_shared_1p$CHR==1&
+               meta_result_shared_1p$position==110222901)
+meta_result_shared_1p[idx,]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_regions.csv",header= T)
 
 idx <- which(intrinsic_subtype_triple_negative_results$position==7571752&intrinsic_subtype_triple_negative_results$CHR==17)

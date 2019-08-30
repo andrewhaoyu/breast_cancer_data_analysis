@@ -75,3 +75,7 @@ save(meta_result_shared_1p,file = "/spin1/users/zhangh24/breast_cancer_data_anal
 meta_result_shared_1p <- meta_result_shared_1p[,c(2,9,3,13)]
 write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt"),row.names = F,
             quote=F)
+
+
+idx <- which(meta_result_shared_1p$CHR==12&
+               meta_result_shared_1p$position==111600134)

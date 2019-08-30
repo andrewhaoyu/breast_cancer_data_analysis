@@ -150,7 +150,7 @@ colnames(z.design) <- c("Luminial A","Luminal B",
   
   test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
-  save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_",i1,".Rdata"))
+  save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_083019",i1,".Rdata"))
   
   
   
