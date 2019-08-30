@@ -61,7 +61,7 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
 #
 ##################only based on BCAC
 places <- 3
-load("./genetic_correlation/result/ldsc_result_meta.rda")
+load("./genetic_correlation/result/ldsc_result_meta_082919.rda")
 
 correlation.matrix <- ldsc_result[[2]]
 correlation.matrix.se <- ldsc_result[[4]]
@@ -77,7 +77,7 @@ rownames(correlation.95) <- names
 
 correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
 correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
-write.csv(correlation.95,file="./genetic_correlation/result/correlation_95_BCAC_CIMBA.csv",quote=F)
+write.csv(correlation.95,file="./genetic_correlation/result/correlation_95_BCAC_CIMBA_082919.csv",quote=F)
 
 
 # #get results for CIMBA+ BCAC

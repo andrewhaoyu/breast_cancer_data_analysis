@@ -83,7 +83,7 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHE
 all.equal(rs_id,icog_info$rs_id)
 # icog_info <- cbind(icog_info,CHR)
 # save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
-CHR <- icog_info[,11]
+CHR <- rep(23,nrow(icog_info))
 icog_info <- icog_info[,1:10]
 
 
@@ -95,7 +95,7 @@ icog_result <- data.frame(icog_info,score,infor,CHR)
 #icog_result[,41] <- CHR
 
 
-save(icog_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result.Rdata")
+save(icog_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_sex.Rdata")
 
 
 

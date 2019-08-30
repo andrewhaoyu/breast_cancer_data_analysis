@@ -1,7 +1,11 @@
 #prepare data for locus plot
 setwd("/Users/haoyuzhang/GoogleDrive/breast_cancer_data_analysis")
 #standard analysis data
+library(data.table)
 data <- as.data.frame(fread("/Users/haoyuzhang/GoogleDrive/BCAC\ OncoArray\ Subtypes\ Local/breast_cancer_paper_writing/breast_cancer_discovery_paper/core_figures/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))
+
+idx <- which(data$CHR==9&data$Position.Onco==106856793)
+
 discovery_snp <- read.csv("./data/discovery_snp_summary_new.csv",header=T)
 library(dplyr)
 data_plot = data %>% select(
@@ -22,6 +26,7 @@ data_plot <- data_plot %>% select(
   c(rs_id,CHR,position,P.value)
 )
 colnames(data_plot)[1] <- "MarkerName"
+
 #write.table(data_plot,file = "./discovery_SNP/result/locus_plot_data/data_plot.txt",col.names=T,row.names=F,quote=F)
 idx <- NULL
 for(k in 1:nrow(discovery_snp)){
@@ -38,9 +43,9 @@ for(k in 1:nrow(discovery_snp)){
 }
 #take out SNPs in LD with known SNP
 k <- 14
-idx.temp <- which(data_plot$CHR==discovery_snp$CHR.x[k]&
-                    data_plot$position>= discovery_snp$Pos[k]-10^6&
-                    data_plot$position<= discovery_snp$Pos[k]+10^6)
+idx.temp <-  which(data_plot$CHR==discovery_snp$CHR.x[k]&
+                     data_plot$position>= discovery_snp$Pos[k]-10^6&
+                     data_plot$position<= discovery_snp$Pos[k]+10^6)
 data_plot_try <- data_plot[idx.temp,]
 #if the SNP don't have rs_id
 #use the chr:position format
@@ -177,3 +182,11 @@ meta_result_shared_1p <- as.data.frame(fread("/Users/haoyuzhang/GoogleDrive/brea
     
   }
   
+  
+  
+  #LD link bug in the following plot
+  data <- as.data.frame(fread("/Users/haoyuzhang/GoogleDrive/breast_cancer_data_analysis/discovery_SNP/result/locus_plot_data/data_plot_12:29140260:G:A.txt"))
+  data$P.value = runif(nrow(data))
+idx <- which(data$MarkerName=="chr12:29140260")  
+data$P.value[idx] = 1E-08
+write.table(data,file = "/Users/haoyuzhang/GoogleDrive/breast_cancer_data_analysis/discovery_SNP/result/locus_plot_data/test_SNP.txt",quote = F,row.names = F)

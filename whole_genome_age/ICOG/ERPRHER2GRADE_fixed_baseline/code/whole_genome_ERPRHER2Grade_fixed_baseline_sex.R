@@ -173,5 +173,8 @@ for(i in 1:inner.size){
 
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
+#this is a typepo
+#should use _sex in the future
+#fine for now
 save(result,file=paste0("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2Grade_fixed_baseline",i1))
 

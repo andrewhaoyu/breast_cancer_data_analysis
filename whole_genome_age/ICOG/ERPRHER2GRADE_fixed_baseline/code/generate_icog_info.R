@@ -56,9 +56,10 @@ save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_gen
 
 num.total <- 728693
 icog_info <- data.frame(snp_id = rep("c",num.total),rs_id = rep("c",num.total),
-                        position=rep(0,num.total),exp_freq_a1=rep(0,num.total),
+                        position=rep(0,num.total),
                         a0 = rep("c",num.total),
                         a1 = rep("c",num.total),
+                        exp_freq_a1=rep(0,num.total),
                         info=rep(0,num.total),
                         certainty=rep(0,num.total),type=rep(0,num.total),info_type0=rep(0,num.total),
                         concord_type0=rep(0,num.total),r2_type0=rep(0,num.total),stringsAsFactors=F)
