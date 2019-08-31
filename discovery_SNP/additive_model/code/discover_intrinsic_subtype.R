@@ -35,6 +35,7 @@ discovery_snp <- read.csv("./data/discovery_snp_summary_new.csv",header=T)
 #x.test.all.mis1 <- as.data.frame(cbind(icog.julie,discovery.snp.icog))
 #x.test.all.mis2 <- as.data.frame(cbind(onco.julie,discovery.snp.onco))
 
+
 z.design <- matrix(c(
   c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
@@ -151,6 +152,8 @@ colnames(z.design) <- c("Luminial A","Luminal B",
   test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
   
   save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_",i1,".Rdata"))
+  result <- list(second.stage.logodds.meta,second.stage.sigma.meta)
+  save(result, file = paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_logodds",i1,".Rdata"))
   
   
   

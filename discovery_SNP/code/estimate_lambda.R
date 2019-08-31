@@ -47,7 +47,10 @@ FilterSNP <- function(gwas_result,fine_mapping){
 }
 
 
-
+Calculatelamda1000 <- function(lambda,n.case,n.control){
+  #1+(lambda-1)*500*(1/N1+1/N0)
+  return(1+(lambda-1)*500*(1/n.case+1/n.control))
+}
 
 
 
@@ -68,12 +71,18 @@ colnames(gwas_result) <- c("SNP",
                            "P")
 
 #standard analysis
-Calculatelambda(gwas_result$P,"PVAL")
+lambda = Calculatelambda(gwas_result$P,"PVAL")
+n.case <- 133384 
+n.control <- 113789 
+Calculatelamda1000(lambda,n.case,n.control)
+
 #standard analysis after filtering
 fine_mapping <- read.csv("./data/filter_regions_standard.csv",header= T)
 gwas_result_filter <- FilterSNP(gwas_result,fine_mapping)
-Calculatelambda(gwas_result_filter$P,"PVAL")
-
+lambda = Calculatelambda(gwas_result_filter$P,"PVAL")
+n.case <- 133384 
+n.control <- 113789 
+Calculatelamda1000(lambda,n.case,n.control)
 
 
 
@@ -95,11 +104,19 @@ colnames(subtypes_gwas_result) <- c("SNP",
                                     "BP",
                                     "P")
 #fixed-effect two-stage polytomous model
-Calculatelambda(subtypes_gwas_result$P,"CHISQ5")
+lambda = Calculatelambda(subtypes_gwas_result$P,"CHISQ5")
+n.case <- 106278  
+n.control <- 91477 
+Calculatelamda1000(lambda,n.case,n.control)
+
+
 fine_mapping <- read.csv("./data/filter_regions_subtypes.csv",header= T)
 subtypes_gwas_result_filter <- FilterSNP(subtypes_gwas_result,fine_mapping) 
 #fixed-effect two-stage polytomous model after filtering
-Calculatelambda(subtypes_gwas_result_filter$P,"CHISQ5")
+lambda = Calculatelambda(subtypes_gwas_result_filter$P,"CHISQ5")
+n.case <- 106278  
+n.control <- 91477 
+Calculatelamda1000(lambda,n.case,n.control)
 
 
 
@@ -130,25 +147,32 @@ colnames(subtypes_gwas_result) <- c("SNP",
                                     "BP",
                                     "P")
 #mixed-effect two-stage polytomous model analysis
-Calculatelambda(subtypes_gwas_result$P,"CHISQ4")
+lambda = Calculatelambda(subtypes_gwas_result$P,"CHISQ4")
+n.case <- 106278  
+n.control <- 91477 
+Calculatelamda1000(lambda,n.case,n.control)
+
+
 #standard analysis after filtering
 fine_mapping <- read.csv("./data/filter_regions_subtypes.csv",header= T)
 subtypes_gwas_result_filter <- FilterSNP(subtypes_gwas_result,fine_mapping) 
 
-Calculatelambda(subtypes_gwas_result_filter$P,"CHISQ4")
+lambda = Calculatelambda(subtypes_gwas_result_filter$P,"CHISQ4")
+n.case <- 106278  
+n.control <- 91477 
+Calculatelamda1000(lambda,n.case,n.control)
 
 
 
 
 
 #CIMBA and BCAC meta-analysis
-cimba_result_all <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/brca1_bcac_tn_meta.txt",header = T))
+cimba_result_all <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/breast_intrinsic/CIMBA_BCAC_meta_analysis_083019.txt",header = T))
 
 colnames(cimba_result_all)[10] <- "P"
 cimba_result = cimba_result_all %>% 
   filter(Freq1>=0.008&
-           Freq1<=0.992&
-           CHR!=23) %>% 
+           Freq1<=0.992) %>% 
   select(MarkerName,CHR,
          position,P)
 
@@ -160,10 +184,16 @@ idx <- which(is.na(cimba_result$P))
 length(idx)
 #CIMBA and BCAC TN analysis
 #cimba_result$P
-Calculatelambda(cimba_result$P,"PVAL")
+lambda = Calculatelambda(cimba_result$P,"PVAL")
+n.cases = 18016
+n.control = 100971
+Calculatelamda1000(lambda,n.case,n.control)
 #CIMBA and BCAC TN analysis after filtering
 
 
 fine_mapping <- read.csv("./data/filter_regions_cimba.csv",header= T)
 cimba_result_filter <- FilterSNP(cimba_result,fine_mapping) 
-Calculatelambda(cimba_result_filter$P,"PVAL")
+lambda = Calculatelambda(cimba_result_filter$P,"PVAL")
+n.cases = 18016
+n.control = 100971
+Calculatelamda1000(lambda,n.case,n.control)

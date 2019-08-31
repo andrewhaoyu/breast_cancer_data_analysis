@@ -30,6 +30,32 @@ get_cor_95 <- function(correlation.matrix,correlation.matrix.se){
 }
 
 
+get_cor_se <- function(correlation.matrix,correlation.matrix.se){
+
+  correlation.matrix <- round(correlation.matrix,places)
+  correlation.matrix.se <- round(correlation.matrix,places)
+  M <- nrow(correlation.matrix)
+  
+  correlation.matrix.new <- rep("c",M^2)
+  
+  temp <- 1
+  for(i in 1:M){
+    for(j in 1:M){
+      correlation.matrix.new[temp] <- paste0(correlation.matrix[i,j]," (",correlation.matrix.se[i,j],")") 
+      temp <- temp+1
+    }
+  }
+  correlation.matrix.new <- matrix(correlation.matrix.new,M,M)
+  return(correlation.matrix.new)  
+}
+
+
+
+
+
+
+
+
 
 get_cor_95_list <- function(correlation.matrix,correlation.matrix.se){
   correlation.matrix.transform <- 0.5*log((1+correlation.matrix)/(1-correlation.matrix))
@@ -60,24 +86,33 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
 #
 #
 ##################only based on BCAC
-places <- 3
+places <- 2
 load("./genetic_correlation/result/ldsc_result_meta_082919.rda")
+
+diag(ldsc_result[[1]][c(2,5,4,3,1,6),c(2,5,4,3,1,6)])
+write.csv(ldsc_result[[1]],file = "./data/BCAC_heritability.csv")
 
 correlation.matrix <- ldsc_result[[2]]
 correlation.matrix.se <- ldsc_result[[4]]
 correlation.matrix <- correlation.matrix[c(2,5,4,3,1,6),c(2,5,4,3,1,6)]
 correlation.matrix.se <- correlation.matrix.se[c(2,5,4,3,1,6),c(2,5,4,3,1,6)]
+
+names <- colnames(ldsc_result[[2]])[c(2,5,4,3,1,6)]
 correlation.95 <- get_cor_95(correlation.matrix,correlation.matrix.se)
+correlation.se <- get_cor_se(correlation.matrix,correlation.matrix.se)
 names <- colnames(ldsc_result[[2]])[c(2,5,4,3,1,6)]
 colnames(correlation.matrix) <- names
 rownames(correlation.matrix) <- names
 
 colnames(correlation.95) <- names
 rownames(correlation.95) <- names
+colnames(correlation.se) <- names
+rownames(correlation.se) <- names
 
 correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
 correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
 write.csv(correlation.95,file="./genetic_correlation/result/correlation_95_BCAC_CIMBA_082919.csv",quote=F)
+write.csv(correlation.se,file="./genetic_correlation/result/correlation_se_BCAC_CIMBA_083119.csv",quote=F)
 
 
 # #get results for CIMBA+ BCAC
@@ -220,6 +255,13 @@ col <- colorRampPalette(c("white","red"))(length(pal.breaks)-1)
 
 # heatmap(correlation.matrix,col = col,symm=T,margins=c(10,4),key.title="",key.ylab="",cexRow=1,cexCol=1)
 paletteLength <- 50
+load("./genetic_correlation/result/ldsc_result_meta_082919.rda")
+
+correlation.matrix <- ldsc_result[[2]]
+correlation.matrix.se <- ldsc_result[[4]]
+correlation.matrix <- correlation.matrix[c(2,5,4,3,1,6),c(2,5,4,3,1,6)]
+correlation.matrix.se <- correlation.matrix.se[c(2,5,4,3,1,6),c(2,5,4,3,1,6)]
+
 my.color <- colorRampPalette(c("white", "dodgerblue4"))(paletteLength)
 myBreaks <- c(seq(0, max(correlation.matrix), length.out=floor(paletteLength)))
 
@@ -238,8 +280,8 @@ rownames(correlation.matrix) <- c("Luminal A-like",
                                   "CIMBA BRCA1")
 #corrplot.mixed(as.matrix(correlation.matrix),
              #  lower.col = "black", number.cex = .7)
-correlation.matrix <- correlation.matrix[c(3,2,1,4,5,6),c(3,2,1,4,5,6)]
-correlation.matrix.se <- correlation.matrix.se[c(3,2,1,4,5,6),c(3,2,1,4,5,6)]
+# correlation.matrix <- correlation.matrix[c(3,2,1,4,5,6),c(3,2,1,4,5,6)]
+# correlation.matrix.se <- correlation.matrix.se[c(3,2,1,4,5,6),c(3,2,1,4,5,6)]
 
 
 M <- 6
@@ -273,7 +315,7 @@ corrplot(as.matrix(correlation.matrix),
          tl.srt = 30,
          cl.lim = c(0, 1),
          #sig.level = c(0.005,0.01,0.05),
-         pch.cex = .9, pch.col = "white"
+         pch.cex = 0.9, pch.col = "white"
 )
 # heatmap.2(correlation.matrix,tracecol=NA,cexRow=1,cexCol=1,margins=c(10,12),col = col,breaks=pal.breaks,key.ylab="",key.title = "",
 #           main=" Genetic Correlation Heatmap",dendrogram="row",density.info="none",lwid = c(1.5,4))
