@@ -1,5 +1,6 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
+second.num <- 1
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/icog_result_shared_1p.Rdata")
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_shared_1p.Rdata")
@@ -39,7 +40,7 @@ n <- nrow(icog_onco_score_infor_casecase)
 
 
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
-second.num <- 1
+
 
 #####get the score and infor for baseline only
 icog_score_infor <- icog_result_shared_1p[,11:(11+second.num+second.num^2-1)]
