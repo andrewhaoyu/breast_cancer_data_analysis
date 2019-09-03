@@ -71,6 +71,19 @@ temp = 1
 for(j in start:end){
   #print(j)
   icog_onco_score_infor_oneline <- icog_onco_score_infor[j,]
+  icog_infor <- icog_onco_score_infor_oneline[(second.num+1):(second.num+second.num^2)]
+  onco_infor <- icog_onco_score_infor_oneline[(second.num+second.num^2+second.num+1):(second.num+second.num^2+second.num+second.num^2)]
+  
+  if(icog_infor==0){
+    print(j)
+    icog_onco_score_infor_oneline[(second.num+1):(second.num+second.num^2)] <- as.vector(diag(10000,second.num))
+  }
+  if(onco_infor==0){
+    print(j)
+    icog_onco_score_infor_oneline[(second.num+second.num^2+second.num+1):(second.num+second.num^2+second.num+second.num^2)] <- as.vector(diag(10000,second.num))
+  }
+  
+ 
   result_temp <- MetaFixedPfunction_temp(icog_onco_score_infor_oneline,second.num)
   result_summary[temp,1:second.num] <- as.vector(result_temp[[1]])
   result_summary[temp,(second.num+1):(second.num+second.num^2)] <- as.vector(result_temp[[2]])
