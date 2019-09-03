@@ -47,7 +47,7 @@ z.trans <- matrix(c(
 colnames(z.design) <- c("Luminial A","Luminal B",
                         "Luminal B HER2Neg ",
                         "HER2 Enriched",
-                        "Triple Negative ")
+                        "Triple Negative")
 
 
 if(i1<=177){

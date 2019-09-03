@@ -90,7 +90,7 @@ if(i1 ==1){
   
   if(i2==1){
     png(paste0("./discovery_SNP/result/manhattan_plot/man_subtypes.png"),width = 7.635,height =4.7175,units = "in",res = 300,type="cairo")
-    manhattan(subtypes_gwas_result, col= c("blue4", "orange3",),
+    manhattan(subtypes_gwas_result, col= c("blue4", "orange3"),
               cex = 0.6,suggestiveline = F)
     dev.off()
     
