@@ -271,6 +271,233 @@ write.csv(heritability.table,file = "./heritability/result/heritability_summary.
 
 
 
+standard_result = standard_result %>% 
+  mutate(chr.pos = paste0(CHR,":",position))
+discovery_snp_standard <- left_join(discovery_snp_new,standard_result,by="chr.pos")
+##create subtypes summary level statistics for 178 known SNPs
+log_or <- matrix(0,178,5)
+colnames(log_or) <- paste0("log_or_",c("Luminial A","Luminal B",
+                                       "Luminal B HER2Neg ",
+                                       "HER2 Enriched",
+                                       "Triple Negative"))
+var_or <- matrix(0,178,5)
+colnames(var_or) <- paste0("var_",c("Luminial A","Luminal B",
+                                    "Luminal B HER2Neg ",
+                                    "HER2 Enriched",
+                                    "Triple Negative"))
+for(i1 in 1:178){
+  load(paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i1,".Rdata"))
+  log_or[i1,] <- heter.result[[1]]
+  var_or[i1,] <- diag(heter.result[[2]])
+}
+
+
+
+
+
+fine_map <- read.csv("./data/fine_mapping_annotated_clean.csv")
+fine_map <- fine_map %>% 
+  mutate(chr.pos = paste0(CHR,":",position))
+fine_map <- cbind(fine_map,log_or,var_or)
+known_snp_subtypes <- left_join(fine_map,standard_result,
+                                by="chr.pos")
+
+
+#two snps duplicated
+known_snp_subtypes <- known_snp_subtypes[-c(62,120),]
+#colnames(known_snp_subtypes)[84] <- "log_or_CIMBA"
+#create standard summary level statistics for 178 known SNPs
+known_snp_standard <- left_join(fine_map,standard_result,
+                                by="chr.pos")
+known_snp_standard <- known_snp_standard[-c(62,120),]
+
+#LD pruning for known SNPs
+data2 <- as.data.frame(fread("./data/Onco_euro_v10_10232017.csv",header=T))
+names2 = colnames(data2)
+idxi1 = which(names2=="rs554219")
+x.test.all.mis2 <- data2[,c(27:203,idxi1)]
+
+p.value.known <- known_snp_standard$P_BCAC_meta
+
+idx.control <- which(data2$Behaviour1==0)
+
+LD2 <- cor(x.test.all.mis2[idx.control,])^2
+known.snp.infor.p <- known_snp_standard %>% 
+  select(Best.published.SNP,CHR.x,position.x,p.value)
+
+colnames(known.snp.infor.p) <- c("SNP","CHR","position",
+                                 "p.value")
+
+known.snp.infor.pruned <- LD_pruning(known.snp.infor.p,LD2)
+
+idx.fil <- which(known.snp.infor.p$SNP%in%known.snp.infor.pruned$SNP)
+#only keep SNPs after LD pruning
+known_snp_subtypes <- known_snp_subtypes[idx.fil,]
+known_snp_standard <- known_snp_standard[idx.fil,]
+
+known_snp_standard_cal = known_snp_standard %>% 
+  select(log.odds,sigma,exp_freq_a1)
+
+#heritability for known snps
+SigmaEst(known_snp_standard_cal)
+#heritability for discovery snps
+discovery_snp_cal <- discovery_snp_standard %>% 
+  select(log.odds,sigma,exp_freq_a1.x)
+SigmaEst(discovery_snp_cal)
+SigmaEst(known_snp_standard_cal)+SigmaEst(discovery_snp_cal)
+
+#heritability for known SNPs subtypes
+#change var_name to markername to avoid the name "var" in grep
+colnames(known_snp_subtypes)[25] <- "markername"
+idx.known <- grep("log_or",colnames(known_snp_subtypes))
+jdx.known <- grep("var_",colnames(known_snp_subtypes))
+zdx.known <- grep("MAF",colnames(known_snp_subtypes))
+idx.dis<- grep("log_or",colnames(discovery_snp_subtypes))
+jdx.dis <- grep("var_",colnames(discovery_snp_subtypes))
+zdx.dis <- grep("exp_freq_a1",colnames(discovery_snp_subtypes))
+result.known <- rep(0,length(idx.known))
+result.discovery <- rep(0,length(idx.dis))
+for(k in 1:length(idx.known)){
+  known_snp_subtypes_cal <- known_snp_subtypes[,c(idx.known[k],jdx.known[k],zdx.known)]
+  result.known[k] <-  SigmaEst(known_snp_subtypes_cal)
+  discovery_snp_cal <- discovery_snp_subtypes[,
+                                              c(idx.dis[k],jdx.dis[k],zdx.dis)]
+  result.discovery[k] <-  SigmaEst(discovery_snp_cal)
+}
+
+result.known+result.discovery
+
+
+heritability.data <- read.csv("./data/BCAC_heritability.csv")[,-1]
+
+heritability.data <- as.matrix(heritability.data)[c(2,4,5,3,1,6),
+                                                  c(2,4,5,3,1,6)]
+heritability <- c(0.557,diag(heritability.data))
+
+result.known+result.discovery
+
+heritability.total <- c(SigmaEst(known_snp_standard_cal)+SigmaEst(discovery_snp_cal),result.known+result.discovery)
+heritability.dis <- c(SigmaEst(discovery_snp_cal),result.discovery)
+
+heritability.table <- cbind(heritability.total,heritability.dis,heritability,heritability.total/heritability)
+
+colnames(heritability.table) <- c("210 SNPs heritability",
+                                  "discovery heritability","heritability","proportion")
+rownames(heritability.table) <- c("overall",
+                                  "Luminial A","Luminal B",
+                                  "Luminal B HER2Neg ",
+                                  "HER2 Enriched",
+                                  "Triple Negative",
+                                  "CIMBA_BRCA1")
+write.csv(heritability.table,file = "./heritability/result/heritability_summary.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+result_standard <- cbind(as.numeric(discovery_snp_new$bcac_onco2_beta),
+                         as.numeric(discovery_snp_new$bcac_onco2_se)^2)
+#discovery_snp_new %>% 
+#select(bcac_onco_icogs_gwas_beta,
+#      bcac_onco_icogs_gwas_se)
+###convert the result to log odds ratio
+n.snp <- 32
+n.subtypes <- 5
+dis.result <- result
+# for(i in 1:n.snp){
+#   for(j in c(2*(1:n.subtypes)-1)){
+#     dis.result[i,j] <- log(as.numeric(strsplit(result[i,j],"\\(")[[1]][1]))
+#     
+#   }
+# }
+# dis.result[,c(2*(1:n.subtypes))] <-as.matrix(result[,c(2*(1:n.subtypes))])
+# dis.result <- as.data.frame(dis.result)
+dis.result <- as.data.frame(dis.result)
+colnames(dis.result)[c(2*(1:n.subtypes))-1] <- paste0("logodds_",c("Luminial_A","Luminal_B",
+                                                                   "Luminal_B_HER2-",
+                                                                   "HER2_Enriched",
+                                                                   "Triple_Negative"))
+colnames(dis.result)[c(2*(1:n.subtypes))] <- paste0("var_",c("Luminial A","Luminal B",
+                                                             "Luminal B HER2-",
+                                                             "HER2 Enriched",
+                                                             "Triple Negative"))
+colnames(result_standard) <- c("logoddsd_standard",
+                               "var_standard")
+dis.result <- cbind(dis.result,result_standard,freq)
+#dis.result[,c(11,12)] <- result_standard
+
+
+
+
+
+
+##load the results for 178 known SNPs
+known.result <- matrix(0,178,13)
+colnames(known.result) <- colnames(dis.result)
+
+
+for(i in 1:178){
+  print(i)
+  load(paste0("./known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/heter_result_origin",i,".Rdata"))
+  known.result[i,] <- Outvec(heter.result)
+}
+#Onco array paper doens't have the 178th known SNP 
+temp.result <- known.result[178,c(11:12)]
+###load Onco array results
+fine_map <- read.csv("./data/fine_mapping_annotated_clean.csv")
+fine_map <- fine_map %>% 
+  mutate(chr.pos = paste0(CHR,":",position))
+fine_map_new <- left_join(fine_map,all_result,by="chrpos")
+#one snp duplicated
+fine_map_new <- fine_map_new[-c(62,120),]
+known.result[,c(11,12)] <- cbind(as.numeric(fine_map_new$bcac_onco2_beta),as.numeric(fine_map_new$bcac_onco2_se)^2)
+known.result[178,c(11,12)] <- temp.result
+
+#########load onco array dataset
+data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
+data2 <- as.data.frame(data2)
+y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
+#y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
+colnames(y.pheno.mis2) = c("Behaviour","ER",
+                           "PR","HER2","Grade")
+names2 = colnames(data2)
+idxi1 = which(names2=="rs554219")
+x.test.all.mis2 <- data2[,c(27:203,idxi1)]
+#LD pruning and position pruning
+known.snp.infor <- fine_map[,c(1,3,4)]
+discovery.snp.infor <- discovery_snp_new[,c(3,4,5)]
+colnames(known.snp.infor) <- colnames(discovery.snp.infor) <- 
+  c("SNP","chr","position")
+all.snp.infor <- rbind(known.snp.infor,
+
+
+
+
+
+
+
+
+
 
 
 

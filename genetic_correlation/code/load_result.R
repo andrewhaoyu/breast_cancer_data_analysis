@@ -90,6 +90,7 @@ places <- 2
 load("./genetic_correlation/result/ldsc_result_meta_082919.rda")
 
 diag(ldsc_result[[1]][c(2,5,4,3,1,6),c(2,5,4,3,1,6)])
+diag(ldsc_result[[3]][c(2,5,4,3,1,6),c(2,5,4,3,1,6)])
 write.csv(ldsc_result[[1]],file = "./data/BCAC_heritability.csv")
 
 correlation.matrix <- ldsc_result[[2]]

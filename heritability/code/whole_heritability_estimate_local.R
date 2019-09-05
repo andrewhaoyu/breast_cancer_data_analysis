@@ -48,6 +48,8 @@ colnames(onco_result) <- c("snpid",
                            "info",
                            "freq")
 write.table(onco_result,file="/dcl01/chatterj/data/hzhang1/ldsc/onco_result.txt",col.names = T,quote=F)
+conda env create --file environment.yml
+source activate ldsc
 ./munge_sumstats.py --sumstats onco_result.txt --out onco --merge-alleles w_hm3.snplist --info-min 0.3 --N 33773.77
 ./ldsc.py --h2 onco.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco
 less onco.log
@@ -80,8 +82,10 @@ colnames(bcac_result) <- c("snpid",
                            "freq",
                            "N")
 write.table(bcac_result,file="/dcl01/chatterj/data/hzhang1/ldsc/bcac_result.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats onco_result.txt --out onco --merge-alleles w_hm3.snplist --info-min 0.3  --signed-sumstats Z,0 --frq freq
-./ldsc.py --h2 onco.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco
+
+
+./munge_sumstats.py --sumstats bcac_result.txt --out bcac --merge-alleles w_hm3.snplist --info-min 0.3  --signed-sumstats Z,0 --frq freq
+./ldsc.py --h2 bcac.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac
 less onco.log
 
 
@@ -90,9 +94,7 @@ less onco.log
 
 
 
-
-
-######meta result
+######meta result based on icogs, onco and gwas
 meta_result <- standard_result %>% mutate(
   z = Beta.meta/sqrt(var.meta),
   sample_size = 1/(var.meta*2*EAFcontrols.Onco*(1-EAFcontrols.Onco))
@@ -112,6 +114,8 @@ colnames(meta_result) <- c("snpid",
                            "freq",
                            "N")
 write.table(meta_result,file="./heritability/result/meta_result.txt",col.names = T,quote=F)
+conda env create --file environment.yml
+source activate ldsc
 ./munge_sumstats.py --sumstats meta_result.txt --out meta --merge-alleles w_hm3.snplist --info-min 0.3  --signed-sumstats Z,0 --frq freq
 ./ldsc.py --h2 meta.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta
 less meta.log
