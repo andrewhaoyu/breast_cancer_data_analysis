@@ -190,10 +190,13 @@ onco_result_pub <- snp.data.onco %>% mutate(
   bcac_onco2_beta = as.numeric(bcac_onco2_beta),
   bcac_onco2_or = exp(bcac_onco2_beta),
   bcac_onco2_eaf_controls = as.numeric(bcac_onco2_eaf_controls),
+  MAF = ifelse(bcac_onco2_eaf_controls>0.5,1-bcac_onco2_eaf_controls,bcac_onco2_eaf_controls),
   z = bcac_onco2_beta/bcac_onco2_se,
   sample_size = 1/(bcac_onco2_se^2*2*bcac_onco2_eaf_controls*(1-bcac_onco2_eaf_controls))) %>% 
   select(snp.id,chr,position_b37,a0,a1,bcac_onco2_beta,bcac_onco2_P1df_Wald,
-         bcac_onco2_r2)
+         bcac_onco2_r2,
+         MAF,
+         sample_size)
 
 
 colnames(onco_result_pub) <- c("snpid",
@@ -203,14 +206,17 @@ colnames(onco_result_pub) <- c("snpid",
                                "A2",
                                "beta",
                                "P",
-                               "info")
+                               "info",
+                               "MAF",
+                               "N")
 write.table(onco_result_pub,file="/spin1/users/zhangh24/ldsc/onco_result_pub_or.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats onco_result_pub_or.txt --out onco_pub_or --merge-alleles w_hm3.snplist --info-min 0.3
+./munge_sumstats.py --sumstats onco_result_pub_or.txt --out onco_pub_or --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 onco_pub_or.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco_pub_or
 less onco_pub_or.log
 #estimate 0.3853 with info cutoff 0.9
 #estimate 0.4041 with info cutoff as 0.3
 #estimate 0.4041 with no info cutoff
+#estimate 0.4308 with info cutoff as 0.3, maf cutoff as 0.01
 
 
 
