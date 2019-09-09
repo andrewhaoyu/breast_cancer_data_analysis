@@ -32,10 +32,15 @@ snp.infor.merge$alleles4[idx] <- snp.infor.merge$Effect.Meta[idx]
 
 #load updated BCAC data whole genome 082119
 load("/dcl01/chatterj/data/hzhang1/breast_intrinsic/whole_genome_breast_cancer_results/meta_result_shared_1p_082119.Rdata")
+idx <- which(meta_result_shared_1p$CHR==1&
+               meta_result_shared_1p$position==100000827)
+meta_result_shared_1p[idx,]
 #merge the two datasets
 colnames(snp.infor.merge)[12:36] <- paste0("cov",c(1:25))
 snp.infor.merge.update <- merge(snp.infor.merge,meta_result_shared_1p,by="var_name")
-
+idx <- which(snp.infor.merge.update$CHR==1&
+               snp.infor.merge.update$position==100000827)
+snp.infor.merge.update[idx,]
 #reorder the log odds ratio and covariance matrix based on snp.infor.merge
 #meta_result_shared_1p used the order c("Luminial_A","Luminal_B","Luminal_B_HER2Neg","HER2_Enriched","Triple_Negative")
 #snp.infor.merge used the order c("Triple_Negative","Luminial_A","HER2_Enriched","Luminal_B","Luminal_B_HER2Neg")

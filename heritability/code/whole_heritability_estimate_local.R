@@ -33,10 +33,12 @@ standard_result = standard_result %>%
 
 
 onco_result <- standard_result %>% mutate(
-  or = exp(beta.Onco)) %>% 
+  or = exp(beta.Onco),
+  sample_size = 1/(SE.Onco^2*2*EAFcontrols.Onco*(1-EAFcontrols.Onco))) %>% 
   select(snp.id,chr.Onco,Position.Onco,Effect.Onco,Baseline.Onco,or,SE.Onco,P1df_risk_chi.Onco,
          r2.Onco,
-         EAFcontrols.Onco)
+         EAFcontrols.Onco,
+         sample_size)
 colnames(onco_result) <- c("snpid",
                            "CHR",
                            "bp",
@@ -46,14 +48,15 @@ colnames(onco_result) <- c("snpid",
                            "se",
                            "P",
                            "info",
-                           "freq")
+                           "freq",
+                           "N")
 write.table(onco_result,file="/dcl01/chatterj/data/hzhang1/ldsc/onco_result.txt",col.names = T,quote=F)
 conda env create --file environment.yml
 source activate ldsc
-./munge_sumstats.py --sumstats onco_result.txt --out onco --merge-alleles w_hm3.snplist --info-min 0.3 --N 33773.77
+./munge_sumstats.py --sumstats onco_result.txt --out onco --merge-alleles w_hm3.snplist --info-min 0.3
 ./ldsc.py --h2 onco.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco
 less onco.log
-
+#estimate 0.4227
 #write.table(meta_result,file="./heritability/result/meta_result.txt",col.names = T,quote=F)
 
 
@@ -82,12 +85,15 @@ colnames(bcac_result) <- c("snpid",
                            "freq",
                            "N")
 write.table(bcac_result,file="/dcl01/chatterj/data/hzhang1/ldsc/bcac_result.txt",col.names = T,quote=F)
-
+library(data.table)
+bcac_result <- as.data.frame(fread("/dcl01/chatterj/data/hzhang1/ldsc/bcac_result.txt"))
 
 ./munge_sumstats.py --sumstats bcac_result.txt --out bcac --merge-alleles w_hm3.snplist --info-min 0.3  --signed-sumstats Z,0 --frq freq
 ./ldsc.py --h2 bcac.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac
-less onco.log
+less bcac.log
+#estimate 0.4777
 
+#load genetic correlation data sent to Gunaghao
 
 
 
@@ -95,128 +101,129 @@ less onco.log
 
 
 ######meta result based on icogs, onco and gwas
-meta_result <- standard_result %>% mutate(
-  z = Beta.meta/sqrt(var.meta),
-  sample_size = 1/(var.meta*2*EAFcontrols.Onco*(1-EAFcontrols.Onco))
-) %>% 
-  select(snp.id,chr.Onco,Position.Onco,Effect.Meta,Baseline.Meta,z,p.meta,
-         r2.Onco,
-         EAFcontrols.Onco,
-         sample_size)
-colnames(meta_result) <- c("snpid",
-                           "CHR",
-                           "bp",
-                           "A2",
-                           "A1",
-                           "Z",
-                           "P-value",
-                           "info",
-                           "freq",
-                           "N")
-write.table(meta_result,file="./heritability/result/meta_result.txt",col.names = T,quote=F)
-conda env create --file environment.yml
-source activate ldsc
-./munge_sumstats.py --sumstats meta_result.txt --out meta --merge-alleles w_hm3.snplist --info-min 0.3  --signed-sumstats Z,0 --frq freq
-./ldsc.py --h2 meta.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta
-less meta.log
-
-
-
-
-
-
-all_result <- meta_result %>% 
-  mutate(chrpos=paste0(chr,":",position_b37))
-KG <- fread("./data/KG.all.chr.bim")
-KG <- KG %>% mutate(chrpos = paste0(V1,":",V4))
-all_result <- merge(all_result,KG,by = "chrpos")
-all_result <- all_result %>% 
-  mutate(meta_or = exp(as.numeric(bcac_onco_icogs_gwas_beta)),
-         icog_or = exp(as.numeric(bcac_icogs2_beta)),
-         onco_or = exp(as.numeric(bcac_onco2_beta)),
-         gwas_or = exp(as.numeric(bcac_gwas_all_beta)))
-icog_result <- all_result %>% 
-  select(V2,chr,position_b37,a0,a1,icog_or,bcac_icogs2_se,
-         bcac_icogs2_P1df_Wald,
-         bcac_onco2_r2,
-         bcac_onco_icogs_gwas_eaf_controls)
-colnames(icog_result) <- c("snpid",
-                           "CHR",
-                           "bp",
-                           "a1",
-                           "a2",
-                           "or",
-                           "se",
-                           "pval",
-                           "info",
-                           "freq")
-write.table(icog_result,file="./heritability/result/icog_result.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats meta_result_new.txt --out meta_new --merge-alleles w_hm3.snplist --info-min 0.3 --frq freq 
-./ldsc.py --h2 meta_new.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta_new
-less meta_new.log
-
-
-
-######meta result
-meta_result <- standard_result %>% mutate(
-  or = exp(Beta.meta),
-  sample_size = 1/(var.meta*2*EAFcontrols.Onco*(1-EAFcontrols.Onco))
-) %>% 
-  select(snp.id,chr.Onco,Position.Onco,Effect.Meta,Baseline.Meta,or,sdE.meta,p.meta,
-         r2.Onco,
-         EAFcontrols.Onco,
-         sample_size)
-colnames(meta_result) <- c("snpid",
-                           "CHR",
-                           "bp",
-                           "A1",
-                           "A2",
-                           "or",
-                           "se",
-                           "P-value",
-                           "info",
-                           "freq",
-                           "N")
-write.table(meta_result,file="./heritability/result/meta_result_new.txt",col.names = T,quote=F)
-
-
-
-
-
-
-
-
-
-###############LD score regression was run locally with ldsc
-###############iCOGs 46785 cases 42892 controls, effective 22377
-###############Onco Array 61282 cases 45494 controls, effective 26110.39
-###############GWAS 14910 cases 17588 controls, effective 8069.33
-cd /Users/zhangh24/GoogleDrive/ldsc
-conda env create --file environment.yml
-source activate ldsc
-./ldsc.py -h
-./munge_sumstats.py -h
-./munge_sumstats.py --sumstats icog_result.txt --N 22377 --out icog --merge-alleles w_hm3.snplist --info-min 0.3
-./ldsc.py --h2 icog.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out icog
-less icog.log
-######onco result
-onco_result <- all_result %>% 
-  select(V2,chr,position_b37,a0,a1,onco_or,bcac_onco2_se,
-         bcac_onco2_P1df_Wald,
-         bcac_onco2_r2,
-         bcac_onco_icogs_gwas_eaf_controls)
-colnames(onco_result) <- c("snpid",
-                           "CHR",
-                           "bp",
-                           "a1",
-                           "a2",
-                           "or",
-                           "se",
-                           "pval",
-                           "info",
-                           "freq")
-write.table(onco_result,file="./heritability/result/onco_result.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats onco_result.txt --N 26110.39 --out onco --merge-alleles w_hm3.snplist --info-min 0.3
-./ldsc.py --h2 onco.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco
-less onco.log
+# meta_result <- standard_result %>% mutate(
+#   z = Beta.meta/sqrt(var.meta),
+#   sample_size = 1/(var.meta*2*EAFcontrols.Onco*(1-EAFcontrols.Onco))
+# ) %>% 
+#   select(snp.id,chr.Onco,Position.Onco,Effect.Meta,Baseline.Meta,z,p.meta,
+#          r2.Onco,
+#          EAFcontrols.Onco,
+#          sample_size)
+# colnames(meta_result) <- c("snpid",
+#                            "CHR",
+#                            "bp",
+#                            "A2",
+#                            "A1",
+#                            "Z",
+#                            "P-value",
+#                            "info",
+#                            "freq",
+#                            "N")
+# write.table(meta_result,file="./heritability/result/meta_result.txt",col.names = T,quote=F)
+# conda env create --file environment.yml
+# source activate ldsc
+# ./munge_sumstats.py --sumstats meta_result.txt --out meta --merge-alleles w_hm3.snplist --info-min 0.3  --signed-sumstats Z,0 --frq freq
+# ./ldsc.py --h2 meta.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta
+# less meta.log
+# 
+# 
+# 
+# 
+# 
+# 
+# all_result <- meta_result %>% 
+#   mutate(chrpos=paste0(chr,":",position_b37))
+# KG <- fread("./data/KG.all.chr.bim")
+# KG <- KG %>% mutate(chrpos = paste0(V1,":",V4))
+# all_result <- merge(all_result,KG,by = "chrpos")
+# all_result <- all_result %>% 
+#   mutate(meta_or = exp(as.numeric(bcac_onco_icogs_gwas_beta)),
+#          icog_or = exp(as.numeric(bcac_icogs2_beta)),
+#          onco_or = exp(as.numeric(bcac_onco2_beta)),
+#          gwas_or = exp(as.numeric(bcac_gwas_all_beta)))
+# icog_result <- all_result %>% 
+#   select(V2,chr,position_b37,a0,a1,icog_or,bcac_icogs2_se,
+#          bcac_icogs2_P1df_Wald,
+#          bcac_onco2_r2,
+#          bcac_onco_icogs_gwas_eaf_controls)
+# colnames(icog_result) <- c("snpid",
+#                            "CHR",
+#                            "bp",
+#                            "a1",
+#                            "a2",
+#                            "or",
+#                            "se",
+#                            "pval",
+#                            "info",
+#                            "freq")
+# write.table(icog_result,file="./heritability/result/icog_result.txt",col.names = T,quote=F)
+# ./munge_sumstats.py --sumstats meta_result_new.txt --out meta_new --merge-alleles w_hm3.snplist --info-min 0.3 --frq freq 
+# ./ldsc.py --h2 meta_new.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta_new
+# less meta_new.log
+# #estimate 0.5088
+# 
+# 
+# 
+# ######meta result
+# meta_result <- standard_result %>% mutate(
+#   or = exp(Beta.meta),
+#   sample_size = 1/(var.meta*2*EAFcontrols.Onco*(1-EAFcontrols.Onco))
+# ) %>% 
+#   select(snp.id,chr.Onco,Position.Onco,Effect.Meta,Baseline.Meta,or,sdE.meta,p.meta,
+#          r2.Onco,
+#          EAFcontrols.Onco,
+#          sample_size)
+# colnames(meta_result) <- c("snpid",
+#                            "CHR",
+#                            "bp",
+#                            "A1",
+#                            "A2",
+#                            "or",
+#                            "se",
+#                            "P-value",
+#                            "info",
+#                            "freq",
+#                            "N")
+# write.table(meta_result,file="./heritability/result/meta_result_new.txt",col.names = T,quote=F)
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# ###############LD score regression was run locally with ldsc
+# ###############iCOGs 46785 cases 42892 controls, effective 22377
+# ###############Onco Array 61282 cases 45494 controls, effective 26110.39
+# ###############GWAS 14910 cases 17588 controls, effective 8069.33
+# cd /Users/zhangh24/GoogleDrive/ldsc
+# conda env create --file environment.yml
+# source activate ldsc
+# ./ldsc.py -h
+# ./munge_sumstats.py -h
+# ./munge_sumstats.py --sumstats icog_result.txt --N 22377 --out icog --merge-alleles w_hm3.snplist --info-min 0.3
+# ./ldsc.py --h2 icog.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out icog
+# less icog.log
+# ######onco result
+# onco_result <- all_result %>% 
+#   select(V2,chr,position_b37,a0,a1,onco_or,bcac_onco2_se,
+#          bcac_onco2_P1df_Wald,
+#          bcac_onco2_r2,
+#          bcac_onco_icogs_gwas_eaf_controls)
+# colnames(onco_result) <- c("snpid",
+#                            "CHR",
+#                            "bp",
+#                            "a1",
+#                            "a2",
+#                            "or",
+#                            "se",
+#                            "pval",
+#                            "info",
+#                            "freq")
+# write.table(onco_result,file="./heritability/result/onco_result.txt",col.names = T,quote=F)
+# ./munge_sumstats.py --sumstats onco_result.txt --N 26110.39 --out onco --merge-alleles w_hm3.snplist --info-min 0.3
+# ./ldsc.py --h2 onco.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco
+# less onco.log
 
