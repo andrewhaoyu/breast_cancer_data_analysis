@@ -84,7 +84,7 @@ for(j in start:end){
     icog_onco_score_infor_oneline[1] <- as.numeric(icog_onco_score_infor_oneline_s[l])
     icog_onco_score_infor_oneline[2] <- as.numeric(icog_infor_s[l])
     icog_onco_score_infor_oneline[3] <- as.numeric(icog_onco_score_infor_oneline_s[l+second.num.s+second.num.s])
-    icog_onco_score_infor_oneline[4] <- as.numeric(onco_infor_s[second.num.s])
+    icog_onco_score_infor_oneline[4] <- as.numeric(onco_infor_s[l])
     
     icog_infor <- icog_onco_score_infor_oneline[2]
     onco_infor <- icog_onco_score_infor_oneline[4]

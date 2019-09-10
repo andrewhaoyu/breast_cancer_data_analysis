@@ -47,7 +47,7 @@ x.covar1 <- cbind(data1[,c(6:15)],country1)
 #x.covar1 <- cbind(data1[,c(6:15)],data1[,idx.known1],country1)
 gene1 <- discovery.snp.icog[,i1]
 
-
+%>% %>% 
 data2 <- fread("./data/oncoarray_overall.csv",header=T)
 discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data_overall.csv"))
 

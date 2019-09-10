@@ -1,5 +1,6 @@
 #-------------------------------------------------------------------
-# Goal: estimate heritability for breast cancer overall risk and subtypes risk on biowulf
+# Goal: estimate heritability for breast cancer overall risk, overall used the meta-analysis results of icogs and oncoarray
+# subtypes estimates used missing data algorithm
 #-------------------------------------------------------------------
 #---------------------------------------#---------------------------------------
 
@@ -52,6 +53,7 @@ library(data.table)
 setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
 
 #load summary level statistics for overall
+#Haoyupdate added the meta-analysis between iCOGs and OncoArray
 standard_result <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF_Haoyuupdate.txt"))
 colnames(standard_result)[1] <- "MarkerName"
 #load CIMBA data
@@ -234,7 +236,7 @@ heritability.data <- read.csv("./data/BCAC_heritability.csv")[,-1]
 
 heritability.data <- as.matrix(heritability.data)[c(2,4,5,3,1,6),
                                        c(2,4,5,3,1,6)]
-heritability <- c(0.557,diag(heritability.data))
+heritability <- c(0.559,diag(heritability.data))
 
 result.known+result.discovery
 

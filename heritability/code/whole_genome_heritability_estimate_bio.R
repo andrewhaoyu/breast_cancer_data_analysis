@@ -23,8 +23,8 @@ standard_result$snp.id <- snpid
 #onco array data
 Twometa <- function(beta1,var1,beta2,var2){
   var_meta <- 1/(1/var1+1/var2)
-  beta_meta <- (var_meta)*(1/var1*beta1+
-                             1/var2*beta2)
+  beta_meta <- (var_meta)*(beta1/var1+
+                             beta2/var2)
   return(list(beta_meta,var_meta))
 }
 #generate meta-analysis odds ratio for icog and onco
@@ -36,10 +36,12 @@ standard_result = standard_result %>%
 
 onco_result <- standard_result %>% mutate(
   or = exp(beta.Onco),
-  sample_size = 1/(SE.Onco^2*2*EAFcontrols.Onco*(1-EAFcontrols.Onco))) %>%
+  sample_size = 1/(SE.Onco^2*2*EAFcontrols.Onco*(1-EAFcontrols.Onco)),
+  MAF = ifelse(EAFcontrols.Onco>0.5,1-EAFcontrols.Onco,
+               EAFcontrols.Onco)) %>%
   select(snp.id,chr.Onco,Position.Onco,Effect.Onco,Baseline.Onco,or,SE.Onco,P1df_risk_chi.Onco,
          r2.Onco,
-         EAFcontrols.Onco,
+         MAF,
          sample_size)
 colnames(onco_result) <- c("snpid",
                            "CHR",
@@ -50,14 +52,15 @@ colnames(onco_result) <- c("snpid",
                            "se",
                            "P",
                            "info",
-                           "freq",
+                           "MAF",
                            "N")
 write.table(onco_result,file="/spin1/users/zhangh24/ldsc/onco_result.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats onco_result.txt --out onco --merge-alleles w_hm3.snplist --info-min 0.3
+./munge_sumstats.py --sumstats onco_result.txt --out onco --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 onco.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco
 less onco.log
 #estimate is 0.4227 with info 0.3 cutoff
 #estimate is 0.4227 with no info cutoff
+#estimate is 0.4196 with info 0.3 cutoff and maf 0.01
 #write.table(meta_result,file="./heritability/result/meta_result.txt",col.names = T,quote=F)
 
 
@@ -70,10 +73,12 @@ less onco.log
 bcac_result <- standard_result %>% mutate(
   z = BCAC_meta_beta/sqrt(BCAC_meta_var),
  sample_size = 1/(BCAC_meta_var*2*EAFcontrols.Onco*(1-EAFcontrols.Onco)),
-  P = 2*pnorm(-abs(z))) %>% 
+  P = 2*pnorm(-abs(z)),
+ MAF = ifelse(EAFcontrols.Onco>0.5,1-EAFcontrols.Onco,
+              EAFcontrols.Onco)) %>% 
   select(snp.id,chr.Onco,Position.Onco,Effect.Onco,Baseline.Onco,z,P,
          r2.Onco,
-         EAFcontrols.Onco,
+         MAF,
          sample_size)
 colnames(bcac_result) <- c("snpid",
                            "CHR",
@@ -83,18 +88,56 @@ colnames(bcac_result) <- c("snpid",
                            "Z",
                            "P",
                            "info",
-                           "freq",
+                           "MAF",
                            "N")
 write.table(bcac_result,file="/spin1/users/zhangh24/ldsc/bcac_result.txt",col.names = T,quote=F)
 
 conda env create --file environment.yml
 source activate ldsc
-./munge_sumstats.py --sumstats bcac_result.txt --out bcac --merge-alleles w_hm3.snplist --signed-sumstats Z,0 --frq freq --info-min 0.3  
+./munge_sumstats.py --sumstats bcac_result.txt --out bcac --merge-alleles w_hm3.snplist --signed-sumstats Z,0 --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 bcac.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac
 less bcac.log
-#estimate is 0.4777 with no info cutoff
-#estimate is 0.4777 with cutoff 0.3
+#estimate is 0.4777 with no info cutoff with maf cutoff 0.01
+#estimate is 0.4777 (se 0.0374) with cutoff 0.3 with maf cutoff 0.01
 #estimate is 0.4584 with cutoff 0.9
+
+
+
+
+
+bcac_result_all <- standard_result %>% mutate(
+  z = Beta.meta/sqrt(var.meta),
+  sample_size = 1/(BCAC_meta_var*2*EAFcontrols.Onco*(1-EAFcontrols.Onco)),
+  P = 2*pnorm(-abs(z)),
+  MAF = ifelse(EAFcontrols.Onco>0.5,1-EAFcontrols.Onco,
+               EAFcontrols.Onco)) %>% 
+  select(snp.id,chr.Onco,Position.Onco,Effect.Onco,Baseline.Onco,z,P,
+         r2.Onco,
+         MAF,
+         sample_size)
+colnames(bcac_result_all) <- c("snpid",
+                           "CHR",
+                           "bp",
+                           "A2",
+                           "A1",
+                           "Z",
+                           "P",
+                           "info",
+                           "MAF",
+                           "N")
+write.table(bcac_result_all,file="/spin1/users/zhangh24/ldsc/bcac_result_all.txt",col.names = T,quote=F)
+
+./munge_sumstats.py --sumstats bcac_result_all.txt --out bcac_all --merge-alleles w_hm3.snplist --signed-sumstats Z,0 --info-min 0.3 --maf-min 0.01
+./ldsc.py --h2 bcac_all.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_all
+less bcac_all.log
+#estimate is 0.5593 (0.0355) with info cutoff 0.3 with maf cutoff 0.01
+
+
+
+
+
+
+
 
 
 
@@ -119,10 +162,12 @@ snp.infor.merge <- merge(snp.infor,all.snp,
 bcac_result_jh <- snp.infor.merge %>% mutate(
   z = BCAC_meta_beta/sqrt(BCAC_meta_var),
   sample_size = 1/(BCAC_meta_var*2*EAFcontrols.Onco*(1-EAFcontrols.Onco)),
-  P = 2*pnorm(-abs(z))) %>% 
+  P = 2*pnorm(-abs(z)),
+  MAF = ifelse(EAFcontrols.Onco>0.5,1-EAFcontrols.Onco,
+               EAFcontrols.Onco)) %>% 
   select(snp.id,chr.Onco,Position.Onco,Effect.Onco,Baseline.Onco,z,P,
          r2.Onco,
-         EAFcontrols.Onco,
+         MAF,
          sample_size)
 colnames(bcac_result_jh) <- c("snpid",
                            "CHR",
@@ -132,17 +177,17 @@ colnames(bcac_result_jh) <- c("snpid",
                            "Z",
                            "P",
                            "info",
-                           "freq",
+                           "MAF",
                            "N")
 write.table(bcac_result_jh,file="/spin1/users/zhangh24/ldsc/bcac_result_jh.txt",col.names = T,quote=F)
 
 conda env create --file environment.yml
 source activate ldsc
-./munge_sumstats.py --sumstats bcac_result_jh.txt --out bcac_jh --merge-alleles w_hm3.snplist --signed-sumstats Z,0 --frq freq --info-min 0.3 
+./munge_sumstats.py --sumstats bcac_result_jh.txt --out bcac_jh --merge-alleles w_hm3.snplist --signed-sumstats Z,0 --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 bcac_jh.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_jh
 less bcac_jh.log
 #estimate is 0.4592 with info cutoff as 0.9
-#estimate is 0.4789 with info cutoff as 0.3
+#estimate is 0.4789 with info cutoff as 0.3 maf 0.01
 #estimate is 0.4789 with no info cutoff
 
 #load public avaiable data from publichsed nature 2017
@@ -156,11 +201,12 @@ onco_result_pub <- snp.data.onco %>% mutate(
   bcac_onco2_se = as.numeric(bcac_onco2_se),
   bcac_onco2_beta = as.numeric(bcac_onco2_beta),
   bcac_onco2_eaf_controls = as.numeric(bcac_onco2_eaf_controls),
+  MAF = ifelse(bcac_onco2_eaf_controls>0.5,1-bcac_onco2_eaf_controls,bcac_onco2_eaf_controls),
   z = bcac_onco2_beta/bcac_onco2_se,
   sample_size = 1/(bcac_onco2_se^2*2*bcac_onco2_eaf_controls*(1-bcac_onco2_eaf_controls))) %>% 
   select(snp.id,chr,position_b37,a0,a1,z,bcac_onco2_P1df_Wald,
          bcac_onco2_r2,
-         bcac_onco2_eaf_controls,
+         MAF,
          sample_size)
 
 
@@ -172,15 +218,95 @@ colnames(onco_result_pub) <- c("snpid",
                               "Z",
                               "P",
                               "info",
-                              "freq",
+                              "MAF",
                               "N")
 write.table(onco_result_pub,file="/spin1/users/zhangh24/ldsc/onco_result_pub.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats onco_result_pub.txt --out onco_pub --merge-alleles w_hm3.snplist --info-min 0.3
+./munge_sumstats.py --sumstats onco_result_pub.txt --out onco_pub --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 onco_pub.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco_pub
 less onco_pub.log
 #estimate 0.4158 with info cutoff 0.9
 #estimate 0.4341 with info cutoff as 0.3
 #estimate 0.4341 with no info cutoff
+#estimate 0.4308 with info cutoff as 0.3 maf 0.01
+
+
+#public avaiable data with only icogs and oncoarray meta-analysis
+bcac_result_pub <- snp.data.onco %>% mutate(
+  bcac_onco2_beta = as.numeric(bcac_onco2_beta),
+  bcac_onco2_se = as.numeric(bcac_onco2_se),
+  bcac_onco2_eaf_controls = as.numeric(bcac_onco2_eaf_controls),
+  bcac_icogs2_se = as.numeric(bcac_icogs2_se),
+  bcac_icogs2_beta = as.numeric(bcac_icogs2_beta),
+  MAF = ifelse(bcac_onco2_eaf_controls>0.5,1-bcac_onco2_eaf_controls,bcac_onco2_eaf_controls),
+  bcac_meta_beta = Twometa(bcac_icogs2_beta,bcac_icogs2_se^2,bcac_onco2_beta,bcac_onco2_se^2)[[1]],
+  bcac_meta_var = Twometa(bcac_icogs2_beta,bcac_icogs2_se^2,bcac_onco2_beta,bcac_onco2_se^2)[[2]],
+  z = bcac_meta_beta/sqrt(bcac_meta_var),
+  p = 2*pnorm(-abs(z),lower.tail = T),
+  sample_size = 1/(bcac_meta_var*2*bcac_onco2_eaf_controls*(1-bcac_onco2_eaf_controls))) %>% 
+  select(snp.id,chr,position_b37,a0,a1,z,p,
+         bcac_onco2_r2,
+         MAF,
+         sample_size)
+
+
+colnames(bcac_result_pub) <- c("snpid",
+                               "CHR",
+                               "bp",
+                               "A2",
+                               "A1",
+                               "Z",
+                               "P",
+                               "info",
+                               "MAF",
+                               "N")
+write.table(bcac_result_pub,file="/spin1/users/zhangh24/ldsc/bcac_result_pub.txt",col.names = T,quote=F)
+./munge_sumstats.py --sumstats bcac_result_pub.txt --out bcac_pub --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
+./ldsc.py --h2 bcac_pub.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_pub
+less bcac_pub.log
+#estimate 0.496 with info cutoff as 0.3 maf 0.01
+
+#public avaiable data with  icogs, oncoarray and gwas meta-analysis
+bcac_result_pub <- snp.data.onco %>% mutate(
+  bcac_onco2_eaf_controls = as.numeric(bcac_onco2_eaf_controls),
+  MAF = ifelse(bcac_onco2_eaf_controls>0.5,1-bcac_onco2_eaf_controls,bcac_onco2_eaf_controls),
+  bcac_onco_icogs_gwas_beta = as.numeric(bcac_onco_icogs_gwas_beta),
+  bcac_onco_icogs_gwas_se = as.numeric(bcac_onco_icogs_gwas_se),
+  z = bcac_onco_icogs_gwas_beta/bcac_onco_icogs_gwas_se,
+  p = bcac_onco_icogs_gwas_P1df,
+  sample_size = 1/(bcac_onco_icogs_gwas_se^2*2*bcac_onco2_eaf_controls*(1-bcac_onco2_eaf_controls))) %>% 
+  select(snp.id,chr,position_b37,a0,a1,z,p,
+         bcac_onco2_r2,
+         MAF,
+         sample_size)
+
+
+colnames(bcac_result_pub) <- c("snpid",
+                               "CHR",
+                               "bp",
+                               "A2",
+                               "A1",
+                               "Z",
+                               "P",
+                               "info",
+                               "MAF",
+                               "N")
+write.table(bcac_result_pub,file="/spin1/users/zhangh24/ldsc/bcac_result_pub.txt",col.names = T,quote=F)
+./munge_sumstats.py --sumstats bcac_result_pub.txt --out bcac_pub --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
+./ldsc.py --h2 bcac_pub.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_pub
+less bcac_pub.log
+#estimate 0.496 with info cutoff as 0.3 maf 0.01
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #use or instead of Z statistics (conclusion, the same as Z)
@@ -310,238 +436,52 @@ less intrinsic_data_lua.log
 #estimate 0.6973 without info cutoff as 0.9
 
 
+#heritability estimate using icog+onco without adjust for country
+load(paste0("./whole_genome_age/ICOG/standard_analysis/result/meta_result_shared_1p_s.Rdata"))
+
+colnames(meta_result_shared_1p)[15:32] = c(paste0("beta_",c("overall","Luminial_A","Luminal_B",
+                                                            "Luminal_B_HER2Neg",
+                                                            "HER2Enriched",
+                                                            "TripleNegative")),
+                                                  paste0("var_",c("overall","Luminial_A","Luminal_B",
+                                                                   "Luminal_B_HER2Neg",
+                                                                   "HER2Enriched",
+                                                                   "TripleNegative")),
+                                                         paste0("p_",c("overall","Luminial_A","Luminal_B",
+                                                                          "Luminal_B_HER2Neg",
+                                                                          "HER2Enriched",
+                                                                          "TripleNegative")))
+
+standard_result <- merge(standard_result,meta_result_shared_1p,by="var_name")
 
 
+names <- c("overall","Luminial_A","Luminal_B",
+           "Luminal_B_HER2Neg",
+           "HER2Enriched",
+           "TripleNegative")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-cimba <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/brca1_bcac_tn_meta.txt"))
-idx <- which(cimba$CHR==6&cimba$position==33239869)
-cimba[idx,]
-#sample size calculated
-bcac_result <- standard_result %>% mutate(
-  z = BCAC_meta_beta/sqrt(BCAC_meta_var),
-  sample_size = 1/(BCAC_meta_var*2*EAFcontrols.Onco*(1-EAFcontrols.Onco)),
+bcac_result_noc <- standard_result %>% mutate(
+  z = beta_overall/sqrt(var_overall),
+  sample_size = 1/(var_overall*2*EAFcontrols.Onco*(1-EAFcontrols.Onco)),
   P = 2*pnorm(-abs(z)),
-  or = exp(BCAC_meta_beta),
-  sebcac = sqrt(BCAC_meta_var)) %>% 
-  select(snp.id,chr.Onco,Position.Onco,Effect.Onco,Baseline.Onco,or,sebcac,P,
+  MAF = ifelse(EAFcontrols.Onco>0.5,1-EAFcontrols.Onco,
+               EAFcontrols.Onco)) %>% 
+  select(snp.id,chr.Onco,Position.Onco,Effect.Onco,Baseline.Onco,z,P,
          r2.Onco,
-         EAFcontrols.Onco,
+         MAF,
          sample_size)
 colnames(bcac_result) <- c("snpid",
                            "CHR",
                            "bp",
                            "A2",
                            "A1",
-                           "or",
-                           "se",
+                           "Z",
                            "P",
                            "info",
-                           "freq",
+                           "MAF",
                            "N")
-write.table(bcac_result,file="/spin1/users/zhangh24/ldsc/bcac_result_new.txt",col.names = T,quote=F)
-
-# conda env create --file environment.yml
-# source activate ldsc
-./munge_sumstats.py --sumstats bcac_result_new.txt --out meta_new --merge-alleles w_hm3.snplist --info-min 0.3 --frq freq
-./ldsc.py --h2 meta_new.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta_new
-less meta_new.log
-
-#sample size plug in
-bcac_result <- standard_result %>% mutate(
-  z = BCAC_meta_beta/sqrt(BCAC_meta_var),
-  sample_size = 1/(BCAC_meta_var*2*EAFcontrols.Onco*(1-EAFcontrols.Onco)),
-  P = 2*pnorm(-abs(z)),
-  or = exp(BCAC_meta_beta),
-  sebcac = sqrt(BCAC_meta_var)) %>% 
-  select(snp.id,chr.Onco,Position.Onco,Effect.Onco,Baseline.Onco,or,sebcac,P,
-         r2.Onco,
-         EAFcontrols.Onco,
-         sample_size)
-colnames(bcac_result) <- c("snpid",
-                           "CHR",
-                           "bp",
-                           "A2",
-                           "A1",
-                           "or",
-                           "se",
-                           "P",
-                           "info",
-                           "freq",
-                           "N")
-write.table(bcac_result,file="/spin1/users/zhangh24/ldsc/bcac_result_new2.txt",col.names = T,quote=F)
-
-# conda env create --file environment.yml
-# source activate ldsc
-./munge_sumstats.py --sumstats bcac_result_new2.txt --out meta_new2 --merge-alleles w_hm3.snplist --info-min 0.3 --frq freq --N 53091.03
-./ldsc.py --h2 meta_new2.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta_new2
-less meta_new2.log
+write.table(bcac_result,file="/spin1/users/zhangh24/ldsc/bcac_result_nocountry.txt",col.names = T,quote=F)
 
 
 
 
-
-
-
-
-
-
-
-
-
-######meta result
-meta_result <- standard_result %>% mutate(
-  or = exp(Beta.meta),
-  sample_size = 1/(var.meta*2*EAFcontrols.Onco*(1-EAFcontrols.Onco))
-) %>% 
-  select(snp.id,chr.Onco,Position.Onco,Effect.Meta,Baseline.Meta,or,sdE.meta,p.meta,
-         r2.Onco,
-         EAFcontrols.Onco,
-         sample_size)
-colnames(meta_result) <- c("snpid",
-                           "CHR",
-                           "bp",
-                           "A1",
-                           "A2",
-                           "or",
-                           "se",
-                           "P-value",
-                           "info",
-                           "freq",
-                           "N")
-write.table(meta_result,file="/spin1/users/zhangh24/ldsc/meta_result.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats bcac_result.txt --out meta --merge-alleles w_hm3.snplist --info-min 0.3  --signed-sumstats Z,0 --frq freq 
-./ldsc.py --h2 meta.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta
-less meta.log
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-###############LD score regression was run locally with ldsc
-###############iCOGs 46785 cases 42892 controls, effective 22377
-###############Onco Array 61282 cases 45494 controls, effective 26110.39
-###############GWAS 14910 cases 17588 controls, effective 8069.33
-cd /Users/zhangh24/GoogleDrive/ldsc
-conda env create --file environment.yml
-source activate ldsc
-./ldsc.py -h
-./munge_sumstats.py -h
-./munge_sumstats.py --sumstats icog_result.txt --N 22377 --out icog --merge-alleles w_hm3.snplist --info-min 0.3
-./ldsc.py --h2 icog.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out icog
-less icog.log
-######onco result
-onco_result <- all_result %>% 
-  select(V2,chr,position_b37,a0,a1,onco_or,bcac_onco2_se,
-         bcac_onco2_P1df_Wald,
-         bcac_onco2_r2,
-         bcac_onco_icogs_gwas_eaf_controls)
-colnames(onco_result) <- c("snpid",
-                           "CHR",
-                           "bp",
-                           "a1",
-                           "a2",
-                           "or",
-                           "se",
-                           "pval",
-                           "info",
-                           "freq")
-write.table(onco_result,file="./heritability/result/onco_result.txt",col.names = T,quote=F)
-./munge_sumstats.py --sumstats onco_result.txt --N 26110.39 --out onco --merge-alleles w_hm3.snplist --info-min 0.3
-./ldsc.py --h2 onco.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco
-less onco.log
-
-
-
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-load(paste0("./whole_genome_age/ICOG/standard_analysis/result/meta_result_shared_1p.Rdata"))
-all.snp <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))
-library(dplyr)
-all.snp = all.snp %>% select(var_name,Effect.Onco,Baseline.Onco)
-standard_result <- meta_result_shared_1p
-temp.str <- strsplit(standard_result$rs_id,":")
-n <- nrow(standard_result)
-snpid <- rep("c",n)
-for(i in 1:n){
-  snpid[i] <- temp.str[[i]][1]
-}
-idx <- which(c(1:n)%in%grep("rs",snpid)!=T)
-snpid[idx] <- paste0("chr",standard_result$CHR,":",
-                     standard_result$position)[idx]
-standard_result$snp.id <- snpid
-
-standard_result = merge(standard_result,
-                        all.snp,
-                        by="var_name")
-
-
-bcac_result <- standard_result %>% mutate(
-  z = log.odds/sqrt(sigma),
-  or = exp(log.odds),
-  se = sqrt(sigma),
-  sample_size = 1/(sigma*2*exp_freq_a1*(1-exp_freq_a1))) %>% 
-  select(snp.id,CHR,position,Effect.Onco,Baseline.Onco,or,se,p.value,
-         info,
-         exp_freq_a1,sample_size)
-colnames(bcac_result) <- c("snpid",
-                           "CHR",
-                           "bp",
-                           "A2",
-                           "A1",
-                           "or",
-                           "se",
-                           "P",
-                           "info",
-                           "freq",
-                           "N")
-write.table(bcac_result,file="/spin1/users/zhangh24/ldsc/bcac_result_noc.txt",col.names = T,quote=F)
-
-conda env create --file environment.yml
-source activate ldsc
-./munge_sumstats.py --sumstats bcac_result_noc.txt --out meta_noc --merge-alleles w_hm3.snplist --info-min 0.3 --frq freq --info-min 0.3
-./ldsc.py --h2 meta_noc.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out meta_noc
-less meta_noc.log

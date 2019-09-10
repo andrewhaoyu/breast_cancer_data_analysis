@@ -1,4 +1,4 @@
-##########merge the CIMBA and BCAC meta analysis result together
+%>% %>% ##########merge the CIMBA and BCAC meta analysis result together
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.combine.Rdata"))
 total <- nrow(CIMBA.BCAC.combine)

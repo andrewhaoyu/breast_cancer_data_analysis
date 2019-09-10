@@ -50,7 +50,7 @@ BCAC_subtypes_result <- data.frame(meta_result_shared_1p,
 subtypes <- c("Luminial_A","Luminal_B",
                                     "Luminal_B_HER2Neg",
                                     "HER2_Enriched",
-                                    "Triple_Negative")
+                                    "Triple_Negative") %>% %>% 
 colnames(BCAC_subtypes_result)[7:31] <- c(paste0("log_or_",subtypes),
                                            paste0("var_",subtypes),
                                            paste0("z_stat_",subtypes),

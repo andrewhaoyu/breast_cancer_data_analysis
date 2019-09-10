@@ -151,7 +151,7 @@ colnames(meta_result_shared_1p)[21:45] <-
 
 
 
-library(data.table)
+library(dat %>% %>% a.table)
 #load CIMBA BCAC meta-analysis data
 #chromosome 23 data are not meta-analyzed yet
 CIMBA.result <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/brca1_bcac_tn_meta.txt"))
