@@ -236,11 +236,12 @@ heritability.data <- read.csv("./data/BCAC_heritability.csv")[,-1]
 
 heritability.data <- as.matrix(heritability.data)[c(2,4,5,3,1,6),
                                        c(2,4,5,3,1,6)]
-heritability <- c(0.559,diag(heritability.data))
+heritability <- c(0.478,diag(heritability.data))
 
 result.known+result.discovery
 
-heritability.total <- c(SigmaEst(known_snp_standard_cal)+SigmaEst(discovery_snp_cal),result.known+result.discovery)
+heritability.total <- c(
+  SigmaEst(known_snp_standard_cal)+SigmaEst(discovery_snp_cal),result.known+result.discovery)
 heritability.dis <- c(SigmaEst(discovery_snp_cal),result.discovery)
 
 heritability.table <- cbind(heritability.total,heritability.dis,heritability,heritability.total/heritability)
