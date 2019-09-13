@@ -236,7 +236,7 @@ heritability.data <- read.csv("./data/BCAC_heritability.csv")[,-1]
 
 heritability.data <- as.matrix(heritability.data)[c(2,4,5,3,1,6),
                                        c(2,4,5,3,1,6)]
-heritability <- c(0.478,diag(heritability.data))
+heritability <- c(0.5149,diag(heritability.data))
 
 result.known+result.discovery
 
@@ -375,7 +375,7 @@ heritability.data <- read.csv("./data/BCAC_heritability.csv")[,-1]
 
 heritability.data <- as.matrix(heritability.data)[c(2,4,5,3,1,6),
                                                   c(2,4,5,3,1,6)]
-heritability <- c(0.557,diag(heritability.data))
+heritability <- c(0.5149,diag(heritability.data))
 
 result.known+result.discovery
 

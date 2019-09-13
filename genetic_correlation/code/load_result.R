@@ -87,7 +87,7 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis')
 #
 ##################only based on BCAC
 places <- 2
-load("./genetic_correlation/result/ldsc_result_meta_082919.rda")
+load("./genetic_correlation/result/ldsc_result_meta_091219.rda")
 
 diag(ldsc_result[[1]][c(2,5,4,3,1,6),c(2,5,4,3,1,6)])
 diag(ldsc_result[[3]][c(2,5,4,3,1,6),c(2,5,4,3,1,6)])
@@ -112,8 +112,8 @@ rownames(correlation.se) <- names
 
 correlation.matrix.low <- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[1]]
 correlation.matrix.high<- get_cor_95_list(correlation.matrix,correlation.matrix.se)[[2]]
-write.csv(correlation.95,file="./genetic_correlation/result/correlation_95_BCAC_CIMBA_082919.csv",quote=F)
-write.csv(correlation.se,file="./genetic_correlation/result/correlation_se_BCAC_CIMBA_083119.csv",quote=F)
+write.csv(correlation.95,file="./genetic_correlation/result/correlation_95_BCAC_CIMBA_091219.csv",quote=F)
+write.csv(correlation.se,file="./genetic_correlation/result/correlation_se_BCAC_CIMBA_091219.csv",quote=F)
 
 
 # #get results for CIMBA+ BCAC
@@ -256,7 +256,7 @@ col <- colorRampPalette(c("white","red"))(length(pal.breaks)-1)
 
 # heatmap(correlation.matrix,col = col,symm=T,margins=c(10,4),key.title="",key.ylab="",cexRow=1,cexCol=1)
 paletteLength <- 50
-load("./genetic_correlation/result/ldsc_result_meta_082919.rda")
+load("./genetic_correlation/result/ldsc_result_meta_091219.rda")
 
 correlation.matrix <- ldsc_result[[2]]
 correlation.matrix.se <- ldsc_result[[4]]

@@ -264,6 +264,52 @@ write.table(bcac_result_pub,file="/spin1/users/zhangh24/ldsc/bcac_result_pub.txt
 ./ldsc.py --h2 bcac_pub.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_pub
 less bcac_pub.log
 #estimate 0.496 (0.042) with info cutoff as 0.3 maf 0.01
+#estimate 0.4835 (0.0414)with info cutoff as 0.9 maf 0.01
+#estimate 0.4958 (0.0419) with info cutoff as 0.3 maf 0.001
+
+
+bcac_result_pub_nplug <- snp.data.onco %>% mutate(
+  bcac_onco2_beta = as.numeric(bcac_onco2_beta),
+  bcac_onco2_se = as.numeric(bcac_onco2_se),
+  bcac_onco2_eaf_controls = as.numeric(bcac_onco2_eaf_controls),
+  bcac_icogs2_se = as.numeric(bcac_icogs2_se),
+  bcac_icogs2_beta = as.numeric(bcac_icogs2_beta),
+  MAF = ifelse(bcac_onco2_eaf_controls>0.5,1-bcac_onco2_eaf_controls,bcac_onco2_eaf_controls),
+  bcac_meta_beta = Twometa(bcac_icogs2_beta,bcac_icogs2_se^2,bcac_onco2_beta,bcac_onco2_se^2)[[1]],
+  bcac_meta_var = Twometa(bcac_icogs2_beta,bcac_icogs2_se^2,bcac_onco2_beta,bcac_onco2_se^2)[[2]],
+  z = bcac_meta_beta/sqrt(bcac_meta_var),
+  p = 2*pnorm(-abs(z),lower.tail = T),
+  sample_size = 1/(bcac_meta_var*2*bcac_onco2_eaf_controls*(1-bcac_onco2_eaf_controls))) %>% 
+  select(snp.id,chr,position_b37,a0,a1,z,p,
+         bcac_onco2_r2,
+         MAF)
+
+
+colnames(bcac_result_pub_nplug) <- c("snpid",
+                               "CHR",
+                               "bp",
+                               "A2",
+                               "A1",
+                               "Z",
+                               "P",
+                               "info",
+                               "MAF")
+write.table(bcac_result_pub_nplug,file="/spin1/users/zhangh24/ldsc/bcac_result_pub_nplug.txt",col.names = T,quote=F)
+
+./munge_sumstats.py --sumstats bcac_result_pub_nplug.txt --out bcac_result_pub_nplug --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01 --N  48487.39
+./ldsc.py --h2 bcac_result_pub_nplug.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_result_pub_nplug
+less bcac_result_pub_nplug.log
+#icogs sample size 46785 cases, 42892 controls, effective sample 22377
+#onco sample size 61282 cases, 45494 controls, effective sample 26110.39
+#gwas sample size 14910 cases, 17588 controls, effective sample 8069.33
+#estimate 0.4367 (0.036) with info cutoff as 0.3 maf 0.01
+
+
+
+
+
+
+
 
 #public avaiable data with  icogs, oncoarray and gwas meta-analysis
 bcac_result_pub_all <- snp.data.onco %>% mutate(
@@ -296,6 +342,33 @@ write.table(bcac_result_pub_all,file="/spin1/users/zhangh24/ldsc/bcac_result_pub
 less bcac_pub_all.log
 #estimate  0.5372 (0.0408) with info cutoff as 0.3 maf 0.01
 
+bcac_result_pub_all_nplug <- snp.data.onco %>% mutate(
+  bcac_onco2_eaf_controls = as.numeric(bcac_onco2_eaf_controls),
+  MAF = ifelse(bcac_onco2_eaf_controls>0.5,1-bcac_onco2_eaf_controls,bcac_onco2_eaf_controls),
+  bcac_onco_icogs_gwas_beta = as.numeric(bcac_onco_icogs_gwas_beta),
+  bcac_onco_icogs_gwas_se = as.numeric(bcac_onco_icogs_gwas_se),
+  z = bcac_onco_icogs_gwas_beta/bcac_onco_icogs_gwas_se,
+  p = bcac_onco_icogs_gwas_P1df,
+  sample_size = 1/(bcac_onco_icogs_gwas_se^2*2*bcac_onco2_eaf_controls*(1-bcac_onco2_eaf_controls))) %>% 
+  select(snp.id,chr,position_b37,a0,a1,z,p,
+         bcac_onco2_r2,
+         MAF)
+
+
+colnames(bcac_result_pub_all_nplug) <- c("snpid",
+                                   "CHR",
+                                   "bp",
+                                   "A2",
+                                   "A1",
+                                   "Z",
+                                   "P",
+                                   "info",
+                                   "MAF")
+write.table(bcac_result_pub_all_nplug,file="/spin1/users/zhangh24/ldsc/bcac_result_pub_all_nplug.txt",col.names = T,quote=F)
+./munge_sumstats.py --sumstats bcac_result_pub_all_nplug.txt --out bcac_pub_all_nplug --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01 --N 56556.72
+./ldsc.py --h2 bcac_pub_all_nplug.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_pub_all_nplug
+less bcac_pub_all.log
+#estimate  0.4657 (0.0359) with info cutoff as 0.3 maf 0.01
 
 
 
@@ -525,17 +598,7 @@ write.table(cimba,file="/spin1/users/zhangh24/ldsc/cimba.txt",col.names = T,quot
 #genetic correlation
 #tn cimba 0.8401(0.154)
 
-#estimate lub heritablity 0.7797 (0.0961)
-#estiamte lua_lub cov 0.5137 (0.0466) cor 0.7389 (0.049)
-#estimate lubher2 heritablity  0.6296 (0.0721)
-#estiamte lua_lubher2 cov 0.4966 (0.0496) cor 0.7951 (0.0461)
 
-
-#estimate tn heritability is 0.4886 (0.0742)
-#estimate cimba heritablity is 0.3034 (0.0773)
-#estimate tn_cimba_cov is 0.3195 (0.0553)
-#estimate tn_cimba_genetic_correlation 0.8297 (0.1516)
-#
 
 
 
