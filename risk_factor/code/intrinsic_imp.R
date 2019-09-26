@@ -76,6 +76,7 @@ all.covariates <- data.frame(as.factor(agemenarche_cat),
                              #as.factor(lastchildage_cat),
                              study,
                              refage)
+#start imputations
 library(mice)
 imp <- mice(all.covariates,m=1,seed=i1,print=FALSE)
 

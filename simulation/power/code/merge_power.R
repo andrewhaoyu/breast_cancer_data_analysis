@@ -7,6 +7,19 @@ for(i1 in 1:5999){
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata")) 
+    #result.list is a list of pvalue
+    #three different simulation settings: 1. no heterogneity 2. one tumor heter 3. multiple tumor heterogeneity
+    #3 different sample size were implemented 5000, 50,000 and 100,000
+    #
+    #its the output of a foreach parallele result
+    #[[1]] and [[2]] share the same structure
+    #[[1]] [[1]] is the vector of p_value from FTOP
+    #[[1]] [[1]] is a long vector looped by first simulation setting, then sample size (inner loop), 9 different sections
+    #[[1]] [[2]] is the vector of p_value from MTOP
+    #[[1]] [[3]] is the vector of p_value from standard logistoc regression
+    #[[1]] [[4]] is the vector of p_value from MTOP this is because of a previous typo
+    #[[1]] [[5]] is the vector of FTOP from complete analysis
+    #[[1]] [[6]] is the vector of polytomous model from complete analysis
     total = total+ length(result.list[[1]][[1]])/9 + length(result.list[[2]][[1]])/9
     
   }
@@ -21,7 +34,7 @@ p_global_complete <- matrix(0,total,9)
 #p_poly <- matrix(0,total,9)
 
 total <- 0
-
+#args 1:5999 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
 for(i1 in 1:5999){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
@@ -83,6 +96,7 @@ setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_result",full.names=T)
 total <- 0
+#args 4000:6000 contains the results for polytomous
 for(i1 in 4000:6000){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
@@ -145,14 +159,20 @@ apply(p_global_result,2,function(x){CountPower(x,10^-3)})
 apply(p_mglobal_result,2,function(x){CountPower(x,10^-3)})
 apply(p_standard,2,function(x){CountPower(x,10^-3)})
 apply(p_global_complete,2,function(x){CountPower(x,10^-3)})
-apply(p_poly,2,function(x){CountPower(x,10^-3)})
+apply(p_poly,2,function(x){CountPower(x,thres)})
 
+thres = 5E-08
+#remove standard polytomous function 
+#unstable outliers
+idx <- which(p_poly[,4]==0)
+p_poly = p_poly[-idx,,drop=F]
 
-result <- cbind(apply(p_global_result,2,function(x){CountPower(x,10^-3)}),
-                apply(p_mglobal_result,2,function(x){CountPower(x,10^-3)}),
-                apply(p_standard,2,function(x){CountPower(x,10^-3)}),
-                apply(p_global_complete,2,function(x){CountPower(x,10^-3)}),
-                apply(p_poly,2,function(x){CountPower(x,10^-3)}))
+result <- cbind(apply(p_global_result,2,function(x){CountPower(x,thres)}),
+                apply(p_mglobal_result,2,function(x){CountPower(x,thres)}),
+                apply(p_standard,2,function(x){CountPower(x,thres)}),
+                apply(p_global_complete,2,function(x){CountPower(x,thres)}),
+                apply(p_poly,2,function(x){CountPower(x,thres)}))
+
 
 
 result.1 <- result
@@ -200,7 +220,7 @@ total <- 0
 
 for(i1 in 6000:7000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata"))
     temp1 = length(result.list[[1]][[1]])/9
@@ -277,12 +297,12 @@ apply(p_standard,2,function(x){CountPower(x,10^-3)})
 apply(p_global_complete,2,function(x){CountPower(x,10^-3)})
 apply(p_poly,2,function(x){CountPower(x,10^-3)})
 
-
-result <- cbind(apply(p_global_result,2,function(x){CountPower(x,10^-3)}),
-                apply(p_mglobal_result,2,function(x){CountPower(x,10^-3)}),
-                apply(p_standard,2,function(x){CountPower(x,10^-3)}),
-                apply(p_global_complete,2,function(x){CountPower(x,10^-3)}),
-                apply(p_poly,2,function(x){CountPower(x,10^-3)}))
+thres = 5E-08
+result <- cbind(apply(p_global_result,2,function(x){CountPower(x,thres)}),
+                apply(p_mglobal_result,2,function(x){CountPower(x,thres)}),
+                apply(p_standard,2,function(x){CountPower(x,thres)}),
+                apply(p_global_complete,2,function(x){CountPower(x,thres)}),
+                apply(p_poly,2,function(x){CountPower(x,thres)}))
 
 result.2 <- result
 

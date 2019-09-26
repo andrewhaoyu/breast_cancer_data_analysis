@@ -157,7 +157,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   # p_indi <- fixed.result[2]
   ##########MTOP global test for association 
   z.design.fixed <- cbind(rep(1,M),z.standard[,1])
-  z.design.random <-z.standard[,2:ncol(z.standard)]
+  z.design.random <-as.matrix(z.standard[,2:ncol(z.standard)])
   score.test.support.fixed <- ScoreTestSupportMixedModel(
     y.pheno.mis,
     baselineonly = NULL,
@@ -165,11 +165,11 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
     pairwise.interaction = NULL,
     saturated = NULL,
     missingTumorIndicator = 888,
-    c(theta_intercept,
+    delta0= c(theta_intercept,
       theta_covar)
   )
   score.test.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
-                                         x=as.matrix(G),
+                                         x=as.matrix(as.numeric(G)),
                                          z.design=z.design.fixed,
                                          score.test.support=score.test.support.fixed,
                                          missingTumorIndicator=888
@@ -281,8 +281,9 @@ i1 = as.numeric(args[[1]])
 print(i1)
 #setwd("/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis/")
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-library(bc2)
-
+#library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+#library(TOP,lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91)
 
 theta_covar <- c(0.05,0,0,0,0)
@@ -304,8 +305,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   p_global_complete <- rep(0,9*s_times)
   p_poly <- rep(0,9*s_times)
   
-  #sizes <- c(5000,50000,100000)
-  sizes <- c(10000)
+  sizes <- c(5000,25000,50000,100000)
+  
   
   temp <- 1  
     for(s in 1:sc){
