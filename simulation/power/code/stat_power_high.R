@@ -278,7 +278,7 @@ i1 = as.numeric(args[[1]])
 print(i1)
 #setwd("/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis/")
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 
 theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
                      -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
@@ -298,8 +298,8 @@ registerDoParallel(no.cores)
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
   s_times <- 1
- # sizes <- c(50000,100000)
- sizes <- c(25000)
+  sizes <- c(5000,25000,50000,100000)
+ #sizes <- c()
   n.sizes <- length(sizes)
   p_global_result <- rep(0,n.sizes*s_times)
   p_mglobal_result <- rep(0,n.sizes*s_times)
