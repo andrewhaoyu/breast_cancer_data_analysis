@@ -204,14 +204,12 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
     model.standard <- glm(y.pheno.mis[,1]~G+x_covar,family = binomial(link='logit')) 
     p_standard <- summary(model.standard)$coefficients[2,4]
     
-    idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
-                       y.pheno.mis[,4]==888|y.pheno.mis[,5]==888)
+    idx.mis <- GenerateMissingPosition(y.pheno.mis,missingTumorIndicator=888)
     y.pheno.com <- y.pheno.mis[-idx.mis,,drop=F]
     x.covar.com <- x_covar[-idx.mis,drop=F]
     G.com <- G[-idx.mis,drop=F]
     
-    model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,
-                                                                                                                 theta_covar))
+    model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,theta_covar))
     z.standard <- model2[[12]]
     M <- nrow(z.standard)
     odds <- model2[[1]][M+(1:K)]
@@ -312,7 +310,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   p_mglobal_result <- rep(0,n.sizes*s_times)
   p_standard <- rep(0,n.sizes*s_times)
   p_global_complete <- rep(0,n.sizes*s_times)
-  p_poly <- rep(0,n.sizes*s_times)
+  #p_poly <- rep(0,n.sizes*s_times)
   
   
   

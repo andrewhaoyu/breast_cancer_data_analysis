@@ -144,8 +144,7 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
 
 
 PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_covar){
-  idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
-                     y.pheno.mis[,4]==888|y.pheno.mis[,5]==888)
+  idx.mis <- GenerateMissingPosition(y.pheno.mis,missingTumorIndicator=888)
   y.pheno.com <- y.pheno.mis[-idx.mis,,drop=F]
   x.covar.com <- x_covar[-idx.mis,drop=F]
   G.com <- G[-idx.mis,drop=F]
