@@ -1,7 +1,7 @@
 ###########simulate data with four tumor characteristics containing three binary tumor characteristics and one oridinal tumor characteristics.
 ###########one genotype with MAF 0.25 is simulated
 ###########one covariate with rnorm(n) simulated
-###########simulate results for MTOP, FTOP, standard log istic regresssion, complete data FTOP
+###########only simulate polytmous model
 
 library(nnet)
 SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
@@ -144,127 +144,60 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
 
 
 PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_covar){
-  model1 <- TwoStageModel(y.pheno.mis,
-                          additive=cbind(G,x_covar),
-                          missingTumorIndicator = 888,
-                          delta0 = c(theta_intercept,theta_test,theta_covar))
-  z.standard <- model1[[12]]
-  M <- nrow(z.standard)
-  odds <- model1[[1]][M+(1:5)]
-  sigma <-  (model1[[2]][M+(1:5),M+(1:5)])
-  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_global <- fixed.result[11]
-  # p_heter <- fixed.result[12]
-  # p_indi <- fixed.result[2]
-  ##########MTOP global test for association 
-  z.design.fixed <- cbind(rep(1,M),z.standard[,1])
-  z.design.random <-as.matrix(z.standard[,2:ncol(z.standard)])
-  score.test.support.fixed <- ScoreTestSupportMixedModel(
-    y.pheno.mis,
-    baselineonly = NULL,
-    additive = as.matrix(x_covar),
-    pairwise.interaction = NULL,
-    saturated = NULL,
-    missingTumorIndicator = 888,
-    delta0= c(theta_intercept,
-              theta_covar)
-  )
-  score.test.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
-                                         x=as.matrix(as.numeric(G)),
-                                         z.design=z.design.fixed,
-                                         score.test.support=score.test.support.fixed,
-                                         missingTumorIndicator=888
-  )
-  score.fixed <- score.test.fixed[[1]]
-  infor.fixed <- score.test.fixed[[2]]
-  
-  score.test.support.random <- ScoreTestSupportMixedModelSelfDesign(
-    y.pheno.mis,
-    x.self.design  = G,
-    z.design = z.design.fixed,
-    additive =  as.matrix(x_covar),
-    pairwise.interaction = NULL,
-    saturated = NULL,
-    missingTumorIndicator = 888,
-    delta0 = c(theta_intercept,theta_test[1:ncol(z.design.fixed)],
-               theta_covar)
-  )
-  score.test.random<- ScoreTestMixedModel(y=y.pheno.mis,
-                                          x=as.matrix(G),
-                                          z.design=z.design.random,
-                                          score.test.support=score.test.support.random,
-                                          missingTumorIndicator=888)
-  score.random <- score.test.random[[1]]
-  infor.random <- score.test.random[[2]]
-  p_mglobal <- DisplayMixedScoreTestResult(score.fixed,
-                                           infor.fixed,
-                                           score.random,
-                                           infor.random)[1]
-  model.standard <- glm(y.pheno.mis[,1]~G+x_covar,family = binomial(link='logit')) 
-  p_standard <- summary(model.standard)$coefficients[2,4]
   idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
                      y.pheno.mis[,4]==888|y.pheno.mis[,5]==888)
   y.pheno.com <- y.pheno.mis[-idx.mis,,drop=F]
   x.covar.com <- x_covar[-idx.mis,drop=F]
   G.com <- G[-idx.mis,drop=F]
   
-  model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,
-                                                                                                               theta_covar))
-  z.standard <- model2[[12]]
-  M <- nrow(z.standard)
-  odds <- model2[[1]][M+(1:5)]
-  sigma <-  (model2[[2]][M+(1:5),M+(1:5)])
-  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_global_complete <- fixed.result[11]
-  result <- list(p_global,p_mglobal,p_standard,p_global_complete)  
+  
+  temp <-  Generatesubtypes(y.pheno.com[,2],y.pheno.com[,3],y.pheno.com[,4],y.pheno.com[,5])
+  if(length(temp[[1]])<=2){
+    p_poly = 1
+  }else{
+    subtypes <- temp[[1]]
+    idx.remove <- temp[[2]]
+    if(length(idx.remove)!=0){
+      x.covar.poly <- x.covar.com[-idx.remove]
+      G.poly <- G.com[-idx.remove]
+      
+    }else{
+      x.covar.poly <- x.covar.com
+      G.poly <- G.com
+      
+    }
+    poly.model <- multinom(subtypes~G.poly+x.covar.poly,maxit = 1000)
+    
+    if(poly.model$convergence==0){
+      tryCatch({
+        poly.model.coef <- coef(poly.model)
+        M <- nrow(poly.model.coef)
+        p.covariate <- ncol(poly.model.coef)
+        snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
+        snp.coef <- poly.model.coef[,2]
+        
+        result_temp <- DisplaySecondStageTestResult(snp.coef,snp.cov)  
+        p_poly <- result_temp[length(result_temp)-1]
+      },
+      error = function(e){
+        p_poly<- 1
+      }
+      
+      )
+      
+      
+    }else{
+      p_poly = 1
+    }
+    
+    
+    
+  }
+  
+  
+  result <- list(p_poly)  
   return(result)
 }
-  
-  # temp <-  Generatesubtypes(y.pheno.com[,2],y.pheno.com[,3],y.pheno.com[,4],y.pheno.com[,5])
-  # if(length(temp[[1]])<=2){
-  #   p_poly = 1
-  # }else{
-  #   subtypes <- temp[[1]]
-  #   idx.remove <- temp[[2]]
-  #   if(length(idx.remove)!=0){
-  #     x.covar.poly <- x.covar.com[-idx.remove]
-  #     G.poly <- G.com[-idx.remove]
-  #     
-  #   }else{
-  #     x.covar.poly <- x.covar.com
-  #     G.poly <- G.com
-  #     
-  #   }
-  #   poly.model <- multinom(subtypes~G.poly+x.covar.poly,maxit = 1000)
-  #   
-  #   if(poly.model$convergence==0){
-  #     tryCatch({
-  #       poly.model.coef <- coef(poly.model)
-  #       M <- nrow(poly.model.coef)
-  #       p.covariate <- ncol(poly.model.coef)
-  #       snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
-  #       snp.coef <- poly.model.coef[,2]
-  #       
-  #       result_temp <- DisplaySecondStageTestResult(snp.coef,snp.cov)  
-  #       p_poly <- result_temp[length(result_temp)-1]
-  #     },
-  #     error = function(e){
-  #       p_poly<- 1
-  #     }
-  #     
-  #     )
-  #     
-  #     
-  #   }else{
-  #     p_poly = 1
-  #   }
-  #   
-    
-    
- # }
-  
-  
- 
 
 
 # GenerateComplete <- function(y.pheno.mis,x_covar){
@@ -300,11 +233,7 @@ registerDoParallel(no.cores)
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
   s_times <- 5
-  p_global_result <- rep(0,9*s_times)
-  p_mglobal_result <- rep(0,9*s_times)
-  p_standard <- rep(0,9*s_times)
-  p_global_complete <- rep(0,9*s_times)
-  #p_poly <- rep(0,9*s_times)
+  p_poly <- rep(0,9*s_times)
   
   sizes <- c(5000,25000,50000,100000)
   
@@ -341,11 +270,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
                                      theta_intercept_input,
                                      theta_test,
                                      theta_covar)
-        p_global_result[temp] <- as.numeric(model.result[[1]])
-        p_mglobal_result[temp] <- as.numeric(model.result[[2]])
-        p_standard[temp] <- as.numeric(model.result[[3]])
-        p_global_complete[temp] <- as.numeric(model.result[[4]])
-       # p_poly[temp] <- as.numeric(model.result[[5]])
+  
+        p_poly[temp] <- as.numeric(model.result[[1]])
         temp = temp+1
         
       }
@@ -355,10 +281,10 @@ result.list <- foreach(job.i = 1:2)%dopar%{
     
   }
   
-  result <- list(p_global_result,p_mglobal_result,p_standard,p_mglobal_result,p_global_complete)
+  result <- list(p_poly)
   return(result)
 }
 
 stopImplicitCluster()
-save(result.list,file=paste0("./simulation/power/result/simu_result",i1,".Rdata"))
+save(result.list,file=paste0("./simulation/power/result/poly",i1,".Rdata"))
 

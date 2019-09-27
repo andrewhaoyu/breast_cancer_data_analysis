@@ -140,81 +140,87 @@ Generatesubtypes<- function(ER,PR,HER2,Grade,T5,T6){
 
 
 PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_covar){
-  model1 <- TwoStageModel(y.pheno.mis,
-                          additive=cbind(G,x_covar),
-                          missingTumorIndicator = 888,
-                          delta0 = c(theta_intercept,theta_test,theta_covar))
-  z.standard <- model1[[12]]
-  M <- nrow(z.standard)
-  K <- ncol(z.standard)+1
-  odds <- model1[[1]][M+(1:(K))]
-  sigma <-  (model1[[2]][M+(1:K),M+(1:K)])
-  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_global <- fixed.result[length(fixed.result)-1]
-  # p_heter <- fixed.result[12]
-  # p_indi <- fixed.result[2]
-  ##########MTOP global test for association 
-  z.design.fixed <- cbind(rep(1,M),z.standard[,1])
-  z.design.random <-z.standard[,2:ncol(z.standard)]
-  score.test.support.fixed <- ScoreTestSupportMixedModel(
-    y.pheno.mis,
-    baselineonly = NULL,
-    additive = as.matrix(x_covar),
-    pairwise.interaction = NULL,
-    saturated = NULL,
-    missingTumorIndicator = 888,
-    c(theta_intercept,
-      theta_covar)
-  )
-  score.test.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
-                                         x=as.matrix(G),
-                                         z.design=z.design.fixed,
-                                         score.test.support=score.test.support.fixed,
-                                         missingTumorIndicator=888
-  )
-  score.fixed <- score.test.fixed[[1]]
-  infor.fixed <- score.test.fixed[[2]]
-  
-  score.test.support.random <- ScoreTestSupportMixedModelSelfDesign(
-    y.pheno.mis,
-    x.self.design  = G,
-    z.design = z.design.fixed,
-    additive =  as.matrix(x_covar),
-    pairwise.interaction = NULL,
-    saturated = NULL,
-    missingTumorIndicator = 888,
-    delta0 = c(theta_intercept,theta_test[1:ncol(z.design.fixed)],
-               theta_covar)
-  )
-  score.test.random<- ScoreTestMixedModel(y=y.pheno.mis,
-                                          x=as.matrix(G),
-                                          z.design=z.design.random,
-                                          score.test.support=score.test.support.random,
-                                          missingTumorIndicator=888)
-  score.random <- score.test.random[[1]]
-  infor.random <- score.test.random[[2]]
-  p_mglobal <- DisplayMixedScoreTestResult(score.fixed,
-                                           infor.fixed,
-                                           score.random,
-                                           infor.random)[1]
-  model.standard <- glm(y.pheno.mis[,1]~G+x_covar,family = binomial(link='logit')) 
-  p_standard <- summary(model.standard)$coefficients[2,4]
-  idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
-                     y.pheno.mis[,4]==888|y.pheno.mis[,5]==888|y.pheno.mis[,6]==888|y.pheno.mis[,7]==888)
-  y.pheno.com <- y.pheno.mis[-idx.mis,]
-  x.covar.com <- x_covar[-idx.mis]
-  G.com <- G[-idx.mis]
-  model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,
-                                                                                                               theta_covar))
-  z.standard <- model2[[12]]
-  M <- nrow(z.standard)
-  odds <- model2[[1]][M+(1:K)]
-  sigma <-  (model2[[2]][M+(1:K),M+(1:K)])
-  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_global_complete <- fixed.result[length(fixed.result)-1]
-  
-  
-  temp <-  Generatesubtypes(y.pheno.com[,2],y.pheno.com[,3],y.pheno.com[,4],y.pheno.com[,5],y.pheno.com[,6],y.pheno.com[,7])
+    
+    model1 <- TwoStageModel(y.pheno.mis,
+                            additive=cbind(G,x_covar),
+                            missingTumorIndicator = 888,
+                            delta0 = c(theta_intercept,theta_test,theta_covar))
+    
+      z.standard <- model1[[12]]
+      M <- nrow(z.standard)
+      K <- ncol(z.standard)+1
+      odds <- model1[[1]][M+(1:(K))]
+      sigma <-  (model1[[2]][M+(1:K),M+(1:K)])
+      fixed.result <- DisplaySecondStageTestResult(odds,sigma)
+      p_global <- fixed.result[length(fixed.result)-1]
+      
+    
+    # p_heter <- fixed.result[12]
+    # p_indi <- fixed.result[2]
+    ##########MTOP global test for association 
+    z.design.fixed <- cbind(rep(1,M),z.standard[,1])
+    z.design.random <-z.standard[,2:ncol(z.standard)]
+    score.test.support.fixed <- ScoreTestSupportMixedModel(
+      y.pheno.mis,
+      baselineonly = NULL,
+      additive = as.matrix(x_covar),
+      pairwise.interaction = NULL,
+      saturated = NULL,
+      missingTumorIndicator = 888,
+      c(theta_intercept,
+        theta_covar)
+    )
+    score.test.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
+                                           x=as.matrix(G),
+                                           z.design=z.design.fixed,
+                                           score.test.support=score.test.support.fixed,
+                                           missingTumorIndicator=888
+    )
+    score.fixed <- score.test.fixed[[1]]
+    infor.fixed <- score.test.fixed[[2]]
+    
+    score.test.support.random <- ScoreTestSupportMixedModelSelfDesign(
+      y.pheno.mis,
+      x.self.design  = G,
+      z.design = z.design.fixed,
+      additive =  as.matrix(x_covar),
+      pairwise.interaction = NULL,
+      saturated = NULL,
+      missingTumorIndicator = 888,
+      delta0 = c(theta_intercept,theta_test[1:ncol(z.design.fixed)],
+                 theta_covar)
+    )
+    score.test.random<- ScoreTestMixedModel(y=y.pheno.mis,
+                                            x=as.matrix(G),
+                                            z.design=z.design.random,
+                                            score.test.support=score.test.support.random,
+                                            missingTumorIndicator=888)
+    score.random <- score.test.random[[1]]
+    infor.random <- score.test.random[[2]]
+    p_mglobal <- DisplayMixedScoreTestResult(score.fixed,
+                                             infor.fixed,
+                                             score.random,
+                                             infor.random)[1]
+    model.standard <- glm(y.pheno.mis[,1]~G+x_covar,family = binomial(link='logit')) 
+    p_standard <- summary(model.standard)$coefficients[2,4]
+    
+    
+    
+    model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,
+                                                                                                                 theta_covar))
+    z.standard <- model2[[12]]
+    M <- nrow(z.standard)
+    odds <- model2[[1]][M+(1:K)]
+    sigma <-  (model2[[2]][M+(1:K),M+(1:K)])
+    fixed.result <- DisplaySecondStageTestResult(odds,sigma)
+    p_global_complete <- fixed.result[length(fixed.result)-1]
+ 
+
+ 
+  result <- list(p_global,p_mglobal,p_standard,p_global_complete)  
+  return(result)
+}
+
   # if(length(temp[[1]])<=2){
   #   p_poly = 1
   # }else{
@@ -258,10 +264,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   # }
   # 
   
-  result <- list(p_global,p_mglobal,p_standard,p_global_complete)  
-  return(result)
-}
-
+ 
 
 # GenerateComplete <- function(y.pheno.mis,x_covar){
 #   idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|

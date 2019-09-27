@@ -140,20 +140,12 @@ Generatesubtypes<- function(ER,PR,HER2,Grade,T5,T6){
 
 
 PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_covar){
-   idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
-                     y.pheno.mis[,4]==888|y.pheno.mis[,5]==888|y.pheno.mis[,6]==888|y.pheno.mis[,7]==888)
-  y.pheno.com <- y.pheno.mis[-idx.mis,]
-  x.covar.com <- x_covar[-idx.mis]
-  G.com <- G[-idx.mis]
-  # model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,
-  #                                                                                                              theta_covar))
-  # z.standard <- model2[[12]]
-  # M <- nrow(z.standard)
-  # odds <- model2[[1]][M+(1:K)]
-  # sigma <-  (model2[[2]][M+(1:K),M+(1:K)])
-  # fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  # p_global_complete <- fixed.result[length(fixed.result)-1]
-  # 
+  idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
+                     y.pheno.mis[,4]==888|y.pheno.mis[,5]==888)
+  y.pheno.com <- y.pheno.mis[-idx.mis,,drop=F]
+  x.covar.com <- x_covar[-idx.mis,drop=F]
+  G.com <- G[-idx.mis,drop=F]
+  
   
   temp <-  Generatesubtypes(y.pheno.com[,2],y.pheno.com[,3],y.pheno.com[,4],y.pheno.com[,5],y.pheno.com[,6],y.pheno.com[,7])
   if(length(temp[[1]])<=2){
@@ -240,7 +232,7 @@ sc <- 3
   set.seed(i1)
   s_times <- 5
   #sizes <- c(50000,100000)
-  sizes <- c(25000)
+  sizes <- c(5000,25000,50000,100000)
   n.sizes <- length(sizes)
   # p_global_result <- rep(0,n.sizes*s_times)
   # p_mglobal_result <- rep(0,n.sizes*s_times)
