@@ -51,8 +51,7 @@ if(i1<=177){
   
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
-  
-  
+
   Heter.result.Icog = EMmvpoly(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1[,1:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Icog[[12]]
   z.additive.design <- as.matrix(cbind(1,z.standard))
@@ -204,8 +203,7 @@ if(i1<=177){
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
   
-  
-  
+
   
   Heter.result.Onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.all.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
   z.standard <- Heter.result.Onco[[12]]

@@ -311,11 +311,14 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   temp <- 1  
   for(s in 1:sc){
     if(s==1){
-      theta_test <- c(0.05,0,0,0,0)
+      #theta_test <- c(0.05,0,0,0,0)
+      theta_test <- c(0.25,0,0,0,0)
     }else if(s==2){
-      theta_test <- c(0,0.05,0,0,0)
+      #theta_test <- c(0,0.05,0,0,0)
+      theta_test <- c(0,0.25,0,0,0)
     }else{
-      theta_test <- c(c(0,0.05),rnorm(3,0,0.02))
+      #theta_test <- c(c(0,0.05),rnorm(3,0,0.02))
+      theta_test <- c(c(0,0.25),rnorm(3,0,0.02))
     }
     for(n in sizes){
       for(i in 1:s_times){
@@ -359,5 +362,5 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 
 stopImplicitCluster()
-save(result.list,file=paste0("./simulation/power/result/simu_result",i1,".Rdata"))
+save(result.list,file=paste0("./simulation/power/result/simu_result_0.25",i1,".Rdata"))
 
