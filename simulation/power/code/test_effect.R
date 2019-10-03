@@ -16,3 +16,63 @@ if(s==1){
     x_covar <- temp.simu[[3]]
 model <- glm(y.pheno.mis[,1]~G+x_covar,family=binomial())    
 summary(model)
+
+
+
+
+
+
+
+
+ggplot(data.m,aes(x=Sample_size,y=value,fill=variable))+
+  geom_bar(stat="identity",position=position_dodge(),
+           alpha=0.8)+
+  scale_fill_Publication()+
+  theme_Publication()+
+  scale_x_discrete(name = "Sample size", limits=c("5000","25000","50000",
+                                                  "1e+05"))+
+  scale_y_continuous(name="Power",limits = c(0,1))+
+  ggtitle(Heter_pattern_temp)+
+  theme(legend.position="none")
+
+
+
+
+
+
+
+ggplot(data.m,aes(x=Sample_size,y=value,fill=variable))+
+  geom_bar(stat="identity",position=position_dodge(),alpha=0.8)+
+  scale_fill_Publication()+
+  theme_Publication()+
+  scale_x_discrete(name="Sample_size",limits=c("5000","25000","50000","1e+05"))+
+  scale_y_continuous(name="Power",limits=c(0,1))+
+  ggtitle("No Heterogeneity")+
+  theme(legend.position="none")
+
+
+
+
+
+
+ggplot(data.m,aes(x=Sample_size,y=value,fill=variable))+
+  geom_bar(stat="identity",position=position_dodge())+
+  scale_fill_Publication()+
+  theme_Publication()+
+  scale_x_discrete(name="Sample Size",limits=c("5000","25000",
+                                                "50000","1e+05"))+
+  scale_y_continuous(name="Power",limits=c(0,1))+
+  ggtitle("No heterogeneity")+
+  theme(legend.position="right")
+
+
+ggplot(data.m,aes(x=Sample_size,y=value,fill=variable))+
+  geom_bar(stat="identity",position=position_dodge())+
+  theme_Publication()+
+  scale_fill_brewer(palette="Greys")+
+  scale_x_discrete(name="Sample Size",limits=c("5000","25000",
+                                               "50000","1e+05"))+
+  scale_y_continuous(name="Power",limits=c(0,1))+
+  ggtitle("No heterogeneity")+
+  theme(legend.position="right")
+  
