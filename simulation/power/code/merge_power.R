@@ -211,10 +211,10 @@ write.csv(result,file=paste0("./simulation/power/result/power.simulation.result_
 #merge power results with effectsize as 0.25 level
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
-files <- dir(filedir,pattern="simu_result",full.names=T)
+files <- dir(filedir,pattern="simu_result_0.25",full.names=T)
 total <- 0
 n.loop <- 12
-for(i1 in 1:2000){
+for(i1 in 1:1000){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result_0.25",i1,".Rdata")
   if(file%in%files==T){
@@ -247,7 +247,7 @@ p_global_complete <- matrix(0,total,n.loop)
 
 total <- 0
 #args 1:2000 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
-for(i1 in 1:2000){
+for(i1 in 1:1000){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result_0.25",i1,".Rdata")
   if(file%in%files==T){

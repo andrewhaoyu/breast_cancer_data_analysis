@@ -1,7 +1,7 @@
 #load four tumor characteristics results with low effect size = 0.05, alpha = 1E-03
 setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/simulation/power/result')
-data <- read.csv("power.simulation.result_0.25.csv")
-#data <- read.csv("power.simulation.result.csv")
+#data <- read.csv("power.simulation.result_0.25.csv")
+data <- read.csv("power.simulation.result.csv")
 data <- data[,-1,drop=F]
 colnames(data) <- c("FTOP",
                     "MTOP",
