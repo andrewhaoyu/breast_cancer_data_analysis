@@ -1,4 +1,4 @@
-###########simulate data with four tumor characteristics containing three binary tumor characteristics and one oridinal tumor characteristics.
+###########simulate data with four tumor characteristics containing five binary tumor characteristics and one oridinal tumor characteristics.
 ###########one genotype with MAF 0.25 is simulated
 ###########one covariate with rnorm(n) simulated
 
@@ -317,11 +317,11 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   temp <- 1  
   for(s in 1:sc){
     if(s==1){
-      theta_test <- c(0.05,0,0,0,0,0,0)
+      theta_test <- c(0.08,0,0,0,0,0,0)
     }else if(s==2){
-      theta_test <- c(0,0.05,0,0,0,0,0)
+      theta_test <- c(0,0.08,0,0,0,0,0)
     }else{
-      theta_test <- c(c(0,0.05),rnorm(5,0,0.02))
+      theta_test <- c(c(0,0.08),rnorm(5,0,0.02))
     }
     for(n in sizes){
       for(i in 1:s_times){
