@@ -3,7 +3,7 @@ filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/r
 files <- dir(filedir,pattern="simu_high",full.names=T)
 total <- 0
 n.loop = 12
-for(i1 in 1:11000){
+for(i1 in 1:12000){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
@@ -23,7 +23,7 @@ p_global_complete <- matrix(0,total,n.loop)
 
 total <- 0
 
-for(i1 in 1:11000){
+for(i1 in 1:12000){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
@@ -117,24 +117,6 @@ for(i1 in 1:2000){
 }
 
 
-
-thres = 1E-03
-#remove standard polytomous function 
-#unstable outliers
-#idx <- which(p_poly[,4]==0)
-#p_poly = p_poly[-idx,,drop=F]
-
-result <- cbind(apply(p_global_result,2,function(x){CountPower(x,thres)}),
-                apply(p_mglobal_result,2,function(x){CountPower(x,thres)}),
-                apply(p_standard,2,function(x){CountPower(x,thres)}),
-                apply(p_global_complete,2,function(x){CountPower(x,thres)}),
-                apply(p_poly_result,2,function(x){CountPower(x,thres)}))
-
-result.1 <- result
-
-write.csv(result,file=paste0("./simulation/power/result/power_high.result.csv") )
-
-
 thres = 5E-08
 #remove standard polytomous function 
 #unstable outliers
@@ -149,4 +131,4 @@ result <- cbind(apply(p_global_result,2,function(x){CountPower(x,thres)}),
 
 result.1 <- result
 
-write.csv(result,file=paste0("./simulation/power/result/power_high.result5E8.csv") )
+write.csv(result,file=paste0("./simulation/power/result/power_high.result.csv") )

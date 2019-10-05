@@ -1,7 +1,7 @@
 #merge power results with the effect size as 0.05 level
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
-files <- dir(filedir,pattern="simu_result0.25",full.names=T)
+files <- dir(filedir,pattern="simu_result",full.names=T)
 total <- 0
 n.loop <- 12
 for(i1 in 1:2000){
@@ -97,12 +97,12 @@ CountPower <- function(p,alpha){
 
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
-files <- dir(filedir,pattern="poly",full.names=T)
+files <- dir(filedir,pattern="poly_",full.names=T)
 total <- 0
 #args 1:2000 contains the results for polytomous
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
@@ -117,7 +117,7 @@ total <- 0
 
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_",i1,".Rdata")
   if(file%in%files==T){
     load(paste0(file))
     temp1 = length(result.list[[1]][[1]])/n.loop
@@ -159,7 +159,7 @@ for(i1 in 1:2000){
 # apply(p_global_complete,2,function(x){CountPower(x,10^-3)})
 # apply(p_poly,2,function(x){CountPower(x,thres)})
 
-thres = 1E-03
+thres = 5E-08
 #remove standard polytomous function 
 #unstable outliers
 #idx <- which(p_poly[,4]==0)
@@ -179,26 +179,6 @@ result.1 <- result
 
 write.csv(result,file=paste0("./simulation/power/result/power.simulation.result.csv") )
 
-
-thres = 5E-08
-#remove standard polytomous function 
-#unstable outliers
-#idx <- which(p_poly[,4]==0)
-#p_poly = p_poly[-idx,,drop=F]
-
-result <- cbind(apply(p_global_result,2,function(x){CountPower(x,thres)}),
-                apply(p_mglobal_result,2,function(x){CountPower(x,thres)}),
-                apply(p_standard,2,function(x){CountPower(x,thres)}),
-                apply(p_global_complete,2,function(x){CountPower(x,thres)}),
-                apply(p_poly,2,function(x){CountPower(x,thres)}))
-
-
-
-result.1 <- result
-#write.csv(result,file=paste0("./simulation/power/result/power.simulation.result.csv") )
-
-
-write.csv(result,file=paste0("./simulation/power/result/power.simulation.result_5E8.csv") )
 
 
 
