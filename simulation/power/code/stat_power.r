@@ -299,14 +299,16 @@ registerDoParallel(no.cores)
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
   s_times <- 5
-  p_global_result <- rep(0,9*s_times)
-  p_mglobal_result <- rep(0,9*s_times)
-  p_standard <- rep(0,9*s_times)
-  p_global_complete <- rep(0,9*s_times)
+  sizes <- c(5000)
+  n.sizes <- length(sizes)
+  p_global_result <- rep(0,3*n.sizes*s_times)
+  p_mglobal_result <- rep(0,3*n.sizes*s_times)
+  p_standard <- rep(0,3*n.sizes*s_times)
+  p_global_complete <- rep(0,3*n.sizes*s_times)
   #p_poly <- rep(0,9*s_times)
   
   #sizes <- c(5000,25000,50000,100000)
-  sizes <- c(5000,25000)
+  
   
   temp <- 1  
   for(s in 1:sc){

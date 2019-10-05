@@ -230,9 +230,10 @@ sc <- 3
 #result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(i1)
   s_times <- 5
-  #sizes <- c(50000,100000)
-  sizes <- c(5000,25000,50000,100000)
+  #sizes <- c(5000,25000,50000,100000)
   n.sizes <- length(sizes)
+  sizes <- c(5000)
+  #n.sizes <- length(sizes)
   # p_global_result <- rep(0,n.sizes*s_times)
   # p_mglobal_result <- rep(0,n.sizes*s_times)
   # p_standard <- rep(0,n.sizes*s_times)
@@ -244,15 +245,16 @@ sc <- 3
   temp <- 1  
   for(s in 1:sc){
     if(s==1){
-      #theta_test <- c(0.05,0,0,0,0,0,0)
-      theta_test <- c(0.08,0,0,0,0,0,0)
+      
+      #theta_test <- c(0.08,0,0,0,0,0,0)
+      theta_test <- c(0.25,0,0,0,0,0,0)
     }else if(s==2){
-      #theta_test <- c(0.05,0,0,0,0,0,0)
-      theta_test <- c(0,0.08,0,0,0,0,0)
+      #theta_test <- c(0,0.08,0,0,0,0,0)
+      theta_test <- c(0,0.25,0,0,0,0,0)
     }else{
-      #theta_test <- c(c(0,0.05),rnorm(5,0,0.02))
-      theta_test <- c(c(0,0.08),rnorm(5,0,0.02))
-    }
+      #theta_test <- c(c(0,0.08),rnorm(5,0,0.02))
+      theta_test <- c(c(0,0.25),rnorm(5,0,0.02))
+      }
     for(n in sizes){
       for(i in 1:s_times){
         temp.simu <- SimulateDataPower(theta_intercept,theta_test,theta_covar,n)
@@ -293,5 +295,5 @@ sc <- 3
   
   
 #stopImplicitCluster()
-save(p_poly,file=paste0("./simulation/power/result/poly_high",i1,".Rdata"))
+save(p_poly,file=paste0("./simulation/power/result/poly_high_0.25_",i1,".Rdata"))
 

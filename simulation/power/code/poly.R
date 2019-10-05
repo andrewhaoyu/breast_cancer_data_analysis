@@ -232,9 +232,12 @@ registerDoParallel(no.cores)
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
   s_times <- 5
-  p_poly <- rep(0,9*s_times)
+  sizes <- c(5000)
+  n.sizes <- length(sizes)
+  #sizes <- c(5000,25000,50000,100000)
+  p_poly <- rep(0,3*n.sizes*s_times)
   
-  sizes <- c(5000,25000,50000,100000)
+  
   
   
   temp <- 1  
@@ -290,5 +293,5 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 
 stopImplicitCluster()
-save(result.list,file=paste0("./simulation/power/result/poly_",i1,".Rdata"))
+save(result.list,file=paste0("./simulation/power/result/poly_0.25_",i1,".Rdata"))
 
