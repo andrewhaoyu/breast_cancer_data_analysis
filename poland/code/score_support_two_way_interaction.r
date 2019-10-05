@@ -1,3 +1,4 @@
+#generate the score support file for two-way pairwise interaction function
 idxi1 = 1
 library(devtools)
 #install_github("andrewhaoyu/bc2", ref = "development",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
@@ -21,13 +22,13 @@ x.covar.mis2 <- data2[,c(5:14,204)]
 score.test.support.onco.ERPRHER2Grade <- ScoreTestSupport(
   y.pheno.mis2,
   baselineonly = NULL,
-  additive = x.covar.mis2,
-  pairwise.interaction = NULL,
+  additive = NULL,
+  pairwise.interaction = x.covar.mis2,
   saturated = NULL,
   missingTumorIndicator = 888
 )
 
-save(score.test.support.onco.ERPRHER2Grade,file="./poland/result/whole_genome/score.test.support.onco.ERPRHER2Grade.Rdata")
+save(score.test.support.onco.ERPRHER2Grade,file="./poland/result/whole_genome/score.test.support.onco.ERPRHER2Grade_pairwise.Rdata")
 
 Heter.result.onco = EMmvpoly(y.pheno.mis2,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
 
