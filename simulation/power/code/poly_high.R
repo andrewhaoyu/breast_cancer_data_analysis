@@ -231,8 +231,9 @@ sc <- 3
   set.seed(i1)
   s_times <- 5
   #sizes <- c(5000,25000,50000,100000)
-  n.sizes <- length(sizes)
   sizes <- c(5000)
+  n.sizes <- length(sizes)
+  
   #n.sizes <- length(sizes)
   # p_global_result <- rep(0,n.sizes*s_times)
   # p_mglobal_result <- rep(0,n.sizes*s_times)
