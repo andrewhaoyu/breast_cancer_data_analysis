@@ -193,7 +193,7 @@ setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_result_0.25_",full.names=T)
 total <- 0
-n.loop <- 6
+n.loop <- 3
 for(i1 in 1:2000){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result_0.25_",i1,".Rdata")
@@ -212,7 +212,7 @@ for(i1 in 1:2000){
     #[[1]] [[4]] is the vector of p_value from MTOP this is because of a previous typo
     #[[1]] [[5]] is the vector of FTOP from complete analysis
     #[[1]] [[6]] is the vector of polytomous model from complete analysis
-    total = total+ length(result.list[[1]][[1]][1:30])/n.loop + length(result.list[[2]][[1]][1:30])/n.loop
+    total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
     
   }
 }
@@ -232,8 +232,8 @@ for(i1 in 1:2000){
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
-    temp1 = length(result.list[[1]][[1]][1:30])/n.loop
-    temp2 = length(result.list[[2]][[1]][1:30])/n.loop
+    temp1 = length(result.list[[1]][[1]])/n.loop
+    temp2 = length(result.list[[2]][[1]])/n.loop
     temp = temp1+temp2
     if(temp1==0){
       p_global_result[total+(1:temp2),] <- matrix(result.list[[2]][[1]],ncol=n.loop)
@@ -287,12 +287,12 @@ CountPower <- function(p,alpha){
 
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
-files <- dir(filedir,pattern="poly",full.names=T)
+files <- dir(filedir,pattern="poly_0.25_",full.names=T)
 total <- 0
 #args 1:2000 contains the results for polytomous
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
@@ -307,7 +307,7 @@ total <- 0
 
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(paste0(file))
     temp1 = length(result.list[[1]][[1]])/n.loop
@@ -363,32 +363,9 @@ result <- cbind(apply(p_global_result,2,function(x){CountPower(x,thres)}),
 
 
 
-result.1 <- result
-#write.csv(result,file=paste0("./simulation/power/result/power.simulation.result.csv") )
 
 
 write.csv(result,file=paste0("./simulation/power/result/power.simulation.result_0.25.csv") )
-
-
-thres = 5E-08
-#remove standard polytomous function 
-#unstable outliers
-#idx <- which(p_poly[,4]==0)
-#p_poly = p_poly[-idx,,drop=F]
-
-result <- cbind(apply(p_global_result,2,function(x){CountPower(x,thres)}),
-                apply(p_mglobal_result,2,function(x){CountPower(x,thres)}),
-                apply(p_standard,2,function(x){CountPower(x,thres)}),
-                apply(p_global_complete,2,function(x){CountPower(x,thres)}),
-                apply(p_poly,2,function(x){CountPower(x,thres)}))
-
-
-
-result.1 <- result
-#write.csv(result,file=paste0("./simulation/power/result/power.simulation.result.csv") )
-
-
-write.csv(result,file=paste0("./simulation/power/result/power.simulation.result_5E8.csv") )
 
 
 
