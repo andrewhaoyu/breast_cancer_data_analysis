@@ -142,9 +142,9 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   con <- gzfile(geno.file)
   open(con)
   for(i in 1:num){
-    if(i%%500==0){
+   # if(i%%500==0){
       print(i)
-    }
+    #}
     oneLine <- readLines(con,n=1)
     
     if(i>=true.start){
@@ -233,11 +233,15 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 stopImplicitCluster()
 
-score_result <- matrix(0.1,inner.file.num,n.support+n.test)
-infor_result <- matrix(0.1,inner.file.num,(n.support+n.test)^2)
-score_result2 <- matrix(0.1,inner.file.num,n.test)
-infor_result2 <- matrix(0.1,inner.file.num,(n.test)^2)
+score_result <- matrix(0.1,file.num,n.support+n.test)
+infor_result <- matrix(0.1,file.num,(n.support+n.test)^2)
+
+
+score_result2 <- matrix(0.1,file.num,n.test)
+infor_result2 <- matrix(0.1,file.num,n.test^2)
 snpid_result <- rep("c",file.num)
+
+
 
 freq.all <- rep(0,file.num)
 
@@ -249,8 +253,8 @@ for(i in 1:inner.size){
   score_result[total+(1:temp),] <- result.temp[[2]]
   infor_result[total+(1:temp),] <- result.temp[[3]]
   freq.all[total+(1:temp)] <- result.temp[[4]]
-  # score_result2[total+(1:temp),] <- result.temp[[5]]
-  # infor_result2[total+(1:temp),] <- result.temp[[6]]
+  score_result2[total+(1:temp),] <- result.temp[[5]]
+  infor_result2[total+(1:temp),] <- result.temp[[6]]
   # 
   total <- temp+total
 }
