@@ -141,6 +141,16 @@ Heter_pattern = c("No Heterogeneity",
                   "One Marker Drove the Heterogeneity",
                   "Multiple Markers Drove the Heterogneity")
 p <- list()
+data <- data[,-1]
+data.m <- melt(data,id = "Heter_pattern")
+colnames(data.m)[2] <- "Method"
+ggplot(data.m,aes(x=Heter_pattern,y=value,fill=Method))+
+  geom_bar(stat="identity",position=position_dodge())+
+  theme_Publication()+
+  scale_fill_Publication()+
+  scale_x_discrete(name="Heterogenous pattern")+
+  scale_y_continuous(name="Power",limits=c(0,1))+
+  theme(axis.text.x = element_text(angle=90))
 for(i in 1:length(Heter_pattern)){
   Heter_pattern_temp = Heter_pattern[i]
   idx <- which(data$Heter_pattern==Heter_pattern_temp)  
@@ -164,7 +174,7 @@ library(gridExtra)
 grid.arrange(p[[1]],p[[2]],p[[3]],nrow=1)
 
 
-#load six tumor characteristics results with low effect size = 0.05, alpha = 1E-03
+#load six tumor characteristics results with low effect size = 0.25, alpha = 5E-08
 data <- read.csv("power_high_0.25_result.csv")
 
 data <- data[,-1,drop=F]

@@ -19,7 +19,7 @@ x.covar.mis2 <- data2[,c(5:14,204)]
 
 
 
-score.test.support.onco.ERPRHER2Grade <- ScoreTestSupport(
+score.test.support.onco.ERPRHER2Grade <- ScoreTestSupportMixedModel(
   y.pheno.mis2,
   baselineonly = NULL,
   additive = NULL,
@@ -27,6 +27,14 @@ score.test.support.onco.ERPRHER2Grade <- ScoreTestSupport(
   saturated = NULL,
   missingTumorIndicator = 888
 )
+
+
+# score.test.onco<- ScoreTestMixedModel(y=y.pheno.mis2,
+#                                       x=snpvalue,
+#                                       z.design=as.matrix(z.design.pairwise.interaction),
+#                                       score.test.support=score.test.support.onco.ERPRHER2Grade,
+#                                       missingTumorIndicator=888)
+
 
 save(score.test.support.onco.ERPRHER2Grade,file="./poland/result/whole_genome/score.test.support.onco.ERPRHER2Grade_pairwise.Rdata")
 

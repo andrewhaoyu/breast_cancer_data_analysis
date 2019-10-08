@@ -122,22 +122,22 @@ library(doParallel)
 
 inner.size <- 2
 
-registerDoParallel(no.cores)
+#registerDoParallel(no.cores)
 
-result.list <- foreach(job.i = 1:2)%dopar%{
-  inner.start.end <- startend(file.num,inner.size,job.i)
-  inner.start <- inner.start.end[1]
-  inner.end <- inner.start.end[2]
-  inner.file.num <- inner.end-inner.start+1
-  true.start <- start+inner.start-1
-  true.end <- start+inner.end-1
-  score_result <- matrix(0,inner.file.num,n.support+n.test)
-  infor_result <- matrix(0,inner.file.num,(n.support+n.test)^2)
-  score_result2 <- matrix(0,inner.file.num,n.test)
-  infor_result2 <- matrix(0,inner.file.num,(n.test)^2)
+#result.list <- foreach(job.i = 1:2)%dopar%{
+  # inner.start.end <- startend(file.num,inner.size,job.i)
+  # inner.start <- inner.start.end[1]
+  # inner.end <- inner.start.end[2]
+  # inner.file.num <- inner.end-inner.start+1
+  # true.start <- start+inner.start-1
+  # true.end <- start+inner.end-1
+  score_result <- matrix(0,file.num,n.support+n.test)
+  infor_result <- matrix(0,file.num,(n.support+n.test)^2)
+  score_result2 <- matrix(0,file.num,n.test)
+  infor_result2 <- matrix(0,file.num,(n.test)^2)
   
-  snpid_result <- rep("c",inner.file.num)
-  freq.all <- rep(0,inner.file.num)
+  snpid_result <- rep("c",file.num)
+  freq.all <- rep(0,file.num)
   temp <- 0
   con <- gzfile(geno.file)
   open(con)
@@ -147,7 +147,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
     #}
     oneLine <- readLines(con,n=1)
     
-    if(i>=true.start){
+    if(i>=start){
       if(temp%%100==0){
         print(paste0("temp",temp))
       }
@@ -216,11 +216,10 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       
     }
     
-    
-    if(i==true.end){
+    if(i==end){
       break
     }
-    
+  
     
     
     
@@ -229,38 +228,38 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   result <- list(snpid_result,score_result,infor_result,freq.all,
                  score_result2,infor_result2)
   
-  return(result)
-}
-stopImplicitCluster()
-
-score_result <- matrix(0.1,file.num,n.support+n.test)
-infor_result <- matrix(0.1,file.num,(n.support+n.test)^2)
-
-
-score_result2 <- matrix(0.1,file.num,n.test)
-infor_result2 <- matrix(0.1,file.num,n.test^2)
-snpid_result <- rep("c",file.num)
-
-
-
-freq.all <- rep(0,file.num)
-
-total <- 0
-for(i in 1:inner.size){
-  result.temp <- result.list[[i]]
-  temp <- length(result.temp[[1]])
-  snpid_result[total+(1:temp)] <- result.temp[[1]]
-  score_result[total+(1:temp),] <- result.temp[[2]]
-  infor_result[total+(1:temp),] <- result.temp[[3]]
-  freq.all[total+(1:temp)] <- result.temp[[4]]
-  score_result2[total+(1:temp),] <- result.temp[[5]]
-  infor_result2[total+(1:temp),] <- result.temp[[6]]
-  # 
-  total <- temp+total
-}
-
-result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,
-               score_result2=score_result2,
-               infor_result2=infor_result2)
+#   return(result)
+# }
+# stopImplicitCluster()
+# 
+# score_result <- matrix(0.1,file.num,n.support+n.test)
+# infor_result <- matrix(0.1,file.num,(n.support+n.test)^2)
+# 
+# 
+# score_result2 <- matrix(0.1,file.num,n.test)
+# infor_result2 <- matrix(0.1,file.num,n.test^2)
+# snpid_result <- rep("c",file.num)
+# 
+# 
+# 
+# freq.all <- rep(0,file.num)
+# 
+# total <- 0
+# for(i in 1:inner.size){
+#   result.temp <- result.list[[i]]
+#   temp <- length(result.temp[[1]])
+#   snpid_result[total+(1:temp)] <- result.temp[[1]]
+#   score_result[total+(1:temp),] <- result.temp[[2]]
+#   infor_result[total+(1:temp),] <- result.temp[[3]]
+#   freq.all[total+(1:temp)] <- result.temp[[4]]
+#   score_result2[total+(1:temp),] <- result.temp[[5]]
+#   infor_result2[total+(1:temp),] <- result.temp[[6]]
+#   # 
+#   total <- temp+total
+# }
+# 
+# result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all,
+#                score_result2=score_result2,
+#                infor_result2=infor_result2)
 
 save(result,file=paste0("./poland/result/whole_genome/ERPRHER2Grade_fixed_onco_two_interaction",i1,"_",i2))
