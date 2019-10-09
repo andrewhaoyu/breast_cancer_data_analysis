@@ -161,6 +161,7 @@ theta_test <- c(0.05,0,0,0,0,0,0)
 time_mat <- matrix(0,4,5)
 
 s_times <- 1
+sizes <- c(5000,25000,50000,100000)
 
 for(l in 1:length(sizes)){
   n <- sizes[l]
