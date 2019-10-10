@@ -16,5 +16,10 @@ onco_result_fixed_5p <- cbind(onco_result_fixed_5p,p_value1)
 colnames(onco_result_fixed_5p)[144] <- "P"
 onco_result_casecase_5p <- cbind(onco_result_casecase_5p,p_value2)
 colnames(onco_result_casecase_5p)[102] <- "P"
+library(dplyr)
+onco_result_fixed_5p = onco_result_fixed_5p %>% 
+  select(rs_id,CHR,position,P)
+onco_result_casecase_5p = onco_result_casecase_5p %>% 
+  select(rs_id,CHR,position,P)
 save(onco_result_fixed_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p_two_interaction.Rdata")
 save(onco_result_casecase_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_random_5p_two_interaction.Rdata")
