@@ -157,7 +157,8 @@ idx <- which(onco_result_fixed$exp_freq_a1>=0.05&
                onco_result_fixed$exp_freq_a1<=0.95)
 onco_result_fixed_5p <- onco_result_fixed[idx,]
 onco_result_casecase_5p <- onco_result_casecase[idx,]
-save(onco_result_fixed_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
+save(onco_result_fixed_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p_two_interaction.Rdata")
+save(onco_result_casecase_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_random_5p_two_interaction.Rdata")
 
 
 print(1)

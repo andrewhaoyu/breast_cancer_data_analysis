@@ -3,7 +3,7 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/simulation/power/
 data <- read.csv("time.simulation.result.csv")
 #data <- read.csv("power.simulation.result.csv")
 data <- data[,-1,drop=F]
-colnames(data) <- c("FTOP",
+dcolnames(data) <- c("FTOP",
                     "MTOP",
                     "Standard logistic regression",
                     "Two-stage model with only complete data",
