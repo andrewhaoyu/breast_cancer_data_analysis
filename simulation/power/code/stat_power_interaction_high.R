@@ -9,14 +9,13 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
   b <- c(0,1)
   c <- c(0,1)
   d <- c(1,2,3)
+  e <- c(0,1)
+  f <- c(0,1)
   ##number of the other covarites
   p_col <- 1
-  z.standard <- as.matrix(expand.grid(a,b,c,d)) # orig
+  z.standard <- as.matrix(expand.grid(a,b,c,d,e,f)) # orig
   M <- nrow(z.standard)
   #z <- as.matrix(expand.grid(a,b))
-  
- 
-  
   #this z_design matrix is the second stage matrix 
   z.design.additive <- cbind(1,z.standard)
   z.design.pairwise.interaction <- z.design.additive
@@ -36,8 +35,8 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
   z.all <- matrix(0,nrow=(M*total.covar.number),ncol = (M+                                                        additive.second.cat*additive.number)+pairwise.interaction.second.cat*pairwise.interaction.number)
   for(i in c("intercept",
              "pairwise.interaction",
-              "additive"
-            
+             "additive"
+             
   )){
     ##we always keep intercept as saturated model and to simply, we always use diagnonal matrix for intercept
     if(i=="intercept"){
@@ -104,10 +103,10 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
   y.tumor <- y%*%z.standard
   
   idx.control <- which(y.case.control==0)
-  y.tumor[idx.control,] <- rep(NA,4)
+  y.tumor[idx.control,] <- rep(NA,6)
   idx.case <- which(y.case.control==1)
-  rate <- c(0.17,0.25,0.42,0.27)
-  for(i in 1:4){
+  rate <- c(0.17,0.25,0.42,0.27,0.05,0.05)
+  for(i in 1:6){
     idx.mis <-  sample(idx.case,size=length(idx.case)*rate[i])
     y.tumor[idx.mis,i] <- 888
   }
@@ -122,7 +121,7 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
 
 
 
-Generatesubtypes<- function(ER,PR,HER2,Grade){
+Generatesubtypes<- function(ER,PR,HER2,Grade,T5,T6){
   n <- length(ER)
   subtypes <- rep("control",n)
   temp = 1
@@ -130,12 +129,16 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
     for(j in 0:1){
       for(k in 0:1){
         for(l in 1:3){
-          
-          idx <- which(ER==i&PR==j&HER2==k&Grade==l)
-          if(length(idx)!=0){
-            subtypes[idx] <- temp
-            temp = temp+1  
+          for(q in 0:1){
+            for(w in 0:1)
+              idx <- which(ER==i&PR==j&HER2==k&Grade==l&T5==q&T6==w)
+            if(length(idx)!=0){
+              subtypes[idx] <- temp
+              temp = temp+1  
+            }
+            
           }
+          
           
         }
       }
@@ -155,7 +158,6 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
   }
   
 }
-
 
 
 
@@ -188,7 +190,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
     saturated = NULL,
     missingTumorIndicator = 888
     #delta0= c(theta_intercept,
-            #  theta_covar)
+    #  theta_covar)
   )
   score.test.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
                                          x=as.matrix(as.numeric(G)),
@@ -200,11 +202,11 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   infor <- score.test.fixed[[2]]
   
   p_ftop_add <- DisplayFixedScoreTestResult(score,
-                                           infor)
+                                            infor)
   
   score.fixed <- matrix(score[1:ncol(z.design.fixed)],nrow=1)
   infor.fixed <- infor[1:ncol(z.design.fixed),
-                            1:ncol(z.design.fixed)]
+                       1:ncol(z.design.fixed)]
   
   score.test.support.random <- ScoreTestSupportMixedModelSelfDesign(
     y.pheno.mis,
@@ -223,10 +225,10 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   score.random <- score.test.random[[1]]
   infor.random <- score.test.random[[2]]
   p_mtop_add <- DisplayMixedScoreTestResult(score.fixed,
-                                           infor.fixed,
-                                           score.random,
-                                           infor.random)[1]
- 
+                                            infor.fixed,
+                                            score.random,
+                                            infor.random)[1]
+  
   ##fit the all the interaction FTOP and MTOP on the data with ER, HER2 interaction effect
   z.design.pairwise.interaction <- z.design.additive
   all.combn <- combn(ncol(z.standard),2)
@@ -258,7 +260,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   infor <- score.test.fixed[[2]]
   
   p_ftop_inter <- DisplayFixedScoreTestResult(score,
-                                            infor)
+                                              infor)
   
   score.fixed <- matrix(score[1:ncol(z.design.fixed)],nrow=1)
   infor.fixed <- infor[1:ncol(z.design.fixed),
@@ -282,14 +284,14 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   infor.random <- score.test.random[[2]]
   
   p_mtop_inter <- DisplayMixedScoreTestResult(score.fixed,
-                                               infor.fixed,
-                                               score.random,
-                                               infor.random)[1]
+                                              infor.fixed,
+                                              score.random,
+                                              infor.random)[1]
   
   
   
   
- 
+  
   result <- list(p_ftop_add,p_mtop_add,p_ftop_inter,p_mtop_inter)  
   return(result)
 }
@@ -359,9 +361,12 @@ setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 #library(bc2)
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 #library(TOP,lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
-theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91)
+theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
+                     -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
+                     -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
+                     -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91)-1.45
 
-theta_covar <- c(0.05,0,0,0,0)
+theta_covar <- c(0.05,0,0,0,0,0,0)
 #####three scenaiors
 sc <- 3
 
@@ -388,45 +393,45 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   
   temp <- 1  
   
-      theta_test <- c(0,0.08,0,0,0,0,0.04,rep(0,4))
-      #theta_test <- c(0,0.08,0,0,0)
-    
-    for(n in sizes){
-      for(i in 1:s_times){
-        temp.simu <- SimulateDataPower(theta_intercept,theta_test,theta_covar,n)
-        y.pheno.mis <- temp.simu[[1]]
-        G <- temp.simu[[2]]
-        x_covar <- temp.simu[[3]]
-        
-        y <- y.pheno.mis
-        missing.data.vec <- GenerateMissingPosition(y,missingTumorIndicator=888)
-        y.pheno.complete <- y[-missing.data.vec,]
-        freq.subtypes <- GenerateFreqTable(y.pheno.complete)
-        idx.del <- which(freq.subtypes[,ncol(freq.subtypes)]<=10)
-        if(length(idx.del)!=0){
-          theta_intercept_input = theta_intercept[-idx.del]
-        }else{
-          theta_intercept_input = theta_intercept
-        }
-        print("simulation")
-        
-        model.result <- PowerCompare(y.pheno.mis,G,x_covar,
-                                     theta_intercept_input,
-                                     theta_test,
-                                     theta_covar)
-        p_ftop_add[temp] <- as.numeric(model.result[[1]])
-        p_mtop_add[temp] <-as.numeric(model.result[[2]])
-        p_ftop_inter[temp] <- as.numeric(model.result[[3]])
-        p_mtop_inter[temp] <- as.numeric(model.result[[4]])
-        
-        # p_poly[temp] <- as.numeric(model.result[[5]])
-        temp = temp+1
-        
+  theta_test <- c(0,0.08,0,0,0,0,0.04,rep(0,15))
+  #theta_test <- c(0,0.08,0,0,0)
+  
+  for(n in sizes){
+    for(i in 1:s_times){
+      temp.simu <- SimulateDataPower(theta_intercept,theta_test,theta_covar,n)
+      y.pheno.mis <- temp.simu[[1]]
+      G <- temp.simu[[2]]
+      x_covar <- temp.simu[[3]]
+      
+      y <- y.pheno.mis
+      missing.data.vec <- GenerateMissingPosition(y,missingTumorIndicator=888)
+      y.pheno.complete <- y[-missing.data.vec,]
+      freq.subtypes <- GenerateFreqTable(y.pheno.complete)
+      idx.del <- which(freq.subtypes[,ncol(freq.subtypes)]<=10)
+      if(length(idx.del)!=0){
+        theta_intercept_input = theta_intercept[-idx.del]
+      }else{
+        theta_intercept_input = theta_intercept
       }
-      # x_covar <- rnorm(n)
+      print("simulation")
+      
+      model.result <- PowerCompare(y.pheno.mis,G,x_covar,
+                                   theta_intercept_input,
+                                   theta_test,
+                                   theta_covar)
+      p_ftop_add[temp] <- as.numeric(model.result[[1]])
+      p_mtop_add[temp] <-as.numeric(model.result[[2]])
+      p_ftop_inter[temp] <- as.numeric(model.result[[3]])
+      p_mtop_inter[temp] <- as.numeric(model.result[[4]])
+      
+      # p_poly[temp] <- as.numeric(model.result[[5]])
+      temp = temp+1
       
     }
+    # x_covar <- rnorm(n)
     
+  }
+  
   
   
   result <- list(p_ftop_add,
@@ -437,5 +442,5 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 
 stopImplicitCluster()
-save(result.list,file=paste0("./simulation/power/result/interaction_",i1,".Rdata"))
+save(result.list,file=paste0("./simulation/power/result/interaction_high",i1,".Rdata"))
 
