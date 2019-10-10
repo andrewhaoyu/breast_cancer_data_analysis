@@ -222,7 +222,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
                                           missingTumorIndicator=888)
   score.random <- score.test.random[[1]]
   infor.random <- score.test.random[[2]]
-  p_mglobal_add <- DisplayMixedScoreTestResult(score.fixed,
+  p_mtop_add <- DisplayMixedScoreTestResult(score.fixed,
                                            infor.fixed,
                                            score.random,
                                            infor.random)[1]
@@ -281,7 +281,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   score.random <- score.test.random[[1]]
   infor.random <- score.test.random[[2]]
   
-  p_mglobal_inter <- DisplayMixedScoreTestResult(score.fixed,
+  p_mtop_inter <- DisplayMixedScoreTestResult(score.fixed,
                                                infor.fixed,
                                                score.random,
                                                infor.random)[1]
@@ -373,7 +373,7 @@ registerDoParallel(no.cores)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 5
+  s_times <- 1
   #sizes <- c(5000)
   sizes <- c(25000,50000,100000)
   n.sizes <- length(sizes)
@@ -437,5 +437,5 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 }
 
 stopImplicitCluster()
-save(result.list,file=paste0("./simulation/power/result/interaction",i1,".Rdata"))
+save(result.list,file=paste0("./simulation/power/result/interaction_",i1,".Rdata"))
 
