@@ -3,7 +3,7 @@ setwd('/Users/zhangh24/GoogleDrive/breast_cancer_data_analysis/simulation/power/
 data <- read.csv("time.simulation.result.csv")
 #data <- read.csv("power.simulation.result.csv")
 data <- data[,-1,drop=F]
-dcolnames(data) <- c("FTOP",
+colnames(data) <- c("FTOP",
                     "MTOP",
                     "Standard logistic regression",
                     "Two-stage model with only complete data",
@@ -37,7 +37,7 @@ p[[k]] <- ggplot(data.m.temp,aes(x=Sample_size,y=log(1000*value),fill=Method))+
   theme_Publication()+
   scale_x_discrete(name = "Sample size", limits=c("5000","25000","50000",
                                                   "1e+05"))+
-  scale_y_continuous(name="Log (computing time)",limits = c(0,11.5))+
+  scale_y_continuous(name="Log (computing time)",limits = c(0,14.5))+
   theme(legend.position="none")+
   discrete_scale("fill","Publication",manual_pal(values = c("#386cb0","#EF7E3D","#FFD042","#7fc97f","#004953","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")))+
   ggtitle("Methods working on all the data")
@@ -51,7 +51,7 @@ p[[k]] <- ggplot(data.m.temp,aes(x=Sample_size,y=log(1000*value),fill=Method))+
   theme_Publication()+
   scale_x_discrete(name = "Sample size", limits=c("5000","25000","50000",
                                                   "1e+05"))+
-  scale_y_continuous(name="Log (computing time)",limits = c(0,11.5))+
+  scale_y_continuous(name="Log (computing time)",limits = c(0,14.5))+
   theme(legend.position="none")+
   discrete_scale("fill","Publication",manual_pal(values = c("#7fc97f","#004953","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")))+
   ggtitle("Methods only working on complete data")
@@ -93,7 +93,7 @@ p[[k]] <- ggplot(data.m.temp,aes(x=Sample_size,y=log(1000*value),fill=Method))+
   theme_Publication()+
   scale_x_discrete(name = "Sample size", limits=c("5000","25000","50000",
                                                   "1e+05"))+
-  scale_y_continuous(name="Log (computing time)",limits = c(0,11.5))+
+  scale_y_continuous(name="Log (computing time)",limits = c(0,14.5))+
   theme(legend.position="none")+
   discrete_scale("fill","Publication",manual_pal(values = c("#386cb0","#EF7E3D","#FFD042","#7fc97f","#004953","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")))+
   ggtitle("Methods working on all the data")
@@ -107,7 +107,7 @@ p[[k]] <- ggplot(data.m.temp,aes(x=Sample_size,y=log(1000*value),fill=Method))+
   theme_Publication()+
   scale_x_discrete(name = "Sample size", limits=c("5000","25000","50000",
                                                   "1e+05"))+
-  scale_y_continuous(name="Log (computing time)",limits = c(0,11.5))+
+  scale_y_continuous(name="Log (computing time)",limits = c(0,14.5))+
   theme(legend.position="none")+
   discrete_scale("fill","Publication",manual_pal(values = c("#7fc97f","#004953","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")))+
   ggtitle("Methods only working on complete data")

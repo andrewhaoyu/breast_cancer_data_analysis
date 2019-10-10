@@ -4,12 +4,12 @@ filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/r
 files <- dir(filedir,pattern="time_mat",full.names=T)
 total <- 0
 n.loop <- 4
-for(i1 in 1:1000){
+for(i1 in c(1:660,662:1000)){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//time_mat",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
-       total = total+ nrow(time_mat)
+       total = total+ 1
     
   }
 }
@@ -21,10 +21,10 @@ p_mglobal_result <- matrix(0,total,n.loop)
 p_standard <- matrix(0,total,n.loop)
 p_global_complete <- matrix(0,total,n.loop)
 p_poly <- matrix(0,total,n.loop)
-
+p_poly_novov <- matrix(0,total,n.loop)
 total <- 0
 #args 1:2000 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
-for(i1 in 1:1000){
+for(i1 in c(1:660,662:1000)){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//time_mat",i1,".Rdata")
   if(file%in%files==T){
@@ -38,6 +38,7 @@ for(i1 in 1:1000){
       p_global_complete[total+(1:temp),] <-time_mat[,4]
       
       p_poly[total+(1:temp),] <- time_mat[,5]
+      p_poly_novov[total+(1:temp),] <- time_mat[,6]
     
     
     #p_poly[total+(1:temp),] <- rbind(matrix(result.list[[1]][[6]],ncol=9),
@@ -64,7 +65,8 @@ result <- cbind(apply(p_global_result,2,function(x){mean(x)}),
                 apply(p_mglobal_result,2,function(x){mean(x)}),
                 apply(p_standard,2,function(x){mean(x)}),
                 apply(p_global_complete,2,function(x){mean(x)}),
-                apply(p_poly,2,function(x){mean(x,na.rm=T)}))
+                apply(p_poly,2,function(x){mean(x,na.rm=T)}),
+                apply(p_poly_novov,2,function(x){mean(x,na.rm=T)}))
 
 #write.csv(result,file=paste0("./simulation/power/result/power.simulation.result.csv") )
 
@@ -86,7 +88,7 @@ for(i1 in 1:1000){
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//time_mat_high",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
-    total = total+ nrow(time_mat)
+    total = total+ 1
     
   }
 }

@@ -2,7 +2,7 @@
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
 load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p_two_interaction.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase_5p_two_interaction.Rdata")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_random_5p_two_interaction.Rdata")
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 
 num = nrow(onco_result_fixed_5p)
