@@ -1,4 +1,4 @@
-#merge the score test results for er and grade as fixed
+#merge the score test results for two interaction results
 Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_imputed"
 Files <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.",full.names=T)
 Filesex <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.chr23",full.names=T)
@@ -46,13 +46,14 @@ num.total <- nrow(onco_result)
 num <- num.total
 #num.total <- 0
 rs_id <- rep("c",num.total)
-n.support <- ncol(z.design.support)
-n.test <- ncol(z.design.test)
 
-score <- matrix(0,nrow=num,ncol = (number.of.tumor+1))
-infor <- matrix(0,nrow = num,ncol = (number.of.tumor+1)^2)
-score2 <- matrix(0,nrow=num,ncol = (number.of.tumor-2))
-infor2 <- matrix(0,nrow = num,ncol = (number.of.tumor-2)^2)
+n.support <- 2
+n.test <- 9
+
+score <- matrix(0,num,n.support+n.test)
+infor <- matrix(0,num,(n.support+n.test)^2)
+score2 <- matrix(0,num,n.test)
+infor2 <- matrix(0,num,(n.test)^2)
 
 freq.all <- rep(0,num)
 #score_baseline <- rep(0,num)
@@ -67,18 +68,19 @@ for(i in 1:567){
   print(i)
   for (k in 1:5) {
     #print(k)
-   
+    
     
     load(
-      paste0("./poland/result/whole_genome/grade_fixed_",idx[i],"_",k)
-    )
-    temp <- length(result[[2]])
-    rs_id[num.total+(1:temp)] <- result[[1]]
+     paste0("./poland/result/whole_genome/ERPRHER2Grade_fixed_onco_two_interaction",idx[i],"_",k)
+     )
     
-    freq.all[num.total+(1:temp)] <- result[[2]] 
-    score2[num.total+(1:temp),] <- result[[3]]
-    infor2[num.total+(1:temp),] <- result[[4]]
-    # 
+    temp <- length(result[[1]])
+    rs_id[num.total+(1:temp)] <- result[[1]]
+    score[num.total+(1:temp),] <- result[[2]]
+    infor[num.total+(1:temp),] <- result[[3]]
+    freq.all[num.total+(1:temp)] <- result[[4]] 
+    score2[num.total+(1:temp),] <- result[[5]]
+    infor2[num.total+(1:temp),] <- result[[6]]
     num.total <- temp+num.total
     job.sub.length[i] <- job.sub.length[i]+temp
   }  
@@ -145,18 +147,17 @@ CHR <- onco_info[,11]
 onco_info <- onco_info[,1:10]
 
 
-#onco_result_fixed <- data.frame(onco_info,score,infor,CHR)
+
+onco_result_fixed <- data.frame(onco_info,score,infor,CHR)
 onco_result_casecase <- data.frame(onco_info,score2,infor2,CHR)
 
+#onco_result_fixed <- data.frame(onco_info,score,infor,CHR)
 
-#save(onco_result_fixed,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed.Rdata")
-save(onco_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase_grade.Rdata")
-
-idx <- which(onco_result_casecase$exp_freq_a1>=0.05&
-               onco_result_casecase$exp_freq_a1<=0.95)
-#onco_result_fixed_5p <- onco_result_fixed[idx,]
+idx <- which(onco_result_fixed$exp_freq_a1>=0.05&
+               onco_result_fixed$exp_freq_a1<=0.95)
+onco_result_fixed_5p <- onco_result_fixed[idx,]
 onco_result_casecase_5p <- onco_result_casecase[idx,]
-#save(onco_result_fixed_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
-save(onco_result_casecase_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase_grade_5p.Rdata")
+save(onco_result_fixed_5p,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
+
 
 print(1)

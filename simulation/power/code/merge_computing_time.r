@@ -9,20 +9,7 @@ for(i1 in 1:1000){
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//time_mat",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
-    #result.list is a list of pvalue
-    #three different simulation settings: 1. no heterogneity 2. one tumor heter 3. multiple tumor heterogeneity
-    #3 different sample size were implemented 5000, 50,000 and 100,000
-    #
-    #its the output of a foreach parallele result
-    #[[1]] and [[2]] share the same structure
-    #[[1]] [[1]] is the vector of p_value from FTOP
-    #[[1]] [[1]] is a long vector looped by first simulation setting, then sample size (inner loop), 9 different sections
-    #[[1]] [[2]] is the vector of p_value from MTOP
-    #[[1]] [[3]] is the vector of p_value from standard logistoc regression
-    #[[1]] [[4]] is the vector of p_value from MTOP this is because of a previous typo
-    #[[1]] [[5]] is the vector of FTOP from complete analysis
-    #[[1]] [[6]] is the vector of polytomous model from complete analysis
-    total = total+ nrow(time_mat)
+       total = total+ nrow(time_mat)
     
   }
 }
@@ -87,6 +74,68 @@ write.csv(result,file=paste0("./simulation/power/result/time.simulation.result.c
 
 
 
+
+
+setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+files <- dir(filedir,pattern="time_mat_high",full.names=T)
+total <- 0
+n.loop <- 4
+for(i1 in 1:1000){
+  print(i1)
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//time_mat_high",i1,".Rdata")
+  if(file%in%files==T){
+    load(file) 
+    total = total+ nrow(time_mat)
+    
+  }
+}
+
+#total = total*2
+
+p_global_result <- matrix(0,total,n.loop)
+p_mglobal_result <- matrix(0,total,n.loop)
+p_standard <- matrix(0,total,n.loop)
+p_global_complete <- matrix(0,total,n.loop)
+p_poly <- matrix(0,total,n.loop)
+
+total <- 0
+#args 1:2000 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
+for(i1 in 1:1000){
+  print(i1)
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//time_mat_high",i1,".Rdata")
+  if(file%in%files==T){
+    load(file) 
+    temp = 1
+    p_global_result[total+(1:temp),] <-time_mat[,1]
+    
+    p_mglobal_result[total+(1:temp),] <- time_mat[,2]
+    p_standard[total+(1:temp),] <- time_mat[,3]
+    
+    p_global_complete[total+(1:temp),] <-time_mat[,4]
+    
+    p_poly[total+(1:temp),] <- time_mat[,5]
+    
+    
+    #p_poly[total+(1:temp),] <- rbind(matrix(result.list[[1]][[6]],ncol=9),
+    # matrix(result.list[[2]][[6]],ncol=9))
+    
+    total = total+ temp
+    
+  }
+}
+
+
+result <- cbind(apply(p_global_result,2,function(x){mean(x)}),
+                apply(p_mglobal_result,2,function(x){mean(x)}),
+                apply(p_standard,2,function(x){mean(x)}),
+                apply(p_global_complete,2,function(x){mean(x)}),
+                apply(p_poly,2,function(x){mean(x,na.rm=T)}))
+
+#write.csv(result,file=paste0("./simulation/power/result/power.simulation.result.csv") )
+
+
+write.csv(result,file=paste0("./simulation/power/result/time.simulation.result_high.csv") )
 
 
 

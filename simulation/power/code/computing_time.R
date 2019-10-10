@@ -157,7 +157,7 @@ sc <- 3
   
       theta_test <- c(0.08,0,0,0,0)
       
-      time_mat <- matrix(0,4,5)
+      time_mat <- matrix(0,4,6)
     
     s_times <- 1
     
@@ -286,14 +286,17 @@ sc <- 3
               poly.model.coef <- coef(poly.model)
               M <- nrow(poly.model.coef)
               p.covariate <- ncol(poly.model.coef)
+              time.end1 <- proc.time()
               snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
               snp.coef <- poly.model.coef[,2]
               
               result_temp <- DisplaySecondStageTestResult(snp.coef,snp.cov)
-             time.end <- proc.time()
-             time_poly <- time.end-time.start
+             time.end2 <- proc.time()
+             time_poly_no_vov <- time.end1-time.start
+             time_poly <- time.end2-time.start
             },
             error = function(e){
+              time_poly_no_vov <- NA
               time_poly<- NA
             }
             
@@ -317,6 +320,7 @@ sc <- 3
         time_mat[l,3] <- time_stan[3]
         time_mat[l,4] <- time_ftop_c[3]
         time_mat[l,5] <- time_poly[3]
+        time_mat[l,6] <- time_poly_no_vov[3]
         
          
     }
