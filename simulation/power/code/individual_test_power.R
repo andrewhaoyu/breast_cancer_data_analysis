@@ -156,16 +156,21 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   p_all <- fixed.result[4]
   # p_heter <- fixed.result[12]
   # p_indi <- fixed.result[2]
-  ##########MTOP global test for association 
-  z.design.fixed <- cbind(rep(1,M),z.standard[,1])
-  z.design.random <-as.matrix(z.standard[,2:ncol(z.standard)])
- 
+
   idx.mis <- GenerateMissingPosition(y.pheno.mis[,1:2],missingTumorIndicator=888)
   y.pheno.com <- y.pheno.mis[-idx.mis,1:2,drop=F]
   x.covar.com <- x_covar[-idx.mis,drop=F]
   G.com <- G[-idx.mis,drop=F]
-  
-  model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL)
+
+ 
+  model2 <- TwoStageModel(y=y.pheno.com,
+                          baselineonly=NULL,
+                          additive=cbind(G.com,x.covar.com),
+                          pairwise.interaction=NULL,
+                          saturated=NULL,
+                          missingTumorIndicator =NULL,
+                          delta0 = NULL,
+                          cutoff = 10)
   z.standard <- model2[[12]]
   
   M <- nrow(z.standard)
@@ -257,7 +262,7 @@ registerDoParallel(no.cores)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 5
+  s_times <- 1
   #sizes <- c(5000)
   sizes <- c(25000,50000,100000)
   n.sizes <- length(sizes)
@@ -283,16 +288,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
           x_covar <- temp.simu[[3]]
           
           y <- y.pheno.mis
-          missing.data.vec <- GenerateMissingPosition(y,missingTumorIndicator=888)
-          y.pheno.complete <- y[-missing.data.vec,]
-          freq.subtypes <- GenerateFreqTable(y.pheno.complete)
-          idx.del <- which(freq.subtypes[,ncol(freq.subtypes)]<=10)
-          if(length(idx.del)!=0){
-            theta_intercept_input = theta_intercept[-idx.del]
-          }else{
-            theta_intercept_input = theta_intercept
-          }
-          print("simulation")
+          
           
           model.result <- PowerCompare(y.pheno.mis,G,x_covar,
                                        theta_intercept_input,
