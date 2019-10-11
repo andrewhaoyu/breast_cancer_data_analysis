@@ -78,7 +78,7 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
   
   # z <- kronecker(diag(2),z)
   #this theta is the true value
-  theta <- c(theta_intercept,theta_covar,theta_test)
+  theta <- c(theta_intercept,theta_test,theta_covar)
   
   #this is the true beta
   beta <- z.all%*%theta

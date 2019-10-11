@@ -36,7 +36,7 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
   z.all <- matrix(0,nrow=(M*total.covar.number),ncol = (M+                                                        additive.second.cat*additive.number)+pairwise.interaction.second.cat*pairwise.interaction.number)
   for(i in c("intercept",
              "pairwise.interaction",
-              "additive"
+             "additive"
             
   )){
     ##we always keep intercept as saturated model and to simply, we always use diagnonal matrix for intercept
@@ -79,7 +79,7 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n){
   
   # z <- kronecker(diag(2),z)
   #this theta is the true value
-  theta <- c(theta_intercept,theta_covar,theta_test)
+  theta <- c(theta_intercept,theta_test,theta_covar)
   
   #this is the true beta
   beta <- z.all%*%theta
@@ -378,7 +378,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   sizes <- c(25000,50000,100000)
   n.sizes <- length(sizes)
   p_ftop_add <- rep(0,n.sizes*s_times)
-  p_mtop_add <- rep(0,n.sizes*s_times)
+  p_mtop_add <- rep(0,n.sizes*s_timesth)
   p_ftop_inter <- rep(0,n.sizes*s_times)
   p_mtop_inter <- rep(0,n.sizes*s_times)
   #p_poly <- rep(0,9*s_times)
@@ -409,6 +409,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
           theta_intercept_input = theta_intercept
         }
         print("simulation")
+        
+        
         
         model.result <- PowerCompare(y.pheno.mis,G,x_covar,
                                      theta_intercept_input,

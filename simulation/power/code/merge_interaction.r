@@ -1,84 +1,82 @@
-#merge power results with the effect size as 0.08 level
+#merge power results two-way interactions with the effect size as 0.08 level
 setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
 filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
-files <- dir(filedir,pattern="simu_result",full.names=T)
+files <- dir(filedir,pattern="interaction_",full.names=T)
 total <- 0
 #n.loop = number of simulation setting* number of sample size setting
-n.loop <- 12
+n.loop <- 3
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//interaction_",i1,".Rdata")
   if(file%in%files==T){
-    load(paste0("./simulation/power/result/simu_result",i1,".Rdata")) 
+    load(file) 
     #result.list is a list of pvalue
     #three different simulation settings: 1. no heterogneity 2. one tumor heter 3. multiple tumor heterogeneity
-    #34different sample size were implemented 5000, 25,000 50,000 and 100,000 
+    #3 different sample size were implemented 5000, 50,000 and 100,000
     #
     #its the output of a foreach parallele result
     #[[1]] and [[2]] share the same structure
-    #[[1]] [[1]] is the vector of p_value from FTOP
-    #[[1]] [[1]] is a long vector looped by first simulation setting, then sample size (inner loop), 12 different sections. The third loop is the number of replicates in each section
-    #[[1]] [[2]] is the vector of p_value from MTOP
-    #[[1]] [[3]] is the vector of p_value from standard logistoc regression
-    #[[1]] [[4]] is the vector of p_value from MTOP this is because of a previous typo
-    #[[1]] [[5]] is the vector of FTOP from complete analysis
-    #[[1]] [[6]] is the vector of polytomous model from complete analysis
+    #[[1]] [[1]] is the vector of p_value from FTOP with additive structure
+    #[[1]] [[1]] is a long vector looped by first simulation setting (only 1 under this case), then sample size (inner loop 3), then the number of replicates (third loop)
+    #[[1]] [[2]] is the vector of p_value from MTOP with additive structure
+    #[[1]] [[3]] is the vector of p_value from ftop with all interaction
+    #[[1]] [[4]] is the vector of p_value from MTOP with all interactions
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
     
   }
-  }
+}
 
 #total = total*2
 
-p_global_result <- matrix(0,total,n.loop)
-p_mglobal_result <- matrix(0,total,n.loop)
-p_standard <- matrix(0,total,n.loop)
-p_global_complete <- matrix(0,total,n.loop)
+p_ftop_add <- matrix(0,total,n.loop)
+p_mtop_add <- matrix(0,total,n.loop)
+p_ftop_inter <- matrix(0,total,n.loop)
+p_mtop_inter <- matrix(0,total,n.loop)
 #p_poly <- matrix(0,total,9)
 
 total <- 0
 #args 1:2000 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//interaction_",i1,".Rdata")
   if(file%in%files==T){
-    load(paste0("./simulation/power/result//simu_result",i1,".Rdata"))
+    load(file) 
     temp1 = length(result.list[[1]][[1]])/n.loop
     temp2 = length(result.list[[2]][[1]])/n.loop
     temp = temp1+temp2
     if(temp1==0){
-      p_global_result[total+(1:temp2),] <- matrix(result.list[[2]][[1]],ncol=n.loop)
+      p_ftop_add[total+(1:temp2),] <- matrix(result.list[[2]][[1]],ncol=n.loop)
       
-      p_mglobal_result[total+(1:temp2),] <- matrix(result.list[[2]][[2]],ncol=n.loop)
-      p_standard[total+(1:temp2),] <- matrix(result.list[[2]][[3]],ncol=n.loop)
+      p_mtop_add[total+(1:temp2),] <- matrix(result.list[[2]][[2]],ncol=n.loop)
+      p_ftop_inter[total+(1:temp2),] <- matrix(result.list[[2]][[3]],ncol=n.loop)
       
-      p_global_complete[total+(1:temp2),] <-matrix(result.list[[2]][[5]],ncol=n.loop)  
+      p_mtop_inter[total+(1:temp2),] <-matrix(result.list[[2]][[4]],ncol=n.loop)  
     }else if(temp2==0){
-      p_global_result[total+(1:temp1),] <- matrix(result.list[[1]][[1]],ncol=n.loop)
+      p_ftop_add[total+(1:temp1),] <- matrix(result.list[[1]][[1]],ncol=n.loop)
       
-      p_mglobal_result[total+(1:temp1),] <- matrix(result.list[[1]][[2]],ncol=n.loop)
-      p_standard[total+(1:temp1),] <- matrix(result.list[[1]][[3]],ncol=n.loop)
+      p_mtop_add[total+(1:temp1),] <- matrix(result.list[[1]][[2]],ncol=n.loop)
+      p_ftop_inter[total+(1:temp1),] <- matrix(result.list[[1]][[3]],ncol=n.loop)
       
-      p_global_complete[total+(1:temp1),] <-matrix(result.list[[1]][[5]],ncol=n.loop)  
+      p_mtop_inter[total+(1:temp1),] <-matrix(result.list[[1]][[4]],ncol=n.loop)  
     }else{
-      p_global_result[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]],ncol=n.loop),
+      p_ftop_add[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]],ncol=n.loop),
                                                matrix(result.list[[2]][[1]],ncol=n.loop))
       
-      p_mglobal_result[total+(1:temp),] <- rbind(matrix(result.list[[1]][[2]],ncol=n.loop),
+      p_mtop_add[total+(1:temp),] <- rbind(matrix(result.list[[1]][[2]],ncol=n.loop),
                                                  matrix(result.list[[2]][[2]],ncol=n.loop))
-      p_standard[total+(1:temp),] <- rbind(matrix(result.list[[1]][[3]],ncol=n.loop),
+      p_ftop_inter[total+(1:temp),] <- rbind(matrix(result.list[[1]][[3]],ncol=n.loop),
                                            matrix(result.list[[2]][[3]],ncol=n.loop))
       
-      p_global_complete[total+(1:temp),] <-rbind(matrix(result.list[[1]][[5]],ncol=n.loop),
-                                                 matrix(result.list[[2]][[5]],ncol=n.loop))
+      p_mtop_inter[total+(1:temp),] <-rbind(matrix(result.list[[1]][[4]],ncol=n.loop),
+                                                 matrix(result.list[[2]][[4]],ncol=n.loop))
       
       #p_poly[total+(1:temp),] <- rbind(matrix(result.list[[1]][[6]],ncol=9),
-       #                                matrix(result.list[[2]][[6]],ncol=9))
+      #                                matrix(result.list[[2]][[6]],ncol=9))
     }
     
     
     #p_poly[total+(1:temp),] <- rbind(matrix(result.list[[1]][[6]],ncol=9),
-                                    # matrix(result.list[[2]][[6]],ncol=9))
+    # matrix(result.list[[2]][[6]],ncol=9))
     
     total = total+ temp
     
@@ -91,62 +89,6 @@ CountPower <- function(p,alpha){
   return(length(idx)/n)
   
 }
-
-#load results for polytomous model
-
-
-
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
-files <- dir(filedir,pattern="poly_",full.names=T)
-total <- 0
-#args 1:2000 contains the results for polytomous
-for(i1 in 1:2000){
-  print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_",i1,".Rdata")
-  if(file%in%files==T){
-    load(file) 
-    total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
-    
-  }
-}
-
-
-p_poly <- matrix(0,total,n.loop)
-
-total <- 0
-
-for(i1 in 1:2000){
-  print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_",i1,".Rdata")
-  if(file%in%files==T){
-    load(paste0(file))
-    temp1 = length(result.list[[1]][[1]])/n.loop
-    temp2 = length(result.list[[2]][[1]])/n.loop
-    temp = temp1+temp2
-    if(temp1==0){
-      p_poly[total+(1:temp2),] <- matrix(result.list[[2]][[1]],ncol=n.loop)  
-    }else if(temp2==0){
-      p_poly[total+(1:temp1),] <- matrix(result.list[[1]][[1]],ncol=n.loop)
-                                       
-    }else{
-    
-      
-      p_poly[total+(1:temp),] <- rbind(matrix(result.list[[1]][[1]],ncol=n.loop),
-                                      matrix(result.list[[2]][[1]],ncol=n.loop))
-    }
-    
-    
-    #p_poly[total+(1:temp),] <- rbind(matrix(result.list[[1]][[6]],ncol=9),
-    # matrix(result.list[[2]][[6]],ncol=9))
-    
-    total = total+ temp
-    
-  }
-}
-
-
-
 
 
 
@@ -161,16 +103,17 @@ for(i1 in 1:2000){
 # apply(p_poly,2,function(x){CountPower(x,thres)})
 
 thres = 5E-08
+
 #remove standard polytomous function 
 #unstable outliers
 #idx <- which(p_poly[,4]==0)
 #p_poly = p_poly[-idx,,drop=F]
 
-result <- cbind(apply(p_global_result,2,function(x){CountPower(x,thres)}),
-                apply(p_mglobal_result,2,function(x){CountPower(x,thres)}),
-                apply(p_standard,2,function(x){CountPower(x,thres)}),
-                apply(p_global_complete,2,function(x){CountPower(x,thres)}),
-                apply(p_poly,2,function(x){CountPower(x,thres)}))
+
+result <- cbind(apply(p_ftop_add,2,function(x){CountPower(x,thres)}),
+                apply(p_mtop_add,2,function(x){CountPower(x,thres)}),
+                apply(p_ftop_inter,2,function(x){CountPower(x,thres)}),
+                apply(p_mtop_inter,2,function(x){CountPower(x,thres)}))
 
 
 
