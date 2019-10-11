@@ -378,7 +378,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   sizes <- c(25000,50000,100000)
   n.sizes <- length(sizes)
   p_ftop_add <- rep(0,n.sizes*s_times)
-  p_mtop_add <- rep(0,n.sizes*s_timesth)
+  p_mtop_add <- rep(0,n.sizes*s_times)
   p_ftop_inter <- rep(0,n.sizes*s_times)
   p_mtop_inter <- rep(0,n.sizes*s_times)
   #p_poly <- rep(0,9*s_times)
