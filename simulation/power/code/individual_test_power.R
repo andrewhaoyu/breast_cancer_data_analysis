@@ -151,59 +151,25 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   # p_heter <- fixed.result[12]
   # p_indi <- fixed.result[2]
 
+  
+  model1 <- TwoStageModel(y.pheno.mis[,1:2],
+                          additive=cbind(G,x_covar),
+                          missingTumorIndicator = 888)
+  z.standard <- model1[[12]]
+  M <- nrow(z.standard)
+  n.cat <- 1+ncol(z.standard)
+  odds <- model1[[1]][M+(1:n.cat)]
+  sigma <-  (model1[[2]][M+(1:n.cat),M+(1:n.cat)])
+  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
+  p_all_ER <- fixed.result[4]
+  
+  
+  
   idx.mis <- GenerateMissingPosition(y.pheno.mis[,1:2],missingTumorIndicator=888)
   y.pheno.com <- y.pheno.mis[-idx.mis,1:2,drop=F]
   x.covar.com <- x_covar[-idx.mis,drop=F]
   G.com <- G[-idx.mis,drop=F]
 
-  
-  
-  temp <-  Generatesubtypes(y.pheno.com[,2])
-  
-    subtypes <- temp[[1]]
-    idx.remove <- temp[[2]]
-    if(length(idx.remove)!=0){
-      x.covar.poly <- x.covar.com[-idx.remove]
-      G.poly <- G.com[-idx.remove]
-      
-    }else{
-      x.covar.poly <- x.covar.com
-      G.poly <- G.com
-      
-    }
-    poly.model <- multinom(subtypes~G.poly+x.covar.poly,maxit = 1000)
-    
-    if(poly.model$convergence==0){
-      tryCatch({
-        poly.model.coef <- coef(poly.model)
-        M <- nrow(poly.model.coef)
-        p.covariate <- ncol(poly.model.coef)
-        snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
-        snp.coef <- poly.model.coef[,2]
-        
-        trans <- c(1,-1)
-        beta_diff <- trans%*%snp.coef
-        var_diff <- as.numeric(t(trans)%*%snp.cov%*%trans)
-        
-        p_poly <- 2*pnorm(-abs(beta_diff/sqrt(var_diff)),lower.tail = T)
-        
-        result_temp <- DisplaySecondStageTestResult(snp.coef,snp.cov)  
-        p_poly <- result_temp[length(result_temp)-1]
-      },
-      error = function(e){
-        p_poly<- 1
-      }
-      
-      )
-      
-      
- 
-  idx1 <- which(y.pheno.com[,1]==0|
-                  y.pheno.com[,2]==0)
-  model3 <- glm(y.pheno.com[idx1,1]~
-                  cbind(G,x_covar)[idx1,],family=binomial())  
-  
-  
   model2 <- TwoStageModel(y=y.pheno.com,
                           baselineonly=NULL,
                           additive=cbind(G.com,x.covar.com),
@@ -220,7 +186,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   sigma <-  (model2[[2]][M+(1:n.cat),M+(1:n.cat)])
   fixed.result <- DisplaySecondStageTestResult(odds,sigma)
   p_complete <- fixed.result[4]
-  result <- list(p_all,p_complete)  
+  result <- list(p_all,p_all_ER,p_complete)  
   return(result)
 }
 
@@ -310,6 +276,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   missingrate_vec <- c(0.17,0.3,0.5)
   n.misrate <- length(missingrate_vec)
   p_all <- rep(0,n.misrate*n.sizes*s_times)
+  p_all_ER <- rep(0,n.misrate*n.sizes*s_times)
   p_complete <- rep(0,n.misrate*n.sizes*s_times)
   #p_poly <- rep(0,9*s_times)
   
@@ -336,7 +303,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
                                        theta_test,
                                        theta_covar)
           p_all[temp] <- as.numeric(model.result[[1]])
-          p_complete[temp] <- as.numeric(model.result[[2]])
+          p_all_ER[temp] <- as.numeric(model.result[[2]])
+          p_complete[temp] <- as.numeric(model.result[[3]])
           
           # p_poly[temp] <- as.numeric(model.result[[5]])
           temp = temp+1
