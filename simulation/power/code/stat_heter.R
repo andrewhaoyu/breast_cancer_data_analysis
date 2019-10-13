@@ -150,8 +150,8 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   z.standard <- model1[[12]]
   M <- nrow(z.standard)
   n.cat <- ncol(z.standard)+1
-  odds <- model2[[1]][M+(1:n.cat)]
-  sigma <-  (model2[[2]][M+(1:n.cat),M+(1:n.cat)])
+  odds <- model1[[1]][M+(1:n.cat)]
+  sigma <-  (model1[[2]][M+(1:n.cat),M+(1:n.cat)])
   fixed.result <- DisplaySecondStageTestResult(odds,sigma)
   p_global <- fixed.result[12]
   # p_heter <- fixed.result[12]
