@@ -97,28 +97,22 @@ SimulateDataPower <- function(theta_intercept,theta_test,theta_covar,n,missingra
 
 
 
-Generatesubtypes<- function(ER,PR,HER2,Grade){
+Generatesubtypes<- function(ER){
   n <- length(ER)
   subtypes <- rep("control",n)
   temp = 1
   for(i in 0:1){
-    for(j in 0:1){
-      for(k in 0:1){
-        for(l in 1:3){
-          
-          idx <- which(ER==i&PR==j&HER2==k&Grade==l)
+   idx <- which(ER==i)
           if(length(idx)!=0){
             subtypes[idx] <- temp
             temp = temp+1  
           }
           
         }
-      }
-    }
-  }
+     
   
   subtypes <- factor(subtypes,levels=c("control",
-                                       c(1:temp)))
+                                       c(1:(temp-1))))
   sum <- table(subtypes)
   idx.cat <- which(sum<=10)
   idx.remove <- which((subtypes%in%(unique(idx.cat)-1))==T)
@@ -162,7 +156,54 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   x.covar.com <- x_covar[-idx.mis,drop=F]
   G.com <- G[-idx.mis,drop=F]
 
+  
+  
+  temp <-  Generatesubtypes(y.pheno.com[,2])
+  
+    subtypes <- temp[[1]]
+    idx.remove <- temp[[2]]
+    if(length(idx.remove)!=0){
+      x.covar.poly <- x.covar.com[-idx.remove]
+      G.poly <- G.com[-idx.remove]
+      
+    }else{
+      x.covar.poly <- x.covar.com
+      G.poly <- G.com
+      
+    }
+    poly.model <- multinom(subtypes~G.poly+x.covar.poly,maxit = 1000)
+    
+    if(poly.model$convergence==0){
+      tryCatch({
+        poly.model.coef <- coef(poly.model)
+        M <- nrow(poly.model.coef)
+        p.covariate <- ncol(poly.model.coef)
+        snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
+        snp.coef <- poly.model.coef[,2]
+        
+        trans <- c(1,-1)
+        beta_diff <- trans%*%snp.coef
+        var_diff <- as.numeric(t(trans)%*%snp.cov%*%trans)
+        
+        p_poly <- 2*pnorm(-abs(beta_diff/sqrt(var_diff)),lower.tail = T)
+        
+        result_temp <- DisplaySecondStageTestResult(snp.coef,snp.cov)  
+        p_poly <- result_temp[length(result_temp)-1]
+      },
+      error = function(e){
+        p_poly<- 1
+      }
+      
+      )
+      
+      
  
+  idx1 <- which(y.pheno.com[,1]==0|
+                  y.pheno.com[,2]==0)
+  model3 <- glm(y.pheno.com[idx1,1]~
+                  cbind(G,x_covar)[idx1,],family=binomial())  
+  
+  
   model2 <- TwoStageModel(y=y.pheno.com,
                           baselineonly=NULL,
                           additive=cbind(G.com,x.covar.com),

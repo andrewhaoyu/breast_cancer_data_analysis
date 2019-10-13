@@ -393,7 +393,9 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   
   temp <- 1  
   
-  theta_test <- c(0,0.08,0,0,0,0,0.04,rep(0,15))
+  theta_test <- c(0,0.08,0,0,0,0,0,
+                  0,0.04,
+                  rep(0,13))
   #theta_test <- c(0,0.08,0,0,0)
   
   for(n in sizes){

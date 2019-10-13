@@ -123,7 +123,7 @@ Generatesubtypes<- function(ER,PR,HER2,Grade,T5,T6){
   }
   
   subtypes <- factor(subtypes,levels=c("control",
-                                       c(1:temp)))
+                                       c(1:(temp-1))))
   sum <- table(subtypes)
   idx.cat <- which(sum<=10)
   idx.remove <- which((subtypes%in%(unique(idx.cat)-1))==T)
