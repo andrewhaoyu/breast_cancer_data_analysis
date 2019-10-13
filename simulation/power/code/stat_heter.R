@@ -179,7 +179,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   score.test.support.random <- ScoreTestSupportMixedModelSelfDesign(
     y.pheno.mis,
     x.self.design  = G,
-    z.design = z.design.fixed,
+    z.design = cbind(1,z.design.fixed),
     additive =  as.matrix(x_covar),
     pairwise.interaction = NULL,
     saturated = NULL,

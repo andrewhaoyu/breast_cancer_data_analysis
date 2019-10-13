@@ -234,8 +234,9 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   s_times <- 5
   sizes <- c(5000)
   n.sizes <- length(sizes)
+  n.heter <- 3
   #sizes <- c(5000,25000,50000,100000)
-  p_poly <- rep(0,3*n.sizes*s_times)
+  p_poly <- rep(0,n.heter*n.sizes*s_times)
   
   
   

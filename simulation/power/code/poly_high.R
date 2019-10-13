@@ -233,13 +233,13 @@ sc <- 3
   #sizes <- c(5000,25000,50000,100000)
   sizes <- c(5000)
   n.sizes <- length(sizes)
-  
+  n.heter <- 3
   #n.sizes <- length(sizes)
   # p_global_result <- rep(0,n.sizes*s_times)
   # p_mglobal_result <- rep(0,n.sizes*s_times)
   # p_standard <- rep(0,n.sizes*s_times)
   # p_global_complete <- rep(0,n.sizes*s_times)
-  p_poly <- rep(0,n.sizes*s_times)
+  p_poly <- rep(0,n.heter*n.sizes*s_times)
   
   
   

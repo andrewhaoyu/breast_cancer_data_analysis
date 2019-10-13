@@ -143,8 +143,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   
   model1 <- TwoStageModel(y.pheno.mis,
                           additive=cbind(G,x_covar),
-                          missingTumorIndicator = 888,
-                          delta0 = c(theta_intercept,theta_test,theta_covar))
+                          missingTumorIndicator = 888)
   
   z.standard <- model1[[12]]
   M <- nrow(z.standard)
@@ -152,23 +151,21 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   odds <- model1[[1]][M+(1:(K))]
   sigma <-  (model1[[2]][M+(1:K),M+(1:K)])
   fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_global <- fixed.result[length(fixed.result)-1]
+  p_global <- fixed.result[length(fixed.result)]
   
   
   # p_heter <- fixed.result[12]
   # p_indi <- fixed.result[2]
   ##########MTOP global test for association 
-  z.design.fixed <- cbind(rep(1,M),z.standard[,1])
+  z.design.fixed <- cbind(z.standard[,1])
   z.design.random <-z.standard[,2:ncol(z.standard)]
   score.test.support.fixed <- ScoreTestSupportMixedModel(
     y.pheno.mis,
-    baselineonly = NULL,
+    baselineonly = as.matrix(G),
     additive = as.matrix(x_covar),
     pairwise.interaction = NULL,
     saturated = NULL,
-    missingTumorIndicator = 888,
-    c(theta_intercept,
-      theta_covar)
+    missingTumorIndicator = 888
   )
   score.test.fixed<- ScoreTestMixedModel(y=y.pheno.mis,
                                          x=as.matrix(G),
@@ -182,13 +179,11 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   score.test.support.random <- ScoreTestSupportMixedModelSelfDesign(
     y.pheno.mis,
     x.self.design  = G,
-    z.design = z.design.fixed,
+    z.design = cbind(1,z.design.fixed),
     additive =  as.matrix(x_covar),
     pairwise.interaction = NULL,
     saturated = NULL,
-    missingTumorIndicator = 888,
-    delta0 = c(theta_intercept,theta_test[1:ncol(z.design.fixed)],
-               theta_covar)
+    missingTumorIndicator = 888
   )
   score.test.random<- ScoreTestMixedModel(y=y.pheno.mis,
                                           x=as.matrix(G),
@@ -201,25 +196,23 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
                                            infor.fixed,
                                            score.random,
                                            infor.random)[1]
-  model.standard <- glm(y.pheno.mis[,1]~G+x_covar,family = binomial(link='logit')) 
-  p_standard <- summary(model.standard)$coefficients[2,4]
   
   idx.mis <- GenerateMissingPosition(y.pheno.mis,missingTumorIndicator=888)
   y.pheno.com <- y.pheno.mis[-idx.mis,,drop=F]
   x.covar.com <- x_covar[-idx.mis,drop=F]
   G.com <- G[-idx.mis,drop=F]
   
-  model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL,delta0 = c(theta_intercept,theta_test,theta_covar))
+  model2 <- TwoStageModel(y.pheno.com,additive=cbind(G.com,x.covar.com),missingTumorIndicator =NULL)
   z.standard <- model2[[12]]
   M <- nrow(z.standard)
   odds <- model2[[1]][M+(1:K)]
   sigma <-  (model2[[2]][M+(1:K),M+(1:K)])
   fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_global_complete <- fixed.result[length(fixed.result)-1]
+  p_global_complete <- fixed.result[length(fixed.result)]
   
   
   
-  result <- list(p_global,p_mglobal,p_standard,p_global_complete)  
+  result <- list(p_global,p_mglobal,p_global_complete)  
   return(result)
 }
 
@@ -303,35 +296,36 @@ registerDoParallel(no.cores)
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
   s_times <- 1
-  #sizes <- c(5000,25000,50000,100000)
+  sizes <- c(25000,50000,100000)
   #sizes <- c()
-  sizes <- c(5000)
+  #sizes <- c(5000)
   n.sizes <- length(sizes)
-  p_global_result <- rep(0,n.sizes*s_times)
-  p_mglobal_result <- rep(0,n.sizes*s_times)
-  p_standard <- rep(0,n.sizes*s_times)
-  p_global_complete <- rep(0,n.sizes*s_times)
+  n.heter <- 2
+  p_global_result <- rep(0,n.heter*n.sizes*s_times)
+  p_mglobal_result <- rep(0,n.heter*n.sizes*s_times)
+  p_global_complete <- rep(0,n.heter*n.sizes*s_times)
   #p_poly <- rep(0,n.sizes*s_times)
   
   
   
   temp <- 1  
   for(s in 1:sc){
+    # if(s==1){
+    #   #theta_test <- c(0.08,0,0,0,0,0,0)
+    #   theta_test <- c(0.25,0,0,0,0,0,0)
+    # }else 
     if(s==1){
-      #theta_test <- c(0.08,0,0,0,0,0,0)
-      theta_test <- c(0.25,0,0,0,0,0,0)
-    }else if(s==2){
-      #theta_test <- c(0,0.08,0,0,0,0,0)
-      theta_test <- c(0,0.25,0,0,0,0,0)
+      theta_test <- c(0,0.08,0,0,0,0,0)
+      #theta_test <- c(0,0.25,0,0,0,0,0)
     }else{
-      #theta_test <- c(c(0,0.08),rnorm(5,0,0.02))
-      theta_test <- c(c(0,0.25),rnorm(5,0,0.02))
+      theta_test <- c(c(0,0.08),rnorm(5,0,0.02))
+      #theta_test <- c(c(0,0.25),rnorm(5,0,0.02))
     }
     for(n in sizes){
       for(i in 1:s_times){
         temp.simu <- SimulateDataPower(theta_intercept,theta_test,theta_covar,n)
         y.pheno.mis <- temp.simu[[1]]
-        table(y.pheno.mis[,1])
+        
         G <- temp.simu[[2]]
         x_covar <- temp.simu[[3]]
         
@@ -353,8 +347,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
                                      theta_covar)
         p_global_result[temp] <- as.numeric(model.result[[1]])
         p_mglobal_result[temp] <- as.numeric(model.result[[2]])
-        p_standard[temp] <- as.numeric(model.result[[3]])
-        p_global_complete[temp] <- as.numeric(model.result[[4]])
+        p_global_complete[temp] <- as.numeric(model.result[[3]])
         # p_poly[temp] <- as.numeric(model.result[[5]])
         temp = temp+1
         
@@ -365,10 +358,10 @@ result.list <- foreach(job.i = 1:2)%dopar%{
     
   }
   
-  result <- list(p_global_result,p_mglobal_result,p_standard,p_mglobal_result,p_global_complete)
+  result <- list(p_global_result,p_mglobal_result,p_global_complete)
   return(result)
 }
 
 stopImplicitCluster()
-save(result.list,file=paste0("./simulation/power/result/simu_high_0.25_",i1,".Rdata"))
+save(result.list,file=paste0("./simulation/power/result/heter_high_",i1,".Rdata"))
 

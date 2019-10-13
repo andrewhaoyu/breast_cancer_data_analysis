@@ -307,10 +307,11 @@ result.list <- foreach(job.i = 1:2)%dopar%{
  #sizes <- c()
   sizes <- c(5000)
   n.sizes <- length(sizes)
-  p_global_result <- rep(0,n.sizes*s_times)
-  p_mglobal_result <- rep(0,n.sizes*s_times)
-  p_standard <- rep(0,n.sizes*s_times)
-  p_global_complete <- rep(0,n.sizes*s_times)
+  n.heter <- 3
+  p_global_result <- rep(0,n.heter*n.sizes*s_times)
+  p_mglobal_result <- rep(0,n.heter*n.sizes*s_times)
+  p_standard <- rep(0,n.heter*n.sizes*s_times)
+  p_global_complete <- rep(0,n.heter*n.sizes*s_times)
   #p_poly <- rep(0,n.sizes*s_times)
   
   
