@@ -318,7 +318,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
     
   
   
-  result <- list(p_all,p_complete)
+  result <- list(p_all,p_all_ER,p_complete)
   return(result)
 }
 
