@@ -5,7 +5,7 @@ files <- dir(filedir,pattern="simu_indi_",full.names=T)
 total <- 0
 #n.loop = number of simulation setting* number of sample size setting
 n.loop <- 9
-for(i1 in 1:2000){
+for(i1 in 1:1400){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_indi_",i1,".Rdata")
   if(file%in%files==T){
@@ -21,38 +21,61 @@ for(i1 in 1:2000){
     #[[1]] [[2]] is the vector of p_value from MTOP with additive structure
     #[[1]] [[3]] is the vector of p_value from ftop with all interaction
     #[[1]] [[4]] is the vector of p_value from MTOP with all interactions
-    total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
+    total = total+ nrow(result.list[[1]][[1]])/n.loop + nrow(result.list[[2]][[1]])/n.loop
     
   }
 }
 
 #total = total*2
 
-p_all <- matrix(0,total,n.loop)
 p_all_ER <- matrix(0,total,n.loop)
-p_complete <- matrix(0,total,n.loop)
+p_all_PR <- matrix(0,total,n.loop)
+p_all_HER2 <- matrix(0,total,n.loop)
+p_all_grade <- matrix(0,total,n.loop)
+p_complete_ER <- matrix(0,total,n.loop)
+p_complete_PR <- matrix(0,total,n.loop)
+p_complete_HER2 <- matrix(0,total,n.loop)
+p_complete_grade <- matrix(0,total,n.loop)
 #p_poly <- matrix(0,total,9)
 
 total <- 0
 #args 1:2000 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
-for(i1 in 1:2000){
+for(i1 in 1:1400){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_indi_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
-    temp1 = length(result.list[[1]][[1]])/n.loop
-    temp2 = length(result.list[[2]][[1]])/n.loop
+    temp1 = nrow(result.list[[1]][[1]])/n.loop
+    temp2 = nrow(result.list[[2]][[1]])/n.loop
     temp = temp1+temp2
   
-    p_all[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]],ncol=n.loop),
-                                          matrix(result.list[[2]][[1]],ncol=n.loop))
+    p_all_ER[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]][,1],ncol=n.loop),
+                                          matrix(result.list[[2]][[1]][,1],ncol=n.loop))
     
-    p_all_ER[total+(1:temp),] <- rbind(matrix(result.list[[1]][[2]],ncol=n.loop),
-                                         matrix(result.list[[2]][[2]],ncol=n.loop))  
+    p_all_PR[total+(1:temp),] <- rbind(matrix(result.list[[1]][[1]][,2],ncol=n.loop),
+                                         matrix(result.list[[2]][[1]][,2],ncol=n.loop))  
     
-    p_complete[total+(1:temp),] <- rbind(matrix(result.list[[1]][[3]],ncol=n.loop),
-                                           matrix(result.list[[2]][[3]],ncol=n.loop))
+    p_all_HER2[total+(1:temp),] <- rbind(matrix(result.list[[1]][[1]][,3],ncol=n.loop),
+                                           matrix(result.list[[2]][[1]][,3],ncol=n.loop))
    
+    
+    p_all_grade[total+(1:temp),] <- rbind(matrix(result.list[[1]][[1]][,4],ncol=n.loop),
+                                         matrix(result.list[[2]][[1]][,4],ncol=n.loop))
+    
+    p_complete_ER[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]][,5],ncol=n.loop),
+                                      matrix(result.list[[2]][[1]][,5],ncol=n.loop))
+    
+    p_complete_PR[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]][,6],ncol=n.loop),
+                                           matrix(result.list[[2]][[1]][,6],ncol=n.loop))
+    
+    p_complete_HER2[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]][,7],ncol=n.loop),
+                                           matrix(result.list[[2]][[1]][,7],ncol=n.loop))
+    
+    p_complete_grade[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]][,8],ncol=n.loop),
+                                             matrix(result.list[[2]][[1]][,8],ncol=n.loop))
+    
+    
+    
     total = total+ temp
     
   }
@@ -78,6 +101,7 @@ CountPower <- function(p,alpha){
 # apply(p_poly,2,function(x){CountPower(x,thres)})
 
 thres = 5E-08
+thres2 = 0.01
 
 #remove standard polytomous function 
 #unstable outliers
@@ -85,9 +109,17 @@ thres = 5E-08
 #p_poly = p_poly[-idx,,drop=F]
 
 
-result <- cbind(apply(p_all,2,function(x){CountPower(x,thres)}),
-                apply(p_all_ER,2,function(x){CountPower(x,thres)}),
-                apply(p_complete,2,function(x){CountPower(x,thres)}))
+result1 <- cbind(apply(p_all_ER,2,function(x){CountPower(x,thres)}),
+              apply(p_complete_ER,2,function(x){CountPower(x,thres)})
+               )
+
+
+result2 <- cbind(  apply(p_all_PR,2,function(x){CountPower(x,thres2)}),
+        apply(p_all_HER2,2,function(x){CountPower(x,thres2)}),
+        apply(p_all_grade,2,function(x){CountPower(x,thres2)}),
+        apply(p_complete_PR,2,function(x){CountPower(x,thres2)}),
+        apply(p_complete_HER2,2,function(x){CountPower(x,thres2)}),
+        apply(p_complete_grade,2,function(x){CountPower(x,thres2)}))
 
 
 

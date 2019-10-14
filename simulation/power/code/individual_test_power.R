@@ -285,7 +285,7 @@ registerDoParallel(no.cores)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
   set.seed(2*i1-job.i)
-  s_times <- 1
+  s_times <- 5
   #sizes <- c(5000)
   sizes <- c(25000,50000,100000)
   n.sizes <- length(sizes)
