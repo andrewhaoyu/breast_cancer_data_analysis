@@ -3,7 +3,7 @@ filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/r
 files <- dir(filedir,pattern="interaction_high",full.names=T)
 total <- 0
 n.loop <- 3
-for(i1 in 1:12000){
+for(i1 in 1:4000){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//interaction_high",i1,".Rdata")
   if(file%in%files==T){
@@ -23,7 +23,7 @@ p_mtop_inter <- matrix(0,total,n.loop)
 
 total <- 0
 
-for(i1 in 1:12000){
+for(i1 in 1:4000){
   print(i1)
   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//interaction_high",i1,".Rdata")
   if(file%in%files==T){

@@ -135,41 +135,15 @@ Generatesubtypes<- function(ER){
 # y.pheno.mis[idx.try,5] <- y.pheno.mis[idx.try,5]-2
 
 
-
-
-PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_covar){
-  model1 <- TwoStageModel(y.pheno.mis,
-                          additive=cbind(G,x_covar),
-                          missingTumorIndicator = 888)
-  z.standard <- model1[[12]]
-  M <- nrow(z.standard)
-  n.cat <- 1+ncol(z.standard)
-  odds <- model1[[1]][M+(1:n.cat)]
-  sigma <-  (model1[[2]][M+(1:n.cat),M+(1:n.cat)])
-  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_all <- fixed.result[4]
-  # p_heter <- fixed.result[12]
-  # p_indi <- fixed.result[2]
-
-  
-  model1 <- TwoStageModel(y.pheno.mis[,1:2],
-                          additive=cbind(G,x_covar),
-                          missingTumorIndicator = 888)
-  z.standard <- model1[[12]]
-  M <- nrow(z.standard)
-  n.cat <- 1+ncol(z.standard)
-  odds <- model1[[1]][M+(1:n.cat)]
-  sigma <-  (model1[[2]][M+(1:n.cat),M+(1:n.cat)])
-  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
-  p_all_ER <- fixed.result[4]
-  
-  
-  
-  idx.mis <- GenerateMissingPosition(y.pheno.mis[,1:2],missingTumorIndicator=888)
-  y.pheno.com <- y.pheno.mis[-idx.mis,1:2,drop=F]
+CompleteTwoStage <- function(y.pheno.mis,
+                             x_covar,
+                             G,
+                             tumor_idx){
+  idx.mis <- GenerateMissingPosition(y.pheno.mis[,tumor_idx],missingTumorIndicator=888)
+  y.pheno.com <- y.pheno.mis[-idx.mis,tumor_idx,drop=F]
   x.covar.com <- x_covar[-idx.mis,drop=F]
   G.com <- G[-idx.mis,drop=F]
-
+  
   model2 <- TwoStageModel(y=y.pheno.com,
                           baselineonly=NULL,
                           additive=cbind(G.com,x.covar.com),
@@ -186,7 +160,49 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   sigma <-  (model2[[2]][M+(1:n.cat),M+(1:n.cat)])
   fixed.result <- DisplaySecondStageTestResult(odds,sigma)
   p_complete <- fixed.result[4]
-  result <- list(p_all,p_all_ER,p_complete)  
+  return(p_complete)
+}
+
+
+
+PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_covar){
+  model1 <- TwoStageModel(y.pheno.mis,
+                          additive=cbind(G,x_covar),
+                          missingTumorIndicator = 888)
+  z.standard <- model1[[12]]
+  M <- nrow(z.standard)
+  n.cat <- 1+ncol(z.standard)
+  odds <- model1[[1]][M+(1:n.cat)]
+  sigma <-  (model1[[2]][M+(1:n.cat),M+(1:n.cat)])
+  fixed.result <- DisplaySecondStageTestResult(odds,sigma)
+  p_all_ER <- fixed.result[4]
+  p_all_PR <- fixed.result[6]
+  p_all_HER2 <- fixed.result[8]
+  p_all_grade <- fixed.result[10]
+  # p_heter <- fixed.result[12]
+  # p_indi <- fixed.result[2]
+
+  p_complete_ER <- CompleteTwoStage(y.pheno.mis,
+                                    x_covar,G,c(1,2))
+  p_complete_PR <- CompleteTwoStage(y.pheno.mis,
+                                    x_covar,G,c(1,3))
+  
+  
+  p_complete_HER2 <- CompleteTwoStage(y.pheno.mis,
+                                    x_covar,G,c(1,4))
+  
+  p_complete_grade <- CompleteTwoStage(y.pheno.mis,
+                                      x_covar,G,c(1,5))
+  
+
+result <- list(p_all_ER,
+               p_all_PR,
+               p_all_HER2,
+               p_all_grade,
+               p_complete_ER,
+               p_complete_PR,
+               p_complete_HER2,
+               p_complete_grade)  
   return(result)
 }
 
@@ -275,11 +291,9 @@ result.list <- foreach(job.i = 1:2)%dopar%{
   n.sizes <- length(sizes)
   missingrate_vec <- c(0.17,0.3,0.5)
   n.misrate <- length(missingrate_vec)
-  p_all <- rep(0,n.misrate*n.sizes*s_times)
-  p_all_ER <- rep(0,n.misrate*n.sizes*s_times)
-  p_complete <- rep(0,n.misrate*n.sizes*s_times)
-  #p_poly <- rep(0,9*s_times)
-  
+
+  p_all <- matrix(0,n.misrate*n.sizes*s_times,8)
+
   
   
   
@@ -302,10 +316,10 @@ result.list <- foreach(job.i = 1:2)%dopar%{
                                        theta_intercept_input,
                                        theta_test,
                                        theta_covar)
-          p_all[temp] <- as.numeric(model.result[[1]])
-          p_all_ER[temp] <- as.numeric(model.result[[2]])
-          p_complete[temp] <- as.numeric(model.result[[3]])
-          
+          #eight different methods p-value
+          for(k in 1:8){
+            p_all[temp,k] <- as.numeric(model.result[[k]])
+          }
           # p_poly[temp] <- as.numeric(model.result[[5]])
           temp = temp+1
           
@@ -318,7 +332,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
     
   
   
-  result <- list(p_all,p_all_ER,p_complete)
+  result <- list(p_all)
   return(result)
 }
 

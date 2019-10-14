@@ -29,6 +29,7 @@ for(i1 in 1:2000){
 #total = total*2
 
 p_all <- matrix(0,total,n.loop)
+p_all_ER <- matrix(0,total,n.loop)
 p_complete <- matrix(0,total,n.loop)
 #p_poly <- matrix(0,total,9)
 
@@ -45,9 +46,12 @@ for(i1 in 1:2000){
   
     p_all[total+(1:temp),] <-rbind(matrix(result.list[[1]][[1]],ncol=n.loop),
                                           matrix(result.list[[2]][[1]],ncol=n.loop))
-      
-    p_complete[total+(1:temp),] <- rbind(matrix(result.list[[1]][[2]],ncol=n.loop),
-                                           matrix(result.list[[2]][[2]],ncol=n.loop))
+    
+    p_all_ER[total+(1:temp),] <- rbind(matrix(result.list[[1]][[2]],ncol=n.loop),
+                                         matrix(result.list[[2]][[2]],ncol=n.loop))  
+    
+    p_complete[total+(1:temp),] <- rbind(matrix(result.list[[1]][[3]],ncol=n.loop),
+                                           matrix(result.list[[2]][[3]],ncol=n.loop))
    
     total = total+ temp
     
@@ -82,6 +86,7 @@ thres = 5E-08
 
 
 result <- cbind(apply(p_all,2,function(x){CountPower(x,thres)}),
+                apply(p_all_ER,2,function(x){CountPower(x,thres)}),
                 apply(p_complete,2,function(x){CountPower(x,thres)}))
 
 

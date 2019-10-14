@@ -283,7 +283,7 @@ theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.
 
 theta_covar <- c(0.05,0,0,0,0)
 #####three scenaiors
-sc <- 3
+sc <- 2
 
 library(foreach)
 library(doParallel)

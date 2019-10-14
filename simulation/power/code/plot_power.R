@@ -5,10 +5,9 @@ data <- read.csv("power.simulation.result.csv")
 data <- data[,-1,drop=F]
 colnames(data) <- c("FTOP",
                     "MTOP",
-                    "Standard logistic regression",
-                    "Two-stage model with only complete data",
+                    "Stanadrd logistic regression",
+                    "FTOP with only complete data",
                     "Polytomous model")
-
 library(ggplot2)
 sizes <- c(5000,25000,50000,100000)
 Sample_size = rep(sizes,3)
@@ -58,7 +57,7 @@ data <- data[,-1,drop=F]
 colnames(data) <- c("FTOP",
                     "MTOP",
                     "Stanadrd logistic regression",
-                    "Two-stage model with only complete data",
+                    "FTOP with only complete data",
                     "Polytomous model")
 
 library(ggplot2)
@@ -130,10 +129,9 @@ data <- read.csv("power.simulation.result_0.25.csv")
 data <- data[,-1,drop=F]
 colnames(data) <- c("FTOP",
                     "MTOP",
-                    "Standard logistic regression",
-                    "Two-stage model with only complete data",
+                    "Stanadrd logistic regression",
+                    "FTOP with only complete data",
                     "Polytomous model")
-
 library(ggplot2)
 sizes = c(5000)
 Sample_size = rep(sizes,3)
@@ -168,12 +166,11 @@ p[[1]]=ggplot(data.m,aes(x=Heter_pattern,y=value,fill=Method))+
 data <- read.csv("power_high_0.25_result.csv")
 
 data <- data[,-1,drop=F]
-colnames(data) <- c("MTOP",
-                    "FTOP",
+colnames(data) <- c("FTOP",
+                    "MTOP",
                     "Stanadrd logistic regression",
-                    "Two-stage model with only complete data",
+                    "FTOP with only complete data",
                     "Polytomous model")
-
 library(ggplot2)
 sizes = c(5000)
 Sample_size = rep(sizes,3)
@@ -201,3 +198,4 @@ png(file = paste0("power_plot_0.25.png"),width=16,height=8,units = "in",res =300
 grid.arrange(p[[1]],p[[2]],
             nrow=2)
 dev.off()
+
