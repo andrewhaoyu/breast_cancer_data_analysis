@@ -170,7 +170,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       # tryCatch(
       #   {
       
-      if(freq<0.006|freq>0.994){
+      if(freq<0.008|freq>0.992){
         
         score_result[temp,] <- 0
         infor_result[temp,] <- as.vector(diag(5))
