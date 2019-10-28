@@ -28,9 +28,9 @@ onco.train.id <- split.id[[2]]
 #icog.cohort.id <- split.id[[4]]
 #onco.cohort.id <- split.id[[5]]
 z.design <- matrix(c(
-  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
-  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0),
   c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
@@ -72,7 +72,7 @@ n <- length(idx.fil)
 snpvalue <- rep(0,n)
 idx.match <- match(Onc_ID,onco.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 #load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 #load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/delta0.onco.Rdata")
 load("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/delta0.Rdata")
@@ -107,7 +107,7 @@ z.design.test <- z.standard[,2:4]
 
 
 #size = 1000
-size = 750
+size = 1000
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
@@ -170,7 +170,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       # tryCatch(
       #   {
       
-      if(freq<0.006|freq>0.994){
+      if(freq<0.008|freq>0.992){
         
         score_result[temp,] <- 0
         infor_result[temp,] <- as.vector(diag(5))
@@ -240,7 +240,7 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_resubmit",i1,"_",i2))
+save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_resubmit_",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit_resubmit",i1,"_",i2))
