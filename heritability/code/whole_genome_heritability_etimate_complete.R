@@ -3,7 +3,7 @@
 #prepare the data for ld score regression file
 library(data.table)
 library(dplyr)
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 standard_result <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))
 #all_result <- fread("./data/oncoarray_bcac_public_release_oct17.txt",header=T)
 #create snp.id with official name
@@ -72,7 +72,7 @@ colnames(bcac_result_noc) <- c("snpid",
                                "info",
                                "MAF",
                                "N")
-write.table(bcac_result_noc,file="/spin1/users/zhangh24/ldsc/bcac_result_nocountry.txt",col.names = T,quote=F)
+write.table(bcac_result_noc,file="/data/zhangh24/ldsc/bcac_result_nocountry.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats bcac_result_nocountry.txt --out bcac_noc --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 bcac_noc.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_noc
 less bcac_noc.log
@@ -98,7 +98,7 @@ colnames(lua_c) <- c("snpid",
                      "info",
                      "MAF",
                      "N")
-write.table(lua_c,file="/spin1/users/zhangh24/ldsc/lua_c.txt",col.names = T,quote=F)
+write.table(lua_c,file="/data/zhangh24/ldsc/lua_c.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats lua_c.txt --out lua_c --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 lua_c.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out lua_c
 less lua_c.log
@@ -125,7 +125,7 @@ colnames(lub_c) <- c("snpid",
                      "info",
                      "MAF",
                      "N")
-write.table(lub_c,file="/spin1/users/zhangh24/ldsc/lub_c.txt",col.names = T,quote=F)
+write.table(lub_c,file="/data/zhangh24/ldsc/lub_c.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats lub_c.txt --out lub_c --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 lub_c.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out lub_c
 less lub_c.log
@@ -151,7 +151,7 @@ colnames(lubher2_c) <- c("snpid",
                          "info",
                          "MAF",
                          "N")
-write.table(lubher2_c,file="/spin1/users/zhangh24/ldsc/lubher2_c.txt",col.names = T,quote=F)
+write.table(lubher2_c,file="/data/zhangh24/ldsc/lubher2_c.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats lubher2_c.txt --out lubher2_c --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 lubher2_c.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out lubher2_c
 less lubher2_c.log
@@ -178,7 +178,7 @@ colnames(her2_c) <- c("snpid",
                       "info",
                       "MAF",
                       "N")
-write.table(her2_c,file="/spin1/users/zhangh24/ldsc/her2_c.txt",col.names = T,quote=F)
+write.table(her2_c,file="/data/zhangh24/ldsc/her2_c.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats her2_c.txt --out her2_c --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 her2_c.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out her2_c
 less her2_c.log
@@ -204,7 +204,7 @@ colnames(TN_c) <- c("snpid",
                     "info",
                     "MAF",
                     "N")
-write.table(TN_c,file="/spin1/users/zhangh24/ldsc/TN_c.txt",col.names = T,quote=F)
+write.table(TN_c,file="/data/zhangh24/ldsc/TN_c.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats TN_c.txt --out TN_c --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 TN_c.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out TN_c
 less TN_c.log

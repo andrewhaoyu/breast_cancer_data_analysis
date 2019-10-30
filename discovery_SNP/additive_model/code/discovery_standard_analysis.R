@@ -12,19 +12,19 @@ rm(list=ls())
 # args = commandArgs(trailingOnly = T)
 # i1 = as.numeric(args[[1]])
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
-#icog.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
+#icog.julie <- fread("/data/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
 #icog.julie <- icog.julie[,-1]
-discovery.snp.icog <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
-#onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
+discovery.snp.icog <- fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
+#onco.julie <- fread("/data/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
 #onco.julie <- onco.julie[,-1]
-discovery.snp.onco <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
+discovery.snp.onco <- fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
 x.test.all.mis1 <- as.data.frame(discovery.snp.icog)
 x.test.all.mis2 <- as.data.frame(discovery.snp.onco)
 

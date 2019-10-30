@@ -1,18 +1,18 @@
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary.csv",header=T)
+discovery_snp <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary.csv",header=T)
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 snp.icogs.extract.id <- as.character(discovery_snp$SNP.ICOGS)
 snp.onco.extract.id <- as.character(discovery_snp$SNP.ONCO)
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 
 n.raw <- 142273
 snpvalue <- rep(0,n.raw) 
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 
@@ -37,7 +37,7 @@ total <- 0
 for(i in 1:567){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco",i,".txt")
+  geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco",i,".txt")
   num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
   
   if(num!=0){
@@ -88,5 +88,5 @@ snpvalue.result <- snpvalue.result[,idx.match]
 extract.result <- list(snpid.result,snpvalue.result)
 colnames(snpvalue.result) <- snpid.result
 
-write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",row.names = F,quote=F)
+write.csv(snpvalue.result,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",row.names = F,quote=F)
 

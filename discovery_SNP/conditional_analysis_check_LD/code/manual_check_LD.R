@@ -12,15 +12,15 @@ rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/extract_result.Rdata")
+# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
+# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/extract_result.Rdata")
 
 #idx <- which(extract.result[[1]]=="rs372562666:1:120561314:G:A")
 
@@ -28,11 +28,11 @@ library(data.table)
 #dim(extract.result[[2]])
 
 
-discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data.csv",header=T))
+discovery.snp.onco <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data.csv",header=T))
 #x.test.all.mis1 <- discovery.snp.icog
 
 
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
+discovery_snp <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)

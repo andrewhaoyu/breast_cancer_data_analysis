@@ -1,4 +1,4 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 stimes <- 100
 
 odds1 <- matrix(0,nrow=100*1000,5)

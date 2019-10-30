@@ -16,7 +16,7 @@ i <- as.numeric(arg[[1]])
 i1 <- i
 print(i)
 library(R.utils)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))

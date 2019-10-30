@@ -3,7 +3,7 @@
 #prepare the data for ld score regression file
 library(data.table)
 library(tidyverse)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 all_result <- fread("./data/oncoarray_bcac_public_release_oct17.txt",header=T)
 all_result <- meta_result %>% 
   mutate(chrpos=paste0(chr,":",position_b37))

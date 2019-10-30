@@ -1,4 +1,4 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load('./genetic_correlation/ICOG/result/ICOG.result.Rdata')
 load("./genetic_correlation/result/ICOG.result.clean.completeglm.Rdata")
 ICOG.result.clean.completeglm <- ICOG.result.clean

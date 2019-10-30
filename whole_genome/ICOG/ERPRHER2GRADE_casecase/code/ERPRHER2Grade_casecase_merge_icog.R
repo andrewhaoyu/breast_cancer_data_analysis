@@ -22,7 +22,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/"
+result.dir <- "/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/"
 
 result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_baseline")
 result_Files <- result_Files[1:564]
@@ -33,7 +33,7 @@ for(i in 1:length(result_Files)){
 }
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
 rs_id <- icog_result_baseline$rs_id
 num <- nrow(icog_result_baseline)
 
@@ -58,7 +58,7 @@ num.total <- 0
 for(i in 1:length(Files)){
   print(i)
   for(k in 1:5){
-    load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase",idx[i],"_",k))
+    load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase",idx[i],"_",k))
     temp <- nrow(result[[2]])
     score[num.total+(1:temp),] <- result[[2]]
     for(j in 1:temp){
@@ -131,9 +131,9 @@ icog_result_casecase <- icog_result
 
 
 
-save(icog_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/Icog_result_casecase.Rdata")
+save(icog_result_casecase,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/Icog_result_casecase.Rdata")
 # icog_result_baseline <- data.frame(icog_info,score_baseline,infor_baseline,CHR)
-# save(icog_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
+# save(icog_result_baseline,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
 # print(1)
 
 

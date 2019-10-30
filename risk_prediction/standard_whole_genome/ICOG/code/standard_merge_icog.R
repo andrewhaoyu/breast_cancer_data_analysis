@@ -26,7 +26,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result"
+result.dir <- "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result"
 
 result_Files <- dir(result.dir,pattern="standard")
 result_Files <- result_Files[1:564]
@@ -36,7 +36,7 @@ for(i in 1:length(result_Files)){
   result.idx[i] <- result.idx.temp
 }
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result")
+setwd("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result")
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
@@ -57,7 +57,7 @@ freq.all <- rep(0,num)
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result")
+setwd("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result")
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
@@ -74,7 +74,7 @@ for(i in 1:length(Files)){
   
 }
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
 all.equal(rs_id,icog_info$rs_id)
 CHR <- icog_info[,11]
 icog_info <- icog_info[,1:10]
@@ -83,7 +83,7 @@ icog_result <- data.frame(icog_info,score,infor,CHR)
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result')
 
 
 save(icog_result,file="./Icog_result.Rdata")

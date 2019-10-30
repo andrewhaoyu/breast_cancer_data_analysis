@@ -1,7 +1,7 @@
 results <- matrix(0,178,6)
 
 for(i1 in 1:178){
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/cluster_analysis/result",i1,".Rdata")) 
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/known_SNPs/cluster_analysis/result",i1,".Rdata")) 
   results[i1,] <- dis.result
 }
 

@@ -1,5 +1,5 @@
 library(tidyverse)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 source("./discovery_SNP/conditional_analysis/code/all_additive_support_fun.R")
 
 library(readr)
@@ -7,7 +7,7 @@ library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
 z.standard <- support.matrix[[1]]
 z.additive.design <- support.matrix[[2]]
 M <- support.matrix[[3]]
@@ -53,12 +53,12 @@ x.covar.mis2 <- data2[,c(5:14)]
 
 
 
-icog.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
+icog.julie <- fread("/data/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
 icog.julie <- icog.julie[,-1]
-discovery.snp.icog <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
-onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
+discovery.snp.icog <- fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
+onco.julie <- fread("/data/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
 onco.julie <- onco.julie[,-1]
-discovery.snp.onco <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
+discovery.snp.onco <- fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
 x.discovery.mis1 <- as.data.frame(cbind(icog.julie,discovery.snp.icog))
 x.discovery.mis2 <- as.data.frame(cbind(onco.julie,discovery.snp.onco))
 ###two snps onco array only
@@ -82,28 +82,28 @@ x.covar.mis2 <- cbind(x.covar.mis2,age2)
 known.all.mis2 <- known.all.mis2[idx.complete2,]
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.first.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.first.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.first")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.first.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.first.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.first")
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.2nd.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.2nd.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.2nd")
-
-
-
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.3rd.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.3rd.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.2nd.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.2nd.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.2nd")
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.4th.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.4th.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.4th")
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.5th.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.5th.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.5th")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.3rd.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.3rd.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd")
+
+
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.4th.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.4th.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.4th")
+
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/icog.5th.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/onco.5th.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.5th")
 
 
 
@@ -141,7 +141,7 @@ n.5th <- nrow(conditional.results.5th)
 known.flag.5th <- conditional.results.5th$known.flag
 
 
-fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
+fine_mapping <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
                          stringsAsFactors = F)
 
 
@@ -149,7 +149,7 @@ region.all <- fine_mapping$region.idx
 new.region <- c(179:207)
 region.all <- c(region.all,new.region)
 
-fine_mapping_dis <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snps_annotated_clean.csv",header= T,
+fine_mapping_dis <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/discovery_snps_annotated_clean.csv",header= T,
                              stringsAsFactors = F)
 sudo.na <- rep(NA,29)
 sudo.na.frame <- as.data.frame(matrix(NA,29,9))
@@ -165,7 +165,7 @@ all.condition.results <- list(conditional.results.first,
                               conditional.results.3rd,
                               conditional.results.4th,
                               conditional.results.5th)
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
 ##############generate conditional snp list
 ##############novel snp 189
 ##############novel snp 190
@@ -294,4 +294,4 @@ conditional.check.data <- list(x.all.mis.icog.1=
                                x.covar.mis1=x.covar.mis1,
                                x.covar.mis2=x.covar.mis2
                                )
-save(conditional.check.data,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.check.data.Rdata")
+save(conditional.check.data,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.check.data.Rdata")

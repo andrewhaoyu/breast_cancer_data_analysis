@@ -1,11 +1,11 @@
 
 library(R.utils)
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 #idx <- which(data2$StudyCountry=="Poland")
@@ -36,7 +36,7 @@ length.file <- rep(0,567)
 file.id <- c(342,384)
 for(i in 1:2){
   
-  file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/top_signal_extract",file.id[i],".txt")
+  file <- paste0("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/top_signal_extract",file.id[i],".txt")
   oneLine <- readLines(file)
   myVector <- strsplit(oneLine," ")
   snpid <- as.character(myVector[[1]][3])
@@ -51,4 +51,4 @@ for(i in 1:2){
 }
 
 colnames(top_signal_in_poland) <- c("rs11200014","rs78540526")
-write.csv(top_signal_in_poland,file="/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/top_signal_in_poland.csv")  
+write.csv(top_signal_in_poland,file="/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/top_signal_in_poland.csv")  

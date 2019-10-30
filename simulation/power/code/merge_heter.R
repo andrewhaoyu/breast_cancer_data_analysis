@@ -1,13 +1,13 @@
 #merge power results with the effect size as 0.08 level
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="heter_result_",full.names=T)
 total <- 0
 #n.loop = number of simulation setting* number of sample size setting
 n.loop <- 9
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//heter_result_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//heter_result_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
@@ -27,7 +27,7 @@ total <- 0
 n.sizes <- 3
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//heter_result_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//heter_result_",i1,".Rdata")
   if(file%in%files==T){
     load(file)
     #due to deletion of setting 3
@@ -88,15 +88,15 @@ write.csv(result.1,file=paste0("./simulation/power/result/heter_simulation.resul
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="heter_high_",full.names=T)
 total <- 0
 #n.loop = number of simulation setting* number of sample size setting
 n.loop <- 9
 for(i1 in 1:4000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//heter_high_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//heter_high_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
@@ -116,7 +116,7 @@ total <- 0
 n.sizes <- 3
 for(i1 in 1:4000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//heter_high_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//heter_high_",i1,".Rdata")
   if(file%in%files==T){
     load(file)
     #due to deletion of setting 3

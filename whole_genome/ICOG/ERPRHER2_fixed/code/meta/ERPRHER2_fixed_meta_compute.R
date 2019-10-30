@@ -2,8 +2,8 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
 library(bc2)
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta/meta_result_shared_1p_sub",i1,".Rdata"))
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta/icog_onco_score_infor_sub",i1,".Rdata"))
+load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta/meta_result_shared_1p_sub",i1,".Rdata"))
+load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta/icog_onco_score_infor_sub",i1,".Rdata"))
 
 
 
@@ -22,7 +22,7 @@ for(i in 1:n){
 
 meta_result_shared_1p_sub <- cbind(meta_result_shared_1p_sub,pvalue)
 save(meta_result_shared_1p_sub,
-     file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta/meta_result_shared_1p_sub",i1,".Rdata"))
+     file=paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta/meta_result_shared_1p_sub",i1,".Rdata"))
 
 
 

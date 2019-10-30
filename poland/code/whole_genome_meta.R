@@ -1,7 +1,7 @@
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase_5p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase_5p.Rdata")
 library(bc2)
 num = nrow(onco_result_fixed_5p)
 size = 1000
@@ -25,4 +25,4 @@ for(i in start:end){
   temp = temp + 1
 }
 p_sub = list(p_sub1,p_sub2)
-save(p_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/p_sub",i1,".Rdata"))
+save(p_sub,file=paste0("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/p_sub",i1,".Rdata"))

@@ -25,7 +25,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result"
+result.dir <- "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result"
 result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
 result_Files <- result_Files[1:567]
 result.idx <- rep(0,length(result_Files))
@@ -45,7 +45,7 @@ for(i in 1:length(result_Files)){
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result")
+setwd("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result")
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
@@ -68,7 +68,7 @@ freq.all <- rep(0,num)
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result")
+setwd("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result")
 num.total <- 0
 num.length <- rep(0,length(Files))
 
@@ -99,13 +99,13 @@ for(i in 1:length(Files)){
 
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ONCO/result/onco_result.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ONCO/result/onco_result.Rdata")
 CHR <- onco_result[,13]
 onco_info <- onco_result[,1:10]
 onco_result <- data.frame(onco_info,score,infor,CHR)
 
-save(onco_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result/onco_result.Rdata")
+save(onco_result,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result/onco_result.Rdata")
 # onco_result_baseline <- data.frame(onco_info,score_baseline,infor_baseline,CHR)
-# save(onco_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/wholge_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
+# save(onco_result_baseline,file="/data/zhangh24/breast_cancer_data_analysis/wholge_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
 # print(2)
 

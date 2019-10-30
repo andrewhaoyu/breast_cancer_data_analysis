@@ -3,9 +3,9 @@ i1 = as.numeric(args[[1]])
 
 library(data.table)
 library(snow)
-load("/spin1/users/zhangh20/match.Rdata")
-load("/spin1/users/zhangh20/breast_cancer/standard_gwas/case_control/icog/icog_result_odds_sd.Rdata")
-load("/spin1/users/zhangh20/breast_cancer/standard_gwas/case_control/onco/onco_result_odds_sd.Rdata")
+load("/data/zhangh20/match.Rdata")
+load("/data/zhangh20/breast_cancer/standard_gwas/case_control/icog/icog_result_odds_sd.Rdata")
+load("/data/zhangh20/breast_cancer/standard_gwas/case_control/onco/onco_result_odds_sd.Rdata")
 
 p_value_function <- function(z){
   result <- NULL

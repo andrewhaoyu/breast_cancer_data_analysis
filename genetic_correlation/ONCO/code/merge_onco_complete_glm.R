@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 total <- 0
 sig <- c(1:567)

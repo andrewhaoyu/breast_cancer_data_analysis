@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/")
 log.odds.meta.tvn.triple <- rep(0,205)
 log.odds.meta.two.stage.tvn.all <- matrix(0,205,2)
 sigma.log.odds.two.stage.tvn <- matrix(0,205,4)
@@ -8,7 +8,7 @@ heter.sigma.tvn <- rep(0,205)
 
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
 
 
 heter.variance.estimate <- function(log.odds,sigma){
@@ -24,17 +24,17 @@ library(bc2)
 
 for(i1 in 1:205){
   print(i1)
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/triple_vs_nontriple_meta.result",i1,".Rdata"))
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/triple_vs_nontriple_meta.result",i1,".Rdata"))
   log.odds.meta.tvn.triple[i1] <- meta.result[[1]][2]
 log.odds.meta.two.stage.tvn.all[i1,] <- meta.result[[1]]
 sigma.log.odds.two.stage.tvn[i1,] <- as.vector(meta.result[[2]])
     heter.sigma.tvn[i1] <-     heter.variance.estimate(meta.result[[1]],meta.result[[2]])
   
 }
-save(log.odds.meta.tvn.triple,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.tvn.triple.Rdata")
-save(log.odds.meta.two.stage.tvn.all,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.tvn.all.Rdata")
-save(sigma.log.odds.two.stage.tvn,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.tvn.Rdata")
-save(heter.sigma.tvn,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.tvn.Rdata")
+save(log.odds.meta.tvn.triple,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.tvn.triple.Rdata")
+save(log.odds.meta.two.stage.tvn.all,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.tvn.all.Rdata")
+save(sigma.log.odds.two.stage.tvn,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.tvn.Rdata")
+save(heter.sigma.tvn,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.tvn.Rdata")
 true.false.calculate <- function(prs,test.data){
   idx.true <- which(test.data==1)
   idx.false <- which(test.data==0)
@@ -70,8 +70,8 @@ auc_cal <- function(roc){
 
 
 library(data.table)
-icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
-onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
+icog.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
+onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
 library(tidyverse)
 y.pheno.mis1 <- select(icog.data,Behaviour1,ER_status1,PR_status1,HER2_status1,Grade1)
 x.covar1 <- select(icog.data,5:14)
@@ -129,7 +129,7 @@ x.covar.train2 <- x.covar2[-idx.test2,]
 x.snp.all.train2 <- x.snp.all2[-idx.test2,]
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.Rdata")
 prs <- x.snp.all.test%*%log.odds.meta.two.stage
 min.prs <- range(prs)[1]
 max.prs <- range(prs)[2]

@@ -1,6 +1,6 @@
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2_fixed/result/extract_result.Rdata")
+#load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2_fixed/result/extract_result.Rdata")
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 
 library(data.table)
@@ -12,19 +12,19 @@ idx.control <- which(data2$Behaviour1==0)
 
 x.test.all.mis2.control <- x.test.all.mis2[idx.control,]
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
 
 # extract.list <- extract.list[-c(1700,1701,1702,1703,1705,1706,1707),]
-# save(extract.list,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
+# save(extract.list,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2_fixed/result/extract_list.Rdata")
 #try <- duplicated(extract.list)
 
 extract.result.onco <- extract.result[[2]]
 extract.result.onco.control <- extract.result.onco[idx.control,]
 
 library(data.table)
-Julie_snp <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv"))
+Julie_snp <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv"))
 x.test.Julie <- Julie_snp[,-1]
 x.test.Julie.control <- x.test.Julie[idx.control,]
 
@@ -69,20 +69,20 @@ for(i in 1:ncol(extract.result.onco.control)){
 
 extract.list.ld <- extract.list[idx.known.ld.flag,]
 
-save(extract.list.ld,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
+save(extract.list.ld,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
 
-save(idx.known.ld.flag,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/idx.known.ld.flag")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/idx.known.ld.flag")
+save(idx.known.ld.flag,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/idx.known.ld.flag")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/idx.known.ld.flag")
 
 
 
 LD.matrix <- cor(extract.result.onco.control)^2
 
-#save(LD.matrix,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD.matrx.Rdata")
+#save(LD.matrix,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD.matrx.Rdata")
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD.matrx.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD.matrx.Rdata")
 
 
 
@@ -132,9 +132,9 @@ extract.list <- extract.list[-idx.known.ld.flag,]
 
 extract.list.ld.pruning.result <- LD_pruning(extract.list,LD.matrix)
 
-save(extract.list.ld.pruning.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
+save(extract.list.ld.pruning.result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
 
-write.csv(extract.list.ld.pruning.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.csv",quote=F)
+write.csv(extract.list.ld.pruning.result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.csv",quote=F)
 
 
 

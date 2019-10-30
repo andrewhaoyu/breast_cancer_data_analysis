@@ -5,7 +5,7 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #---------------------------------------#---------------------------------------
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction')
 load("./EB_whole_genome/result/whole_gonome.rdata")
 #######prs file need A1 to be effect_allele
 #######we need to reverse all the log odds ratio since we put A2 as effect allele
@@ -14,7 +14,7 @@ load("./EB_whole_genome/result/whole_gonome.rdata")
 #save(whole_genome,file = "./EB_whole_genome/result/whole_gonome.rdata")
 library(data.table)
 library(dplyr)
-clump.snp <- as.data.frame(fread("/spin1/users/zhangh24/BCAC/impute_plink_onco/clump_snp",header=F))
+clump.snp <- as.data.frame(fread("/data/zhangh24/BCAC/impute_plink_onco/clump_snp",header=F))
 clump.snp <- clump.snp %>% filter(clump.snp!="SNP"&
                                     clump.snp!="")
 dim(clump.snp)
@@ -28,7 +28,7 @@ save(whole_genome_clump,file = "./EB_whole_genome/result/whole_genome_clump.rdat
 #No need to rerun the previous code again
 
 #create prs files based on different p-threshold
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction')
 library(dplyr)
 library(data.table)
 load("./EB_whole_genome/result/whole_genome_clump.rdata")
@@ -47,7 +47,7 @@ for(i in 1:n.pthres){
     select(SNP,referece_allele,beta)
   colnames(prs) <- c("SNP","effect_allele","beta")
   dim(prs)
-  write.table(prs,file = paste0("/spin1/users/zhangh24/BCAC/prs_file/standard_prs_",i,".file"),row.names=F,col.names=T,quote=F)
+  write.table(prs,file = paste0("/data/zhangh24/BCAC/prs_file/standard_prs_",i,".file"),row.names=F,col.names=T,quote=F)
   
 }
 #create the prs file for two-stage and eb
@@ -71,7 +71,7 @@ for(i in 1:n.pthres){
       select(SNP,referece_allele,select.names[j])
     colnames(prs) <- c("SNP","effect_allele","beta")
     dim(prs)
-    write.table(prs,file = paste0("/spin1/users/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file"),row.names=F,col.names=T,quote=F)
+    write.table(prs,file = paste0("/data/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file"),row.names=F,col.names=T,quote=F)
     
   }
   

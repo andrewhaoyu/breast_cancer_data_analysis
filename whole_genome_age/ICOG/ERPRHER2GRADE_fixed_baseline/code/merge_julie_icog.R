@@ -1,18 +1,18 @@
 
 ##########extract list was generated after we filter out all the SNPs with 1M around the known SNPs region###
 ##########all the SNPs with pvalue <= 5E-06 was token out
-new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
+new_filter <- read.csv("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
 new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n.raw <- 109713
 snpvalue <- rep(0,n.raw)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 library(data.table)
 Icog.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -38,7 +38,7 @@ total <- 0
 for(i in 1:564){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_Icog",i,".txt"
+  geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_Icog",i,".txt"
   )
   num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
   
@@ -95,7 +95,7 @@ snpvalue.result <- snpvalue.result[,idx.match]
 extract.result <- list(snpid.result,snpvalue.result)
 colnames(snpvalue.result) <- snpid.result
 
-write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_snp_icog.csv",row.names = F,quote=F)
+write.csv(snpvalue.result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Julie_snp_icog.csv",row.names = F,quote=F)
 
 
 

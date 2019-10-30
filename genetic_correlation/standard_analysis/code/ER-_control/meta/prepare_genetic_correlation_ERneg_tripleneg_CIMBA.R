@@ -2,7 +2,7 @@
 load(paste0("/data/zhangh24/breast_cancer/standard_gwas/ER-_control/meta/ER-_control_meta_result_final.Rdata"))
 head(ERNeg_control_meta_result_final)
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p.Rdata")
 head(meta_result_shared_1p)
 
 

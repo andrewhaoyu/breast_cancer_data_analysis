@@ -28,7 +28,7 @@ FilterSNP <- function(gwas_result,fine_mapping){
   gwas_result_filter <- gwas_result[-idx_cut,]
   return(gwas_result_filter)
 }
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis")
+setwd("/data/zhangh24/breast_cancer_data_analysis")
 if(i1 ==1){
 
   data <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))

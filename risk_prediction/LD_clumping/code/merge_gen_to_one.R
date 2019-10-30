@@ -12,7 +12,7 @@ for(i in 1:22){
   
     merge.code <- paste0(" ",
                          merge.code,
-                         "/spin1/users/zhangh24/BCAC/impute_onco/chr",
+                         "/data/zhangh24/BCAC/impute_onco/chr",
                          i,
                          ".gz",
                          " ")  
@@ -22,11 +22,11 @@ for(i in 1:22){
   
 }
 merge.code <- paste0(merge.code,
-                     "> /spin1/users/zhangh24/BCAC/impute_onco/onco_all",
+                     "> /data/zhangh24/BCAC/impute_onco/onco_all",
                      ".gz")
 system(merge.code)
  #write out the command and submit use cluster
-write.table(merge.code,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/code/merge.gen.to.one.sh"),col.names = F,row.names = F,quote=F)
+write.table(merge.code,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/code/merge.gen.to.one.sh"),col.names = F,row.names = F,quote=F)
 # 
 
 

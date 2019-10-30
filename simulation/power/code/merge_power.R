@@ -1,13 +1,13 @@
 #merge power results with the effect size as 0.08 level
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_result",full.names=T)
 total <- 0
 #n.loop = number of simulation setting* number of sample size setting
 n.loop <- 12
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/simu_result",i1,".Rdata")) 
     #result.list is a list of pvalue
@@ -40,7 +40,7 @@ total <- 0
 #args 1:2000 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata"))
     temp1 = length(result.list[[1]][[1]])/n.loop
@@ -96,14 +96,14 @@ CountPower <- function(p,alpha){
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="poly_",full.names=T)
 total <- 0
 #args 1:2000 contains the results for polytomous
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
@@ -118,7 +118,7 @@ total <- 0
 
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_",i1,".Rdata")
   if(file%in%files==T){
     load(paste0(file))
     temp1 = length(result.list[[1]][[1]])/n.loop
@@ -190,14 +190,14 @@ write.csv(result,file=paste0("./simulation/power/result/power.simulation.result.
 
 
 #merge power results with effectsize as 0.25 level
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_result_0.25_",full.names=T)
 total <- 0
 n.loop <- 3
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result_0.25_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     #result.list is a list of pvalue
@@ -230,7 +230,7 @@ total <- 0
 #args 1:2000 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result_0.25_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     temp1 = length(result.list[[1]][[1]])/n.loop
@@ -286,14 +286,14 @@ CountPower <- function(p,alpha){
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="poly_0.25_",full.names=T)
 total <- 0
 #args 1:2000 contains the results for polytomous
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_0.25_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
@@ -308,7 +308,7 @@ total <- 0
 
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_0.25_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(paste0(file))
     temp1 = length(result.list[[1]][[1]])/n.loop
@@ -384,13 +384,13 @@ write.csv(result,file=paste0("./simulation/power/result/power.simulation.result_
 
 
 
-# setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-# filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+# setwd('/data/zhangh24/breast_cancer_data_analysis/')
+# filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 # files <- dir(filedir,pattern="simu_result",full.names=T)
 # total <- 0
 # for(i1 in 6000:7000){
 #   print(i1)
-#   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+#   file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
 #   if(file%in%files==T){
 #     load(paste0("./simulation/power/result//simu_result",i1,".Rdata")) 
 #     total = total+ length(result.list[[1]][[1]])/9 + length(result.list[[2]][[1]])/9
@@ -410,7 +410,7 @@ write.csv(result,file=paste0("./simulation/power/result/power.simulation.result_
 # 
 # for(i1 in 6000:7000){
 #   print(i1)
-#   file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/simu_result",i1,".Rdata")
+#   file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/simu_result",i1,".Rdata")
 #   if(file%in%files==T){
 #     load(paste0("./simulation/power/result//simu_result",i1,".Rdata"))
 #     temp1 = length(result.list[[1]][[1]])/9

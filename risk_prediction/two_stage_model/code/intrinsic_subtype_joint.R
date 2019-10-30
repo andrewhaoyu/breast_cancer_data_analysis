@@ -15,17 +15,17 @@ z.design <- matrix(c(
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
 
-genetic_covariance <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_covariance.csv",header=T)
-genetic_correlation <- as.matrix(read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",header=T))
+genetic_covariance <- read.csv("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_covariance.csv",header=T)
+genetic_correlation <- as.matrix(read.csv("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",header=T))
 
 
 # genetic_correlation <- genetic_correlation[c(2,4,5,3,1),c(2,4,5,3,1)]
-#  write.csv(genetic_correlation,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",row.names = F)
+#  write.csv(genetic_correlation,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",row.names = F)
 
 #genetic_covariance <- genetic_covariance[,-c(1,2)]
 # genetic_covariance <- genetic_covariance[,-6]
 # genetic_covariance <- genetic_covariance[c(2,4,5,3,1),c(2,4,5,3,1)]
-# write.csv(genetic_covariance,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_covariance.csv",row.names = F)
+# write.csv(genetic_covariance,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_covariance.csv",row.names = F)
 
 insub.names <- colnames(z.design) <- c("Luminal_A","Luminal_B",
                         "Luminal_B_HER2Neg",
@@ -36,12 +36,12 @@ insub.names <- colnames(z.design) <- c("Luminal_A","Luminal_B",
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 
 library(data.table)
-icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
+icog.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
 icog.data <- icog.data[,-1]
-onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
+onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 onco.data <- onco.data[,-1]
 library(tidyverse)
 y.pheno.mis1 <- select(icog.data,Behavior,ER,PR,HER2,Grade)
@@ -287,7 +287,7 @@ all.model.result <- list(log.odds.standard.result
                          # =heter.variance.estiamte,
                          # log.odds.tree=log.odds.tree)
 
-save(all.model.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
+save(all.model.result,file=paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
 
 
 
@@ -343,7 +343,7 @@ save(all.model.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_anal
 # 
 # 
 # 
-# save(meta.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/meta.result",i1,".Rdata"))
+# save(meta.result,file=paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/meta.result",i1,".Rdata"))
 # HeterVarianceEstimate <- function(log.odds,sigma){
 #   M <- length(log.odds)
 #   result <- (sum((log.odds-mean(log.odds))^2)-sum(diag(sigma))+sum(sigma)/M)/(M-1)
@@ -354,7 +354,7 @@ save(all.model.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_anal
 # }
 # 
 # 
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
+# load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
 # M <- length(meta.result[[1]])
 # beta0 <- log.odds.meta[i1]
 # Sigma <- meta.result[[2]]
@@ -363,7 +363,7 @@ save(all.model.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_anal
 # 
 # 
 # 
-# save(log.odds.meta.la,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.la",i1,".Rdata"))
+# save(log.odds.meta.la,file=paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.la",i1,".Rdata"))
 # 
 # 
 # 

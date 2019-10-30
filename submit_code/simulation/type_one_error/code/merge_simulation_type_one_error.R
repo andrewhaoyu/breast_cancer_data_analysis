@@ -1,11 +1,11 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result/'
 files <- dir(filedir,pattern="simu_result",full.names=T)
 
 total <- 0
 for(i1 in 3001:6000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/type_one_error/result/simu_result",i1,".Rdata"))
     temp1 = length(result.list[[1]][[1]])/3
@@ -28,7 +28,7 @@ p_indi_result <- matrix(0,total,3)
 total <- 0
 for(i1 in 3001:6000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/type_one_error/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/type_one_error/result/simu_result",i1,".Rdata"))
     temp1 = length(result.list[[1]][[1]])/3

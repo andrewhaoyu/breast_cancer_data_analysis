@@ -1,6 +1,6 @@
 #Goal: merge the  OncoArray intrinsic subtypes results
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 filedir <- './whole_genome_age/ONCO/intrinsic_subtypes/result/'
 files <- dir(filedir,pattern="intrinsic_subytpe_onco_size6_")
 #files <- dir(filedir,pattern="intrinsic_subytpe_onco_resubmit")
@@ -35,7 +35,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-# result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
+# result.dir <- "/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
 # result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
 # result_Files <- result_Files[1:567]
 # result.idx <- rep(0,length(result_Files))
@@ -46,8 +46,8 @@ File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
 # }
 
 
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+#load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
 num.total <- nrow(onco_result)
 
 
@@ -103,7 +103,7 @@ for(i in 1:567){
   
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
 
 all.equal(onco_info$rs_id,rs_id)
 idx <- which(onco_info$rs_id!=rs_id)
@@ -116,7 +116,7 @@ onco_info <- onco_info[,1:10]
 
 onco_result_casecase <- data.frame(onco_info,score,infor,CHR)
 
-save(onco_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_intrinsic_subtype_082119.Rdata")
+save(onco_result_casecase,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_intrinsic_subtype_082119.Rdata")
 print(1)
 
 # paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco",idx[i],"_",k)
@@ -237,13 +237,13 @@ print(1)
 # 
 #  }
 # 
-#  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+#  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
 # 
 # 
 #  onco_info <- onco_result[,1:10]
 #  CHR <- onco_result[,41]
 #  onco_info <- cbind(onco_info,CHR)
-#  save(onco_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+#  save(onco_info,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
 
 
 

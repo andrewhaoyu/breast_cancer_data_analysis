@@ -10,7 +10,7 @@ rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(CompQuadForm)
@@ -122,7 +122,7 @@ if(i1<=177){
                              second.stage.sigma.meta,
                              dis.trans)
   
-  save(dis.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/cluster_analysis/result",i1,".Rdata"))
+  save(dis.result,file=paste0("/data/zhangh24/breast_cancer_data_analysis/known_SNPs/cluster_analysis/result",i1,".Rdata"))
   
   
 }else{
@@ -163,7 +163,7 @@ if(i1<=177){
                              second.stage.sigma.meta,
                              dis.trans)
   
-  save(dis.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/cluster_analysis/result",i1,".Rdata"))
+  save(dis.result,file=paste0("/data/zhangh24/breast_cancer_data_analysis/known_SNPs/cluster_analysis/result",i1,".Rdata"))
   
   
   

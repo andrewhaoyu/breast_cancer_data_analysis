@@ -17,7 +17,7 @@ transfunction <- function(lododds,sigma){
   beta.sigma <- beta.sigma[p,p]
   return(c(beta,as.vector(beta.sigma)))
 }
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 load("./genetic_correlation/ONCO/result/result.clean.Rdata")
 n <- nrow(ONCO.result.clean)

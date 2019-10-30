@@ -1,12 +1,12 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
 
 discovery_icog_id <- read.table(paste0("./discovery_SNP/result/extract_id_icog_discovery.txt"),header=T)
 
 idx <- which(meta_result_shared_1p$SNP.ICOGS==as.character(discovery_icog_id[21,1]))
 meta_result_shared_1p[idx,]
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.combine.Rdata"))
 idx <- which(CIMBA.BCAC.combine$SNP.ICOGS==as.character(discovery_icog_id[11,1]))
 CIMBA.BCAC.combine[idx,]

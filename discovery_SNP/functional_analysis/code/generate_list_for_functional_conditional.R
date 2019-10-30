@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./discovery_SNP/functional_analysis/result/functional_snp_conditional.Rdata"))
 total <- 0
 n <- nrow(functional_snp_conditional)
@@ -14,7 +14,7 @@ for(i1 in 1:1000){
 # n
 functional_snp_conditional$p.value <- p.value
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
 meta_result_shared_1p_MTOP <- meta_result_shared_1p
 idx <- which(meta_result_shared_1p$CHR==22&
                meta_result_shared_1p$position==30592808)
@@ -55,7 +55,7 @@ for(i in 1:nrow(MTOP_SNP)){
 library(data.table)
 FTOP_SNP <- fread("./data/Discovery_SNP_FTOP.csv",header=T)
 #functional.result <- NULL
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
 for(i in 1:nrow(FTOP_SNP)){
   print(i)
   chr.temp = as.numeric(FTOP_SNP[i,3])

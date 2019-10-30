@@ -1,17 +1,17 @@
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/potential_discovery_snp.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/potential_discovery_snp.Rdata")
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 snp.icogs.extract.id <- as.character(discovery_snp$SNP.ICOGS)
 snp.onco.extract.id <- as.character(discovery_snp$SNP.ONCO)
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 
 n.raw <- 142273
 snpvalue <- rep(0,n.raw) 
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(data.table)
 data2 <- fread("./data/oncoarray_overall.csv",header=T)
 data2 <- as.data.frame(data2)
@@ -42,7 +42,7 @@ total <- 0
 for(i in 1:567){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/result/discovery_onco",i,".txt")
+  geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/result/discovery_onco",i,".txt")
   num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
   
   if(num!=0){
@@ -94,7 +94,7 @@ extract.result <- list(snpid.result,snpvalue.result)
 colnames(snpvalue.result) <- snpid.result
 #sum(snpvalue.result[,11])/(2*nrow(snpvalue.result))
 
-write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data_overall.csv",row.names = F,quote=F)
+write.csv(snpvalue.result,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data_overall.csv",row.names = F,quote=F)
 
 
 # data1 <- fread("./data/PRS_subtype_icgos_pheno_v10_euro.csv",header=T)
@@ -118,5 +118,5 @@ write.csv(snpvalue.result,file="/spin1/users/zhangh24/breast_cancer_data_analysi
 #                       snpvalue2,
 #                       age,
 #                       special.snp)
-# write.csv(sig_snp_onco,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv")
+# write.csv(sig_snp_onco,file = "/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv")
 # 

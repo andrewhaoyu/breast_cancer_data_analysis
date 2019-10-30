@@ -3,11 +3,11 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 library(data.table)
 library(bcutility)
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load("./discovery_SNP/conditional_analysis_check_LD/potential_discovery_snp.Rdata")
 
 
-discovery_snp_infor <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/SNP_infor_conditional_check.csv",header=T,stringsAsFactors = F)
+discovery_snp_infor <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/SNP_infor_conditional_check.csv",header=T,stringsAsFactors = F)
 discovery_snp_infor <- discovery_snp_infor[1:20,]
 
 
@@ -20,7 +20,7 @@ discovery_snp_infor <- discovery_snp_infor[1:20,]
 library(bc2)
 data1 <- as.data.frame(fread("./data/icogs_overall.csv",header=T))
 idx.case1 <- which(data1$Behaviour1==2|data1$Behaviour1==888)
-discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_icog_data_overall.csv"))
+discovery.snp.icog <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_icog_data_overall.csv"))
 colnames(discovery.snp.icog)[5] <- "5:45333860"
 country1 <- as.factor(data1[,3])
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -49,7 +49,7 @@ gene1 <- discovery.snp.icog[,i1]
 
 %>% %>% 
 data2 <- fread("./data/oncoarray_overall.csv",header=T)
-discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data_overall.csv"))
+discovery.snp.onco <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis_check_LD/discovery_onco_data_overall.csv"))
 
 data2 <- as.data.frame(data2)
 idx.case2 <- which(data2$Behaviour1==2|data2$Behaviour1==888)

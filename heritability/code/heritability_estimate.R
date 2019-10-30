@@ -27,7 +27,7 @@ Outvec <- function(heter.result){
 
 
 result <- NULL
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 result_standard <- matrix(0,35,2)
 result <- matrix(0,35,10)
 freq = rep(0,35)
@@ -45,7 +45,7 @@ for(i1 in 1:35){
 #SNP <- c(colnames(icog.julie),colnames(discovery.snp.icog)[1:18])
 
 ##################discovery snp were ordered based on the order they are extracted
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
+discovery_snp <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 #SNP <- discovery_snp$SNP.ICOGS
 
 ################match the discovery snps to the order in the paper
@@ -58,7 +58,7 @@ y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$H
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 #x.test.all.mis2 <- data2[,c(27:203)]
-discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
+discovery.snp.onco <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/result/discovery_onco_data.csv",header=T))
 
 x.test.all.mis.dis <- discovery.snp.onco
 
@@ -214,7 +214,7 @@ LD_pruning = function(sig_SNPs,LD2){
 #all snp.result
 all.result <- rbind(known.result[idx.fil,],dis.result)
 #load in the heritability estimate
-heri.est <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/BCAC_heritability.csv")
+heri.est <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/BCAC_heritability.csv")
 #reorder heri.est 
 heri.est <- heri.est[c(2,4,5,3,1),c(2,4,5,3,1)]
 gwas.heri <- diag(as.matrix(heri.est))
@@ -266,7 +266,7 @@ colnames(result.sum) <- c("simga_all_identified_snps",
 write.csv(result.sum,file = "./heritability/result/result.sum.csv")
 
 ############PRS for the top 1% increase risk compared to the standard
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./risk_prediction/result/split.id.rdata"))
 #icog.test.id <- Generatetestid(subtypes.icog)
 #icog.train.id <- split.id[[1]]

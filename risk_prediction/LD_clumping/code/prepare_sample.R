@@ -8,9 +8,9 @@
 #prepare sample for all of the subjects
 library(data.table)
 library(bcutility)
-subject.file <- "/spin1/users/zhangh24/test/onco_order.txt"
+subject.file <- "/data/zhangh24/test/onco_order.txt"
 
-onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
+onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 onco.data <- onco.data[,-1]
 library(tidyverse)
 y.pheno.mis2 <- select(onco.data,Behavior,ER,PR,HER2,Grade)
@@ -79,11 +79,11 @@ colnames(sample.data) <- c("ID_1",
                            "cov_1",
                            "subtypes")
 
-write.table(sample.data,file = "/spin1/users/zhangh24/test/sample.txt",
+write.table(sample.data,file = "/data/zhangh24/test/sample.txt",
             row.names = F, quote = F,sep = " ")
 
 #prepare sample for people keeping in test
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./risk_prediction/result/split.id.rdata"))
 #icog.test.id <- Generatetestid(subtypes.icog)
 icog.train.id <- split.id[[1]]
@@ -109,7 +109,7 @@ for(i in 1:length(names.subtypes)){
                 ) %>%
                 select(ID_1)
   write.table(test.sample,file = 
-                paste0("/spin1/users/zhangh24/BCAC/test_sample_",
+                paste0("/data/zhangh24/BCAC/test_sample_",
                         names.subtypes[i]
                         ,".txt"),
               row.names = F, quote = F,sep = " ")
@@ -120,5 +120,5 @@ for(i in 1:length(names.subtypes)){
 
 
 
-write.table(test_ID,file = "/spin1/users/zhangh24/BCAC/sample_onco_test.txt",
+write.table(test_ID,file = "/data/zhangh24/BCAC/sample_onco_test.txt",
             row.names = F, quote = F,sep = " ")

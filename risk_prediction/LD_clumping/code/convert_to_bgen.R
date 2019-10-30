@@ -14,12 +14,12 @@ convert.to.bgen <- rep("c",length(names.subtypes))
 convert.to.bgen <- data.frame(convert.to.bgen,stringsAsFactors=F)
 
 for(i in 1:length(names.subtypes)){
-  convert.to.bgen.code <- paste0("/spin1/users/zhangh24/qctool_v1.4-linux-x86_64/qctool -g /spin1/users/zhangh24/BCAC/impute_onco/onco_all.gz -s /spin1/users/zhangh24/BCAC/sample_onco.txt -incl-samples /spin1/users/zhangh24/BCAC/test_sample_",names.subtypes[i],".txt -incl-rsids /spin1/users/zhangh24/BCAC/impute_onco/onco_1p_shared_id.txt -og /spin1/users/zhangh24/BCAC/impute_test_bgen/",names.subtypes[i],"_test.bgen")
+  convert.to.bgen.code <- paste0("/data/zhangh24/qctool_v1.4-linux-x86_64/qctool -g /data/zhangh24/BCAC/impute_onco/onco_all.gz -s /data/zhangh24/BCAC/sample_onco.txt -incl-samples /data/zhangh24/BCAC/test_sample_",names.subtypes[i],".txt -incl-rsids /data/zhangh24/BCAC/impute_onco/onco_1p_shared_id.txt -og /data/zhangh24/BCAC/impute_test_bgen/",names.subtypes[i],"_test.bgen")
   convert.to.bgen[i,1] <- convert.to.bgen.code
 }
 
 
-write.table(convert.to.bgen,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/code/convert_to_bgen",
+write.table(convert.to.bgen,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/code/convert_to_bgen",
             row.names=F,col.names = F,
             quote=F)
 
@@ -36,7 +36,7 @@ convert.to.bgen <- data.frame(convert.to.bgen,stringsAsFactors=F)
 temp <- 1
 for(i in 1:length(names.subtypes)){
   for(j in 1:22){
-    convert.to.bgen.code <- paste0("/spin1/users/zhangh24/qctool_v1.4-linux-x86_64/qctool -g /spin1/users/zhangh24/BCAC/impute_onco/chr",j,".gz -s /spin1/users/zhangh24/BCAC/sample_onco.txt -incl-samples /spin1/users/zhangh24/BCAC/test_sample_",names.subtypes[i],".txt -incl-rsids /spin1/users/zhangh24/BCAC/impute_onco/onco_1p_shared_id.txt -og /spin1/users/zhangh24/BCAC/impute_test_bgen/",names.subtypes[i],"_chr",j,"_test.bgen")
+    convert.to.bgen.code <- paste0("/data/zhangh24/qctool_v1.4-linux-x86_64/qctool -g /data/zhangh24/BCAC/impute_onco/chr",j,".gz -s /data/zhangh24/BCAC/sample_onco.txt -incl-samples /data/zhangh24/BCAC/test_sample_",names.subtypes[i],".txt -incl-rsids /data/zhangh24/BCAC/impute_onco/onco_1p_shared_id.txt -og /data/zhangh24/BCAC/impute_test_bgen/",names.subtypes[i],"_chr",j,"_test.bgen")
     convert.to.bgen[temp,1] <- convert.to.bgen.code  
     temp <- temp+1
   }
@@ -44,7 +44,7 @@ for(i in 1:length(names.subtypes)){
 }
 
 
-write.table(convert.to.bgen,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/code/convert_to_bgen_chr",
+write.table(convert.to.bgen,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/code/convert_to_bgen_chr",
             row.names=F,col.names = F,
             quote=F)
 

@@ -1,5 +1,5 @@
 second.num <- 1
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load("./whole_genome_age/ICOG/standard_analysis/result/icog_result_shared_1p.Rdata")
 load("./whole_genome_age/ONCO/standard_analysis/result/onco_result_shared_1p.Rdata")
 load("./whole_genome_age/ONCO/standard_analysis/result/icog_result_only_shared_1p.Rdata")
@@ -14,7 +14,7 @@ meta_result_shared_1p_onco_only <- onco_result_only_shared_1p[,c(1:10,(ncol(icog
 meta_result_shared_1p_no_pvalue <- rbind(meta_result_shared_1p,meta_result_shared_1p_icog_only,meta_result_shared_1p_onco_only)
 
 
-# save(meta_result_shared_1p_no_pvalue,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_no_pvalue.Rdata")
+# save(meta_result_shared_1p_no_pvalue,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_no_pvalue.Rdata")
 
 
 n <- nrow(meta_result_shared_1p_no_pvalue)

@@ -2,10 +2,10 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_only_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_only_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_only_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_only_shared_1p.Rdata")
 library(bc2)
 second.num <- 5
 
@@ -42,7 +42,7 @@ icog_onco_score_infor <- icog_onco_score_infor_final
 # meta_result_shared_1p_no_pvalue <- rbind(meta_result_shared_1p,meta_result_shared_1p_icog_only,meta_result_shared_1p_onco_only)
 
 # meta_result_shared_1p_no_pvalue <-meta_result_shared_1p_final 
-# save(meta_result_shared_1p_no_pvalue,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_no_pvalue.Rdata")
+# save(meta_result_shared_1p_no_pvalue,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_no_pvalue.Rdata")
 
 rm(icog_result_shared_1p)
 rm(onco_result_shared_1p)
@@ -90,7 +90,7 @@ for(j in start:end){
 
 
 
-save(pvalue_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/p_value_sub",i1,".Rdata"))
+save(pvalue_sub,file=paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/p_value_sub",i1,".Rdata"))
 #n <- nrow(icog_onco_score_infor)
 
 
@@ -137,9 +137,9 @@ save(pvalue_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/w
 # 
 # 
 # 
-# save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata"))
+# save(meta_result_shared_1p,file=paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata"))
 # 
-# known_snps <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/known_SNPs_info.csv",header= T)
+# known_snps <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/known_SNPs_info.csv",header= T)
 # 
 # 
 # 
@@ -164,12 +164,12 @@ save(pvalue_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/w
 # idx_cut <- unique(idx_cut)
 # meta_result_shared_1p_filter <- meta_result_shared_1p[-idx_cut,]
 # 
-# save(meta_result_shared_1p_filter,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M.Rdata")
+# save(meta_result_shared_1p_filter,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M.Rdata")
 # 
 # 
 # 
 # 
-# new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
+# new_filter <- read.csv("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
 # new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 # 
 # idx_cut <- NULL
@@ -187,7 +187,7 @@ save(pvalue_sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/w
 # idx_cut <- unique(idx_cut)
 # meta_result_shared_1p_filter_Ju <- meta_result_shared_1p_filter[-idx_cut,]
 # 
-# save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+# save(meta_result_shared_1p_filter_Ju,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
 # 
 # 
 # 

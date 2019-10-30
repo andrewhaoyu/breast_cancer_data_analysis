@@ -1,7 +1,7 @@
 #goal:merge polytomous model results from multiple imputation
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 
 coef.all <- list()
 sigma.all <- list()

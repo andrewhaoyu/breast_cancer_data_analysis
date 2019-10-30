@@ -5,14 +5,14 @@
 #new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./discovery_SNP/functional_analysis/result/functional_snp_conditional_replicate.Rdata"))
 n.raw <- 109713
 snpvalue <- rep(0,n.raw)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 library(data.table)
 Icog.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- as.data.frame(fread("./data/icogs_overall.csv",header=T))
 idx.case1 <- which(data1$Behaviour1==2|data1$Behaviour1==888)
 data1$Behaviour1[idx.case1] <- 1
@@ -38,10 +38,10 @@ total <- 0
 temp1 = rep(0,564) 
 for(i in 1:564){
   print(i) 
-  geno.file <-paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ICOG/funcitonal_conditional_icog_replicate",i,".txt"
+  geno.file <-paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ICOG/funcitonal_conditional_icog_replicate",i,".txt"
   ) 
   temp.out <- system(paste0('wc -l ',geno.file),intern=T) 
-  temp.out <- gsub(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ICOG/funcitonal_conditional_icog_replicate",i,".txt"),"",temp.out)
+  temp.out <- gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ICOG/funcitonal_conditional_icog_replicate",i,".txt"),"",temp.out)
   num <- as.numeric(temp.out) #temp1[i] <- num # }
   
   if(num!=0){
@@ -119,7 +119,7 @@ n.raw <- 142273
 snpvalue <- rep(0,n.raw) 
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(data.table)
 data2 <- fread("./data/oncoarray_overall.csv",header=T)
 data2 <- as.data.frame(data2)
@@ -146,9 +146,9 @@ total <- 0
 for(i in 1:567){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ONCO/functional_conditional_onco_replicate",i,".txt")
+  geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ONCO/functional_conditional_onco_replicate",i,".txt")
   temp.out <- system(paste0('wc -l ',geno.file),intern=T)
-  temp.out <- gsub(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ONCO/functional_conditional_onco_replicate",i,".txt"),"",temp.out)
+  temp.out <- gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/functional_analysis/result/ONCO/functional_conditional_onco_replicate",i,".txt"),"",temp.out)
   num <- as.numeric(temp.out)
   
   

@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./genetic_correlation/ICOG/result/icog.onco.merge.Rdata"))
 library(bc2)
 size =1000
@@ -31,7 +31,7 @@ save(result.sub,file=paste0("./genetic_correlation/ICOG/result/result.sub.meta",
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 total <- nrow(icog.onco.merge)
 
 result.all <- matrix(0,total,30)

@@ -1,9 +1,9 @@
 ##############generate the discovery snps list
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_result_shared.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary.csv",header=T)
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_result_shared.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
+discovery_snp <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary.csv",header=T)
 discovery.icogs <- as.character(discovery_snp$SNP.ICOGS)
 idx.fil <- which((extract.list[[1]]%in%discovery.icogs)==T)
 
@@ -34,7 +34,7 @@ idx.match <-match(discovery.icogs,extract.list[[1]][idx.fil])
 
 #########fixed effect model
 library(bc2)
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/LD_pruning.result")
 extract.result.fixed <- extract.list.ld.pruning.result
 idx <- which(is.na(extract.result.fixed$SNP.ICOGS)==T)
 
@@ -42,10 +42,10 @@ extract.result.fixed.shared <- extract.result.fixed[-idx,]
 extract.result.onco.only <- extract.result.fixed[idx,]
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
 extract.result.onco.fixed <- extract.result
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
 extract.result.icog.fixed <- extract.result
 
 
@@ -57,9 +57,9 @@ icog.name <- extract.result.icog.fixed[[1]][idx.fil][idx.match]
 all.equal(icog.name,extract.result.fixed.shared$SNP.ICOGS)
 discover.data.icog.fixed <- extract.result.icog.fixed[[2]][,idx.fil][,idx.match]
 colnames(discover.data.icog.fixed) <- icog.name
-write.csv(discover.data.icog.fixed,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/discover.data.icog.fixed.csv")
+write.csv(discover.data.icog.fixed,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/discover.data.icog.fixed.csv")
 
-save(discover.data.icog.fixed,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/discover.data.icog.fixed.Rdata")
+save(discover.data.icog.fixed,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/discover.data.icog.fixed.Rdata")
 
 
 fill.match <- FillandMatch(extract.result.fixed.shared$SNP.ONCO,extract.result.onco.fixed[[1]])
@@ -69,9 +69,9 @@ onco.name <- extract.result.onco.fixed[[1]][idx.fil][idx.match]
 all.equal(onco.name,extract.result.fixed.shared$SNP.ONCO)
 discover.data.onco.fixed <- extract.result.onco.fixed[[2]][,idx.fil][,idx.match]
 colnames(discover.data.onco.fixed) <- onco.name
-write.csv(discover.data.onco.fixed,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/discover.data.onco.fixed.csv")
+write.csv(discover.data.onco.fixed,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/discover.data.onco.fixed.csv")
 
-save(discover.data.onco.fixed,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/discover.data.onco.fixed.Rdata")
+save(discover.data.onco.fixed,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/discover.data.onco.fixed.Rdata")
 
 
 
@@ -85,9 +85,9 @@ onco.name <- extract.result.onco.fixed[[1]][idx.fil][idx.match]
 all.equal(onco.name,extract.result.onco.only$SNP.ONCO)
 discover.data.onco.fixed.oncoonly <- extract.result.onco.fixed[[2]][idx.fil][idx.match]
 colnames(discover.data.onco.fixed.oncoonly) <- onco.name
-write.csv(discover.data.onco.fixed.oncoonly,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/discover.data.onco.fixed.oncoonly.csv")
+write.csv(discover.data.onco.fixed.oncoonly,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/discover.data.onco.fixed.oncoonly.csv")
 
-save(discover.data.onco.fixed.oncoonly,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/discover.data.onco.fixed.oncoonly.Rdata")
+save(discover.data.onco.fixed.oncoonly,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/discover.data.onco.fixed.oncoonly.Rdata")
 
 
 
@@ -126,7 +126,7 @@ cbind(icog.snp.name,extract.result.fixed.shared$SNP.ICOGS)
 
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/LD_pruning_casecase.result")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/LD_pruning_casecase.result")
 extract.result.random <- extract.list.ld.pruning.result
 
 

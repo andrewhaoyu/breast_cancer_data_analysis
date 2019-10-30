@@ -1,4 +1,4 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 snp.name <- rep("c",20)
 p.value <- rep(0,20)
 for(i1 in 1:20){

@@ -23,8 +23,8 @@ true.false.calculate <- function(prs,test.data){
 
 
 library(data.table)
-icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
-onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
+icog.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
+onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
 library(tidyverse)
 y.pheno.mis1 <- select(icog.data,Behaviour1,ER_status1,PR_status1,HER2_status1,Grade1)
 x.covar1 <- select(icog.data,5:14)
@@ -117,7 +117,7 @@ plot(roc.result[,1],roc.result[,2],xlab="false_p",ylab="true_p")
 abline(a=0,b=1,col="red")
 auc <- auc_cal(roc.result)
 
-save(log.odds.meta, file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
+save(log.odds.meta, file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
 
 
 

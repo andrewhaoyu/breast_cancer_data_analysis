@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./discovery_SNP/functional_analysis/result/functional_snp_conditional_standard.Rdata"))
 functional_snp_conditional <- functional_snp_conditional[1:5480,]
 total <- 0

@@ -1,7 +1,7 @@
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_only_shared_1p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_only_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_only_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_only_shared_1p.Rdata")
 
 
 meta_result_shared_1p <- icog_result_shared_1p[,c(1:10,(ncol(icog_result_shared_1p)-3):ncol(icog_result_shared_1p))]
@@ -12,7 +12,7 @@ meta_result_shared_1p_onco_only <- onco_result_only_shared_1p[,c(1:10,(ncol(icog
 meta_result_shared_1p_no_pvalue <- rbind(meta_result_shared_1p,meta_result_shared_1p_icog_only,meta_result_shared_1p_onco_only)
 
 
-save(meta_result_shared_1p_no_pvalue,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_no_pvalue.Rdata")
+save(meta_result_shared_1p_no_pvalue,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_no_pvalue.Rdata")
  
  
  n <- nrow( meta_result_shared_1p_no_pvalue)
@@ -21,7 +21,7 @@ save(meta_result_shared_1p_no_pvalue,file="/spin1/users/zhangh24/breast_cancer_d
  total <- 0
  for(i1 in 1:1000){
    
-   load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/p_value_sub",i1,".Rdata"))
+   load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/p_value_sub",i1,".Rdata"))
    temp <- length(pvalue_sub)
    
    p.value[total+(1:temp)] <- pvalue_sub
@@ -32,9 +32,9 @@ save(meta_result_shared_1p_no_pvalue,file="/spin1/users/zhangh24/breast_cancer_d
 
 
 meta_result_shared_1p <- cbind(meta_result_shared_1p_no_pvalue,p.value)
- save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata"))
+ save(meta_result_shared_1p,file=paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata"))
  
-fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_regions.csv",header= T)
+fine_mapping <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/fine_mapping_regions.csv",header= T)
 
 
 
@@ -59,10 +59,10 @@ for(i in 1:nrow(fine_mapping)){
 idx_cut <- unique(idx_cut)
 meta_result_shared_1p_filter <- meta_result_shared_1p[-idx_cut,]
 
-save(meta_result_shared_1p_filter,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M.Rdata")
+save(meta_result_shared_1p_filter,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M.Rdata")
 
 
- new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
+ new_filter <- read.csv("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
  new_filter <- new_filter[1:22,]
  new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 
@@ -83,7 +83,7 @@ for(i in 1:nrow(new_filter)){
 idx_cut <- unique(idx_cut)
 meta_result_shared_1p_filter_Ju <- meta_result_shared_1p_filter[-idx_cut,]
 
-save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+save(meta_result_shared_1p_filter_Ju,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
 
 
 
@@ -94,7 +94,7 @@ save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_d
 # meta_result_shared_1p_filter_Ju[idx,]
 
 
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
 # 
 meta_result_shared_1p_filter_Ju_fix <- meta_result_shared_1p_filter_Ju
 
@@ -106,9 +106,9 @@ idx <- which(meta_result_shared_1p_filter_Ju_fix$CHR==18&meta_result_shared_1p_f
 meta_result_shared_1p_filter_Ju_fix[idx,]
  
 
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata"))
+load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata"))
 meta_result_shared_1p <- meta_result_shared_1p[,c(2,11,3,15)]
-write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt"),row.names = F,
+write.table(meta_result_shared_1p,file=paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt"),row.names = F,
             quote=F)
 
 

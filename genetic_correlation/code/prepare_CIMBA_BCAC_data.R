@@ -1,10 +1,10 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 library(data.table)
 ###########load CIMBA data
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.clean.Rdata"))
 CIMBA <- CIMBA.clean
 ###########load BCAC intrinsic subtype data
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
+load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
 
 
 N.TN <- 1/(meta_result_shared_1p[,45]*2*meta_result_shared_1p[,4]*(1-meta_result_shared_1p[,4]))
@@ -84,9 +84,9 @@ save(CIMBA.result,file = "./genetic_correlation/result/CIMBA_result.Rdata")
 
 
 ###############prepare data for breast cancer standard to genetic correlation analysis
-load("/spin1/users/zhangh24/breast_cancer/standard_gwas/case_control/meta/case_control_meta_result_final.Rdata")
-load("/spin1/users/zhangh24/breast_cancer/standard_gwas/ER-_control/meta/ER-_control_meta_result_final.Rdata")
-load("/spin1/users/zhangh24/breast_cancer/standard_gwas/ER+_control/meta/ER+_control_meta_result_final.Rdata")
+load("/data/zhangh24/breast_cancer/standard_gwas/case_control/meta/case_control_meta_result_final.Rdata")
+load("/data/zhangh24/breast_cancer/standard_gwas/ER-_control/meta/ER-_control_meta_result_final.Rdata")
+load("/data/zhangh24/breast_cancer/standard_gwas/ER+_control/meta/ER+_control_meta_result_final.Rdata")
 
 
 standard.analysis <- data.frame(case_control_meta_result_final,

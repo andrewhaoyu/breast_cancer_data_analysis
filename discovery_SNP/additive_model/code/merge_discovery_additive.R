@@ -31,7 +31,7 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
   return(result)
 }
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(CompQuadForm)
@@ -93,7 +93,7 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
 
 
 
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
+discovery_snp <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 
 discovery_snp_paper_order <- read.csv("./data/discovery_snp_paper_order.csv",header=T)
 chr.pos.paper <- paste0(discovery_snp_paper_order$CHR,":",discovery_snp_paper_order$position)
@@ -110,7 +110,7 @@ discovery_snp_new <- discovery_snp[idx.match,]
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/additive_model/result")
+setwd("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/additive_model/result")
 library(xlsx)
 generate_second_stage_parameter_names = function(tumor_characteristics){
   result = c("baseline effect (95%CI)",
@@ -145,7 +145,7 @@ tumor.characteristics <- c("ER","PR","HER2","Grade")
 generate_second_stage_parameter_names(tumor.characteristics)
 colnames(result) <- generate_second_stage_parameter_names(tumor.characteristics)
 #take out the 5 SNPs after we changed the threshold to 5E-08
-#new_discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new_Dec07.csv")
+#new_discovery_snp <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new_Dec07.csv")
 library(dplyr)
 #new.chr.pos = paste0(new_discovery_snp$CHR,":",new_discovery_snp$Pos)
 #old.chr.pos = as.character(discovery_snp$chr.pos)
@@ -225,7 +225,7 @@ result <- data.frame(result,pvalue)
 
 #result <- data.frame(result)
 row.names(result) <- discovery_snp_paper_order$SNP
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 write.csv(result,file = "./discovery_SNP/additive_model/result/additive_model_result.csv")
 #write.xlsx(result,file="./additive_model_G_age_2des.xlsx",sheetName="additive_model_2nd_stage_age_minor_allele")
 #write.xlsx(first.stage,file="./additive_model.xlsx",sheetName="additive_model_1st_stage",append=T)

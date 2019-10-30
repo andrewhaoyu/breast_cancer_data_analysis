@@ -5,14 +5,14 @@ new_filter <- read.table("./discovery_SNP/CIMBA_conditional_analysis/result/extr
 #new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n.raw <- 109713
 snpvalue <- rep(0,n.raw)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 library(data.table)
 Icog.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -38,10 +38,10 @@ total <- 0
 for(i in 394:394){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/ICOG/CIMBA_Icog",i,".txt"
+  geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/ICOG/CIMBA_Icog",i,".txt"
   )
   temp.out <- system(paste0('wc -l ',geno.file),intern=T)
-  temp.out <- gsub("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/ICOG/CIMBA_Icog394.txt","",temp.out)
+  temp.out <- gsub("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/ICOG/CIMBA_Icog394.txt","",temp.out)
   num <- as.numeric(temp.out)
   
   if(num!=0){
@@ -108,7 +108,7 @@ n.raw <- 142273
 snpvalue <- rep(0,n.raw) 
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 
@@ -133,9 +133,9 @@ total <- 0
 for(i in 397:397){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/ONCO/CIMBA_onco397.txt")
+  geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/ONCO/CIMBA_onco397.txt")
   temp.out <- system(paste0('wc -l ',geno.file),intern=T)
-  temp.out <- gsub("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/ONCO/CIMBA_onco397.txt","",temp.out)
+  temp.out <- gsub("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/ONCO/CIMBA_onco397.txt","",temp.out)
   num <- as.numeric(temp.out)
   
   

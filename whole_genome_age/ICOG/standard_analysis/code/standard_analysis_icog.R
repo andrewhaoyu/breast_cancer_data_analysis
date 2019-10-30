@@ -9,7 +9,7 @@ print(i1)
 print(i2)
 library(R.utils)
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n <- 109713
 snpvalue <- rep(0,n)
@@ -17,7 +17,7 @@ subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_orde
 
 Icog.order <- read.table(gzfile(subject.file))
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- as.data.frame(fread("./data/icogs_overall.csv",header=T))
 idx.case1 <- which(data1$Behaviour1==2|data1$Behaviour1==888)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)

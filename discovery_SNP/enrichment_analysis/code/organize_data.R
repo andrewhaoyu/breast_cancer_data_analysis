@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.meta.result.Rdata"))
 enrichment_result <- CIMBA.BCAC.meta.result[,c(9,18,10,3,4,5,12,22,26,
                                                27,31,47,51)-1]

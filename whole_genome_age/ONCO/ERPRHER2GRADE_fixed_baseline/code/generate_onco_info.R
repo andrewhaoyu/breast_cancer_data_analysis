@@ -30,7 +30,7 @@ for(i in 1:22){
 
 onco_result <- data.frame(onco_info,score,infor,CHR)
 
-save(onco_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result.Rdata")
+save(onco_result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result.Rdata")
 print(1)
 
 
@@ -69,6 +69,6 @@ for(i in 23){
 
 
 
-save(onco_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_infor_sex.Rdata")
+save(onco_info,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_infor_sex.Rdata")
 print(1)
 

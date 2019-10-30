@@ -1,10 +1,10 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_high",full.names=T)
 total <- 0
 for(i1 in 1:3200){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/simu_high",i1,".Rdata")) 
     total = total+ length(result.list[[1]][[1]])/6 + length(result.list[[2]][[1]])/6
@@ -24,7 +24,7 @@ total <- 0
 
 for(i1 in 1:3200){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/simu_high",i1,".Rdata")) 
     temp1 = length(result.list[[1]][[1]])/6
@@ -78,14 +78,14 @@ CountPower <- function(p,alpha){
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 
 files <- dir(filedir,pattern="poly_high",full.names=T)
 total <- 0
 for(i1 in 1:500){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/poly_high",i1,".Rdata")) 
     total = total+ length(p_poly)/6 
@@ -101,7 +101,7 @@ total <- 0
 
 for(i1 in 1:500){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/poly_high",i1,".Rdata"))
     temp = length(p_poly)/6
@@ -154,13 +154,13 @@ result.1 <- result
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_high",full.names=T)
 total <- 0
 for(i1 in 4001:5000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/simu_high",i1,".Rdata")) 
     total = total+ length(result.list[[1]][[1]])/3 + length(result.list[[2]][[1]])/3
@@ -180,7 +180,7 @@ total <- 0
 
 for(i1 in 4001:5000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/simu_high",i1,".Rdata")) 
     temp1 = length(result.list[[1]][[1]])/3
@@ -234,14 +234,14 @@ CountPower <- function(p,alpha){
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 
 files <- dir(filedir,pattern="poly_high",full.names=T)
 total <- 0
 for(i1 in 501:1000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/poly_high",i1,".Rdata")) 
     total = total+ length(p_poly)/3
@@ -257,7 +257,7 @@ total <- 0
 
 for(i1 in 501:1000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/poly_high",i1,".Rdata"))
     temp = length(p_poly)/3

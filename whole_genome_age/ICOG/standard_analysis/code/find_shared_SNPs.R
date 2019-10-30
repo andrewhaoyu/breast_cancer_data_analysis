@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load("./whole_genome_age/ICOG/standard_analysis/result/icog_result_standard.Rdata")
 load("./whole_genome_age/ONCO/standard_analysis/result/onco_result_standard.Rdata")
 icog_result <- icog_result_casecase
@@ -18,7 +18,7 @@ gc()
 
 
 
-load("/spin1/users/zhangh24/match.Rdata")
+load("/data/zhangh24/match.Rdata")
 
 
 
@@ -59,11 +59,11 @@ all.equal(icog_result_shared$rs_id,icog_result_shared$SNP.ICOGS)
 onco_result_shared <- cbind(onco_result_shared,data_c_shared)
 all.equal(onco_result_shared$rs_id,onco_result_shared$SNP.ONCO)
 
-#save(icog_result_shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/icog_result_shared.Rdata")
-#save(onco_result_shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_shared.Rdata")
+#save(icog_result_shared,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/icog_result_shared.Rdata")
+#save(onco_result_shared,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_shared.Rdata")
 
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
+#load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/icog_result_shared.Rdata")
+#load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2_fixed/result/onco_result_shared.Rdata")
 
 
 

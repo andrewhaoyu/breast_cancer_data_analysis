@@ -45,7 +45,7 @@ for(i in 1:nrow(data)){
 
 icog_info <- icog_result[,1:10]
 
-save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+save(icog_info,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
 
 
 
@@ -90,4 +90,4 @@ for(i in 23){
 
 
 
-save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info_sex.Rdata")
+save(icog_info,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info_sex.Rdata")

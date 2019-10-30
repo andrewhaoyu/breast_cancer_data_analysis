@@ -49,7 +49,7 @@ LD_pruning = function(sig_SNPs,LD2){
 
 
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 #load summary level statistics for overall
 #Haoyupdate added the meta-analysis between iCOGs and OncoArray

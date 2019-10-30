@@ -1,10 +1,10 @@
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
 n.snp <- nrow(all.conditional.snps)
 p.value <- rep(0,n.snp)
 total <- 0
 for(i1 in 1:3000){
   print(i1)
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.3nd",i1,".Rdata") )
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/psub.3nd",i1,".Rdata") )
   temp <- length(p.value.all)
   p.value[total+(1:temp)] <- p.value.all
   total <- total + temp
@@ -40,9 +40,9 @@ table(conditional.results.3rd$cat.known.flag)
 
 
 
-save(conditional.results.3rd,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd.Rdata")
-write.csv(conditional.results.3rd,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd.csv",quote=F,row.names = F)
+save(conditional.results.3rd,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd.Rdata")
+write.csv(conditional.results.3rd,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.results.3rd.csv",quote=F,row.names = F)
 
 
 

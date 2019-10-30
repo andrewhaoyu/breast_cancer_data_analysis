@@ -17,7 +17,7 @@ each.other.same.all <- rep(0,region)
 
 for(i1 in 1:207){
   print(i1)
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/result.all",i1,".Rdata"))
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/result.all",i1,".Rdata"))
   if(is.null(result.all)==1){
     con.show[i1] <- 0
   }else{
@@ -55,7 +55,7 @@ for(i1 in 1:207){
 }
 
 
-write.csv(result.com,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/condition.all.csv")
+write.csv(result.com,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/condition.all.csv")
 colnames(result.com)[19]="known_flag"
 table(result.com$mark)
 

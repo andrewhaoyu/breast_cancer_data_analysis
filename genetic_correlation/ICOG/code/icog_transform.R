@@ -17,7 +17,7 @@ transfunction <- function(lododds,sigma){
   beta.sigma <- beta.sigma[p,p]
   return(c(beta,as.vector(beta.sigma)))
 }
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 ##############transform the results into intrinsic subtypes results
 ##############ICOG.result.clean uses Luminal a as reference and other intrinsic subtypes versus luminal A as second stage parameters
 load("./genetic_correlation/result/ICOG.result.clean.Rdata")

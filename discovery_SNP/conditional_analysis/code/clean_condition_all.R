@@ -1,4 +1,4 @@
-data <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/condition.all.csv",header=T,stringsAsFactors = F)
+data <- read.csv("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/condition.all.csv",header=T,stringsAsFactors = F)
 data <- data[,-1]
 
 library(tidyverse)
@@ -41,4 +41,4 @@ print(i)
     data[i,j] <- new
     }
 }
-write.csv(data,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/condition.all.Rclean.csv")
+write.csv(data,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/condition.all.Rclean.csv")

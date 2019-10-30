@@ -1,10 +1,10 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_result",full.names=T)
 total <- 0
 for(i1 in 1:5999){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata")) 
     total = total+ length(result.list[[1]][[1]])/9 + length(result.list[[2]][[1]])/9
@@ -24,7 +24,7 @@ total <- 0
 
 for(i1 in 1:5999){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata"))
     temp1 = length(result.list[[1]][[1]])/9
@@ -79,13 +79,13 @@ CountPower <- function(p,alpha){
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_result",full.names=T)
 total <- 0
 for(i1 in 4000:6000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata")) 
     total = total+ length(result.list[[1]][[1]])/9 + length(result.list[[2]][[1]])/9
@@ -105,7 +105,7 @@ total <- 0
 
 for(i1 in 4000:6000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata"))
     temp1 = length(result.list[[1]][[1]])/9
@@ -174,13 +174,13 @@ result.1 <- result
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_result",full.names=T)
 total <- 0
 for(i1 in 6000:7000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata")) 
     total = total+ length(result.list[[1]][[1]])/9 + length(result.list[[2]][[1]])/9
@@ -200,7 +200,7 @@ total <- 0
 
 for(i1 in 6000:7000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_result",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result//simu_result",i1,".Rdata"))
     temp1 = length(result.list[[1]][[1]])/9

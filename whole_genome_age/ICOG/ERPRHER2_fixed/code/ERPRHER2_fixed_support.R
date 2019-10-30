@@ -2,7 +2,7 @@ i1 = 1
 library(devtools)
 install_github("andrewhaoyu/bc2", ref = "development",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 library(bc2)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- read.csv("./data/iCOGS_euro_v10_05242017.csv",header=T)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
 colnames(y.pheno.mis1) = c("Behavior","PR","ER","HER2")

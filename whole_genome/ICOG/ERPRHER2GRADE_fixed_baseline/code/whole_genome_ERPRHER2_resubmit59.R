@@ -16,7 +16,7 @@ rm(list=ls())
 i1 <- 59
 #print(i)
 library(R.utils)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n <- 109713
 snpvalue <- rep(0,n)

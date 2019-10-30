@@ -7,8 +7,8 @@ library(bc2)
 
 
 library(data.table)
-icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
-onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
+icog.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
+onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
 library(tidyverse)
 y.pheno.mis1 <- select(icog.data,Behaviour1,ER_status1,PR_status1,HER2_status1,Grade1)
 x.covar1 <- select(icog.data,5:14)
@@ -93,12 +93,12 @@ meta.result <- LogoddsMetaAnalysis(log.odds.icog,
                                    sigma.log.odds.onco)
 
 
-save(meta.result,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/add.meta.result",i1,".Rdata"))
-save(z.standard,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/z.standard.Rdata"))
+save(meta.result,file=paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/add.meta.result",i1,".Rdata"))
+save(z.standard,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/z.standard.Rdata"))
 y.combine <- rbind(y.pheno.mis1.train,y.pheno.mis2.train)
 complete.grade <- table(y.combine[,5])[1:3]
 grade.ratio <- complete.grade/sum(complete.grade)
-save(grade.ratio,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/grade.ratio.Rdata"))
+save(grade.ratio,file=paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/grade.ratio.Rdata"))
 
 
 

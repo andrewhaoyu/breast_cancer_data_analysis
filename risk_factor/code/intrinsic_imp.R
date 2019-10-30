@@ -9,7 +9,7 @@ library(data.table)
 library(bc3)
 #data <- fread("./data/dataset_montse_20180522.txt")
 #setwd('/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis')
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 data <- as.data.frame(fread("./data/Dataset_Montse_20190322.txt"))
 idx <- which(data1$parity==0)
 

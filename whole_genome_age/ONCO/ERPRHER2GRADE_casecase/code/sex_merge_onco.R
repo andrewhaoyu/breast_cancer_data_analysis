@@ -25,7 +25,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-# result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
+# result.dir <- "/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
 # result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
 # result_Files <- result_Files[1:567]
 # result.idx <- rep(0,length(result_Files))
@@ -36,8 +36,8 @@ File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
 # }
 
 
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_sex.Rdata")
+#load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_sex.Rdata")
 num.total <- nrow(onco_result)
 
 
@@ -63,7 +63,7 @@ for(i in 1:32){
     for (k in 1:30) {
       #print(k)
       load(
-        paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco_sex",idx[i],"_",k)
+        paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_onco_sex",idx[i],"_",k)
       )
       temp <- nrow(result[[2]])
       rs_id[num.total+(1:temp)] <- result[[1]]
@@ -86,7 +86,7 @@ for(i in 1:32){
 
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_infor_sex.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_infor_sex.Rdata")
 
 all.equal(onco_info$rs_id,rs_id)
 
@@ -96,5 +96,5 @@ onco_info <- onco_info[,1:10]
 
 onco_result_casecase <- data.frame(onco_info,score,infor,CHR)
 
-save(onco_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_casecase_sex.Rdata")
+save(onco_result_casecase,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_casecase_sex.Rdata")
 print(1)

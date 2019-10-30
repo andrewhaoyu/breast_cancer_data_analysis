@@ -1,13 +1,13 @@
 #merge power results two-way interactions with the effect size as 0.08 level
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_indi_",full.names=T)
 total <- 0
 #n.loop = number of simulation setting* number of sample size setting
 n.loop <- 9
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_indi_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_indi_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     #result.list is a list of pvalue
@@ -42,7 +42,7 @@ total <- 0
 #args 1:2000 contains the simulation results for FTOP, MTOP, standard logistic regressionn, complete FTOP
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_indi_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_indi_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     temp1 = nrow(result.list[[1]][[1]])/n.loop

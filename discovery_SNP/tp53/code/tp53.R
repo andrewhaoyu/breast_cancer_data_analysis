@@ -46,7 +46,7 @@ freq <- function(x){
 }
 library(bc2)
 ##tp53
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(data.table)
 data1 <- as.data.frame(fread("./data/iCOGS_euro_v10_05242017.csv",header=T))
 data2 <- as.data.frame(fread("./data/Onco_euro_v10_05242017.csv",header=T))
@@ -424,6 +424,6 @@ heter.result <- list(data.frame(test.result.second.wald,test.result.second.score
 
 
 
-save(heter.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/tp53/result/heter.result")
+save(heter.result,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/tp53/result/heter.result")
 
 

@@ -1,10 +1,10 @@
 args <- commandArgs(trailingOnly = T)
 i1 <- as.numeric(args[[1]])
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/")
 library(qqman)
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase_5p.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_standard_5p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_fixed_5p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_casecase_5p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/onco_result_standard_5p.Rdata")
 if(i1 == 1){
   idx <- which(onco_result_standard_5p$p_value1<=5E-08)
   onco_result_standard_5p[idx,]

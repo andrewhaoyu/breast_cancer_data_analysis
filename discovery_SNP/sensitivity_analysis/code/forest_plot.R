@@ -1,4 +1,4 @@
-#setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+#setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./discovery_SNP/sensitivity_analysis/result/sensitivity_result.Rdata"))
 library(data.table)
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)

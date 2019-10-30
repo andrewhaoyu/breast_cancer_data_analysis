@@ -1,10 +1,10 @@
 #-------------------------------------------------------------------
 # Update Date: 11/20/2018
 # Create Date: 11/20/2018
-# Goal: prepare base dataset for PRSice2
+# Goal: prepare base dataset for PRSice2 (decided not using this software)
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/')
 load("./EB_whole_genome/result/whole_gonome.rdata")
 
 SNP <- whole_genome$rs_id

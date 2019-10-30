@@ -3,7 +3,7 @@ library(devtools)
 library(data.table)
 #install_github("andrewhaoyu/bc2", ref = "development",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
 library(bc2)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./risk_prediction/result/split.id.rdata"))
 #icog.test.id <- Generatetestid(subtypes.icog)
 icog.train.id <- split.id[[1]]
@@ -13,7 +13,7 @@ icog.train.id <- split.id[[1]]
 #onco.cohort.id <- split.id[[5]]
 #Icog.order <- read.table(gzfile(subject.file))
 
-data1 <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
+data1 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
 data1 <- as.data.frame(data1[,-1])
 icog.train <- which(data1[,1]%in%icog.train.id)
 data1 <- data1[icog.train,]

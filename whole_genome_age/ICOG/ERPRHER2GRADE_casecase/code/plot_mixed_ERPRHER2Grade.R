@@ -1,10 +1,10 @@
 args <- commandArgs(trailingOnly=T)
 args <- as.numeric(args[[1]])
 i1 <- args
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/")
 library(qqman)
 if(i1==1){
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
   idx <- which(meta_result_shared_1p$CHR==7&meta_result_shared_1p$position==102891784)
    meta_result_shared_1p[idx,]
 s  
@@ -22,8 +22,8 @@ s
   dev.off()
   
 }else if(i1==2){
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M.Rdata")
- load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M.Rdata")
+ load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
   pvalue <- meta_result_shared_1p_filter[,15]
   idx <- which(pvalue<=1.0e-20)
   pvalue[idx] <- 1.0e-20
@@ -38,8 +38,8 @@ s
   qq(gwas_result$P,main=paste0(" Global Test Association Manhattan QQ Plot"))
   dev.off()
 }else{
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract.list.ld")
   meta_result_shared_1p_filter <- meta_result_shared_1p_filter_Ju
   
   pvalue <- meta_result_shared_1p_filter[,15]

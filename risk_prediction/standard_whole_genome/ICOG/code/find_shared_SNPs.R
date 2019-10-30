@@ -1,5 +1,5 @@
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ONCO/result/onco_result.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result/Icog_result.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ONCO/result/onco_result.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result/Icog_result.Rdata")
 
 
 
@@ -14,7 +14,7 @@ load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard
 
 
 
-load("/spin1/users/zhangh24/match.Rdata")
+load("/data/zhangh24/match.Rdata")
 
 
 
@@ -54,7 +54,7 @@ all.equal(icog_result_shared$rs_id,icog_result_shared$SNP.ICOGS)
 #onco_result_shared <- onco_result_shared[,-ncol(onco_result_shared)]
 onco_result_shared <- cbind(onco_result_shared,data_c_shared)
 all.equal(onco_result_shared$rs_id,onco_result_shared$SNP.ONCO)
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/')
 
 
 idx.filter <- which(icog_result_shared$exp_freq_a1>=0.01&

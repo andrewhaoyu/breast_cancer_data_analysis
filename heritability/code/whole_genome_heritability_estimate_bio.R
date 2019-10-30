@@ -3,7 +3,7 @@
 #prepare the data for ld score regression file
 library(data.table)
 library(dplyr)
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 standard_result <- as.data.frame(fread("./discovery_SNP/result/ResultsMeta_GWAS_iCOGs_Onco_filter_R2_MAF.txt"))
 #all_result <- fread("./data/oncoarray_bcac_public_release_oct17.txt",header=T)
 #create snp.id with official name
@@ -54,7 +54,7 @@ colnames(onco_result) <- c("snpid",
                            "info",
                            "MAF",
                            "N")
-write.table(onco_result,file="/spin1/users/zhangh24/ldsc/onco_result.txt",col.names = T,quote=F)
+write.table(onco_result,file="/data/zhangh24/ldsc/onco_result.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats onco_result.txt --out onco --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 onco.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco
 less onco.log
@@ -90,7 +90,7 @@ colnames(bcac_result) <- c("snpid",
                            "info",
                            "MAF",
                            "N")
-write.table(bcac_result,file="/spin1/users/zhangh24/ldsc/bcac_result.txt",col.names = T,quote=F)
+write.table(bcac_result,file="/data/zhangh24/ldsc/bcac_result.txt",col.names = T,quote=F)
 
 conda env create --file environment.yml
 source activate ldsc
@@ -125,7 +125,7 @@ colnames(bcac_result_all) <- c("snpid",
                            "info",
                            "MAF",
                            "N")
-write.table(bcac_result_all,file="/spin1/users/zhangh24/ldsc/bcac_result_all.txt",col.names = T,quote=F)
+write.table(bcac_result_all,file="/data/zhangh24/ldsc/bcac_result_all.txt",col.names = T,quote=F)
 
 ./munge_sumstats.py --sumstats bcac_result_all.txt --out bcac_all --merge-alleles w_hm3.snplist --signed-sumstats Z,0 --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 bcac_all.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_all
@@ -142,7 +142,7 @@ less bcac_all.log
 
 
 #match the SNPs to hapmap3 SNPs in JHPCE
-load("/spin1/users/zhangh24/ldsc/BCAC.meta.data.result.jhpce.Rdata")
+load("/data/zhangh24/ldsc/BCAC.meta.data.result.jhpce.Rdata")
 #merge BCAC results as snp.infor
 snp.infor <- cbind(BCAC.meta.result[[1]],
                    BCAC.meta.result[[2]],
@@ -179,7 +179,7 @@ colnames(bcac_result_jh) <- c("snpid",
                            "info",
                            "MAF",
                            "N")
-write.table(bcac_result_jh,file="/spin1/users/zhangh24/ldsc/bcac_result_jh.txt",col.names = T,quote=F)
+write.table(bcac_result_jh,file="/data/zhangh24/ldsc/bcac_result_jh.txt",col.names = T,quote=F)
 
 conda env create --file environment.yml
 source activate ldsc
@@ -220,7 +220,7 @@ colnames(onco_result_pub) <- c("snpid",
                               "info",
                               "MAF",
                               "N")
-write.table(onco_result_pub,file="/spin1/users/zhangh24/ldsc/onco_result_pub.txt",col.names = T,quote=F)
+write.table(onco_result_pub,file="/data/zhangh24/ldsc/onco_result_pub.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats onco_result_pub.txt --out onco_pub --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 onco_pub.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out onco_pub
 less onco_pub.log
@@ -259,7 +259,7 @@ colnames(bcac_result_pub) <- c("snpid",
                                "info",
                                "MAF",
                                "N")
-write.table(bcac_result_pub,file="/spin1/users/zhangh24/ldsc/bcac_result_pub.txt",col.names = T,quote=F)
+write.table(bcac_result_pub,file="/data/zhangh24/ldsc/bcac_result_pub.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats bcac_result_pub.txt --out bcac_pub --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 bcac_pub.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_pub
 less bcac_pub.log
@@ -294,7 +294,7 @@ colnames(bcac_result_pub_nplug) <- c("snpid",
                                "P",
                                "info",
                                "MAF")
-write.table(bcac_result_pub_nplug,file="/spin1/users/zhangh24/ldsc/bcac_result_pub_nplug.txt",col.names = T,quote=F)
+write.table(bcac_result_pub_nplug,file="/data/zhangh24/ldsc/bcac_result_pub_nplug.txt",col.names = T,quote=F)
 
 ./munge_sumstats.py --sumstats bcac_result_pub_nplug.txt --out bcac_result_pub_nplug --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01 --N  48487.39
 ./ldsc.py --h2 bcac_result_pub_nplug.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_result_pub_nplug
@@ -336,7 +336,7 @@ colnames(bcac_result_pub_all) <- c("snpid",
                                "info",
                                "MAF",
                                "N")
-write.table(bcac_result_pub_all,file="/spin1/users/zhangh24/ldsc/bcac_result_pub_all.txt",col.names = T,quote=F)
+write.table(bcac_result_pub_all,file="/data/zhangh24/ldsc/bcac_result_pub_all.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats bcac_result_pub_all.txt --out bcac_pub_all --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./ldsc.py --h2 bcac_pub_all.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_pub_all
 less bcac_pub_all.log
@@ -364,7 +364,7 @@ colnames(bcac_result_pub_all_nplug) <- c("snpid",
                                    "P",
                                    "info",
                                    "MAF")
-write.table(bcac_result_pub_all_nplug,file="/spin1/users/zhangh24/ldsc/bcac_result_pub_all_nplug.txt",col.names = T,quote=F)
+write.table(bcac_result_pub_all_nplug,file="/data/zhangh24/ldsc/bcac_result_pub_all_nplug.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats bcac_result_pub_all_nplug.txt --out bcac_pub_all_nplug --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01 --N 56556.72
 ./ldsc.py --h2 bcac_pub_all_nplug.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out bcac_pub_all_nplug
 less bcac_pub_all.log
@@ -401,7 +401,7 @@ colnames(lua) <- c("snpid",
                    "info",
                    "MAF",
                    "N")
-write.table(lua,file="/spin1/users/zhangh24/ldsc/lua.txt",col.names = T,quote=F)
+write.table(lua,file="/data/zhangh24/ldsc/lua.txt",col.names = T,quote=F)
 lub <- intrinsic_data %>% mutate(
   z = beta2/sqrt(cov7),
   sample_size = 1/(cov7*2*exp_freq_a1*(1-exp_freq_a1)),
@@ -422,7 +422,7 @@ colnames(lub) <- c("snpid",
                    "info",
                    "MAF",
                    "N")
-write.table(lub,file="/spin1/users/zhangh24/ldsc/lub.txt",col.names = T,quote=F)
+write.table(lub,file="/data/zhangh24/ldsc/lub.txt",col.names = T,quote=F)
 lubher2 <- intrinsic_data %>% mutate(
   z = beta3/sqrt(cov13),
   sample_size = 1/(cov13*2*exp_freq_a1*(1-exp_freq_a1)),
@@ -443,7 +443,7 @@ colnames(lubher2) <- c("snpid",
                        "info",
                        "MAF",
                        "N")
-write.table(lubher2,file="/spin1/users/zhangh24/ldsc/lubher2.txt",col.names = T,quote=F)
+write.table(lubher2,file="/data/zhangh24/ldsc/lubher2.txt",col.names = T,quote=F)
 her2 <- intrinsic_data %>% mutate(
   z = beta4/sqrt(cov19),
   sample_size = 1/(cov19*2*exp_freq_a1*(1-exp_freq_a1)),
@@ -464,7 +464,7 @@ colnames(her2) <- c("snpid",
                     "info",
                     "MAF",
                     "N")
-write.table(her2,file="/spin1/users/zhangh24/ldsc/her2.txt",col.names = T,quote=F)
+write.table(her2,file="/data/zhangh24/ldsc/her2.txt",col.names = T,quote=F)
 tn <- intrinsic_data %>% mutate(
   z = beta5/sqrt(cov25),
   sample_size = 1/(cov25*2*exp_freq_a1*(1-exp_freq_a1)),
@@ -485,7 +485,7 @@ colnames(tn) <- c("snpid",
                   "info",
                   "MAF",
                   "N")
-write.table(tn,file="/spin1/users/zhangh24/ldsc/tn.txt",col.names = T,quote=F)
+write.table(tn,file="/data/zhangh24/ldsc/tn.txt",col.names = T,quote=F)
 
 
 
@@ -535,7 +535,7 @@ colnames(cimba) <- c("snpid",
                   "info",
                   "MAF",
                   "N")
-write.table(cimba,file="/spin1/users/zhangh24/ldsc/cimba.txt",col.names = T,quote=F)
+write.table(cimba,file="/data/zhangh24/ldsc/cimba.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats lua.txt --out lua --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./munge_sumstats.py --sumstats lub.txt --out lub --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
 ./munge_sumstats.py --sumstats lubher2.txt --out lubher2 --merge-alleles w_hm3.snplist --info-min 0.3 --maf-min 0.01
@@ -610,14 +610,14 @@ write.table(cimba,file="/spin1/users/zhangh24/ldsc/cimba.txt",col.names = T,quot
 less lua_c.log
 #estimate is 0.592 (0.063)
 
-write.table(intrinsic_data,file="/spin1/users/zhangh24/ldsc/lua.txt",col.names = T,quote=F)
+write.table(intrinsic_data,file="/data/zhangh24/ldsc/lua.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats lua.txt --out lua --merge-alleles w_hm3.snplist --info-min 0.3
 ./ldsc.py --h2 lua.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out lua
 less lua.log
 #
 
 #load hapmap3 intrinsic subtypes data used by guanghao
-load("/spin1/users/zhangh24/ldsc/BCAC_CIMBABRCA1_082119.Rdata")
+load("/data/zhangh24/ldsc/BCAC_CIMBABRCA1_082119.Rdata")
 
 BCAC.meta.result.new <- cbind(BCAC.meta.result.new[[1]],
                               BCAC.meta.result.new[[2]],
@@ -649,7 +649,7 @@ colnames(intrinsic_data_lua) <- c("snpid",
                               "info",
                               "freq",
                               "N")
-write.table(intrinsic_data_lua,file="/spin1/users/zhangh24/ldsc/intrinsic_data_lua.txt",col.names = T,quote=F)
+write.table(intrinsic_data_lua,file="/data/zhangh24/ldsc/intrinsic_data_lua.txt",col.names = T,quote=F)
 ./munge_sumstats.py --sumstats intrinsic_data_lua.txt --out intrinsic_data_lua --merge-alleles w_hm3.snplist --info-min 0.3
 ./ldsc.py --h2 intrinsic_data_lua.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out intrinsic_data_lua
 less intrinsic_data_lua.log

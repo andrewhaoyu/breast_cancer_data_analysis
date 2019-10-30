@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./genetic_correlation/ICOG/result/ICOG.result.transform.Rdata"))
 load(paste0("./genetic_correlation/ONCO/result/ONCO.result.transfrom.Rdata"))
 colnames(ICOG.result.transform)[11:40] <- paste0("ICOG",c(1:30))

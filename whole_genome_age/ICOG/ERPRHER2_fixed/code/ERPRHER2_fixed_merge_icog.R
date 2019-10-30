@@ -22,7 +22,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result"
+result.dir <- "/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result"
 result_Files <- dir(result.dir,pattern="ERPRHER2_fixed")
 result.idx <- rep(0,length(result_Files))
 for(i in 1:length(result_Files)){
@@ -34,7 +34,7 @@ for(i in 1:length(result_Files)){
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
-  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result")
+  setwd("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result")
   
     load(paste0("ERPRHER2_fixed.Rdata",idx[i]))
     temp <- length(result[[1]])
@@ -51,7 +51,7 @@ freq.all <- rep(0,num)
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result")
+setwd("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result")
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
@@ -122,7 +122,7 @@ icog_result <- data.frame(icog_info,score,infor,CHR)
 
 
 
-save(icog_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Icog_result.Rdata")
+save(icog_result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Icog_result.Rdata")
 print(1)
 
 

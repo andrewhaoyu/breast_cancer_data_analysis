@@ -1,4 +1,4 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 result <- NULL
 for(i1 in 1:35){
   load(paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_",i1,".Rdata"))
@@ -7,7 +7,7 @@ for(i1 in 1:35){
 #SNP <- c(colnames(icog.julie),colnames(discovery.snp.icog)[1:18])
 
 ##################discovery snp were ordered based on the order they are extracted
-discovery_snp <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
+discovery_snp <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/discovery_snp_summary_new.csv",header=T)
 #SNP <- discovery_snp$SNP.ICOGS
 
 ################match the discovery snps to the order in the paper

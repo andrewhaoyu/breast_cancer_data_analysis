@@ -1,9 +1,9 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 library(data.table)
 ###########load CIMBA data
 CIMBA <- fread('./data/brca1_bc.txt',header=T)
 ###########load BCAC intrinsic subtype data
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p.Rdata"))
+load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p.Rdata"))
 ###############Transform the allele in different coding
 TranformAllele <- function(allele){
   if(allele=="A"){

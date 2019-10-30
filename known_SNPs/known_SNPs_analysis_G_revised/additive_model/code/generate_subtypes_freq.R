@@ -18,7 +18,7 @@ SubtypesTrans <- function(casecon,ER,PR,HER2,grade){
 }
 library(R.utils)
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -36,4 +36,4 @@ idx <- which(y.pheno.mis[,1]==1&
 y.pheno.case.complete <- y.pheno.mis[idx,]
 result <- GenerateFreqTable(y.pheno.case.complete)
 result[,5] <- result[,5]/length(idx)
-write.csv(result,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/data/BCAC_freq_result.csv")
+write.csv(result,file = "/data/zhangh24/breast_cancer_data_analysis/data/BCAC_freq_result.csv")

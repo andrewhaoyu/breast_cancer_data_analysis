@@ -5,14 +5,14 @@ i2 = as.numeric(args[[2]])
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 #library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
 library(bigmemory)
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
 z.standard <- support.matrix[[1]]
 z.additive.design <- support.matrix[[2]]
 M <- support.matrix[[3]]
@@ -56,11 +56,11 @@ if(i1!=19){
   x.covar.mis2 <- x.covar.mis2[idx.complete2,]
   x.covar.mis2 <- cbind(x.covar.mis2,age2)
   data2.com <- data2[idx.complete2,]
-  discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T))
+  discovery.snp.icog <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T))
   
   discovery.snp.icog.complete <- discovery.snp.icog[idx.complete1,]
   
-  discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv"))
+  discovery.snp.onco <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv"))
   discovery.snp.onco.complete <- discovery.snp.onco[idx.complete2,]
   
   
@@ -162,11 +162,11 @@ if(i1!=19){
   x.covar.mis2 <- x.covar.mis2[idx.complete2,]
   x.covar.mis2 <- cbind(x.covar.mis2,age2)
   data2.com <- data2[idx.complete2,]
-  discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T))
+  discovery.snp.icog <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T))
   
   discovery.snp.icog.complete <- discovery.snp.icog[idx.complete1,]
   
-  discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv"))
+  discovery.snp.onco <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv"))
   discovery.snp.onco.complete <- discovery.snp.onco[idx.complete2,]
   
   

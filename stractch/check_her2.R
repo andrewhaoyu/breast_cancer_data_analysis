@@ -5,13 +5,13 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #Load mixed effect model results
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
 mixed <- meta_result_shared_1p
 #Load fixed effect model results
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p.Rdata")
 fixed <- meta_result_shared_1p
 #Load intirnsic subtypes results
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p.Rdata"))
+load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p.Rdata"))
 intrin <- meta_result_shared_1p
 # all.equal(mixed$rs_id,fixed$rs_id)
 # all.equal(mixed$rs_id,intrin$rs_id)
@@ -40,7 +40,7 @@ colnames(intrin.result)[c(2,4,6,8,10)] <- paste0(names.subtypes,"_",c("p-value")
 new.data <- cbind(snp.info,mixed.p,fixed.p,intrin.result[,1:10])
 colnames(new.data)[c(15,16)] <- c("Mixed model global association test",
                                   "Fixed model global association test")
-write.csv(new.data,file="/spin1/users/zhangh24/breast_cancer_data_analysis/data/HER2_check.csv",quote=F,row.names=F)
+write.csv(new.data,file="/data/zhangh24/breast_cancer_data_analysis/data/HER2_check.csv",quote=F,row.names=F)
 
 
 

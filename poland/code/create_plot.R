@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data <- read.csv("./poland/result/known_snps/known_snps_result.csv",header=T)
 idx <- which(data$standard_p<=0.001)
 data.zoom <- data[-idx,]

@@ -4,7 +4,7 @@
 # Goal: prepare assoc dataset for plink
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/')
 load("./EB_whole_genome/result/whole_gonome.rdata")
 
 
@@ -29,4 +29,4 @@ colnames(assoc) <- c("CHR",
                      "OR",
                      "STAT",
                      "P")
-write.table(assoc,file="/spin1/users/zhangh24/BCAC/impute_plink_onco/LD_assoc",col.names = T, row.names=F, quote = F)
+write.table(assoc,file="/data/zhangh24/BCAC/impute_plink_onco/LD_assoc",col.names = T, row.names=F, quote = F)

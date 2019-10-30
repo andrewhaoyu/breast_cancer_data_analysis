@@ -1,7 +1,7 @@
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
 print(i1)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(bc2)
 
 z.design <- matrix(c(
@@ -25,7 +25,7 @@ load("./discovery_SNP/CIMBA_conditional_analysis/result/ICOG/CIMBA_icog_snpvalue
 load("./discovery_SNP/CIMBA_conditional_analysis/result/ONCO/CIMBA_onco_snpvalue.Rdata")
 
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -106,4 +106,4 @@ for(i2 in (5*i1-4):(5*i1)){
   }else{}
    
 }
-save(conditional_result,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/conditional_result",i1,".Rdata"))
+save(conditional_result,file = paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/CIMBA_conditional_analysis/result/conditional_result",i1,".Rdata"))

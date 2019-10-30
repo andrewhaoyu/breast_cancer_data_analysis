@@ -26,7 +26,7 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
   return(result)
 }
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(CompQuadForm)
@@ -98,7 +98,7 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/age_interaction/result/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/age_interaction/result/")
 library(xlsx)
 generate_second_stage_parameter_names = function(tumor_characteristics){
   result = c("baseline effect (95%CI)",

@@ -21,7 +21,7 @@ rm(list=ls())
 i1= 1
 
 library(R.utils)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load("./whole_genome/ICOG/ERPRHER2GRADE_casecase/result/ERPRHER2Grade_casecase_test")
 
 n <- 109713

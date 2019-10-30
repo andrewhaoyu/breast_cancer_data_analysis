@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 p.random <- rep(0,178)
 p.fixed <- rep(0,178)
 p.random.adjust <- rep(0,178)
@@ -52,7 +52,7 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
   return(result)
 }
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(CompQuadForm)
@@ -105,7 +105,7 @@ generate_first_stage_parameter_names = function(tumor_characteristics,z_standard
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(xlsx)
 generate_second_stage_parameter_names = function(tumor_characteristics){
   result = c("baseline effect (95%CI)",

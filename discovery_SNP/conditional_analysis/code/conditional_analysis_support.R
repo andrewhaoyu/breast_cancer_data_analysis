@@ -4,13 +4,13 @@ rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/support.matrix.Rdata")
 z.standard <- support.matrix[[1]]
 z.additive.design <- support.matrix[[2]]
 M <- support.matrix[[3]]
@@ -56,12 +56,12 @@ x.covar.mis2 <- data2[,c(5:14)]
 
 
 
-icog.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
+icog.julie <- fread("/data/zhangh24/breast_cancer_data_analysis/data/Julie_snp_icog.csv")
 icog.julie <- icog.julie[,-1]
-discovery.snp.icog <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
-onco.julie <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
+discovery.snp.icog <- fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T)
+onco.julie <- fread("/data/zhangh24/breast_cancer_data_analysis/data/Julie_snp_onco.csv")
 onco.julie <- onco.julie[,-1]
-discovery.snp.onco <- fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
+discovery.snp.onco <- fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv")
 x.discovery.mis1 <- as.data.frame(cbind(icog.julie,discovery.snp.icog))
 x.discovery.mis2 <- as.data.frame(cbind(onco.julie,discovery.snp.onco))
 ###two snps onco array only
@@ -84,7 +84,7 @@ x.covar.mis2 <- cbind(x.covar.mis2,age2)
 
 known.all.mis2 <- known.all.mis2[idx.complete2,]
 
-fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
+fine_mapping <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/fine_mapping_annotated_clean.csv",header= T,
                          stringsAsFactors = F)
 
 
@@ -116,8 +116,8 @@ idx.known <- which(region.all==region.all[i1])
     saturated = NULL,
     missingTumorIndicator = 888
   )
-  save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",i1,".Rdata"))
-  save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",i1,".Rdata"))
+  save(score.test.support.icog,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",i1,".Rdata"))
+  save(score.test.support.onco,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",i1,".Rdata"))
   
   
 }else{
@@ -149,8 +149,8 @@ idx.known <- which(region.all==region.all[i1])
     saturated = NULL,
     missingTumorIndicator = 888
   )
-  save(score.test.support.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",i1,".Rdata"))
-  save(score.test.support.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",i1,".Rdata"))
+  save(score.test.support.icog,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.icog",i1,".Rdata"))
+  save(score.test.support.onco,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/score.test.support.onco",i1,".Rdata"))
   
   
 }

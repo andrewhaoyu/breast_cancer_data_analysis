@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./discovery_SNP/functional_analysis/result/functional_snp_conditional_replicate.Rdata"))
 dim(functional_snp_conditional)
 idx.na <- which(is.na(functional_snp_conditional$SNP.ICOG))

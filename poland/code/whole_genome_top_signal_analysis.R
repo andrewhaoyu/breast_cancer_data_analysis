@@ -10,7 +10,7 @@ rm(list=ls())
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(readr)
 library(devtools)
 library(CompQuadForm)
@@ -49,7 +49,7 @@ Generatesubtypes<- function(ER,PR,HER2,Grade){
 
 
 if(i1<=2){
-  top_signal <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/top_signal_in_poland.csv",header=T)[,2:3]
+  top_signal <- read.csv("/data/zhangh24/breast_cancer_data_analysis/poland/result/whole_genome/top_signal_in_poland.csv",header=T)[,2:3]
   data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
   data2 <- as.data.frame(data2)
   idx <- which(data2$StudyCountry=="Poland")

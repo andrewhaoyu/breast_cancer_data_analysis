@@ -2,15 +2,15 @@
 ##########extract list was generated after we filter out all the SNPs with 1M around the known SNPs region###
 ##########all the SNPs with pvalue <= 5E-06 was token out
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n.raw <- 109713
 snpvalue <- rep(0,n.raw)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 Icog.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -36,7 +36,7 @@ total <- 0
 for(i in 1:564){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2_extract",i,".txt"
+  geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2_extract",i,".txt"
 )
   num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
   
@@ -90,9 +90,9 @@ snpvalue.result <- snpvalue.result[,1:total]
  
 extract.list.shared <- extract.list[1:total,]
 
-save(extract.list.shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list_shared.Rdata")
+save(extract.list.shared,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list_shared.Rdata")
 extract.list.onco.only <- extract.list[(total+1):1799,]
-save(extract.list.onco.only,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list_onco_only.Rdata")
+save(extract.list.onco.only,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list_onco_only.Rdata")
 
 
 ##########
@@ -106,7 +106,7 @@ colnames(snpvalue.result) <- snpid.result
 
 
 extract.result <- list(snpid.result,snpvalue.result)
-save(extract.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
+save(extract.result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
 
 
 

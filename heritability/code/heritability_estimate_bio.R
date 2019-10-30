@@ -50,7 +50,7 @@ LD_pruning = function(sig_SNPs,LD2){
 
 
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 #load summary level statistics for overall
 #Haoyupdate added the meta-analysis between iCOGs and OncoArray
@@ -639,7 +639,7 @@ LD_pruning = function(sig_SNPs,LD2){
 #all snp.result
 all.result <- rbind(known.result[idx.fil,],dis.result)
 #load in the heritability estimate
-heri.est <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/BCAC_heritability.csv")
+heri.est <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/BCAC_heritability.csv")
 #reorder heri.est 
 heri.est <- heri.est[c(2,4,5,3,1),c(2,4,5,3,1)]
 gwas.heri <- diag(as.matrix(heri.est))
@@ -687,7 +687,7 @@ colnames(result.sum) <- c("simga_all_identified_snps",
 write.csv(result.sum,file = "./heritability/result/result.sum.csv")
 
 ############PRS for the top 1% increase risk compared to the standard
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./risk_prediction/result/split.id.rdata"))
 #icog.test.id <- Generatetestid(subtypes.icog)
 #icog.train.id <- split.id[[1]]

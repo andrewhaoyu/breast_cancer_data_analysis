@@ -1,6 +1,6 @@
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
 
 n.icog <- length(conditional.snp.list.icog[[1]])
 n.onco <- length(conditional.snp.list.onco[[1]])
@@ -18,15 +18,15 @@ test.onco <- conditional.snp.list.onco[[1]][idx.match.onco]
 test.onco.value <- conditional.snp.list.onco[[2]][,idx.match.onco]
 conditional.snp.list.onco.clean <- list(test.onco,
                                         test.onco.value)
-#save(conditional.snp.list.icog.clean,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.Rdata")
-#save(conditional.snp.list.onco.clean,file="/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.Rdata")
+#save(conditional.snp.list.icog.clean,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.Rdata")
+#save(conditional.snp.list.onco.clean,file="/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.Rdata")
 
 
 
 
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.Rdata")
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.Rdata")
-#load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
+#load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.Rdata")
+#load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.Rdata")
+#load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
 
 
 
@@ -42,6 +42,6 @@ for(i in 1:3000){
   conditional.snp.list.icog.clean.sub <- list(conditional.snp.list.icog.clean[[1]][start:end],conditional.snp.list.icog.clean[[2]][,start:end])
   conditional.snp.list.onco.clean.sub <- list(conditional.snp.list.onco.clean[[1]][start:end],
                                               conditional.snp.list.onco.clean[[2]][,start:end])
-  save(conditional.snp.list.icog.clean.sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.sub",i,".Rdata"))
-  save(conditional.snp.list.onco.clean.sub,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.sub",i,".Rdata"))
+  save(conditional.snp.list.icog.clean.sub,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog.clean.sub",i,".Rdata"))
+  save(conditional.snp.list.onco.clean.sub,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco.clean.sub",i,".Rdata"))
 }

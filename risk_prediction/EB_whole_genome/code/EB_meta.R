@@ -2,7 +2,7 @@ arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
 library(bc2)
 library(bcutility)
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/')
 load('./intrinsic_subtypes_whole_genome/ICOG/result/meta_result_shared_1p.Rdata')
 meta_intrin <- meta_result_shared_1p
 load("./standard_whole_genome/ICOG/result/meta_result_shared_1p.Rdata")

@@ -1,4 +1,4 @@
-# setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+# setwd("/data/zhangh24/breast_cancer_data_analysis/")
 # filedir <- './whole_genome_age/ICOG/Intrinsic_subtypes/result/'
 # files <- dir(filedir,pattern="intrinsic_subytpe_icog")
 # total <- 564*5
@@ -21,12 +21,12 @@
 # temp <- 1
 # for(i in 1:length(icog.unique.resubmit)){
 #   for(j in 1:15){
-#     submit[temp] <- paste0("Rscript /spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/code/intrinsic_subtype_icog.R ",icog.unique.resubmit[i]," ",j)
+#     submit[temp] <- paste0("Rscript /data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/code/intrinsic_subtype_icog.R ",icog.unique.resubmit[i]," ",j)
 #     temp <- temp+1
 #   }
 #   
 # }
-# write.table(submit,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/code/icog_resubmit.sh",
+# write.table(submit,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/code/icog_resubmit.sh",
 #             row.names=F,quote=F,col.names=F)
 
 
@@ -35,7 +35,7 @@
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 filedir <- './whole_genome_age/ICOG/Intrinsic_subtypes/result/'
 files <- dir(filedir,pattern="intrinsic_subytpe_icog_resubmit")
 result_files <- dir(filedir,pattern="intrinsic_subytpe_icog")
@@ -75,7 +75,7 @@ result.dir <- './whole_genome_age/ICOG/Intrinsic_subtypes/result/'
 
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result.Rdata")
 #rs_id <- icog_result$rs_id
 num <- nrow(icog_result)
 
@@ -130,9 +130,9 @@ for(i in 1:length(Files)){
     }
     }
 }
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
 # icog_info <- cbind(icog_info,CHR)
-# save(icog_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
+# save(icog_info,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_info.Rdata")
 idx <- which(icog_info$rs_id!=rs_id)
 all.equal(icog_info$rs_id,rs_id)
 #idx.diff <- which(icog_info$rs_id!=rs_id)
@@ -146,7 +146,7 @@ icog_result_casecase <- data.frame(icog_info,score,infor,CHR)
 
 
 
-save(icog_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/Icog_result_intrinsic_subtype_082119.Rdata")
+save(icog_result_casecase,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/Icog_result_intrinsic_subtype_082119.Rdata")
     # for(j in 1:temp){
     #   infor_j <- result[[3]][(number.of.tumor*j-(number.of.tumor-1)):((number.of.tumor)*j),]
     #   infor[num.total+j,] <- as.vector(infor_j)
@@ -281,7 +281,7 @@ save(icog_result_casecase,file="/spin1/users/zhangh24/breast_cancer_data_analysi
 # 
 
 # icog_result_baseline <- data.frame(icog_info,score_baseline,infor_baseline,CHR)
-# save(icog_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
+# save(icog_result_baseline,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/Icog_result_baseline.Rdata")
 # print(1)
 
 

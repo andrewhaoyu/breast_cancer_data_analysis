@@ -17,14 +17,14 @@ i1 <- as.numeric(arg[[1]])
 print(i1)
 library(R.utils)
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n <- 109713
 snpvalue <- rep(0,n)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 Icog.order <- read.table(gzfile(subject.file))
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./risk_prediction/result/split.id.rdata"))
 #icog.test.id <- Generatetestid(subtypes.icog)
 icog.train.id <- split.id[[1]]
@@ -34,7 +34,7 @@ icog.train.id <- split.id[[1]]
 #onco.cohort.id <- split.id[[5]]
 #Icog.order <- read.table(gzfile(subject.file))
 ######load in the data and take out the training data
-data1 <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
+data1 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
 data1 <- as.data.frame(data1[,-1])
 icog.train <- which(data1[,1]%in%icog.train.id)
 data1 <- data1[icog.train,]

@@ -25,7 +25,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
+result.dir <- "/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
 result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
 result_Files <- result_Files[1:567]
 result.idx <- rep(0,length(result_Files))
@@ -48,7 +48,7 @@ for(i in 1:length(result_Files)){
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
-  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
+  setwd("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
   
   load(paste0("ERPRHER2Grade_fixed_onco",idx[i]))
   temp <- length(result[[1]])
@@ -67,7 +67,7 @@ freq.all <- rep(0,num)
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
 num.total <- 0
 num.length <- rep(0,length(Files))
 
@@ -131,15 +131,15 @@ for(i in 1:length(Files)){
 #   
 # }
 
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
 # 
 # 
 # onco_info <- onco_result[,1:10]
 # CHR <- onco_result[,41]
 # onco_info <- cbind(onco_info,CHR)
-# save(onco_info,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+# save(onco_info,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info.Rdata")
 all.equal(onco_info$rs_id,rs_id)
 CHR <- onco_info[,11]
 onco_info <- onco_info[,1:10]
@@ -147,9 +147,9 @@ onco_info <- onco_info[,1:10]
 
 onco_result <- data.frame(onco_info,score,infor,CHR)
 
-save(onco_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
+save(onco_result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
 print(1)
 # onco_result_baseline <- data.frame(onco_info,score_baseline,infor_baseline,CHR)
-# save(onco_result_baseline,file="/spin1/users/zhangh24/breast_cancer_data_analysis/wholge_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
+# save(onco_result_baseline,file="/data/zhangh24/breast_cancer_data_analysis/wholge_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_baseline.Rdata")
 # print(2)
 

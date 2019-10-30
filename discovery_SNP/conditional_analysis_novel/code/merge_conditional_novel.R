@@ -1,4 +1,4 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 p.value.twostage <- rep(0,11)
 p.value.standard <- rep(0,11)
 for(i1 in 1:11){
@@ -12,7 +12,7 @@ names(p.value.twostage) <- c("")
 
 
 ###########second time check
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 p.value.twostage <- rep(0,11)
 p.value.standard <- rep(0,11)
 for(i1 in 4:11){

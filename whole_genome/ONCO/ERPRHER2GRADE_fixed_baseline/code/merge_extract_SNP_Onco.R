@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 
 n.raw <- 142273
@@ -18,7 +18,7 @@ n <- length(idx.fil)
 snpvalue <- rep(0,n)
 idx.match <- match(pheno$Onc_ID,onco.order[idx.fil,1])
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
 library(bc2)
 
 extract.num <- nrow(extract.list)
@@ -32,7 +32,7 @@ total <- 0
 for(i in 1:567){
   
   print(i)  
-  geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2_extract",i,".txt")
+  geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/ERPRHER2_extract",i,".txt")
   num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
   
   if(num!=0){
@@ -76,4 +76,4 @@ snpvalue.result <- snpvalue.result[,1:total]
 
 extract.result <- list(snpid.result=snpid.result,snpvalue.result=snpvalue.result)
 
-save(extract.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result.Rdata")
+save(extract.result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result.Rdata")

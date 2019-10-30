@@ -1,5 +1,5 @@
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/icog_result_shared_1p_sex.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_shared_1p_sex.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/icog_result_shared_1p_sex.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_casecase/result/onco_result_shared_1p_sex.Rdata")
 
 
 meta_result_shared_1p <- icog_result_shared_1p[,c(1:10,(ncol(icog_result_shared_1p)-3):ncol(icog_result_shared_1p))]
@@ -13,7 +13,7 @@ p.value <- rep(0,n)
 total <- 0
 for(i1 in 1:1000){
   
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/p_value_sub_sex",i1,".Rdata"))
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/p_value_sub_sex",i1,".Rdata"))
   temp <- length(pvalue_sub)
   
   p.value[total+(1:temp)] <- pvalue_sub
@@ -24,12 +24,12 @@ for(i1 in 1:1000){
 
 
 meta_result_shared_1p_sex <- cbind(meta_result_shared_1p_no_pvalue,p.value)
- #save(meta_result_shared_1p_sex,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_sex.Rdata"))
+ #save(meta_result_shared_1p_sex,file=paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_sex.Rdata"))
 
 
 
 
-load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata"))
+load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata"))
 
 head(meta_result_shared_1p)
 #match the column name between the sex dataset and #22 auto chromosomes data
@@ -42,11 +42,11 @@ meta_result_shared_1p_final = rbind(
   meta_result_shared_1p_sex[,c(1:3,6:15)] )
 meta_result_shared_1p <- meta_result_shared_1p_final
 
-save(meta_result_shared_1p,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_final.Rdata"))
+save(meta_result_shared_1p,file = paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_final.Rdata"))
 
 
 meta_result_shared_1p <- meta_result_shared_1p[,c(2,9,3,13)]
-write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_mixed.txt"),row.names = F,quote = F)
+write.table(meta_result_shared_1p,file=paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_mixed.txt"),row.names = F,quote = F)
 
 
 
@@ -54,7 +54,7 @@ write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_canc
 
 
 
-# fine_mapping <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/data/fine_mapping_regions.csv",header= T)
+# fine_mapping <- read.csv("/data/zhangh24/breast_cancer_data_analysis/data/fine_mapping_regions.csv",header= T)
 # 
 # idx <- which(meta_result_shared_1p$position== 47780223&meta_result_shared_1p$CHR==21)
 # meta_result_shared_1p[idx,]
@@ -79,10 +79,10 @@ write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_canc
 # idx_cut <- unique(idx_cut)
 # meta_result_shared_1p_filter <- meta_result_shared_1p[-idx_cut,]
 # 
-# save(meta_result_shared_1p_filter,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M.Rdata")
+# save(meta_result_shared_1p_filter,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M.Rdata")
 # 
 # 
-# new_filter <- read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
+# new_filter <- read.csv("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/Filter_based_on_Montse.csv",header=T,stringsAsFactors = F)
 # new_filter <- new_filter[1:22,]
 # new_filter[,2] <- as.numeric(gsub(",","",new_filter[,2]))
 # 
@@ -103,11 +103,11 @@ write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_canc
 # idx_cut <- unique(idx_cut)
 # meta_result_shared_1p_filter_Ju <- meta_result_shared_1p_filter[-idx_cut,]
 # 
-# save(meta_result_shared_1p_filter_Ju,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+# save(meta_result_shared_1p_filter_Ju,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
 # 
 # 
 # 
-# load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata"))
+# load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata"))
 
 
 
@@ -125,7 +125,7 @@ write.table(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_canc
 
 
 
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
 # 
 # idx <- which(meta_result_shared_1p_filter_Ju$CHR==1&meta_result_shared_1p_filter_Ju$position== 120485335)
 # meta_result_shared_1p_filter_Ju[idx,]

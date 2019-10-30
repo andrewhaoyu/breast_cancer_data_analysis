@@ -5,7 +5,7 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #---------------------------------------#---------------------------------------
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 library(dplyr)
 library(data.table)
 library(pROC)
@@ -16,7 +16,7 @@ subtypes <- c("Luminial_A",
               "HER2_Enriched",
               "TN")
 #load all the datasets
-sample.data <- as.data.frame(fread("/spin1/users/zhangh24/test/sample.txt"))
+sample.data <- as.data.frame(fread("/data/zhangh24/test/sample.txt"))
 #the subtypes names in sample data
 names.subtypes <- c("Luminal_A",
                     "Luminal_B",
@@ -55,7 +55,7 @@ for(j in 1:length(select.names)){
   for(i in 1:n.pthres){
     #read in result
     
-    prs <- as.data.frame(fread(paste0("/spin1/users/zhangh24/BCAC/prs_out/",select.names[j],"_prs_",i,"_out.profile"),header=T))
+    prs <- as.data.frame(fread(paste0("/data/zhangh24/BCAC/prs_out/",select.names[j],"_prs_",i,"_out.profile"),header=T))
     
       temp <- j%%5
     if(temp==0){temp=5}
@@ -93,9 +93,9 @@ for(j in 1:length(select.names)){
     subtypes[ind] <- names.subtypes[temp]
     method[ind] <- method.temp
     p[ind] <- pthres[i]
-    code <- paste0("wc -l /spin1/users/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file")
+    code <- paste0("wc -l /data/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file")
     temp.out <- system(code,intern = T)
-    n.snp[ind] <- as.numeric(gsub(paste0("/spin1/users/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file"),"",temp.out))
+    n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file"),"",temp.out))
     
     ind = ind + 1
     
@@ -114,4 +114,4 @@ auc.result <- data.frame(auc,
                          p,
                          subtypes,
                          n.snp)
-save(auc.result,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.rdata")
+save(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.rdata")

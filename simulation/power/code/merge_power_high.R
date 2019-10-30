@@ -1,11 +1,11 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_high",full.names=T)
 total <- 0
 n.loop = 12
 for(i1 in 1:12000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/simu_high",i1,".Rdata")) 
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
@@ -25,7 +25,7 @@ total <- 0
 
 for(i1 in 1:12000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/simu_high",i1,".Rdata")) 
     temp1 = length(result.list[[1]][[1]])/n.loop
@@ -79,14 +79,14 @@ CountPower <- function(p,alpha){
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 
 files <- dir(filedir,pattern="poly_high",full.names=T)
 total <- 0
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/poly_high",i1,".Rdata")) 
     total = total+ length(p_poly)/n.loop
@@ -101,7 +101,7 @@ p_poly_result <- matrix(0,total,n.loop)
 total <- 0
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high",i1,".Rdata")
   if(file%in%files==T){
     load(paste0("./simulation/power/result/poly_high",i1,".Rdata"))
     temp = length(p_poly)/n.loop
@@ -144,14 +144,14 @@ write.csv(result,file=paste0("./simulation/power/result/power_high.result.csv") 
 
 
 #load results for effect with 0.25
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 files <- dir(filedir,pattern="simu_high_0.25_",full.names=T)
 total <- 0
 n.loop = 3
 for(i1 in 1:12000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high_0.25_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     total = total+ length(result.list[[1]][[1]])/n.loop + length(result.list[[2]][[1]])/n.loop
@@ -171,7 +171,7 @@ total <- 0
 
 for(i1 in 1:12000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high_0.25_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//simu_high_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     temp1 = length(result.list[[1]][[1]])/n.loop
@@ -225,14 +225,14 @@ CountPower <- function(p,alpha){
 
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
-filedir <- '/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+filedir <- '/data/zhangh24/breast_cancer_data_analysis/simulation/power/result/'
 
 files <- dir(filedir,pattern="poly_high_0.25_",full.names=T)
 total <- 0
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high_0.25_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file) 
     total = total+ length(p_poly)/n.loop
@@ -247,7 +247,7 @@ p_poly_result <- matrix(0,total,n.loop)
 total <- 0
 for(i1 in 1:2000){
   print(i1)
-  file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high_0.25_",i1,".Rdata")
+  file = paste0("/data/zhangh24/breast_cancer_data_analysis/simulation/power/result//poly_high_0.25_",i1,".Rdata")
   if(file%in%files==T){
     load(file)
     temp = length(p_poly)/n.loop

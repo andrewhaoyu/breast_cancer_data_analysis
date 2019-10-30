@@ -24,13 +24,13 @@ prs.code <- data.frame(prs.code,stringsAsFactors=F)
 temp <- 1
 for(i in 1:n.pthres){
   for(j in 1:length(select.names)){
-    prs.code.temp <- paste0("/spin1/users/zhangh24/plink --score /spin1/users/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file no-sum no-mean-imputation --dosage /spin1/users/zhangh24/BCAC/impute_onco_dosage/dosage_all noheader skip0=1 skip1=1 format=1 --fam /spin1/users/zhangh24/BCAC/impute_onco/onco_plink.fam --out /spin1/users/zhangh24/BCAC/prs_out/",select.names[j],"_prs_",i,"_out")
+    prs.code.temp <- paste0("/data/zhangh24/plink --score /data/zhangh24/BCAC/prs_file/",select.names[j],"_prs_",i,".file no-sum no-mean-imputation --dosage /data/zhangh24/BCAC/impute_onco_dosage/dosage_all noheader skip0=1 skip1=1 format=1 --fam /data/zhangh24/BCAC/impute_onco/onco_plink.fam --out /data/zhangh24/BCAC/prs_out/",select.names[j],"_prs_",i,"_out")
     prs.code[temp,1] <- prs.code.temp
     temp <- temp+1
   }
   }
 #write out the command and submit use cluster
-write.table(prs.code,file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/code/caculate.prs.sh"),col.names = F,row.names = F,quote=F)
+write.table(prs.code,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/code/caculate.prs.sh"),col.names = F,row.names = F,quote=F)
 
 
 

@@ -10,7 +10,7 @@ library(data.table)
 library(bc3)
 #data <- fread("./data/dataset_montse_20180522.txt")
 #setwd('/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis')
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 data <- as.data.frame(fread("./data/Dataset_Montse_20190322.txt"))
 ##############we only focus on the invasive breast cancer cases
 ##############collapse breastmost_cat 0 agefftp 0 and lastchildage 0 as 1, otherwise there will be collinearity issue with parity. Since women with no children will also fall into these categoriess

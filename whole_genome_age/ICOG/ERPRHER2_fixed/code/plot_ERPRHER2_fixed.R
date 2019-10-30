@@ -1,10 +1,10 @@
 args <- commandArgs(trailingOnly=T)
 args <- as.numeric(args[[1]])
 i1 <- args
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/")
 library(qqman)
 if(i1==1){
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p.Rdata")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p.Rdata")
   pvalue <- meta_result_shared_1p[,15]
   idx <- which(pvalue<=1.0e-20)
   pvalue[idx] <- 1.0e-20
@@ -15,8 +15,8 @@ if(i1==1){
   dev.off()
   
 }else if(i1==2){
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p_filter_1M.Rdata")
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract.list.ld")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p_filter_1M.Rdata")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract.list.ld")
   
   pvalue <- meta_result_shared_1p_filter[,15]
   idx <- which(pvalue<=1.0e-20)
@@ -29,9 +29,9 @@ if(i1==1){
   manhattan(gwas_result,suggestiveline = F, cex.axis = 2,main=paste0(" Global Test Association Manhattan Plot"),ylim=c(0,20))
   dev.off()
 }else{
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/meta_result_shared_1p_filter_1M_Ju.Rdata")
   meta_result_shared_1p_filter <- meta_result_shared_1p_filter_Ju
-  load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract.list.ld")
+  load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ICOG/ERPRHER2_fixed/result/extract.list.ld")
   pvalue <- meta_result_shared_1p_filter[,15]
   idx <- which(pvalue<=1.0e-20)
   pvalue[idx] <- 1.0e-20

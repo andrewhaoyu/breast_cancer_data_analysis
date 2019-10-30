@@ -2,15 +2,15 @@ args = commandArgs(trailingOnly = T)
 i1 <- as.numeric(args[[1]])
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n.raw <- 109713
 snpvalue <- rep(0,n.raw)
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 Icog.order <- read.table(gzfile(subject.file))
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
@@ -34,13 +34,13 @@ n.sub <- 72411
 
 
 
-text <- system(paste0("cat | wc -l /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i1,".txt"),intern=T)
-extract.num <- as.integer(gsub(paste0(" /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i1,".txt"),"",text))
+text <- system(paste0("cat | wc -l /data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i1,".txt"),intern=T)
+extract.num <- as.integer(gsub(paste0(" /data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i1,".txt"),"",text))
 #snpvalue.result <- matrix(0,n.sub,extract.num)
 
 if(extract.num==0){
   conditional.snp.list.icog <- NULL
-  save(conditional.snp.list.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog",i1,".Rdata"))
+  save(conditional.snp.list.icog,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog",i1,".Rdata"))
 }else{
   snpvalue.result <- matrix(0,n.sub,extract.num)
   
@@ -49,7 +49,7 @@ if(extract.num==0){
   for(i in i1:i1){
     
     print(i)  
-    geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i,".txt"
+    geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_icog",i,".txt"
     )
     num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
     
@@ -98,7 +98,7 @@ if(extract.num==0){
   
   
   conditional.snp.list.icog <- list(snpid.result,snpvalue.result)
-  save(conditional.snp.list.icog,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog",i1,".Rdata"))
+  save(conditional.snp.list.icog,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.icog",i1,".Rdata"))
   
 }
 
@@ -107,9 +107,9 @@ if(extract.num==0){
 # 
 # extract.list.shared <- extract.list[1:total,]
 # 
-# save(extract.list.shared,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_list_shared.Rdata")
+# save(extract.list.shared,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_list_shared.Rdata")
 # extract.list.onco.only <- extract.list[(total+1):nrow(extract.list),]
-# save(extract.list.onco.only,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_list_onco_only.Rdata")
+# save(extract.list.onco.only,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_list_onco_only.Rdata")
 # 
 # 
 # ##########
@@ -123,7 +123,7 @@ if(extract.num==0){
 # 
 # 
 # extract.result <- list(snpid.result,snpvalue.result)
-# save(extract.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_result_shared.Rdata")
+# save(extract.result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/extract_result_shared.Rdata")
 # 
 # 
 

@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly = T)
 i1 <- as.numeric(args[[1]])
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 
 n.raw <- 142273
@@ -28,7 +28,7 @@ n <- length(idx.fil)
 snpvalue <- rep(0,n)
 idx.match <- match(Onc_ID,onco.order[idx.fil,1])
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/all.conditional.snps.Rdata")
 
 library(bc2)
 
@@ -37,14 +37,14 @@ snpid.result <- rep("c",extract.num)
 n.sub <- nrow(data2)
 library(bigmemory)
 
-text <- system(paste0("cat | wc -l /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_onco",i1,".txt"),intern=T)
-extract.num <- as.integer(gsub(paste0(" /spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_onco",i1,".txt"),"",text))
+text <- system(paste0("cat | wc -l /data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_onco",i1,".txt"),intern=T)
+extract.num <- as.integer(gsub(paste0(" /data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_onco",i1,".txt"),"",text))
 
 
 
 if(extract.num==0){
   conditional.snp.list.onco <- NULL 
-  save(conditional.snp.list.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco",i1,".Rdata"))
+  save(conditional.snp.list.onco,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco",i1,".Rdata"))
   
 }else{
   snpvalue.result <- matrix(0,n.sub,extract.num)
@@ -52,7 +52,7 @@ if(extract.num==0){
   for(i in i1:i1){
     
     print(i)  
-    geno.file <- paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_onco",i,".txt")
+    geno.file <- paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional_extract_onco",i,".txt")
     num <- as.numeric(system(paste0('cat ',geno.file,' | wc -l '),intern=T))
     
     if(num!=0){
@@ -96,7 +96,7 @@ if(extract.num==0){
   
   
   conditional.snp.list.onco <- list(snpid.result,snpvalue.result)
-  save(conditional.snp.list.onco,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco",i1,".Rdata"))
+  save(conditional.snp.list.onco,file=paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.snp.list.onco",i1,".Rdata"))
   
 }
 

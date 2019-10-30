@@ -1,12 +1,12 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/')
 
 load("./ICOG/result/icog_result_shared_1p.Rdata")
 load("./ONCO/result/onco_result_shared_1p.Rdata")
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_only_shared_1p.Rdata")
-# load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_only_shared_1p.Rdata")
+# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_only_shared_1p.Rdata")
+# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_only_shared_1p.Rdata")
 library(bc2)
 second.num <- 1
 

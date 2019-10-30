@@ -1,6 +1,6 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/CIMBA.BCAC.combine.Rdata"))
 library(bc2)
 n <- nrow(CIMBA.BCAC.combine)

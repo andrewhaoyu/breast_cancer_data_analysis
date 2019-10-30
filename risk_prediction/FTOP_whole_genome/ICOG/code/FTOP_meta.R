@@ -1,7 +1,7 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/')
 load("./ICOG/result/icog_result_shared_1p.Rdata")
 load("./ONCO/result/onco_result_shared_1p.Rdata")
 library(bc2)

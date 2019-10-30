@@ -20,7 +20,7 @@ print(i1)
 print(i2)
 library(R.utils)
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n <- 109713
 snpvalue <- rep(0,n)
@@ -51,9 +51,9 @@ icog.train.id <- split.id[[1]]
 #Icog.order <- read.table(gzfile(subject.file))
 Icog.order <- read.table(subject.file)
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 ######load in the data and take out the training data
-data1 <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
+data1 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
 data1 <- as.data.frame(data1[,-1])
 icog.train <- which(data1[,1]%in%icog.train.id)
 data1 <- data1[icog.train,]

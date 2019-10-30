@@ -2,9 +2,9 @@
 
 library(data.table)
 library(snow)
-load("/spin1/users/zhangh20/match.Rdata")
-load("/spin1/users/zhangh20/breast_cancer/standard_gwas/case_control/icog/icog_result_odds_sd.Rdata")
-load("/spin1/users/zhangh20/breast_cancer/standard_gwas/case_control/onco/onco_result_odds_sd.Rdata")
+load("/data/zhangh20/match.Rdata")
+load("/data/zhangh20/breast_cancer/standard_gwas/case_control/icog/icog_result_odds_sd.Rdata")
+load("/data/zhangh20/breast_cancer/standard_gwas/case_control/onco/onco_result_odds_sd.Rdata")
 
 
 idx = which(is.na(data$SNP.ICOGS)|is.na(data$SNP.ONCO)|is.na(data$var_name))

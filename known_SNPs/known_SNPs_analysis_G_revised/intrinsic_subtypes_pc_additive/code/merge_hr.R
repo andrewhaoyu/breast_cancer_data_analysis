@@ -1,4 +1,4 @@
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/known_SNPs/known_SNPs_analysis_G_revised/intrinsic_subtypes_pc_additive/result/")
 library(xlsx)
 result <-  NULL
 first.stage <- NULL

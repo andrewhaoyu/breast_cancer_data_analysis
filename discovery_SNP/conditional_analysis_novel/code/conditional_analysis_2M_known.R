@@ -3,7 +3,7 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 library(data.table)
 library(bcutility)
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 discovery_snp <- as.data.frame(fread("./data/discovery_snps_annotated_clean.csv",header=T))
 fine_mapping <- as.data.frame(fread("./data/fine_mapping_annotated_clean.csv"))
 library(bc2)
@@ -34,7 +34,7 @@ for(i in 1:28){
 
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
-discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T))
+discovery.snp.icog <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T))
 y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 # Grade1.fake <- data1$Grade1
@@ -73,7 +73,7 @@ gene1 <- gene1[idx.complete]
 
 
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
-discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv"))
+discovery.snp.onco <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv"))
 
 data2 <- as.data.frame(data2)
 y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
@@ -115,7 +115,7 @@ p.value.two.stage.model <- two_data_two_stage_random(y.pheno.mis1,
 
 # data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 # data1 <- as.data.frame(data1)
-# discovery.snp.icog <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T))
+# discovery.snp.icog <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_icog_data.csv",header=T))
 # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
 # colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 # 
@@ -135,7 +135,7 @@ p.value.two.stage.model <- two_data_two_stage_random(y.pheno.mis1,
 # }
 # 
 # data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
-# discovery.snp.onco <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv"))
+# discovery.snp.onco <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/discovery_onco_data.csv"))
 # 
 # data2 <- as.data.frame(data2)
 # y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)

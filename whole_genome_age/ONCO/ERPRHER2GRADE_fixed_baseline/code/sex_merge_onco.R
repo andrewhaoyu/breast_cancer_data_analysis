@@ -25,7 +25,7 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-result.dir <- "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
+result.dir <- "/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/"
 result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
 
 
@@ -34,7 +34,7 @@ result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
-  setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
+  setwd("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
   
   load(paste0("ERPRHER2Grade_fixed_onco_sex",idx[i]))
   temp <- length(result[[1]])
@@ -53,7 +53,7 @@ freq.all <- rep(0,num)
 
 
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/")
 num.total <- 0
 num.length <- rep(0,length(Files))
 
@@ -80,7 +80,7 @@ for(i in 1:length(Files)){
 }
 
 
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info_sex.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_info_sex.Rdata")
 all.equal(onco_info$rs_id,rs_id)
 CHR <- rep(23,nrow(onco_info))
 onco_info <- onco_info[,1:10]
@@ -88,6 +88,6 @@ onco_info <- onco_info[,1:10]
 
 onco_result <- data.frame(onco_info,score,infor,CHR)
 
-save(onco_result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_sex.Rdata")
+save(onco_result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_sex.Rdata")
 print(1)
 

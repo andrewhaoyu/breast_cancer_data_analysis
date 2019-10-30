@@ -2,7 +2,7 @@ args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 library(bc2)
 library(bcutility)
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.check.data.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.check.data.Rdata")
 
 y.pheno.mis1 = conditional.check.data$y.pheno.mis1
 y.pheno.mis2 = conditional.check.data$y.pheno.mis2
@@ -32,4 +32,4 @@ for(i in 1:total.gene){
                                         gene2,
                                         x.covar2)
 }
-save(p.value, file = paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.check.result",i1,".Rdata"))
+save(p.value, file = paste0("/data/zhangh24/breast_cancer_data_analysis/discovery_SNP/conditional_analysis/result/conditional.check.result",i1,".Rdata"))

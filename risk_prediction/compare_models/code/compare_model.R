@@ -1,4 +1,4 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/')
 auc_cal <- function(roc){
   n <- nrow(roc)
   auc <- 0
@@ -38,9 +38,9 @@ library(bc2)
 library(pROC)
 library(data.table)
 library(plotROC)
-icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
+icog.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
 icog.data <- icog.data[,-1]
-onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
+onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 onco.data <- onco.data[,-1]
 library(tidyverse)
 y.pheno.mis1 <- select(icog.data,Behavior,ER,PR,HER2,Grade)
@@ -62,10 +62,10 @@ colnames(y.pheno.mis1)
 #                  id.cohort.clean1,
 #                  id.cohort.clean2)
 #load the training and testing data row number
-genetic_correlation <- as.matrix(read.csv("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",header=T))
+genetic_correlation <- as.matrix(read.csv("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/genetic_correlation.csv",header=T))
 
 
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
 load(paste0("./risk_prediction/result/split.id.rdata"))
 #icog.test.id <- Generatetestid(subtypes.icog)
 icog.train.id <- split.id[[1]]
@@ -101,7 +101,7 @@ log.odds.intrinsic.ep.all <- matrix(0,n.snp,M)
 # log.odds.intrinsic.tree.all <- matrix(0,n.snp,M)
 
 for(i1 in 1:n.snp){
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
   
   log.odds.standard.all[i1,] <- rep(all.model.result[[1]],M)
   log.odds.poly.all[i1,] <- all.model.result[[4]]
@@ -115,7 +115,7 @@ for(i1 in 1:n.snp){
 
 
 for(i1 in 1:n.snp){
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
   log.odds.intrinsic <- all.model.result[[2]]
   sigma.log.odds.intrinsic <- matrix(all.model.result[[3]],M,M)
   #######empirical bayesian with whole genome genetic correlaiton
@@ -154,7 +154,7 @@ for(i1 in 1:n.snp){
   # log.odds.intrinsic.tree.all[i1,] <- diag(all.model.result[[8]])
 }
 
-#save(temp,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp.Rdata")
+#save(temp,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp.Rdata")
 subtypes.names <- c("Luminal_A","Luminal_B",
                     "Luminal_B_HER2Neg",
                     "HER2Enriched",
@@ -254,7 +254,7 @@ colnames(auc.summary) <- c("standard analysis",
 #                            "Empirical Bayesian (Normal Prior)",
 #                            "Empirical Bayesian (Laplace Prior)",
 #                            "Classification tree")
-write.csv(auc.summary,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/auc.summary.csv")
+write.csv(auc.summary,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/auc.summary.csv")
 auc.com 
 n <- 5
 method <- c(rep("Standard analysis",n),
@@ -317,7 +317,7 @@ log.odds.intrinsic.eb.all <- matrix(0,n.snp,M)
 log.odds.intrinsic.la.all <- matrix(0,n.snp,M)
 
 for(i1 in 1:n.snp){
-  load(paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/all.model.result",i1,".Rdata"))
 
   log.odds.standard.all[i1] <- all.model.result[[1]][6]
   log.odds.intrinsic.all[i1,] <- all.model.result[[2]][6,]
@@ -664,8 +664,8 @@ log.odds.intrinsic.la <- log.odds.intrinsic.la.all[,i]
 
 
 library(data.table)
-icog.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
-onco.data <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
+icog.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snps_icog.csv",header=T))
+onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snps_onco.csv",header=T))
 library(tidyverse)
 y.pheno.mis1 <- select(icog.data,Behaviour1,ER_status1,PR_status1,HER2_status1,Grade1)
 x.covar1 <- select(icog.data,5:14)
@@ -724,25 +724,25 @@ x.snp.all.train2 <- x.snp.all2[-idx.test2,]
 
 #############################compare different model
 ######standard analysis result
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_analysis/result/log.odds.meta.Rdata")
 #####intrinsic subtype result
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.intrinsic.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.all.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.la.all.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.intrinsic.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.all.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.triple.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.la.all.Rdata")
 ##triple vs nontriple
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.tvn.triple.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.tvn.all.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.tvn.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.tvn.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.tvn.triple.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.meta.two.stage.tvn.all.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/sigma.log.odds.two.stage.tvn.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/heter.sigma.tvn.Rdata")
 
 ####additive two-stage model
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.add.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.add.triple.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.add.triple.eb.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/p.heter.add.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.add.triple.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/log.odds.add.triple.eb.Rdata")
 
 
 
@@ -937,7 +937,7 @@ row.names(cal.result) <- c(
   "additive two-stage model dichotomized",
   "additive two-stage model empirical bayesian"
 )
-write.csv(cal.result,file="/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/cal.result.csv")
+write.csv(cal.result,file="/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/cal.result.csv")
 
 
 
