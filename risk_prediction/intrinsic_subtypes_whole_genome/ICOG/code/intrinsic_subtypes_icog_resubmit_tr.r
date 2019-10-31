@@ -20,16 +20,16 @@ print(i1)
 print(i2)
 library(R.utils)
 
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 n <- 109713
 snpvalue <- rep(0,n)
 #subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt"
 z.design <- matrix(c(
-  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
-  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0),
   c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
@@ -51,9 +51,9 @@ icog.train.id <- split.id[[1]]
 #Icog.order <- read.table(gzfile(subject.file))
 Icog.order <- read.table(subject.file)
 library(data.table)
-setwd("/spin1/users/zhangh24/breast_cancer_data_analysis/")
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
 ######load in the data and take out the training data
-data1 <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
+data1 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
 data1 <- as.data.frame(data1[,-1])
 icog.train <- which(data1[,1]%in%icog.train.id)
 data1 <- data1[icog.train,]
@@ -79,7 +79,8 @@ gc()
 idx.fil <- Icog.order[,1]%in%SG_ID
 idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+
 load("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/delta0.icog.Rdata")
 load("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
 z.design.support <- cbind(1,z.standard[,1])
@@ -101,7 +102,7 @@ num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 #     num <- countLines(geno.file)[1]
 #   }
 # )
-size = 750
+size = 1000
 #size = 1000
 #size = 70
 start.end <- startend(num,size,i2)
@@ -177,7 +178,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       # tryCatch(
       #   {
       
-      if(freq<0.006|freq>0.994|snpid=="rs17465085:36645884:T:C"){
+      if(freq<0.008|freq>0.992|snpid=="rs17465085:36645884:T:C"){
         
         score_result[temp,] <- 0
         infor_result[temp,] <- as.vector(diag(5))
@@ -238,7 +239,7 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/intrinsic_subytpe_icog_resubmit",i1,"_",i2))
+save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/intrinsic_subytpe_icog_resubmit_",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/intrinsic_subytpe_icog_resubmit_resubmit_resubmit",i1,"_",i2))
