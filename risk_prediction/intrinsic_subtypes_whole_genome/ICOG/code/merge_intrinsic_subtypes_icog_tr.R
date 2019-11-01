@@ -57,17 +57,17 @@ freq.all <- rep(0,num)
 rs_id <- rep("c",num)
 
 
-resubimt_resubmimt_id <- c(231,281,486)
+resubimt_resubmimt_id <- c(231,281)
 
 #resubmit_id <- matrix(0,100,2)
 #resubmit_temp <- 0
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
-  file_load = paste0("intrinsic_subytpe_icog_resubmit",idx[i],"_",1)
+  file_load = paste0("intrinsic_subytpe_icog_resubmit_",idx[i],"_",1)
   if(idx[i]%in%resubimt_resubmimt_id){
-    for(k in 1:750){
-      load(paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/intrinsic_subytpe_icog_resubmit",idx[i],"_",k))
+    for(k in 1:1000){
+      load(paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/intrinsic_subytpe_icog_resubmit_",idx[i],"_",k))
       temp <- nrow(result[[2]])
       rs_id[num.total+(1:temp)] <- result[[1]]
       score[num.total+(1:temp),] <- result[[2]]
@@ -80,8 +80,8 @@ for(i in 1:length(Files)){
       }
     }
   }else{
-    for(k in 1:2){
-      load(paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/intrinsic_subytpe_icog",idx[i],"_",k))
+    for(k in 1:5){
+      load(paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/intrinsic_subytpe_icog_",idx[i],"_",k))
       temp <- nrow(result[[2]])
       rs_id[num.total+(1:temp)] <- result[[1]]
       score[num.total+(1:temp),] <- result[[2]]

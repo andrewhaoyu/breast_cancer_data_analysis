@@ -71,12 +71,12 @@ num.total <- 0
 for(i in 1:567){
   print(i)
   k = 1
-  file_load = paste0("intrinsic_subytpe_onco_resubmit",idx[i],"_",k)
+  file_load = paste0("intrinsic_subytpe_onco_resubmit_",idx[i],"_",k)
     if(idx[i]%in%resubmit_id){
-      for (k in 1:750) {
+      for (k in 1:1000) {
         #print(k)
         load(
-          paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_resubmit",idx[i],"_",k)
+          paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_resubmit_",idx[i],"_",k)
         )
         temp <- nrow(result[[2]])
         rs_id[num.total+(1:temp)] <- result[[1]]
@@ -91,10 +91,10 @@ for(i in 1:567){
         }
       }
     }else{
-      for (k in 1:3) {
+      for (k in 1:5) {
         #print(k)
         load(
-          paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco",idx[i],"_",k)
+          paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_",idx[i],"_",k)
         )
         temp <- nrow(result[[2]])
         rs_id[num.total+(1:temp)] <- result[[1]]
