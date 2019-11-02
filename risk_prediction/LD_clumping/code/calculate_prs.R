@@ -10,9 +10,11 @@ subtypes <- c("Luminial_A",
               "Luminal_B_HER2Neg",
               "HER2_Enriched",
               "TN")
-select.names <- c(subtypes,paste0("eb_",subtypes))
-select.names <- c("standard",
-                  select.names)
+#select.names <- c(subtypes,paste0("eb_",subtypes))
+#select.names <- c("standard",
+ #                 select.names)
+
+select.names <- c(subtypes)
 pthres <- c(5E-08,1E-07,5E-07,1E-06,5E-06,1E-05,5E-05,
             1E-04,5E-04,1E-03,5E-03,1E-02)
 #create the file for standard logisic regression

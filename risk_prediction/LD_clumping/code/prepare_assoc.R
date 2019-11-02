@@ -5,7 +5,9 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/')
-load("./EB_whole_genome/result/whole_gonome.rdata")
+load("./intrinsic_subtypes_whole_genome/ICOG/result/meta_result_shared_1p.Rdata")
+
+#load("./EB_whole_genome/result/whole_gonome.rdata")
 
 
 library(dplyr)
