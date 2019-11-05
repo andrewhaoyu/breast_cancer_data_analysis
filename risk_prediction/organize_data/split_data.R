@@ -20,13 +20,13 @@ SubtypesTrans <- function(casecon,ER,PR,HER2,grade){
   result[idx.LA] <- "Luminal_A"
   result[idx.LB] <- "Luminal_B"
   result[idx.LUBHER2] <- "Luminal_B_HER2Neg"
-  result[idx.HER2] <- "HER2Enriched"
+  result[idx.HER2] <- "HER2_Enriched"
   result[idx.TN] <- "TripleNeg"
   result <- factor(result,levels=c("control",
                                        "Luminal_A",
                                        "Luminal_B",
                                        "Luminal_B_HER2Neg",
-                                       "HER2Enriched",
+                                       "HER2_Enriched",
                                        "TripleNeg",
                                        "unknown"))
   

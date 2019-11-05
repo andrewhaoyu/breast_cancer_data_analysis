@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------
 # Update Date: 11/20/2018
 # Create Date: 11/20/2018
-# Goal: prepare assoc dataset for plink
+# Goal: prepare assoc dataset for plink to perform LD clumping
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/')

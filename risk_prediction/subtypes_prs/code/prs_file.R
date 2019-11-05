@@ -43,7 +43,7 @@ pthres <- c(5E-08,1E-07,5E-07,1E-06,5E-06,1E-05,5E-05,
             1E-04,5E-04,1E-03,5E-03,1E-02)
 
 #create the prs file for two-stage and eb
-subtypes <- c("Luminial_A",
+subtypes <- c("Luminal_A",
               "Luminal_B",
               "Luminal_B_HER2Neg",
               "HER2_Enriched",
@@ -103,7 +103,7 @@ for(i in 1:n.pthres){
 }
 
 #create the prs file for two-stage and eb
-subtypes <- c("Luminial_A",
+subtypes <- c("Luminal_A",
               "Luminal_B",
               "Luminal_B_HER2Neg",
               "HER2_Enriched",

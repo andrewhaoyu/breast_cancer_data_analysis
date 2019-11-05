@@ -6,10 +6,13 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 #prepare sample for all of the subjects
-library(data.table)
-library(bcutility)
+library(withr)
+#with_libpaths(new = "/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6", install_github("andrewhaoyu/bcutility"))
+#install_github("andrewhaoyu/bcutility")
+library(bcutility,lib.loc = "/spin1/home/linux/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+#read in the onco array genotype data file order
 subject.file <- "/data/zhangh24/test/onco_order.txt"
-
+library(data.table)
 onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 onco.data <- onco.data[,-1]
 library(tidyverse)
@@ -32,6 +35,12 @@ colnames(onco.order) <- "ID"
 onco.order.new <- left_join(onco.order,disease_onco,
                           by= "ID")
 
+#head(disease_onco)
+
+idx <- which(disease_onco[,1]%in%onco.order$ID==T)
+
+
+#idx <- which(onco.order.new$ID==999999357290)
 all.equal(onco.order.new[,1],onco.order[,1])
 subtypes.onco <- data.frame(
                     as.character(onco.order.new[,3]),
@@ -51,7 +60,7 @@ subtypes.onco <- data.frame(
 n <- nrow(onco.order)
 ID <- matrix("c",n,1)
 for(i in 1:n){
-  ID[i] <- paste0("sample_",onco.order[i,1])
+  ID[i] <- paste0("sample_",as.integer(onco.order[i,1]))
 }
 missing <- matrix(0,n,1)
 case <- onco.order.new[,2,drop=F]
@@ -78,7 +87,6 @@ colnames(sample.data) <- c("ID_1",
                            "case",
                            "cov_1",
                            "subtypes")
-
 write.table(sample.data,file = "/data/zhangh24/test/sample.txt",
             row.names = F, quote = F,sep = " ")
 
