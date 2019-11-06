@@ -18,7 +18,7 @@ colnames(stan_result) <- paste0("stan_",
 FTOP_result <- meta_FTOP[,15]
 colnames(meta_FTOP) <- c("FTOP")
 intrin_result <- meta_intrin[,c(11:40,45)]
-colnames(intrin_result)[1:5] <- c("Luminial_A",
+colnames(intrin_result)[1:5] <- c("Luminal_A",
                                   "Luminal_B",
                                   "Luminal_B_HER2Neg",
                                   "HER2_Enriched",
@@ -49,4 +49,5 @@ whole_genome <- cbind(whole_genome,
                       effect_allele)
 whole_genome = whole_genome %>% 
   mutate(p.min = pmin(stan_p,FTOP_result,na.rm = T))
+colnames(whole_genome)[19] <- "Luminal_A"
 save(whole_genome,file = "./intrinsic_subtypes_whole_genome/ICOG/result/whole_gonome.rdata")

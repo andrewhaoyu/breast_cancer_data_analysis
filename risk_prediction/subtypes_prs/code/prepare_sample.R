@@ -60,11 +60,37 @@ subtypes.onco <- data.frame(
 n <- nrow(onco.order)
 ID <- matrix("c",n,1)
 for(i in 1:n){
-  ID[i] <- paste0("sample_",as.integer(onco.order[i,1]))
+  #avoid the isseu of coding 100000 as 1e+05 since it will cause trouble in future sample match as character
+
+    ID[i] <- paste0("sample_",as.numeric(onco.order[i,1]))
+  
+  
 }
 missing <- matrix(0,n,1)
 case <- onco.order.new[,2,drop=F]
+#fam file have 6 different columns
+#first column is family ID
+#second colunn is individual ID
+# 3rd column Paternal ID
+# 4th column Maternal ID
+#5th column (1=male; 2=female; other=unknown)
+#sixth column is the case with 2 as cases, 1 as controls, -9 as missing
+plink.case <- case+1
+plink.case[is.na(case)]= -9
+fam <- data.frame(ID,ID,
+                  rep(0,n),
+                  rep(0,n),
+                  rep(2,n),
+                  case+1)
+write.table(fam,file = "/data/zhangh24/BCAC/impute_onco/onco_plink.fam",row.names = F,col.names = F,quote=F)
+
+
+
 cov_1 <- matrix(rnorm(n),n,1)
+
+
+
+
 #onco.order <- matrix(paste0("sample",onco.order),n,1)
 ID <- rbind(0,ID)
 missing <- rbind(0,missing)
@@ -87,8 +113,19 @@ colnames(sample.data) <- c("ID_1",
                            "case",
                            "cov_1",
                            "subtypes")
-write.table(sample.data,file = "/data/zhangh24/test/sample.txt",
+write.table(sample.data,file = "/data/zhangh24/BCAC/impute_onco/sample.txt",
             row.names = F, quote = F,sep = " ")
+
+
+
+
+
+
+
+
+
+
+
 
 #prepare sample for people keeping in test
 setwd('/data/zhangh24/breast_cancer_data_analysis/')

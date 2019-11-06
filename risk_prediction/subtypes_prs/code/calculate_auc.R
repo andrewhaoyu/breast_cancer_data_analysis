@@ -33,25 +33,38 @@ onco.test.id <- split.id[[3]]
 icog.vad.id <- split.id[[4]]
 onco.vad.id <- split.id[[4]]
 
+sample.data <- read.table("/data/zhangh24/BCAC/impute_onco/sample.txt",header=T)
+sample.data <- sample.data[-1,,drop=F]
 
 onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 onco.data <- onco.data[,-1]
 
-idx <- which(disease_onco[,1]%in%onco.order$ID==T)
-
-data2 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
-data2 <- data2[,-1]
-#onco.train <- which(data2[,1]%in%onco.train.id)
-#all the test data come from onco array
 
 
 
+onco.test.id <- data.frame(ID = onco.test.id)
+colnames(onco.test.id) = "ID"
+
+new.onco.data <- left_join(onco.test.id,
+                           onco.data
+                           ,by="ID")
 
 
+temp <- as.matrix(2-new.onco.data[,c(20),drop=F])%*%as.vector(beta)
+new.temp <- cbind(new.onco.data[,1],temp)
+head(new.temp)
+idx <- which(new.onco.data[,1]==39183 )
+new.onco.data[idx,]
 n <- length(onco.test.id)
 test_ID <- matrix("c",n,1)
 for(i in 1:n){
-  test_ID[i] <- paste0("sample_",onco.test.id[i])
+  #fix the issue that prs file will code 100000 as 1e+05
+  if(onco.test.id[i]=="100000"){
+    test_ID[i] <- paste0("sample_1e+05")  
+  }else{
+    test_ID[i] <- paste0("sample_",as.numeric(onco.test.id[i]))
+  }
+  
 }
 #test_ID
 #select.names <- c(subtypes,paste0("eb_",subtypes))
@@ -77,40 +90,53 @@ for(j in 1:length(select.names)){
     #the prs files contain all the subjects in the genotyped data
     #the genotype data is larger than the phenotype data
     #we need to select the subset for testdata
-    prs <- as.data.frame(fread(paste0("/data/zhangh24/BCAC/prs_out/",select.names[j],"_prs_",i,"_out.profile"),header=T))
-    
+    prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out.profile"),header=T))
+   
       temp <- j%%5
     if(temp==0){temp=5}
     
       #select the sample in the test data
       #also select sample for control and target subtypes
-      try3 <- which(sample.data$ID_1=="sample_1e+05")
-      try <- which(test_ID%in%sample.data$ID_1==F)
-      
-      try2 <- which(test_ID=="sample_100000")
+    
       
       test.sample = sample.data%>%
       filter(
         (ID_1%in%test_ID))
-      
-      
+        
+        
         
         &
           ((subtypes=="control"|
-              subtypes==names.subtypes[temp]))
-      ) %>%
+              subtypes==names.subtypes[temp])))%>%
       select(ID_1,case)
     
     colnames(test.sample) <- c("IID","case")
-   #match the test sample
+    colnames(test.sample)[1] <- "IID"
+    #match the test sample
+    #get the prs from the prs file of all the genotype data
+    test.prs <- read.table("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out.profile",header=T)
+    prs <- test.prs
     
-    test.sample2 <- left_join(test.sample,prs)
-    
-    
-    prs.standard <- test.sample[,"SCORE"]
-    y.test <- test.sample[,"case"]
+    test.sample_new <- left_join(test.sample,prs)
+    idx <- which(test.sample_new[,1]==test_ID[3])
+    test.sample_new[idx,]
+    idx <- which(test.sample_new$case==1)
+    idx2<- which(test.sample_new$case==0)
+    mean(test.sample_new$SCORE[idx])
+    mean(test.sample_new$SCORE[idx2])
+    head(test.sample_new[idx,])    
+    head(test.sample_new[idx2,])
+    tail(test.sample_new[idx,])    
+    tail(test.sample_new[idx2,])
+    prs.standard <- test.sample_new[,"SCORE"]
+    y.test <- test.sample_new[,"case"]
     #roc.standard <- calibration(y.test,prs.standard)
-    roc.standard <- roc(y.test,as.vector(prs.standard),ci=T,plot=F)
+    
+    
+    
+    
+    roc.standard <- roc(y.test,as.vector(prs.standard),ci=T,plot=T)
+    plot.roc(roc.standard)
     roc.standard
     pla <- 4
     auc[ind] <- round(as.numeric(roc.standard$auc),pla)*100
@@ -132,9 +158,9 @@ for(j in 1:length(select.names)){
     p[ind] <- pthres[i]
     #read in SNP file information to calculate PRS
     
-    code <- paste0("wc -l /data/zhangh24/BCAC/prs_file/",select.names[j],"_prs_pvaluecut_",i,".file")
+    code <- paste0("wc -l /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file")
     temp.out <- system(code,intern = T)
-    n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/BCAC/prs_file/",select.names[j],"_prs_pvaluecut_",i,".file"),"",temp.out))
+    n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file"),"",temp.out))
     
     ind = ind + 1
     

@@ -62,13 +62,26 @@ for(i in 1:n.pthres){
       select(SNP,reference_allele,select.names[j])
     colnames(prs) <- c("SNP","effect_allele","beta")
     dim(prs)
-    write.table(prs,file = paste0("/data/zhangh24/BCAC/prs_file/",select.names[j],"_prs_pvaluecut_",i,".file"),row.names=F,col.names=T,quote=F)
+    write.table(prs,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file"),row.names=F,col.names=T,quote=F)
     
   }
   
 }
 
 
+
+#
+i <- 1
+j <- 1
+
+prs <-  whole_genome_clump_new %>%
+  filter(p.min<=pthres[i]) %>% 
+  select(SNP,reference_allele,select.names[j])
+colnames(prs) <- c("SNP","effect_allele","beta")
+dim(prs)
+prs <- prs[c(1),,drop=F]
+write.table(prs,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file"),row.names=F,col.names=T,quote=F)
+beta = prs[,3]
 
 
 
