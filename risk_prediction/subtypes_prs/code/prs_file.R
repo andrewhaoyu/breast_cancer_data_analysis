@@ -70,28 +70,28 @@ for(i in 1:n.pthres){
 
 
 
-#
-i <- 1
-j <- 1
-
-prs <-  whole_genome_clump_new %>%
-  filter(p.min<=pthres[i]) %>% 
-  select(SNP,reference_allele,select.names[j])
-colnames(prs) <- c("SNP","effect_allele","beta")
-dim(prs)
-prs <- prs[c(1),,drop=F]
-write.table(prs,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file"),row.names=F,col.names=T,quote=F)
-beta = prs[,3]
-
-
-
-
-
-
-
-
-
-
+# #
+# i <- 1
+# j <- 1
+# 
+# prs <-  whole_genome_clump_new %>%
+#   filter(p.min<=pthres[i]) %>% 
+#   select(SNP,reference_allele,select.names[j])
+# colnames(prs) <- c("SNP","effect_allele","beta")
+# dim(prs)
+# prs <- prs[c(1,8,10),,drop=F]
+# write.table(prs,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file"),row.names=F,col.names=T,quote=F)
+# beta = prs[,3]
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
 
 
 

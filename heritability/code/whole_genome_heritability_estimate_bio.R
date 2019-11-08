@@ -580,7 +580,9 @@ write.table(cimba,file="/data/zhangh24/ldsc/cimba.txt",col.names = T,quote=F)
 #lubher2 tn 0.4041 (0.0750)
 #lubher2 cimba 0.3109(0.1236)
 
-./ldsc.py --rg lub.sumstats.gz,her2.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out lub_her2
+./ldsc.py --rg lub.sumstats.gz,her2.sumstats.gz --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out lub_her2:q
+:q
+
 
 
 ./ldsc.py --rg lub.sumstats.gz,her2.sumstats.gz,tn.sumstats.gz,cimba.sumstats.gz  --ref-ld-chr eur_w_ld_chr/ --w-ld-chr eur_w_ld_chr/ --out gr_cov_lub

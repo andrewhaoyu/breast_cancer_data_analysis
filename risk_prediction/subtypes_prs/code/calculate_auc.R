@@ -50,8 +50,11 @@ new.onco.data <- left_join(onco.test.id,
                            ,by="ID")
 
 
-temp <- as.matrix(2-new.onco.data[,c(20),drop=F])%*%as.vector(beta)
-new.temp <- cbind(new.onco.data[,1],temp)
+temp <- as.matrix(cbind(
+            2-new.onco.data[,c(20,30),drop=F],
+            new.onco.data[,c(23),drop=F]))%*%
+            as.vector(beta)/6
+new.temp <- cbind(new.onco.data[,1],temp,2-new.onco.data[,c(20,30,23)])
 head(new.temp)
 idx <- which(new.onco.data[,1]==39183 )
 new.onco.data[idx,]
@@ -59,7 +62,7 @@ n <- length(onco.test.id)
 test_ID <- matrix("c",n,1)
 for(i in 1:n){
   #fix the issue that prs file will code 100000 as 1e+05
-  if(onco.test.id[i]=="100000"){
+  if(onco.test.id[i]==100000){
     test_ID[i] <- paste0("sample_1e+05")  
   }else{
     test_ID[i] <- paste0("sample_",as.numeric(onco.test.id[i]))
@@ -118,7 +121,7 @@ for(j in 1:length(select.names)){
     prs <- test.prs
     
     test.sample_new <- left_join(test.sample,prs)
-    idx <- which(test.sample_new[,1]==test_ID[3])
+    idx <- which(test.sample_new[,1]==test_ID[2])
     test.sample_new[idx,]
     idx <- which(test.sample_new$case==1)
     idx2<- which(test.sample_new$case==0)
