@@ -70,32 +70,34 @@ for(i in 1:n.pthres){
 
 
 
-# #
-# i <- 1
-# j <- 1
-# 
-# prs <-  whole_genome_clump_new %>%
-#   filter(p.min<=pthres[i]) %>% 
-#   select(SNP,reference_allele,select.names[j])
-# colnames(prs) <- c("SNP","effect_allele","beta")
-# dim(prs)
-# prs <- prs[c(1,8,10),,drop=F]
-# write.table(prs,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file"),row.names=F,col.names=T,quote=F)
-# beta = prs[,3]
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#
+i <- 1
+j <- 1
 
+prs.temp <-  whole_genome_clump_new %>%
+  filter(p.min<=pthres[i]) %>%
+  select(SNP,reference_allele,select.names[j])
+colnames(prs.temp) <- c("SNP","effect_allele","beta")
+dim(prs.temp)
+n.snp <- 5
+#prs.temp <- prs.temp[c(1:n.snp),,drop=F]
+prs.temp <- prs.temp[c(n.snp),,drop=F]
+write.table(prs.temp,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file"),row.names=F,col.names=T,quote=F)
+beta = prs[,3]
 
+dosage.assoc <- read.table("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/dosage_test_out.assoc.dosage",header=T)
 
-
+idx <- which(dosage.assoc$SNP=="rs370540207:121450795:T:G")
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
 
 
 

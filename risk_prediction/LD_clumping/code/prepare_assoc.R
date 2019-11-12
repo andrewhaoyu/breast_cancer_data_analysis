@@ -5,17 +5,17 @@
 # Author: Haoyu Zhang
 #-------------------------------------------------------------------
 setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/')
-load("./intrinsic_subtypes_whole_genome/ICOG/result/meta_result_shared_1p.Rdata")
+load("./intrinsic_subtypes_whole_genome/ICOG/result/whole_gonome.rdata")
 
 #load("./EB_whole_genome/result/whole_gonome.rdata")
 
 
 library(dplyr)
 n <- nrow(whole_genome)
-assoc <- whole_genome %>% mutate(p.min = pmin(p.value,FTOP_result),
+assoc <- whole_genome %>% mutate(p.min = pmin(stan_p,FTOP_result),
                         TEST = rep("ADD",n),
                         NMISS = rep(0,n),
-                        OR = exp(score),
+                        OR = exp(stan_logodds),
                         STAT = rnorm(n)) %>%
                         select(CHR,SNP.ONCO,position,
                                effect_allele,

@@ -27,3 +27,12 @@ for(i in 1:22){
   merge.code <- paste0(merge.code," dosage_chr",i)
 }
 merge.code <- paste0(merge.code, "> dosage_all")
+
+
+
+
+
+
+
+  convert_dosage_code <- paste0("zcat /data/zhangh24/BCAC/impute_onco/onco_all.gen.gz | awk -v C=2 -v TF=/data/zhangh24/BCAC/impute_plink_onco/clump_snp -f /home/zhangh24/bin/Element.Matching.awk  | awk -v chr=",i," '{printf chr\"\\t\"$2\"\\t\"$3\"\\t\"$4\"\\t\"$5; for(i=6; i<NF; i+=3) {if($(i+0) == 0 && $(i+1) == 0 && $(i+2) == 0) printf \"\\tNA\"; else printf \"\\t\"$(i+0)*2+$(i+1)*1+$(i+2)*0}; printf \"\\n\"}' | gzip > /data/zhangh24/BCAC/impute_onco_dosage/dosage_new")
+  
