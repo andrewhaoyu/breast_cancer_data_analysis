@@ -31,5 +31,7 @@ icog_onco_info_sub = icog_onco_infor %>%
 
 
 discovery_snp_info_sub <- left_join(discovery_snp_info_sub,icog_onco_info_sub,by="chr.pos")
-write.csv(discovery_snp_info_sub,file="")
+discovery_snp_info_sub = discovery_snp_info_sub %>% 
+  mutate(info_icog_onco=paste0(sprintf("%.2f",round(info_icog,2)),"/",sprintf("%.2f",round(info_onco,2))))
+write.csv(discovery_snp_info_sub,file="./discovery_SNP/get_imputation_score/resultdiscovery_snp_imputation_score.csv")
 

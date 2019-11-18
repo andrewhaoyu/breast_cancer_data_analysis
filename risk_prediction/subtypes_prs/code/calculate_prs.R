@@ -37,13 +37,24 @@ for(i in 1:n.pthres){
 write.table(prs.code,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/code/caculate.prs.sh"),col.names = F,row.names = F,quote=F)
 
 
+
+
+
 # temp = read.table("/data/zhangh24/BCAC/impute_onco/onco_plink.fam",header=F)
 # temp2 = read.table("/data/zhangh24/test/sample.txt",
 #                    header=T)
 # idx <- which(as.character(temp$V1)!=as.character(temp2$ID_1)[2:nrow(temp2)])
 
 
-#"/data/zhangh24/plink --score /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file no-sum no-mean-imputation --map /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/onco_map.txt --dosage /data/zhangh24/BCAC/impute_onco_dosage/dosage_all noheader skip0=1 skip1=1 format=1 --fam /data/zhangh24/BCAC/impute_onco/onco_plink.fam --out /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out"
+#"/data/zhangh24/plink --score /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file no-sum no-mean-imputation --dosage /data/zhangh24/BCAC/impute_plink_onco/dosage_all noheader skip0=1 skip1=1 format=1 --fam /data/zhangh24/BCAC/impute_onco/onco_plink.fam --out /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out"
+
+
+#"/data/zhangh24/plink --score /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file no-sum no-mean-imputation --dosage /spin1/users/zhangh24/BCAC/impute_plink_onco/dosage_all_new_try noheader skip0=1 skip1=1 format=1 --fam /data/zhangh24/BCAC/impute_onco/onco_plink.fam --out /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out_try"
+
+#"/data/zhangh24/plink --score /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test.file no-sum no-mean-imputation --dosage /data/zhangh24/BCAC/impute_onco_dosage/dosage_all noheader skip0=1 skip1=1 format=1 --fam /data/zhangh24/BCAC/impute_onco/onco_plink.fam --out /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out"
+
+
+
 
 #"/data/zhangh24/plink --map /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/onco_map.txt --dosage /data/zhangh24/BCAC/impute_onco_dosage/dosage_all noheader skip0=1 skip1=1 format=1 --fam /data/zhangh24/BCAC/impute_onco/onco_plink.fam --out /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/dosage_test_out"
 

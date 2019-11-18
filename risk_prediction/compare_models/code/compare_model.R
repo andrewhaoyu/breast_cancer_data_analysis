@@ -33,8 +33,8 @@ true.false.calculate <- function(prs,test.data){
   return(cbind(true.pos,false.pos))
 }
 ########subtypes risk prediction
-library(bcutility)
-library(bc2)
+library(bcutility,lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+library(bc2,lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 library(pROC)
 library(data.table)
 library(plotROC)
@@ -176,6 +176,8 @@ onco.test <- which(onco.data[,1]%in%onco.test.id)
 y.pheno.mis2.test <- y.pheno.mis2[onco.test,]
 x.covar.test <- x.covar2[onco.test,]
 x.snp.all.test <- x.snp.all2[onco.test,]
+#sample.id.order <- onco.data[onco.test,1]
+#sample.id.order.j <- sample.id.order[onco.test.sub.j]
 insub.onco.test <- GenerateIntrinsicmis(y.pheno.mis2.test[,2],
                                         y.pheno.mis2.test[,3],
                                         y.pheno.mis2.test[,4],
@@ -189,6 +191,22 @@ for(j in 1:M){
                              insub.onco.test=="control")
   y.pheno.mis2.test.casecon.j <- as.vector(y.pheno.mis2.test[onco.test.sub.j,1])
   x.snp.j <- as.matrix(x.snp.all.test[onco.test.sub.j,])
+  #sample.id.order.j <- sample.id.order[onco.test.sub.j]
+  #prs.intrinsic = x.snp.j%*%log.odds.intrinsic.all[,j]
+  #true_result <- data.frame(sample.id.order.j,y.pheno.mis2.test.casecon.j,prs.intrinsic,stringsAsFactors=F)
+  #colnames(true_result) <- c("IID","case_status_t","prs_true")
+  # for(i in 1:nrow(true_result)){
+  # if(as.numeric(true_result[i,1])==100000){
+  #   true_result[i,1]= paste0("sample_1e+05")
+  # }else{
+  #   true_result[i,1]=paste0("sample_",true_result[i,1])
+  # }
+  # }
+  # idx.match <- match(test.sample_new[,1],true_result[,1])
+  # x.snp.j.order <- x.snp.j[idx.match,]
+  
+
+  
   auc.cal.result <- GenerateAuc_Cal(
     log.odds.standard=
       as.vector(log.odds.standard.all[,j]),
@@ -206,7 +224,15 @@ for(j in 1:M){
       x.snp.j,
     y.test=
       y.pheno.mis2.test.casecon.j
-  )    
+  )   
+  #snp =  names(select(onco.data,17:228))
+  #logodds_result = data.frame(snp,log.odds.intrinsic.all,stringsAsFactors=F)
+  #colnames(logodds_result) <- c("snp",subtypes.names)
+  #write.csv(logodds_result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp_logodds_result.csv")
+  #colnames(temp) <- c("y_test","score")
+  #temp[,1] = as.numeric(temp[,1])
+  #temp = as.data.frame(temp)
+  #temp_new = temp %>% group_by(y_test) %>% mutate(means=mean(score))
   coeff.result <- GenerateCoeff(
     log.odds.standard.all[,j],
     log.odds.poly.all[,j],

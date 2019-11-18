@@ -33,7 +33,7 @@ onco.test.id <- split.id[[3]]
 icog.vad.id <- split.id[[4]]
 onco.vad.id <- split.id[[4]]
 
-sample.data <- read.table("/data/zhangh24/BCAC/impute_onco/sample.txt",header=T)
+sample.data <- read.table("/data/zhangh24/BCAC/impute_onco/sample.txt",header=T,stringsAsFactors = F)
 sample.data <- sample.data[-1,,drop=F]
 
 onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
@@ -48,24 +48,27 @@ colnames(onco.test.id) = "ID"
 new.onco.data <- left_join(onco.test.id,
                            onco.data
                            ,by="ID")
+idx <- which(sample.data[,1]==
+               paste0("sample_",127845))
+sample.data[idx,]
 
-
-temp <- as.matrix(cbind(
-            2-new.onco.data[,c(20,30),drop=F],
-            new.onco.data[,c(23),drop=F]))%*%
-            as.vector(beta)/6
-new.temp <- cbind(new.onco.data[,1],temp,2-new.onco.data[,c(20,30,23)])
-head(new.temp)
-idx <- which(new.onco.data[,1]==39183 )
-new.onco.data[idx,]
-n <- length(onco.test.id)
-test_ID <- matrix("c",n,1)
+# temp <- as.matrix(cbind(
+#             2-new.onco.data[,c(20,30),drop=F],
+#             new.onco.data[,c(23),drop=F]))%*%
+#             as.vector(beta)/6
+# new.temp <- cbind(new.onco.data[,1],temp,2-new.onco.data[,c(20,30,23)])
+# head(new.temp)
+# idx <- which(new.onco.data[,1]==39183 )
+# new.onco.data[idx,]
+onco.test.id <- as.vector(onco.test.id)
+n <- nrow(onco.test.id)
+test_ID <- rep("c",n)
 for(i in 1:n){
   #fix the issue that prs file will code 100000 as 1e+05
-  if(onco.test.id[i]==100000){
+  if(onco.test.id[i,1]==100000){
     test_ID[i] <- paste0("sample_1e+05")  
   }else{
-    test_ID[i] <- paste0("sample_",as.numeric(onco.test.id[i]))
+    test_ID[i] <- paste0("sample_",as.numeric(onco.test.id[i,1]))
   }
   
 }
@@ -94,7 +97,7 @@ for(j in 1:length(select.names)){
     #the genotype data is larger than the phenotype data
     #we need to select the subset for testdata
     prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out.profile"),header=T))
-   
+#prs[,4] <- prs.la.temp
       temp <- j%%5
     if(temp==0){temp=5}
     
@@ -104,43 +107,73 @@ for(j in 1:length(select.names)){
       
       test.sample = sample.data%>%
       filter(
-        (ID_1%in%test_ID))
-        
-        
-        
-        &
+        (ID_1%in%test_ID)&
           ((subtypes=="control"|
               subtypes==names.subtypes[temp])))%>%
       select(ID_1,case)
     
+      
+   
+    #temp.log.odds <- read.csv("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/two_stage_model/result/temp_logodds_result.csv")
+      
+      
+      
     colnames(test.sample) <- c("IID","case")
     colnames(test.sample)[1] <- "IID"
-    #match the test sample
-    #get the prs from the prs file of all the genotype data
-    test.prs <- read.table("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out.profile",header=T)
-    prs <- test.prs
+   
     
+    idx.fil <- which(prs[,1]%in%test.sample[,1])
+    idx.match <- match(prs[idx.fil,1],test.sample[,1])
+       test.sample_new2 <- prs[idx.fil[idx.match],] 
     test.sample_new <- left_join(test.sample,prs)
-    idx <- which(test.sample_new[,1]==test_ID[2])
-    test.sample_new[idx,]
-    idx <- which(test.sample_new$case==1)
-    idx2<- which(test.sample_new$case==0)
-    mean(test.sample_new$SCORE[idx])
-    mean(test.sample_new$SCORE[idx2])
-    head(test.sample_new[idx,])    
-    head(test.sample_new[idx2,])
-    tail(test.sample_new[idx,])    
-    tail(test.sample_new[idx2,])
+    all.equal(test.sample_new2[,4],
+              test.sample_new[,5])
+   # test.sample_new <- left_join(test.sample,prs.plink)
+   # idx.match <- match(test.sample_new[,1],true_result[,1])
+   # all.equal(test.sample_new[,1],true_result[idx.match,1])
+   # test.sample.all = left_join(test.sample_new,true_result,by="IID")
+   # test.sample.all[,5] = test.sample.all[,5]*207*2
+   # all.equal(as.character(test.sample.all[,2]),as.character(test.sample.all[,6]))
+    # idx.fil = which((sample.data$ID_1%in%test_ID)&
+    #                   ((sample.data$subtypes=="control"|
+    #                       sample.data$subtypes==names.subtypes[temp])))
+    #all.equal(sample.data[idx.fil,1],test.sample[,1])
+    #snpvalue.test <-snpvalue.result[idx.fil,]
+    #all.equal(snpvalue.test[,1],x.snp.j.order[,1])
+    
     prs.standard <- test.sample_new[,"SCORE"]
     y.test <- test.sample_new[,"case"]
+    prs.sd <- prs.standard/sd(prs.standard)
+    model <- glm(as.numeric(y.test)~prs.sd,
+                 family=binomial())
+    summary(model)
+    # prs.standard <- as.numeric(test.sample.all[,7])
+    # y.test <- test.sample.all[,"case"]
+    # prs.sd <- prs.standard/sd(prs.standard)
+    # model <- glm(as.numeric(y.test)~prs.sd,family=binomial())
+    # summary(model)
     #roc.standard <- calibration(y.test,prs.standard)
+    # temp = cbind(as.numeric(y.test),(prs.standard))
+    # 
+    # mean(temp>=2)
+    test.sample_new = test.sample_new %>%
+      mutate(y.out = 1*(SCORE>=quantile(SCORE,probs=0.9)))
+    test.sample_new %>% select(case,y.out) %>%
+      group_by(case,y.out) %>%
+      tally()
+    test.sample_new = test.sample_new %>% 
+      group_by(case) %>% 
+      mutate(groupmean = mean(1000*SCORE),
+             newscore = 1000*SCORE)
+      
+    # test.sample_new_temp = test.sample_new %>% 
+    #   group_by(case) %>% 
+    #   mutate(meanscore = mean(10000*SCORE))
+  
     
-    
-    
-    
-    roc.standard <- roc(y.test,as.vector(prs.standard),ci=T,plot=T)
+    roc.standard <- roc(y.test,as.vector(prs.standard),ci=T,plot=F)
     plot.roc(roc.standard)
-    roc.standard
+    #roc.standard
     pla <- 4
     auc[ind] <- round(as.numeric(roc.standard$auc),pla)*100
     

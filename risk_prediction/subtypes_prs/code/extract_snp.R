@@ -49,20 +49,21 @@ subtypes <- c("Luminal_A",
               "TN")
 select.names <- subtypes
 score <- whole_genome_clump %>%  select(select.names)
-#reverse the odds ratio, since dosage use the first allele as reference
-score <- -score
-whole_genome_clump_new <- whole_genome_clump %>% mutate(SNP=SNP.ONCO) %>% select(SNP,reference_allele,p.min) %>% 
+
+whole_genome_clump_new <- whole_genome_clump %>% mutate(SNP=SNP.ONCO) %>% select(SNP,effect_allele,p.min) %>% 
   cbind(score)
 
 
 #generate extract snps list
-i <- j <- 1
+i <- 8
+j <- 1
     prs <-  whole_genome_clump_new %>%
       filter(p.min<=pthres[i]) %>% 
-      select(SNP,reference_allele,Luminal_A,TN)
-    colnames(prs) <- c("SNP","ref","Luminal_A","TN")
+      select(SNP,effect_allele,Luminal_A,TN)
+    colnames(prs) <- c("SNP","effect_allele","Luminal_A","TN")
+    extract_snp = prs %>% select(SNP)
 
-  write.table(prs,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/extrac_snp_list"),row.names=F,col.names=F,quote=F)
+  write.table(extract_snp,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/extrac_snp_list.txt"),row.names=F,col.names=T,quote=F)
   
   
   
@@ -186,7 +187,7 @@ i <- j <- 1
   onco.vad.id <- split.id[[4]]
   library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
  
-  head(prs)
+
   
   
   
@@ -198,7 +199,7 @@ i <- j <- 1
 
   #take out the first row of the sample data
   #the first row of the sample data is the dataformat of each column
-  sample.data <- read.table("/data/zhangh24/BCAC/impute_onco/sample.txt",header=T)
+  sample.data <- read.table("/data/zhangh24/BCAC/impute_onco/sample.txt",header=T,stringsAsFactors = F)
   sample.data <- sample.data[-1,,drop=F]
   n <- nrow(sample.data)  
   extract.num <- nrow(prs)
@@ -235,7 +236,7 @@ i <- j <- 1
         
         snppro <- as.numeric(unlist(myVector)[7:length(myVector[[1]])])
         
-        snpvalue <- 2-convert(snppro,n.raw)
+        snpvalue <- convert(snppro,n.raw)
         #snpvalue <- snpvalue[idx.fil][idx.match]
         snpvalue.result[,temp+total] <- snpvalue
         
@@ -261,23 +262,44 @@ i <- j <- 1
   snpvalue.result <- snpvalue.result[,idx.match]
   
   colnames(snpvalue.result) <- snpid.result
-  n.snp <- 4
+  n.snp <- 1701
   #prs.la <-   snpvalue.result[,1:n.snp]%*%prs[1:n.snp,3]/((n.snp+1)*2)
-   prs.la <-   snpvalue.result[,1:n.snp]%*%prs[1:n.snp,3]/(n.snp*2)
+   prs.la <-   (snpvalue.result[,1:n.snp])%*%(prs[1:n.snp,3])/(n.snp*2)
   #prs.la <-   snpvalue.result[,n.snp]*prs[n.snp,3]/(2)
-  prs.tn <- snpvalue.result%*%prs[,4]/(251*2)
-i <- j <- 1
+  prs.tn <- snpvalue.result%*%prs[1:n.snp,4]/(n.snp*2)
+i <- 8
+j <- 1
   prs.plink <- read.table(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out.profile"),header=T)
-  all.equal(as.numeric(prs.la),as.numeric(prs.plink[,4]))
+  prs.plink2 <- read.table(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out_try.profile"),header=T)
   
-  
-  prs.plink5 <- prs.plink
-  
-  
+  all.equal(as.numeric(prs.la),as.numeric(prs.plink2[,4]))
   
   
   
   
+  #load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_intrinsic_subtype_082119.Rdata")
+
+  onco_result_temp = onco_result_casecase %>% 
+    select(rs_id,X1,X5)
+ colnames(onco_result_temp)[1] <- "SNP"
+  prs_new = left_join(prs,onco_result_temp,
+                      by="SNP")
+  prs.la.temp = (snpvalue.result[,1:n.snp])%*%(prs_new[1:n.snp,5])/(n.snp*2)
+  
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata")
+  
+write.csv(prs,file= "/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/tempprs.csv")
+
+colnames(meta_result_shared_1p)[c(16:20)] <- paste0("beta_",subtypes)
+meta_result_shared_1p_sub = meta_result_shared_1p %>% 
+  select(SNP.ONCO,beta_Luminal_A,beta_TN)
+colnames(meta_result_shared_1p_sub)[1] <- "SNP"
+prs_compare = left_join(prs,meta_result_shared_1p_sub,
+                        by="SNP")
+prs.la.temp <-   snpvalue.result[,1:n.snp]%*%prs_compare[1:n.snp,5]
+prs.plink.temp <- prs.plink
+prs.plink.temp[,4] <- prs.tn
+ 
    
   # extract.result <- list(snpid.result,snpvalue.result)
   # save(extract.result,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_result_shared.Rdata")
@@ -308,7 +330,9 @@ i <- j <- 1
       
       
       "/data/zhangh24/software/qctool/qctool -g /data/zhangh24/BCAC/impute_onco/onco_all.gen.gz -incl-rsids /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/extrac_snp_list.txt -og /data/zhangh24/BCAC/impute_onco/extracted_snp_test"   
-      /spin1/users/zhangh24/software/qctool/qctool
+    
       
       
+      
+    
  

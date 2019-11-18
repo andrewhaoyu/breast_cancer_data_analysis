@@ -15,6 +15,8 @@ subject.file <- "/data/zhangh24/test/onco_order.txt"
 library(data.table)
 onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 onco.data <- onco.data[,-1]
+
+idx <- which(onco.data[,1]==39177)
 library(tidyverse)
 y.pheno.mis2 <- select(onco.data,Behavior,ER,PR,HER2,Grade)
 ############put onco array unknown cases as 1
