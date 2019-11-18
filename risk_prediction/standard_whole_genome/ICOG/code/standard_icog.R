@@ -13,6 +13,7 @@ rm(list=ls())
 #pheno is ICOGS,data2 is onco_array
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
+i2 <- as.numeric(arg[[2]])
 
 print(i1)
 library(R.utils)
@@ -59,7 +60,8 @@ x.covar.mis1 <- as.matrix(data1[,c(7:16)])
 idx.fil <- Icog.order[,1]%in%SG_ID
 idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+
 #load("./risk_prediction/FTOP_whole_genome/ICOG/result/score.test.support.icog.ERPRHER2Grade.Rdata")
 
 
@@ -84,19 +86,27 @@ n.control <- length(idx.control)
 library(doParallel)
 library(foreach)
 
+size = 5
+start.end <- startend(num,size,i2)
+start <- start.end[1]
+end <- start.end[2]
+file.num <- end-start+1
+num.of.tumor = 0
+
 no.cores <- 2
 inner.size <- 2
 registerDoParallel(no.cores)
 result.list <- foreach(job.i = 1:inner.size)%dopar%{
-  print(job.i)
-  start.end <- startend(num,inner.size,job.i)
-  start <- start.end[1]
-  end <- start.end[2]
-  inner.num <- end-start+1
-  score_result <- matrix(0,inner.num,1)
-  infor_result <- matrix(0,inner.num,1)
-  snpid_result <- rep("c",inner.num)
-  freq.all <- rep(0,inner.num)
+  inner.start.end <- startend(file.num,inner.size,job.i)
+  inner.start <- inner.start.end[1]
+  inner.end <- inner.start.end[2]
+  inner.file.num <- inner.end-inner.start+1
+  true.start <- start+inner.start-1
+  true.end <- start+inner.end-1
+  score_result <- matrix(0,inner.file.num,num.of.tumor+1)
+  infor_result <- matrix(0,inner.file.num,(num.of.tumor+1)^2)
+  snpid_result <- rep("c",inner.file.num)
+  freq.all <- rep(0,inner.file.num)
   temp <- 0
   con <- gzfile(geno.file)
   open(con)
@@ -106,7 +116,7 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
     #}
     oneLine <- readLines(con,n=1)
     
-    if(i>=start){
+    if(i>=true.start){
       temp <- temp+1
       myVector <- strsplit(oneLine," ")
       snpid <- as.character(myVector[[1]][2])
@@ -128,13 +138,13 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
       
 
           
-          if(freq<0.006|freq>0.994){
+          if(freq<0.008|freq>0.992){
             
             score_result[temp,] <- 0
             infor_result[temp,] <- 100
           }else{
-            
-            model.icog<- glm(y.pheno.mis1[,1]~snpvalue+x.covar.mis1)
+          
+            model.icog<- glm(y.pheno.mis1[,1]~snpvalue+x.covar.mis1,family = binomial())
             summmary.icog <- summary(model.icog)
              
             
@@ -148,7 +158,7 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
       
     }
    
-    if(i==end){
+    if(i==true.end){
       break
     }
     
@@ -160,14 +170,15 @@ result.list <- foreach(job.i = 1:inner.size)%dopar%{
 
 stopImplicitCluster()
 
+num.of.tumor <- 0
+
+score_result <- matrix(0.1,file.num,num.of.tumor+1)
+infor_result <- matrix(0.1,file.num,(num.of.tumor+1)^2)
+snpid_result <- rep("c",file.num)
+
+freq.all <- rep(0,file.num)
 
 
-
-
-score_result <- matrix(0,num,1)
-infor_result <- matrix(0,num,1)
-snpid_result <- rep("c",num)
-freq.all <- rep(0,num)
 
 total <- 0
 for(i in 1:inner.size){
@@ -184,5 +195,5 @@ for(i in 1:inner.size){
 
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./risk_prediction/standard_whole_genome/ICOG/result/standard",i1))
+save(result,file=paste0("./risk_prediction/standard_whole_genome/ICOG/result/standard",i1,"_",i2))
 

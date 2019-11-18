@@ -13,6 +13,7 @@ second.num <- 1
 
 icog_score_infor <- icog_result_shared_1p[,11:(11+second.num+second.num^2-1)]
 onco_score_infor <- onco_result_shared_1p[,11:(11+second.num+second.num^2-1)]
+#snp_odds_temp = left_join(snp_odds,icog_result_shared_1p,by="var_name")
 
 icog_onco_score_infor <- cbind(icog_score_infor,onco_score_infor)
 n <- nrow(icog_onco_score_infor)

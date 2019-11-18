@@ -13,6 +13,7 @@ rm(list=ls())
 #pheno is ICOGS,data2 is onco_array
 arg <- commandArgs(trailingOnly=T)
 i1 <- as.numeric(arg[[1]])
+i2 <- as.numeric(arg[[2]])
 #i1 <- i
 print(i1)
 library(R.utils)
@@ -41,7 +42,7 @@ y.pheno.mis2[idx,1] <- 1
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
-x.covar.mis2 <- as.matrix(data2[,c(7:15)])
+x.covar.mis2 <- as.matrix(data2[,c(7:16)])
 #ages <- data2[,230]
 #idx.complete <- which(ages!=888)
 
@@ -59,7 +60,8 @@ n <- length(idx.fil)
 snpvalue <- rep(0,n)
 idx.match <- match(Onc_ID,onco.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+
 #load("./risk_prediction/FTOP_whole_genome/ONCO/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 
 
@@ -87,20 +89,27 @@ geno.file <- Files[i1]
     
     library(doParallel)
     library(foreach)
-    
+    size = 5
+    start.end <- startend(num,size,i2)
+    start <- start.end[1]
+    end <- start.end[2]
+    file.num <- end-start+1
+    num.of.tumor = 0
     no.cores <- 2
     inner.size <- 2
     registerDoParallel(no.cores)
     result.list <- foreach(job.i = 1:inner.size)%dopar%{
       print(job.i)
-      start.end <- startend(num,inner.size,job.i)
-      start <- start.end[1]
-      end <- start.end[2]
-      inner.num <- end-start+1
-      score_result <- matrix(0,inner.num,1)
-      infor_result <- matrix(0,inner.num,1)
-      snpid_result <- rep("c",inner.num)
-      freq.all <- rep(0,inner.num)
+      inner.start.end <- startend(file.num,inner.size,job.i)
+      inner.start <- inner.start.end[1]
+      inner.end <- inner.start.end[2]
+      inner.file.num <- inner.end-inner.start+1
+      true.start <- start+inner.start-1
+      true.end <- start+inner.end-1
+      score_result <- matrix(0,inner.file.num,num.of.tumor+1)
+      infor_result <- matrix(0,inner.file.num,(num.of.tumor+1)^2)
+      snpid_result <- rep("c",inner.file.num)
+      freq.all <- rep(0,inner.file.num)
       temp <- 0
       con <- gzfile(geno.file)
       open(con)
@@ -110,12 +119,12 @@ geno.file <- Files[i1]
         }
         oneLine <- readLines(con,n=1)
         
-        if(i>=start){
+        if(i>=true.start){
           temp <- temp+1
           myVector <- strsplit(oneLine," ")
           snpid <- as.character(myVector[[1]][2])
           snpid_result[temp] <- snpid
-          snpvalue <- rep(0,n)
+          
           
           
           snppro <- as.numeric(unlist(myVector)[6:length(myVector[[1]])])
@@ -132,13 +141,13 @@ geno.file <- Files[i1]
           
           
           
-          if(freq<0.006|freq>0.994){
+          if(freq<0.008|freq>0.992){
             
             score_result[temp,] <- 0
             infor_result[temp,] <- 0.1
           }else{
             
-            model.onco<- glm(y.pheno.mis2[,1]~snpvalue+x.covar.mis2)
+            model.onco<- glm(y.pheno.mis2[,1]~snpvalue+x.covar.mis2,family=binomial())
             summmary.onco<- summary(model.onco)
             
             
@@ -154,10 +163,9 @@ geno.file <- Files[i1]
           
         }
         
-        if(i==end){
+        if(i==true.end){
           break
         }
-        
       }
       close(con)
       result <- list(snpid_result,score_result,infor_result,freq.all)
@@ -170,10 +178,15 @@ geno.file <- Files[i1]
     
     
     
-    score_result <- matrix(0,num,1)
-    infor_result <- matrix(0,num,1)
-    snpid_result <- rep("c",num)
-    freq.all <- rep(0,num)
+    num.of.tumor <- 0
+    
+    score_result <- matrix(0.1,file.num,num.of.tumor+1)
+    infor_result <- matrix(0.1,file.num,(num.of.tumor+1)^2)
+    snpid_result <- rep("c",file.num)
+    
+    freq.all <- rep(0,file.num)
+    
+    
     
     total <- 0
     for(i in 1:inner.size){
@@ -189,5 +202,7 @@ geno.file <- Files[i1]
     
     
     
+    
+    
     result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
-save(result,file=paste0("./risk_prediction/standard_whole_genome/ONCO/result/standard",i1))
+save(result,file=paste0("./risk_prediction/standard_whole_genome/ONCO/result/standard",i1,"_",i2))
