@@ -75,3 +75,7 @@ for(i in 1:n){
   var2 = matrix(as.numeric(subtypes_snp_odds[i,39:63]),p,p)
   p2[i] = TestDiffvec(beta1,var1,beta2,var2)
 }
+p = c(p1,p2)
+result <- data.frame(discovery_snp_paper,
+                     pbatch=p)
+write.csv(result,file = paste0("./"))
