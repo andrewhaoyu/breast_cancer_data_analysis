@@ -28,24 +28,20 @@ idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
 result.dir <- "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result"
 
-result_Files <- dir(result.dir,pattern="standard")
-result_Files <- result_Files[1:564]
-result.idx <- rep(0,length(result_Files))
-for(i in 1:length(result_Files)){
-  result.idx.temp <- as.integer(gsub("standard","",result_Files[i]))
-  result.idx[i] <- result.idx.temp
-}
-
-setwd("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result")
+size <- 5
 num.total <- 0
 for(i in 1:length(Files)){
-  print(i)
+  for(j in 1:size){
+    load(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result/standard",idx[i],"_",j))
+    temp <- length(result[[1]])
+    num.total <- temp+num.total
+    
+  }
   
-  
-  load(paste0("standard",idx[i]))
-  temp <- length(result[[1]])
-  num.total <- num.total+temp
 }
+
+
+
 
 num <-  num.total
 rs_id <- rep("c",num)
@@ -61,8 +57,10 @@ setwd("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole
 num.total <- 0
 for(i in 1:length(Files)){
   print(i)
+  for(j in 1:size){
   
-  load(paste0("standard",idx[i]))
+  
+  load(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ICOG/result/standard",idx[i],"_",j))
   temp <- length(result[[1]])
   rs_id[num.total+(1:temp)] <- result[[1]]
   score[num.total+(1:temp),] <- result[[2]]
@@ -70,7 +68,7 @@ for(i in 1:length(Files)){
   freq.all[num.total+(1:temp)] <- result[[4]] 
   num.total <- temp+num.total
   
-  
+  }
   
 }
 

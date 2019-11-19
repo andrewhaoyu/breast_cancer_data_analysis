@@ -78,4 +78,4 @@ for(i in 1:n){
 p = c(p1,p2)
 result <- data.frame(discovery_snp_paper,
                      pbatch=p)
-write.csv(result,file = paste0("./"))
+write.csv(result,file = paste0("./discovery_SNP/batch_effect_test/result/bateffect_test.csv"))

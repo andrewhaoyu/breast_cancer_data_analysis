@@ -56,11 +56,9 @@ onco_result_shared <- cbind(onco_result_shared,data_c_shared)
 all.equal(onco_result_shared$rs_id,onco_result_shared$SNP.ONCO)
 setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/')
 
-
-idx.filter <- which(icog_result_shared$exp_freq_a1>=0.01&
-                      onco_result_shared$exp_freq_a1>=0.01&
-                      icog_result_shared$exp_freq_a1<=0.99&
-                      onco_result_shared$exp_freq_a1<=0.99)
+idx.filter <- which((icog_result_shared$exp_freq_a1>=0.01&icog_result_shared$exp_freq_a1<=0.99)&
+                      (onco_result_shared$exp_freq_a1>=0.01&
+                      onco_result_shared$exp_freq_a1<=0.99))
 icog_result_shared_1p <- icog_result_shared[idx.filter,]
 onco_result_shared_1p <- onco_result_shared[idx.filter,]
 

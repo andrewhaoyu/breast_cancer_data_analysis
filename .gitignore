@@ -1,4 +1,5 @@
-/discovery_SNP/batch_effect_test/result
+discovery_SNP/batch_effect_test/result/
+/discovery_SNP/ideogram_plot/result/
 /risk_prediction/Nasim_prs/result
 /discovery_SNP/get_imputation_score/result
 /multi_ethnic/Hapgen2_test/
