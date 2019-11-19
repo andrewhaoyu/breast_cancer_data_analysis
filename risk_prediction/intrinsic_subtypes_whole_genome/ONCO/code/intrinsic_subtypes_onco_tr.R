@@ -47,6 +47,7 @@ data2 <- data2[,-1]
 onco.train <- which(data2[,1]%in%onco.train.id)
 data2 <- data2[onco.train,]
 y.pheno.mis2 <- cbind(data2$Behavior,data2$ER,data2$PR,data2$HER2,data2$Grade)
+#idx <- which(data2[,1]%in%split.id[[3]])
 #######clean y.phneo.mis2 
 idx <- which(y.pheno.mis2[,1]==888|y.pheno.mis2[,1]==2)
 y.pheno.mis2[idx,1] <- 1

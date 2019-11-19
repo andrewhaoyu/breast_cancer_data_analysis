@@ -5,8 +5,9 @@ meta_intrin <- meta_result_shared_1p
 load('./FTOP_whole_genome/ICOG/result/meta_result_shared_1p.Rdata')
 meta_FTOP <- meta_result_shared_1p_FTOP
 load("./standard_whole_genome/ICOG/result/meta_result_shared_1p.Rdata")
+meta_stan <- meta_result_shared_1p
 
-load("./EB_whole_genome/result/meta_result_shared_1p.Rdata")
+#load("./EB_whole_genome/result/meta_result_shared_1p.Rdata")
 #meta_stan <- meta_result_shared_1p
 all.equal(meta_intrin$rs_id,meta_FTOP$rs_id)
 all.equal(meta_stan$rs_id,meta_FTOP$rs_id)
@@ -51,7 +52,7 @@ whole_genome <- cbind(whole_genome,
 whole_genome = whole_genome %>% 
   mutate(p.min = pmin(stan_p,FTOP_result,na.rm = T))
 colnames(whole_genome)[19] <- "Luminal_A"
-save(whole_genome,file = "./intrinsic_subtypes_whole_genome/ICOG/result/whole_gonome.rdata")
+#save(whole_genome,file = "./intrinsic_subtypes_whole_genome/ICOG/result/whole_gonome.rdata")
 
 load("/data/zhangh24/icog_onco_information_data.rdata")
 icog_onco_infor_sub = icog_onco_infor %>% 

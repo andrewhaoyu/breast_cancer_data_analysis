@@ -43,6 +43,9 @@ data1 <- fread("./data/PRS_subtype_icgos_pheno_v10_euro.csv",header=T)
 data1 <- as.data.frame(data1)
 data2 <- fread("./data/PRS_subtype_Onco_euro_v10_08012018.csv",
                header=T)
+#temp =data2[,1]%in%onco.data[,1]
+#idx <- which(data2[,1]%in%onco.data[,1]==F)
+#data2[idx,]
 data2 <- as.data.frame(data2)
 library(xlsx)
 ################take out all the people with in-situ status

@@ -44,6 +44,7 @@ idx <- which(disease_onco[,1]%in%onco.order$ID==T)
 
 #idx <- which(onco.order.new$ID==999999357290)
 all.equal(onco.order.new[,1],onco.order[,1])
+table(onco.order.new$subtypes.onco,useNA="always")
 subtypes.onco <- data.frame(
                     as.character(onco.order.new[,3]),
                             stringsAsFactors = F)
@@ -70,6 +71,7 @@ for(i in 1:n){
 }
 missing <- matrix(0,n,1)
 case <- onco.order.new[,2,drop=F]
+table(case)
 #fam file have 6 different columns
 #first column is family ID
 #second colunn is individual ID
@@ -115,6 +117,7 @@ colnames(sample.data) <- c("ID_1",
                            "case",
                            "cov_1",
                            "subtypes")
+table(case,useNA="always")
 write.table(sample.data,file = "/data/zhangh24/BCAC/impute_onco/sample.txt",
             row.names = F, quote = F,sep = " ")
 
