@@ -63,7 +63,7 @@ for(i in 1:n.pthres){
       select(SNP,effect_allele,select.names[j])
     colnames(prs) <- c("SNP","effect_allele","beta")
     dim(prs)
-    write.table(prs,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file"),row.names=F,col.names=T,quote=F)
+    write.table(prs,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/overall_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file"),row.names=F,col.names=T,quote=F)
     
   }
   

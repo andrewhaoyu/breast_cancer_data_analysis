@@ -98,6 +98,7 @@ load(paste0("./risk_prediction/result/split.id.rdata"))
 icog.train.id <- split.id[[1]]
 onco.train.id <- split.id[[2]]
 onco.test.id <- split.id[[3]]
+#onco.test.id <- split.id[[5]]
 icog.vad.id <- split.id[[4]]
 onco.vad.id <- split.id[[4]]
 

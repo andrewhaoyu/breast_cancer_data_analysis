@@ -17,6 +17,7 @@ library(devtools)
 library(CompQuadForm)
 library(bc2)
 library(data.table)
+library(nnet)
 
 if(i1<=177){
   ##analysis for Icog

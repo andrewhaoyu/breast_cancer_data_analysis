@@ -28,7 +28,7 @@ for(i in 1:n.pthres){
     # skip0=N      Number of fields to skip before SNP
     # skip1=N       Number of fields to skip between SNP and A1
     # format=N      Dosage, two probabilities or three (N=1,2,3)
-    prs.code.temp <- paste0("/data/zhangh24/plink --score /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file no-sum no-mean-imputation --dosage /data/zhangh24/BCAC/impute_plink_onco/dosage_all noheader skip0=1 skip1=1 format=1 --fam /data/zhangh24/BCAC/impute_onco/onco_plink.fam --out /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out")
+    prs.code.temp <- paste0("/data/zhangh24/plink --score /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file no-sum no-mean-imputation --dosage /data/zhangh24/BCAC/impute_plink_onco/dosage_all_new_try noheader skip0=1 skip1=1 format=1 --fam /data/zhangh24/BCAC/impute_onco/onco_plink.fam --out /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out")
     prs.code[temp,1] <- prs.code.temp
     temp <- temp+1
   }
