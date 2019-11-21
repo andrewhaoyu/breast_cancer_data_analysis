@@ -141,7 +141,7 @@ second.stage.sigma.meta <- meta.result[[2]]
 
 test.result.second.wald <- DisplaySecondStageTestResult(second.stage.logodds.meta,second.stage.sigma.meta)
 
-save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_",i1,".Rdata"))
+save( test.result.second.wald,file=paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_logodds_complete_data_analysis_",i1,".Rdata"))
 result <- list(second.stage.logodds.meta,second.stage.sigma.meta)
 save(result, file = paste0("./discovery_SNP/additive_model/result/intrinsic_subtype_logodds_complete_data_analysis",i1,".Rdata"))
 
