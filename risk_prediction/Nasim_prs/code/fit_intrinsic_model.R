@@ -42,7 +42,7 @@ y.pheno.mis1[idx,1] <- 1
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 
 x.covar.mis1 <- data1[,c(7:16)]
-rm(data1)
+
 gc()
 
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
