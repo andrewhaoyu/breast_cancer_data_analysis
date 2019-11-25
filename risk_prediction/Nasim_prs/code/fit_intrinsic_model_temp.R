@@ -30,42 +30,7 @@ onco.train.id <- split.id[[2]]
 #onco.cohort.id <- split.id[[5]]
 load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/Nasim_prs/result/icog.nasim.snp")
 library(data.table)
-data1 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_icog_prs.csv",header=T))
-data1 <- as.data.frame(data1[,-1])
-icog.train <- which(data1[,1]%in%icog.train.id)
-data1 <- data1[icog.train,]
-y.pheno.mis1 <- cbind(data1$Behavior,data1$ER,data1$PR,data1$HER2,data1$Grade)
-table(y.pheno.mis1[,1])
-##########clean phenotype file
-idx <- which(y.pheno.mis1[,1]==888|y.pheno.mis1[,1]==2)
-y.pheno.mis1[idx,1] <- 1
-colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
-
-x.covar.mis1 <- data1[,c(7:16)]
-
-gc()
-
-library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
-
-load("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/delta0.icog.Rdata")
-
-library(dplyr)
-ID <- data1[,1,drop=F]
-snp_test_all1 <- left_join(ID,icog.nasim.snp,by="ID")
-snpvalue_all = snp_test_all1[,2:ncol(snp_test_all1)]
-snpvalue = snpvalue_all[,i1]
-
-Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888,delta0 = delta0)
-z.standard <- Heter.result.Icog[[12]]
-M <- nrow(z.standard)
-number.of.tumor <- ncol(z.standard)
-log.odds.icog <- Heter.result.Icog[[1]][(M+1):(M+1+number.of.tumor)]
-nparm <- length(Heter.result.Icog[[1]])  
-sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
-
-
-
-load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/Nasim_prs/result/onco.nasim.snp.rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/Nasim_prs/result/onco.nasim.snp_temp.rdata")
 data2 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 data2 <- data2[,-1]
 load("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/delta0.Rdata")
@@ -84,7 +49,7 @@ x.covar.mis2 <- data2[,c(7:15)]
 library(dplyr)
 ID <- data2[,1,drop=F]
 snp_test_all2 <- left_join(ID,onco.nasim.snp,by="ID")
-snpvalue_all = snp_test_all2[,2:ncol(snp_test_all2)]
+snpvalue_all = snp_test_all2[,2:ncol(snp_test_all2),drop=F]
 snpvalue = snpvalue_all[,i1]
 
 Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=delta0)

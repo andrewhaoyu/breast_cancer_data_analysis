@@ -177,6 +177,14 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         infor_result[temp,] <- as.vector(diag(5))
       }else{
         tryCatch({
+          # colnames(y.pheno.mis2.temp) <- colnames(y.pheno.mis2)
+          # all.equal(y.pheno.mis2.temp,y.pheno.mis2)
+          # all.equal(x.covar.mis2.temp,
+          #           x.covar.mis2)
+          # colnames(z.design) = colnames(z.design.temp)
+          # all.equal(z.design.temp,
+          #           z.design)
+          
           Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=delta0)
           nz.standard <- Heter.result.Onco[[12]]
           M <- nrow(z.standard)
@@ -241,7 +249,7 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_",i1,"_",i2))
+save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_112519_",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit_resubmit",i1,"_",i2))

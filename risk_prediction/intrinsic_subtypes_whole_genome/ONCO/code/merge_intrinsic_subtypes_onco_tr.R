@@ -253,3 +253,7 @@ onco_result_casecase <- data.frame(onco_info,score,infor,CHR)
 
 save(onco_result_casecase,file="./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/onco_result_intrinsic_subtype.Rdata")
 print(1)
+
+
+idx <- which(onco_result_casecase$rs_id=="rs1416885:100010765:C:G")
+onco_result_casecase[idx,]
