@@ -55,7 +55,7 @@ y.pheno.mis2[idx,1] <- 1
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
-x.covar.mis2 <- data2[,c(7:15)]
+x.covar.mis2 <- data2[,c(7:16)]
 #ages <- data2[,230]
 #idx.complete <- which(ages!=888)
 
@@ -174,7 +174,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       }else{
         tryCatch({
          
-          Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=delta0)
+          Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=NULL)
           nz.standard <- Heter.result.Onco[[12]]
           M <- nrow(z.standard)
           number.of.tumor <- ncol(z.standard)
