@@ -68,7 +68,7 @@ sigma.log.odds.icog <- Heter.result.Icog[[2]][(M+1):(M+1+number.of.tumor),(M+1):
 load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/Nasim_prs/result/onco.nasim.snp.rdata")
 data2 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 data2 <- data2[,-1]
-load("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/delta0.Rdata")
+#load("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/delta0.Rdata")
 
 #onco.train <- which(data2[,1]%in%onco.train.id)
 onco.train <- which(data2[,1]%in%onco.train.id)
@@ -87,7 +87,7 @@ snp_test_all2 <- left_join(ID,onco.nasim.snp,by="ID")
 snpvalue_all = snp_test_all2[,2:ncol(snp_test_all2)]
 snpvalue = snpvalue_all[,i1]
 
-Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=delta0)
+Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=NULL)
 nz.standard <- Heter.result.Onco[[12]]
 M <- nrow(z.standard)
 number.of.tumor <- ncol(z.standard)
