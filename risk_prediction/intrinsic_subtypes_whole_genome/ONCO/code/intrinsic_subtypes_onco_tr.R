@@ -98,7 +98,7 @@ num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 
 
 number.of.tumor <- ncol(y.pheno.mis2)-1
-
+num.of.tumor <- number.of.tumor
 n.sub <- nrow(y.pheno.mis2)
 idx.control <- which(y.pheno.mis2[,1]==0)
 n.control <- length(idx.control)
