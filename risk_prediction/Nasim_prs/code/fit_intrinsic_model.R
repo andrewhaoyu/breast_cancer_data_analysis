@@ -78,7 +78,7 @@ y.pheno.mis2 <- cbind(data2$Behavior,data2$ER,data2$PR,data2$HER2,data2$Grade)
 #######clean y.phneo.mis2 
 idx <- which(y.pheno.mis2[,1]==888|y.pheno.mis2[,1]==2)
 y.pheno.mis2[idx,1] <- 1
-x.covar.mis2 <- data2[,c(7:15)]
+x.covar.mis2 <- data2[,c(7:16)]
 
 
 library(dplyr)
