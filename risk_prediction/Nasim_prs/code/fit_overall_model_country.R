@@ -23,6 +23,7 @@ data1 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/si
 data1 <- as.data.frame(data1[,-1])
 icog.train <- which(data1[,1]%in%icog.train.id)
 data1 <- data1[icog.train,]
+data1_country <- data1_country[icog.train,]
 y.pheno.mis1 <- cbind(data1$Behavior,data1$ER,data1$PR,data1$HER2,data1$Grade)
 table(y.pheno.mis1[,1])
 ##########clean phenotype file
@@ -30,7 +31,7 @@ idx <- which(y.pheno.mis1[,1]==888|y.pheno.mis1[,1]==2)
 y.pheno.mis1[idx,1] <- 1
 colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
 
-x.covar.mis1 <- data1[,c(7:16)]
+x.covar.mis1 <- cbind(data1[,c(7:16)],data1_country$StudyCountry)
 
 gc()
 
@@ -45,12 +46,16 @@ snpvalue = snpvalue_all[,i1]
 
 
 StandardLogisticmodel <- function(y.pheno.mis,snpvalue,x.covar.mis,idx){
-  model <- glm(y.pheno.mis[idx,1]~snpvalue[idx]+as.matrix(x.covar.mis)[idx,],family=binomial())
+
+  model <- glm(y.pheno.mis[idx,1]~snpvalue[idx]+
+                 as.matrix(x.covar.mis[idx,1:10])+x.covar.mis[idx,11],
+               family=binomial())
   model.summary <- summary(model)
   log.odds <- coef(model.summary)[2,1]
   var.log.odds <- coef(model.summary)[2,2]^2
   return(list(log.odds,var.log.odds))
 }
+
 
 result.overall.icog <- StandardLogisticmodel(y.pheno.mis1,snpvalue,x.covar.mis1,idx=c(1:nrow(y.pheno.mis1)))
 
@@ -62,16 +67,21 @@ idx.ERneg <- which(y.pheno.mis1[,2]==0|
                      y.pheno.mis1[,1]==0)
 result.ERneg.icog <- StandardLogisticmodel(y.pheno.mis1,snpvalue,x.covar.mis1,idx=idx.ERneg)
 load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/Nasim_prs/result/onco.nasim.snp.rdata")
+data2_country <- as.data.frame(fread("./data/PRS_subtype_Onco_euro_v10_08012018.csv",
+               header=T))
+
 data2 <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/sig_snp_onco_prs.csv",header=T))
 data2 <- data2[,-1]
+all.equal(data2_country[,1],data2[,1])
 onco.train <- which(data2[,1]%in%onco.train.id)
 data2 <- data2[onco.train,]
+data2_country <- data2_country[onco.train,]
 y.pheno.mis2 <- cbind(data2$Behavior,data2$ER,data2$PR,data2$HER2,data2$Grade)
 #idx <- which(data2[,1]%in%split.id[[3]])
 #######clean y.phneo.mis2 
 idx <- which(y.pheno.mis2[,1]==888|y.pheno.mis2[,1]==2)
 y.pheno.mis2[idx,1] <- 1
-x.covar.mis2 <- data2[,c(7:16)]
+x.covar.mis2 <- cbind(data2[,c(7:16)],data2_country$StudyCountry)
 
 
 library(dplyr)
@@ -118,7 +128,7 @@ sigma.ERneg <- meta.result.ERneg[[2]]
 
 
 result <- list(logodds.overall=logodds.overall,sigma.overall=sigma.overall,logodds.ERpos=logodds.ERpos,sigma.ERpos=sigma.ERpos,logodds.ERneg=logodds.ERneg,sigma.ERneg=sigma.ERneg)
-save(result, file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/Nasim_prs/result/overall_log_odds_",i1,".Rdata"))
+save(result, file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/Nasim_prs/result/overall_log_odds_country_",i1,".Rdata"))
 
 
 
