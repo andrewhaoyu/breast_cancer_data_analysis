@@ -33,7 +33,7 @@ write.table(qctool.command,file = paste0("./risk_prediction/Nasim_prs/code/qc_ex
 
 
 
-
+#extract the genotype from icogs data
 extract_snp <-  snp_id %>%
   select(SNP.ICOGS)
 

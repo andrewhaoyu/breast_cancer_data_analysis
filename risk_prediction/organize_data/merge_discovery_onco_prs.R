@@ -30,7 +30,8 @@ n <- length(idx.fil)
 snpvalue <- rep(0,n)
 idx.match <- match(Onc_ID,onco.order[idx.fil,1])
 
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+
 
 extract.num <- length(snp.onco.extract.id)
 snpid.result <- rep("c",extract.num)
