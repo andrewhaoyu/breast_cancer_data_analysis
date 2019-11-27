@@ -1,6 +1,8 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
+library(data.table)
+library(dplyr)
 #load CIMBA data
 CIMBA <- as.data.frame(fread("./data/brca1_bc_alligned_with_BCAC.txt"))
 load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
