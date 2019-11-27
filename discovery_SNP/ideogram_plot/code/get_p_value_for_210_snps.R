@@ -21,7 +21,7 @@ snp_overall = snp_all %>%
 meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt",header=T))
 ftop <- meta_result_shared_1p
 ftop.p <- ftop$p.value
-
+rs74911261
 meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_mixed.txt",header=T))
 mtop <- meta_result_shared_1p
 mtop.p <- mtop$p.value
@@ -60,3 +60,20 @@ colnames(snp_overall)[4] <- "Overall analysis P"
 snp_result <- cbind(snp_overall,snp_subtypes[,4],
                     snp_cimba[,4])
 write.csv(snp_result,file = "./discovery_SNP/ideogram_plot/result/210_SNPs_result.csv")
+
+
+#load intrinsic subtypes results
+load(paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
+intrinsic_result <- meta_result_shared_1p
+jdx2 <- which(intrinsic_result$var_name=="11_108357137_G_A")
+CIMBA <- as.data.frame(fread("./data/brca1_bc_alligned_with_BCAC.txt"))
+str.temp <- strsplit(CIMBA$var_name,split="_")
+n.snp <- nrow(CIMBA)
+CHR = rep(0,n.snp)
+position = rep(0,n.snp)
+for(i in 1:n.snp){
+  CHR[i] <-  as.numeric(str.temp[[i]][[1]])
+  position[i] <- as.numeric(str.temp[[i]][[2]])
+}
+CIMBA <- cbind(CIMBA,CHR,position)
+jdx <- which(CHR==11&position==108357137)

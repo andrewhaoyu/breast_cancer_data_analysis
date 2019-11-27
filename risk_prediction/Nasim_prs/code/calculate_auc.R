@@ -4,8 +4,12 @@ load(paste0("./risk_prediction/Nasim_prs/result/313_intrinsic_subtype_logodds.Rd
 intrinsic_subtypes_result <- final_result
 load(paste0("./risk_prediction/Nasim_prs/result/313_overall_logodds.Rdata"))
 overall_result <- final_result
+load("./risk_prediction/Nasim_prs/result/313_overall_logodds_country.Rdata")
+overall_result_country <- final_result
 all_result <- cbind(intrinsic_subtypes_result,
-                    overall_result[,4:6])
+                    overall_result[,4:6],
+                    overall_result_country[,4:6])
+colnames(all_result)[12:14] <- paste0("country_",colnames(all_result)[9:11])
 
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 
@@ -14,7 +18,7 @@ snpvalue.result <- onco.nasim.snp[,2:ncol(onco.nasim.snp)]
 
 library(dplyr)
 logodds = all_result %>% 
-  select(Luminal_A,Luminal_B,Luminal_B_HER2Neg,HER2_Enriched,TN,logodds_overall,logodds_erpos,logodds_erneg)
+  select(Luminal_A,Luminal_B,Luminal_B_HER2Neg,HER2_Enriched,TN,logodds_overall,logodds_erpos,logodds_erneg,country_logodds_overall,country_logodds_erpos,country_logodds_erneg)
 all.equal(colnames(snpvalue.result),all_result[,3])
 prs_all <- as.matrix(snpvalue.result)%*%as.matrix(logodds)
 

@@ -28,7 +28,8 @@ x.covar.mis1 <- data1[,c(5:14)]
 idx.fil <- Icog.order[,1]%in%SG_ID
 idx.match <- match(SG_ID,Icog.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+
 
 
 extract.num <- length(snp.icogs.extract.id)
