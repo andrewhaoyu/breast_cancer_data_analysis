@@ -47,6 +47,7 @@ data2 <- data2[,-1]
 onco.train <- which(data2[,1]%in%onco.train.id)
 data2 <- data2[onco.train,]
 y.pheno.mis2 <- cbind(data2$Behavior,data2$ER,data2$PR,data2$HER2,data2$Grade)
+#idx <- which(data2[,1]%in%split.id[[3]])
 #######clean y.phneo.mis2 
 idx <- which(y.pheno.mis2[,1]==888|y.pheno.mis2[,1]==2)
 y.pheno.mis2[idx,1] <- 1
@@ -54,7 +55,7 @@ y.pheno.mis2[idx,1] <- 1
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
-x.covar.mis2 <- data2[,c(7:15)]
+x.covar.mis2 <- data2[,c(7:16)]
 #ages <- data2[,230]
 #idx.complete <- which(ages!=888)
 
@@ -75,7 +76,7 @@ idx.match <- match(Onc_ID,onco.order[idx.fil,1])
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 #load("./whole_genome/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 #load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/delta0.onco.Rdata")
-load("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/delta0.Rdata")
+#load("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/delta0.Rdata")
 load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/z.standard.Rdata")
 
 
@@ -96,8 +97,8 @@ geno.file <- Files[i1]
 num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 
 
-num.of.tumor <- ncol(y.pheno.mis2)-1
-
+number.of.tumor <- ncol(y.pheno.mis2)-1
+num.of.tumor <- number.of.tumor
 n.sub <- nrow(y.pheno.mis2)
 idx.control <- which(y.pheno.mis2[,1]==0)
 n.control <- length(idx.control)
@@ -107,7 +108,7 @@ z.design.test <- z.standard[,2:4]
 
 
 #size = 1000
-size = 1000
+size = 155
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
@@ -165,10 +166,6 @@ result.list <- foreach(job.i = 1:2)%dopar%{
       snpvalue.control <- snpvalue[idx.control]
       freq <- sum(snpvalue.control)/(2*n.control)
       freq.all[temp] <- freq
-      #print(paste0("freq",freq))
-      
-      # tryCatch(
-      #   {
       
       if(freq<0.008|freq>0.992){
         
@@ -176,7 +173,8 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         infor_result[temp,] <- as.vector(diag(5))
       }else{
         tryCatch({
-          Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=delta0)
+          
+          Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=NULL)
           nz.standard <- Heter.result.Onco[[12]]
           M <- nrow(z.standard)
           number.of.tumor <- ncol(z.standard)
@@ -240,7 +238,7 @@ for(i in 1:inner.size){
 
 result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 
-save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_resubmit_",i1,"_",i2))
+save(result,file=paste0("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/intrinsic_subytpe_onco_112519_resubmit_",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit",i1,"_",i2))
 #save(result,file=paste0("./whole_genome_age/ONCO/intrinsic_subtypes/result/intrinsic_subytpe_onco_resubmit_resubmit_resubmit",i1,"_",i2))

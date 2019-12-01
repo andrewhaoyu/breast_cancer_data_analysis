@@ -1,56 +1,80 @@
-args = commandArgs(trailingOnly = T)
-i1 = as.numeric(args[[1]])
-setwd('/data/zhangh24/breast_cancer_data_analysis/')
-library(data.table)
-library(dplyr)
-#load CIMBA data
-CIMBA <- as.data.frame(fread("./data/brca1_bc_alligned_with_BCAC.txt"))
-load(paste0("./whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
-colnames(meta_result_shared_1p)[16:20] <- 
-  c("Luminial_A","Luminal_B",
-    "Luminal_B_HER2Neg",
-    "HER2_Enriched",
-    "TN")
+load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_final.Rdata")
 
-intrinsic_result = meta_result_shared_1p %>% 
-  select(var_name,TN,"25") %>% 
-  rename(TN_var="25")
+library(dat.talbe)
 library(dplyr)
 
-BCAC_CIMBA <- inner_join(intrinsic_result,CIMBA,
-                         by="var_name")
-BCAC_CIMBA = BCAC_CIMBA %>% 
-  mutate(beta_cimba_var = StdErr^2)
-library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+
+colnames(meta_result_shared_1p)[21:45] <- 
+  paste0("cov",c(1:25))
+
+
+#load CIMBA BCAC meta-analysis data
+#chromosome 23 data are not meta-analyzed yet
+CIMBA.result <- as.data.frame(fread("/spin1/users/zhangh24/breast_cancer_data_analysis/data/brca1_bcac_tn_meta.txt"))
 
 
 
+CIMBA.BCAC <- merge(meta_result_shared_1p,CIMBA.result,by.x = "var_name",by.y = "MarkerName")
+idx.am <- which(CIMBA.BCAC$a1!=toupper(CIMBA.BCAC$Allele2))
+#reverse the allele that not aligned in bcac and CIMBA
+temp1 = CIMBA.BCAC$a1[idx.am] 
+temp2 = CIMBA.BCAC$a0[idx.am]
+CIMBA.BCAC$a1[idx.am] = temp2
+CIMBA.BCAC$a0[idx.am] = temp1
 
+CIMBA.BCAC$Effect[idx.am] <- -CIMBA.BCAC$Effect[idx.am]
+CIMBA.BCAC$Freq1[idx.am] <- 1-CIMBA.BCAC$Freq1[idx.am]
+CIMBA.BCAC$MinFreq[idx.am] <- 1-CIMBA.BCAC$MinFreq[idx.am]
+CIMBA.BCAC$MaxFreq[idx.am] <- 1-CIMBA.BCAC$MaxFreq[idx.am]
 
-n <- nrow(BCAC_CIMBA)
-start.end <- startend(n,30,i1)
-start <- start.end[1]
-end <- start.end[2]
-total <- end-start+1
-############## Meta analysis between BCAC and CIMBA
-############## CIMBA only get the triple negative results
-############## Triple negative is the 5th subtypes in BCAC
-meta.log.odds <- rep(0,total)
-meta.sigma <- rep(0,total)
-meta.p <- rep(0,total)
-temp = 1
-for(i in start:end){
-  logodds1 = BCAC_CIMBA$TN[i]
-  sigma1 = BCAC_CIMBA$TN_var[i]
-  logodds2 = BCAC_CIMBA$beta_cimba[i]
-  sigma2 = BCAC_CIMBA$beta_cimba_var[i]
-  resul.temp <- LogoddsMetaAnalysis(logodds1,sigma1,logodds2,sigma2)
-  meta.log.odds[temp] <- resul.temp[[1]]
-  meta.sigma[temp] <- resul.temp[[2]]
-  meta.p[temp] <- 2*pnorm(-abs(resul.temp[[1]]/sqrt(resul.temp[[2]])))
-  temp = temp+1
+CIMBA.BCAC_update <- CIMBA.BCAC %>% 
+  mutate(var_effect = StdErr^2) %>% 
+  select(var_name,"5",cov25,Effect,var_effect)
+
+#BCAC TN and CIMBA BRCA1 meta analysis
+meta_effect <- rep(0,nrow(CIMBA.BCAC_update))
+meta_std <- rep(0,nrow(CIMBA.BCAC_update))
+meta_p <- rep(0,nrow(CIMBA.BCAC_update))
+for(i in 1:nrow(CIMBA.BCAC_update)){
+  if(i%%1000==0){
+    print(i)  
+  }
+  
+  result_temp <- MetaFixedPfunction_temp(CIMBA.BCAC_update[i,2:5],1)
+  meta_effect[i] <- result_temp[[1]]
+  meta_std[i] <- sqrt(result_temp[[2]])
+  meta_p[i] <- as.numeric(result_temp[[3]][2])
+  
 }
-result.sub <- list(meta.log.odds,
-                   meta.sigma,
-                   meta.p)
-save(result.sub,file = paste0("./discovery_SNP/CIMBA_BCAC_meta_analysis/result/meta.result.sub",i1,".Rdata"))
+
+
+
+CIMBA.BCAC_update$meta_effect <- meta_effect
+CIMBA.BCAC_update$meta_std <- meta_std
+CIMBA.BCAC_update$meta_p <- meta_p
+#Some alleles change the order due to BCAC and CIMBA meta-analysis.
+#we need to change them back
+colnames(CIMBA.BCAC_update)[1] <- "MarkerName"
+CIMBA.BCAC_update$a1_update <- CIMBA.BCAC$a1
+CIMBA.BCAC_update$a0_update <- CIMBA.BCAC$a0
+CIMBA.BCAC_update$Freq1_update <- CIMBA.BCAC$Freq1
+CIMBA.BCAC_update$MinFreq_update <- CIMBA.BCAC$MinFreq
+CIMBA.BCAC_update$MaxFreq_update <- CIMBA.BCAC$MaxFreq
+
+
+
+
+
+#update CIMBA data
+CIMBA.result.update <- left_join(CIMBA.result,CIMBA.BCAC_update,by ="MarkerName")
+idx <- which(!is.na(CIMBA.result.update$Effect.y))
+#use the update information allele1,allele2,freq1,minfreq,maxfreq,effect.x, stderr,p-value
+CIMBA.result.update[idx,c(2,3,4,6,7,8,9,10)] <-
+  CIMBA.result.update[idx,c(26,25,28,27,29,20,23,24)]
+head(CIMBA.result.update)
+#drop the uncessary data
+CIMBA.result.update <- CIMBA.result.update[,c(1:17)]
+write.table(CIMBA.result.update,file = "/spin1/users/zhangh24/breast_cancer_data_analysis/data/CIMBA_BCAC_meta_analysis_083019.txt",quote=F,row.names=F)
+
+
+

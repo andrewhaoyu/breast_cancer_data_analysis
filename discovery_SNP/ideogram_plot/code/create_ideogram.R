@@ -2,7 +2,7 @@
 setwd("/data/zhangh24/breast_cancer_data_analysis/")
 snp <- read.csv("./data/210_known_discovery_snp_paper_order.csv")
 cate <- rep(0,nrow(snp))
-cate[1:178] <- c("Known variants")
+#cate[1:178] <- c("Known variants")
 cate[179:200] <- c("Variants detected in overall analysis")
 cate[201:208] <- c("Variants detected in subtypes analysis")
 cate[209:210] <- c("Variants detected in subtypes analysis")
@@ -20,7 +20,7 @@ library(data.table)
 setwd("/data/zhangh24/breast_cancer_data_analysis/")
 snp <- read.csv("./data/210_known_discovery_snp_paper_order.csv")
 snp_known <- snp[1:178,]
-snp_known$cate = rep("Known variants",178)
+#snp_known$cate = rep("Known variants",178)
 library(dplyr)
 snp = snp %>% 
   mutate(chr.pos = paste0(CHR,":",position))
@@ -32,6 +32,9 @@ snp_all = left_join(snp,data,by="chr.pos")
 #remove two multi-allelic snps that are not reported before
 idx <- c(62,119)
 snp_all = snp_all[-idx,]
+#the NA p-value are highly significant known snps with rare MAF not listed in the summary level statistics
+jdx <- which(is.na(snp_all$p.meta))
+snp_all$p.meta[jdx] <- 0
 snp_overall = snp_all %>% 
   filter(p.meta<=5E-08) %>% 
   select(Best.published.SNP,CHR,position)
@@ -54,6 +57,8 @@ snp_all = left_join(snp,ftop,by="chr.pos")
 #remove two multi-allelic snps that are not reported before
 idx <- c(62,119)
 snp_all = snp_all[-idx,]
+jdx <- which(is.na(snp_all$subtypes.p))
+snp_all$subtypes.p[jdx] <- 0
 snp_subtypes = snp_all %>% 
   filter(subtypes.p<=5E-08) %>% 
   select(Best.published.SNP,CHR.x,position.x)
@@ -70,6 +75,8 @@ snp_all = left_join(snp,cimba_result_all,by="chr.pos")
 idx <- c(62,119,78)
 snp_all = snp_all[-idx,]
 colnames(snp_all)[14] <- "P"
+jdx <- which(is.na(snp_all$P))
+length(jdx)
 snp_cimba = snp_all %>% 
   filter(P<=5E-08) %>% 
   select(Best.published.SNP,CHR.x,position.x)
@@ -94,4 +101,8 @@ snp_all <- rbind(snp_known,
                  snp_cimba)
 write.table(snp_all,file = paste0("./discovery_SNP/ideogram_plot/result/ideogram_data_all_analysis.txt"),col.names = T,quote=F,row.names = F,sep = "\t")
 
+snp_all <- rbind(snp_overall,
+                 snp_subtypes,
+                 snp_cimba)
+write.table(snp_all,file = paste0("./discovery_SNP/ideogram_plot/result/ideogram_data_all_analysis_no_known.txt"),col.names = T,quote=F,row.names = F,sep = "\t")
 
