@@ -108,7 +108,7 @@ z.design.test <- z.standard[,2:4]
 
 
 #size = 1000
-size = 155
+size = 37
 start.end <- startend(num,size,i2)
 start <- start.end[1]
 end <- start.end[2]
