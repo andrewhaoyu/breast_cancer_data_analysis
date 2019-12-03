@@ -88,7 +88,7 @@ snpvalue_all = snp_test_all2[,2:ncol(snp_test_all2)]
 snpvalue = snpvalue_all[,i1]
 
 Heter.result.Onco = EMmvpolySelfDesign(y.pheno.mis2,x.self.design = snpvalue,z.design = z.design,baselineonly = NULL,additive = x.covar.mis2,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888, delta0=NULL)
-nz.standard <- Heter.result.Onco[[12]]
+z.standard <- Heter.result.Onco[[12]]
 M <- nrow(z.standard)
 number.of.tumor <- ncol(z.standard)
 log.odds.onco <- Heter.result.Onco[[1]][(M+1):(M+1+number.of.tumor)]
