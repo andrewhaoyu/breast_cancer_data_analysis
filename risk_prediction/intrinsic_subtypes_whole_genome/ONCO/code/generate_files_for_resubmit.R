@@ -99,10 +99,10 @@ for(i in 1:length(resubmit_id)){
     
 #after a check, the unfinished job is 232
 resubmit_id1 <- 232
-code <- rep("c",length(unique(resubmit_id1))*3000)
+code <- rep("c",length(unique(resubmit_id1))*1000)
 temp <- 1
 for(i in 1:length(unique(resubmit_id1))){
-  for(j in 1:3000){
+  for(j in 1:1000){
     code[temp] <- paste0("Rscript /gpfs/gsfs11/users/zhangh24/breast_cancer_data_analysis/risk_prediction/intrinsic_subtypes_whole_genome/ONCO/code/intrinsic_subtypes_onco_resubmit_tr.R ",unique(resubmit_id1)[i]," ",j)
     temp <- temp+1
   }
