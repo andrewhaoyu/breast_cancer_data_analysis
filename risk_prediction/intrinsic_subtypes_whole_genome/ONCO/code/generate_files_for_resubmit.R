@@ -33,14 +33,14 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result.Rdata")
-num.total <- nrow(onco_result)
 
 resubmit_id1 <- NULL
 resubmit_id2 <- NULL
 
 #for(i in 1:428){
   for(i in 1:567){ 
+    
+    
  
     for (k in 1:7) {
       #print(k)
@@ -66,3 +66,47 @@ for(i in 1:length(unique(resubmit_id1))){
 write.table(code,file ="/gpfs/gsfs11/users/zhangh24/breast_cancer_data_analysis/risk_prediction/intrinsic_subtypes_whole_genome/ONCO/code/intrinsic_subtypes_onco_resubmit_tr.sh",row.names = F,col.names = F,quote = F)
 resubmit_id <- unique(resubmit_id1)
 save(resubmit_id,file = "./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/resubmit_id.rdata")
+
+
+
+
+
+
+#goal: generate the files for resubmit_resubmit_id
+setwd("/data/zhangh24/breast_cancer_data_analysis/")
+
+filedir <- './risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result'
+
+files <- dir(filedir,pattern="intrinsic_subytpe_onco_112519_resubmit")
+
+load("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/resubmit_id.rdata")
+resubmit_id1 <- NULL
+resubmit_id2 <- NULL
+
+for(i in 1:length(resubmit_id)){ 
+    for(k in 1:37){
+      file_temp = 
+        paste0("intrinsic_subytpe_onco_112519_resubmit_",resubmit_id[i],"_",k)
+      if(file_temp%in%files==F){
+        resubmit_id1 <- c(resubmit_id1,resubmit_id[i])
+        resubmit_id2 <- c(resubmit_id2,k)
+      }
+    }
+  }
+  
+  
+ 
+    
+#after a check, the unfinished job is 232
+resubmit_id1 <- 232
+code <- rep("c",length(unique(resubmit_id1))*3000)
+temp <- 1
+for(i in 1:length(unique(resubmit_id1))){
+  for(j in 1:3000){
+    code[temp] <- paste0("Rscript /gpfs/gsfs11/users/zhangh24/breast_cancer_data_analysis/risk_prediction/intrinsic_subtypes_whole_genome/ONCO/code/intrinsic_subtypes_onco_resubmit_tr.R ",unique(resubmit_id1)[i]," ",j)
+    temp <- temp+1
+  }
+}
+write.table(code,file ="/gpfs/gsfs11/users/zhangh24/breast_cancer_data_analysis/risk_prediction/intrinsic_subtypes_whole_genome/ONCO/code/intrinsic_subtypes_onco_resubmit_resubmit_tr.sh",row.names = F,col.names = F,quote = F)
+resubmit_resubmit_id <- unique(resubmit_id1)
+save(resubmit_resubmit_id,file = "./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/resubmit_resubmit_id.rdata")
