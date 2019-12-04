@@ -9,8 +9,8 @@ setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction')
 
 #load("./EB_whole_genome/result/whole_gonome.rdata")
 load("./intrinsic_subtypes_whole_genome/ICOG/result/whole_gonome.rdata")
-#idx <- which(whole_genome$SNP.ONCO=="chr1_121280613_A_G")
-#whole_genome[idx,]
+idx <- which(whole_genome$SNP.ONCO=="rs56097627:110198129:CAAA:C")
+whole_genome[idx,c(14,19:23)]
 #LD.assoc <- read.table("/spin1/users/zhangh24/BCAC/impute_plink_onco/LD_assoc",header=T)
 #idx <- which(LD.assoc$SNP=="chr1_121280613_A_G")
 #LD.assoc[idx,]
@@ -59,6 +59,13 @@ select.names <- subtypes
 score <- whole_genome_clump %>%  select(select.names)
 whole_genome_clump_new <- whole_genome_clump %>% mutate(SNP=SNP.ONCO) %>% select(SNP,effect_allele,p.min) %>% 
   cbind(score)
+idx <- which()
+idx <- which(whole_genome_clump_new$SNP=="chr1_100880328_A_T")
+
+
+
+
+
 
 for(i in 1:n.pthres){
   for(j in 1:length(select.names)){
@@ -73,8 +80,8 @@ for(i in 1:n.pthres){
   
 }
 
-
-
+idx <- which(prs$SNP=="chr1_100880328_A_T")
+prs[idx,]
 #
 i <- 8
 j <- 1

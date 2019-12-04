@@ -157,15 +157,15 @@ for(j in 1:length(select.names)){
     # temp = cbind(as.numeric(y.test),(prs.standard))
     # 
     # mean(temp>=2)
-    test.sample_new = test.sample_new %>%
-      mutate(y.out = 1*(SCORE<=quantile(SCORE,probs=0.5)))
-    test.sample_new %>% select(case,y.out) %>%
-      group_by(case,y.out) %>%
-      tally()
-    test.sample_new = test.sample_new %>% 
-      group_by(case) %>% 
-      mutate(groupmean = mean(1000*SCORE),
-             newscore = 1000*SCORE)
+    # test.sample_new = test.sample_new %>%
+    #   mutate(y.out = 1*(SCORE<=quantile(SCORE,probs=0.5)))
+    # test.sample_new %>% select(case,y.out) %>%
+    #   group_by(case,y.out) %>%
+    #   tally()
+    # test.sample_new = test.sample_new %>% 
+    #   group_by(case) %>% 
+    #   mutate(groupmean = mean(1000*SCORE),
+    #          newscore = 1000*SCORE)
       
     # test.sample_new_temp = test.sample_new %>% 
     #   group_by(case) %>% 
@@ -216,4 +216,5 @@ auc.result <- data.frame(auc,
                          p,
                          subtypes,
                          n.snp)
-save(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.rdata")
+write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.test.csv")
+write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.vad.csv")

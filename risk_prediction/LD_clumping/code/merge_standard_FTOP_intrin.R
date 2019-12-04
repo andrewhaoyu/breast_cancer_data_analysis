@@ -1,6 +1,8 @@
-setwd('/spin1/users/zhangh24/breast_cancer_data_analysis/risk_prediction/')
+setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/')
 load('./intrinsic_subtypes_whole_genome/ICOG/result/meta_result_shared_1p.Rdata')
 meta_intrin <- meta_result_shared_1p
+idx <- which(meta_intrin$SNP.ONCO=="chr1_100880328_A_T")
+meta_intrin[idx,]
 #idx <- which(meta_intrin$SNP.ONCO=="chr1_10566215_A_G")
 load('./FTOP_whole_genome/ICOG/result/meta_result_shared_1p.Rdata')
 meta_FTOP <- meta_result_shared_1p_FTOP

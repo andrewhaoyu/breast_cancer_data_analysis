@@ -59,8 +59,8 @@ i <- 8
 j <- 1
     prs <-  whole_genome_clump_new %>%
       filter(p.min<=pthres[i]) %>% 
-      select(SNP,effect_allele,Luminal_A,TN)
-    colnames(prs) <- c("SNP","effect_allele","Luminal_A","TN")
+      select(SNP,effect_allele,Luminal_A,Luminal_B,Luminal_B_HER2Neg,HER2_Enriched,TN)
+    colnames(prs) <- c("SNP","effect_allele","Luminal_A","Luminal_B" ,"Luminal_B_HER2Neg","HER2_Enriched","TN")
     extract_snp = prs %>% select(SNP)
 
   write.table(extract_snp,file = paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/extrac_snp_list.txt"),row.names=F,col.names=T,quote=F)
@@ -184,7 +184,7 @@ j <- 1
   onco.train.id <- split.id[[2]]
   onco.test.id <- split.id[[3]]
   icog.vad.id <- split.id[[4]]
-  onco.vad.id <- split.id[[4]]
+  onco.vad.id <- split.id[[5]]
   library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
  
 
@@ -262,17 +262,29 @@ j <- 1
   snpvalue.result <- snpvalue.result[,idx.match]
   
   colnames(snpvalue.result) <- snpid.result
-  n.snp <- 1701
+  n.snp <- 1792
   #prs.la <-   snpvalue.result[,1:n.snp]%*%prs[1:n.snp,3]/((n.snp+1)*2)
    prs.la <-   (snpvalue.result[,1:n.snp])%*%(prs[1:n.snp,3])/(n.snp*2)
+   prs.lb <- (snpvalue.result[,1:n.snp])%*%(prs[1:n.snp,4])/(n.snp*2)
   #prs.la <-   snpvalue.result[,n.snp]*prs[n.snp,3]/(2)
   prs.tn <- snpvalue.result%*%prs[1:n.snp,4]/(n.snp*2)
+
 i <- 8
 j <- 1
-  prs.plink <- read.table(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out.profile"),header=T)
-  prs.plink2 <- read.table(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/test_out_try.profile"),header=T)
+prs_plink_la <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out.profile"),header=T))
+dim(prs_plink_la)
+all.equal(as.numeric(prs_plink_la$SCORE),as.numeric(prs.la))
+i <- 8
+j <- 2
+prs_plink_lb <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out.profile"),header=T))
+dim(prs_plink_lb)
+all.equal(as.numeric(prs_plink_la$SCORE),as.numeric(prs.la))
+
+i <- 8
+j <- 5
+prs_plink_tn <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out.profile"),header=T))
   
-  all.equal(as.numeric(prs.la),as.numeric(prs.plink2[,4]))
+  all.equal(as.numeric(prs_plink_tn$SCORE),as.numeric(prs.tn))
   
   
   

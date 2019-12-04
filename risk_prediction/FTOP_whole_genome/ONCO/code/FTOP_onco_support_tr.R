@@ -1,7 +1,7 @@
 idxi1 = 1
 library(devtools)
 #install_github("andrewhaoyu/bc2", ref = "development",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 library(data.table)
 setwd("/data/zhangh24/breast_cancer_data_analysis/")
 load(paste0("./risk_prediction/result/split.id.rdata"))
@@ -25,7 +25,7 @@ y.pheno.mis2[idx,1] <- 1
 colnames(y.pheno.mis2) = c("Behaviour","ER",
                            "PR","HER2","Grade")
 
-x.covar.mis2 <- data2[,c(7:15)]
+x.covar.mis2 <- data2[,c(7:16)]
 #ages <- data2[,230]
 #idx.complete <- which(ages!=888)
 
@@ -36,7 +36,7 @@ Onc_ID <- data2$ID
 
 
 
-score.test.support.onco.ERPRHER2Grade <- ScoreTestSupport(
+score.test.support.onco.ERPRHER2Grade <- ScoreTestSupportMixedModel(
   y.pheno.mis2,
   baselineonly = NULL,
   additive = x.covar.mis2,

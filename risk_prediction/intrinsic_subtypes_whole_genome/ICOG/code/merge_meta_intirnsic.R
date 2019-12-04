@@ -1,6 +1,6 @@
 setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/intrinsic_subtypes_whole_genome')
 load("./ICOG/result/icog_result_shared_1p.Rdata")
-load("./ONCO/result/onco_result_shared_1p.Rdata")
+
 size = 1000
 total = 0
 for(i1 in 1:size){
@@ -29,3 +29,7 @@ icog_result_shared_1p[,16:40] <- covar
 meta_result_shared_1p <- cbind(icog_result_shared_1p,p.value) 
 save(meta_result_shared_1p,
      file="./ICOG/result/meta_result_shared_1p.Rdata")
+
+idx <- which(meta_result_shared_1p$SNP.ONCO=="chr1_100880328_A_T")
+meta_result_shared_1p[idx,]
+
