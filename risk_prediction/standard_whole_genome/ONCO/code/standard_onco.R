@@ -89,7 +89,7 @@ geno.file <- Files[i1]
     
     library(doParallel)
     library(foreach)
-    size = 5
+    size = 6
     start.end <- startend(num,size,i2)
     start <- start.end[1]
     end <- start.end[2]

@@ -38,8 +38,6 @@ onco.data <- as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/dat
                        onco.data$HER2,
                        onco.data$Grade)
 
-subtypes <- GenerateIntrinsicmis(onco.data$ER,onco.data$PR,onco.data$HER2,onco.data$Grade)
-
 all.data <- data.frame(onco.data[,1],
                        onco.data$Behavior,
                        stringsAsFactors = F)
