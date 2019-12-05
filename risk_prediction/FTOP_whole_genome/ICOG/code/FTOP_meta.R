@@ -4,7 +4,7 @@ i1 = as.numeric(args[[1]])
 setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/')
 load("./ICOG/result/icog_result_shared_1p.Rdata")
 load("./ONCO/result/onco_result_shared_1p.Rdata")
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 second.num <- 5
 
 

@@ -25,16 +25,6 @@ for(i in 1:length(Files)){
 }
 idx <- order(Files_sub$chr,Files_sub$p1)
 File_sub_order <- Files_sub[order(Files_sub$chr,Files_sub$p1),]
-result.dir <- "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result"
-result_Files <- dir(result.dir,pattern="ERPRHER2Grade_fixed_onco")
-result_Files <- result_Files[1:567]
-result.idx <- rep(0,length(result_Files))
-for(i in 1:length(result_Files)){
-  result_Files[i] <- gsub("ERPRHER2Grade_fixed_onco","",result_Files[i])
-  result.idx.temp <- as.integer(gsub(".Rdata","",result_Files[i]))
-  result.idx[i] <- result.idx.temp
-}
-
 
 
 
@@ -47,13 +37,18 @@ for(i in 1:length(result_Files)){
 
 setwd("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/FTOP_whole_genome/ONCO/result")
 num.total <- 0
+sizes <- 6
 for(i in 1:length(Files)){
   print(i)
-
+  for(j in 1:sizes){
   
-  load(paste0("ERPRHER2Grade_fixed_onco",idx[i]))
+  
+  
+  load(paste0("./ERPRHER2Grade_fixed_onco_120419_",idx[i],"_",j))
   temp <- length(result[[1]])
   num.total <- num.total+temp
+}
+  
 }
 
 num <- num.total
@@ -77,8 +72,11 @@ num.length <- rep(0,length(Files))
 
 for(i in 1:length(Files)){
   print(i)
-  
-  load(paste0("ERPRHER2Grade_fixed_onco",idx[i]))
+  for(j in 1:sizes){
+    
+    
+    
+    load(paste0("./ERPRHER2Grade_fixed_onco_120419_",idx[i],"_",j))
   
   temp <- length(result[[1]])
   #print(paste0("temp:",temp))
@@ -90,7 +88,7 @@ for(i in 1:length(Files)){
   num.length[i] <- length(result[[1]])
   num.total <- temp+num.total
   
-  
+  }
   
 }
 
@@ -100,6 +98,7 @@ for(i in 1:length(Files)){
 
 
 load("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole_genome/ONCO/result/onco_result.Rdata")
+all.equal(onco_result[,2],rs_id)
 CHR <- onco_result[,13]
 onco_info <- onco_result[,1:10]
 onco_result <- data.frame(onco_info,score,infor,CHR)
