@@ -38,7 +38,7 @@ setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole
 
 
 num.total <- 0
-size <- 5
+size <- 6
 for(i in 1:length(Files)){
   print(i)
   for(j in 1:size){
