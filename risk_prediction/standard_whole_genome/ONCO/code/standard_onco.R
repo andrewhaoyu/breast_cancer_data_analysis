@@ -206,3 +206,4 @@ geno.file <- Files[i1]
     
     result <- list(snpid_reuslt=snpid_result,score_result=score_result,infor_result=infor_result,freq.all=freq.all)
 save(result,file=paste0("./risk_prediction/standard_whole_genome/ONCO/result/standard",i1,"_",i2))
+
