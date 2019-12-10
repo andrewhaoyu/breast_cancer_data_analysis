@@ -5,8 +5,6 @@ setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/standard_whole
 
 load("./ICOG/result/icog_result_shared_1p.Rdata")
 load("./ONCO/result/onco_result_shared_1p.Rdata")
-# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/icog_result_only_shared_1p.Rdata")
-# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/onco_result_only_shared_1p.Rdata")
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 
 second.num <- 1

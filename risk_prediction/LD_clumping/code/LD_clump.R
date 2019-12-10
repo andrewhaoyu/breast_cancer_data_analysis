@@ -41,7 +41,7 @@ write.table(SNP,file = "/data/zhangh24/BCAC/impute_plink_onco/clump_snp",
             row.names = F,col.names = F,quote=F)
 
 
-
+#data <- fread("/data/zhangh24/BCAC/impute_plink_onco/clump_snp")
 
 
 # system('rm /data/zhangh24/BCAC/impute_plink_onco/clump_snp')

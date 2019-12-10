@@ -25,6 +25,6 @@ for(i1 in 1:size){
 #icog_result_shared_1p[,12] <- covar
 meta_result_shared_1p_FTOP <- cbind(icog_result_shared_1p[c(1:10,41:44)],
                                p.value) 
-meta_result_shared_1p_FTOP <- meta_result_shared_1p
+#meta_result_shared_1p_FTOP <- meta_result_shared_1p
 save(meta_result_shared_1p_FTOP,
      file="./ICOG/result/meta_result_shared_1p.Rdata")

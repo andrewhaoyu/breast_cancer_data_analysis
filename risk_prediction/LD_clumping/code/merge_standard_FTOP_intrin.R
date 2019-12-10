@@ -8,7 +8,7 @@ load('./FTOP_whole_genome/ICOG/result/meta_result_shared_1p.Rdata')
 meta_FTOP <- meta_result_shared_1p_FTOP
 load("./standard_whole_genome/ICOG/result/meta_result_shared_1p.Rdata")
 meta_stan <- meta_result_shared_1p
-
+library(dplyr)
 #load("./EB_whole_genome/result/meta_result_shared_1p.Rdata")
 #meta_stan <- meta_result_shared_1p
 all.equal(meta_intrin$rs_id,meta_FTOP$rs_id)
@@ -68,3 +68,7 @@ whole_genome_sub = whole_genome_sub %>%
 head(whole_genome_sub)
 whole_genome = whole_genome_sub
 save(whole_genome,file = "./intrinsic_subtypes_whole_genome/ICOG/result/whole_gonome.rdata")
+load("./intrinsic_subtypes_whole_genome/ICOG/result/whole_gonome.rdata")
+
+idx.order <- order(whole_genome$p.min)
+whole_genome_order <- whole_genome[idx.order,]

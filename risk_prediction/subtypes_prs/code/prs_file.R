@@ -59,13 +59,12 @@ select.names <- subtypes
 score <- whole_genome_clump %>%  select(select.names)
 whole_genome_clump_new <- whole_genome_clump %>% mutate(SNP=SNP.ONCO) %>% select(SNP,effect_allele,p.min) %>% 
   cbind(score)
-idx <- which()
 idx <- which(whole_genome_clump_new$SNP=="chr1_100880328_A_T")
 
 
 
-
-
+idx <- which(whole_genome_clump$CHR==1)
+head(whole_genome_clump[idx,])
 
 for(i in 1:n.pthres){
   for(j in 1:length(select.names)){

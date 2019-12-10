@@ -32,3 +32,6 @@ colnames(assoc) <- c("CHR",
                      "STAT",
                      "P")
 write.table(assoc,file="/data/zhangh24/BCAC/impute_plink_onco/LD_assoc",col.names = T, row.names=F, quote = F)
+
+#library(data.table)
+#data <- fread("/data/zhangh24/BCAC/impute_plink_onco/LD_assoc")
