@@ -158,8 +158,8 @@ theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.
 theta_covar <- c(0.05,0,0,0,0,0,0)
 theta_test <- c(0.08, 0.08, 0.05, 0.05, 0.05,0.05,0.05)
 s_times <- 10
-odds1 <- matrix(0,s_times,5)
-sigma1 <- matrix(0,s_times,5)
+odds1 <- matrix(0,s_times,7)
+sigma1 <- matrix(0,s_times,7)
 sizes <- c(25000,50000,100000)
 n <- sizes[i2]
 for(i in 1:s_times){
