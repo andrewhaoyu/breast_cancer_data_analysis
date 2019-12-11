@@ -174,7 +174,7 @@ for(i in 1:s_times){
   M <- nrow(z.standard)
   K <- ncol(z.standard)+1
   odds <- model1[[1]][M+(1:(K))]
-  sigma <-  (model1[[2]][M+(1:K),M+(1:K)])
+  sigma <-  diag(model1[[2]][M+(1:K),M+(1:K)])
   odds1[i,] <- odds
   sigma1[i,] <-  sigma
   
