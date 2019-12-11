@@ -1,14 +1,18 @@
-###########simulate data with four tumor characteristics containing three binary tumor characteristics and one oridinal tumor characteristics.
+###########simulate data with six tumor characteristics containing five binary tumor characteristics and one oridinal tumor characteristics.
 ###########one genotype with MAF 0.25 is simulated
 ###########one covariate with rnorm(n) simulated
+
+library(nnet)
 SimulateData <- function(theta_intercept,theta_test,theta_covar,n){
   a <- c(0,1)
   b <- c(0,1)
   c <- c(0,1)
   d <- c(1,2,3)
+  e <- c(0,1)
+  f <- c(0,1)
   ##number of the other covarites
   p_col <- 1
-  z.standard <- as.matrix(expand.grid(a,b,c,d)) # orig
+  z.standard <- as.matrix(expand.grid(a,b,c,d,e,f)) # orig
   M <- nrow(z.standard)
   #z <- as.matrix(expand.grid(a,b))
   
@@ -76,10 +80,10 @@ SimulateData <- function(theta_intercept,theta_test,theta_covar,n){
   y.tumor <- y%*%z.standard
   
   idx.control <- which(y.case.control==0)
-  y.tumor[idx.control,] <- rep(NA,4)
+  y.tumor[idx.control,] <- rep(NA,6)
   idx.case <- which(y.case.control==1)
-  rate <- c(0.17,0.25,0.42,0.27)
-  for(i in 1:4){
+  rate <- c(0.17,0.25,0.42,0.27,0.05,0.05)
+  for(i in 1:6){
     idx.mis <-  sample(idx.case,size=length(idx.case)*rate[i])
     y.tumor[idx.mis,i] <- 888
   }
@@ -92,18 +96,68 @@ SimulateData <- function(theta_intercept,theta_test,theta_covar,n){
 
 
 
+
+
+Generatesubtypes<- function(ER,PR,HER2,Grade,T5,T6){
+  n <- length(ER)
+  subtypes <- rep("control",n)
+  temp = 1
+  for(i in 0:1){
+    for(j in 0:1){
+      for(k in 0:1){
+        for(l in 1:3){
+          for(q in 0:1){
+            for(w in 0:1)
+              idx <- which(ER==i&PR==j&HER2==k&Grade==l&T5==q&T6==w)
+            if(length(idx)!=0){
+              subtypes[idx] <- temp
+              temp = temp+1  
+            }
+            
+          }
+          
+          
+        }
+      }
+    }
+  }
+  
+  subtypes <- factor(subtypes,levels=c("control",
+                                       c(1:temp)))
+  sum <- table(subtypes)
+  idx.cat <- which(sum<=10)
+  idx.remove <- which((subtypes%in%(unique(idx.cat)-1))==T)
+  if(length(idx.remove)==0){
+    return(list(subtypes,idx.remove))
+  }else{
+    subtypes <- subtypes[-idx.remove]
+    return(list(subtypes,idx.remove))  
+  }
+  
+}
+
+
+
+
+
+
+
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
 i2 = as.numeric(args[[2]])
-set.seed(i1)
+print(i1)
+#setwd("/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis/")
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
 library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 
-theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91)+0.37
-theta_test <- c(0.08, 0.08, 0.05, 0.05, 0.05)
-theta_covar <- c(0.05, 0, 0, 0, 0)
+theta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
+                     -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
+                     -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
+                     -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91)-1.45
 
-s_times <- 100
+theta_covar <- c(0.05,0,0,0,0,0,0)
+theta_test <- c(0.08, 0.08, 0.05, 0.05, 0.05,0.05,0.05)
+s_times <- 10
 odds1 <- matrix(0,s_times,5)
 sigma1 <- matrix(0,s_times,5)
 sizes <- c(25000,50000,100000)
@@ -120,12 +174,11 @@ for(i in 1:s_times){
   M <- nrow(z.standard)
   K <- ncol(z.standard)+1
   odds <- model1[[1]][M+(1:(K))]
-  sigma <-  diag(model1[[2]][M+(1:K),M+(1:K)])
-  
+  sigma <-  (model1[[2]][M+(1:K),M+(1:K)])
   odds1[i,] <- odds
   sigma1[i,] <-  sigma
   
 }
 
 result <- list(odds1,sigma1)
-save(result,file=paste0("./simulation/EM_algorithm_evaluation/result/simu_result_high",i1,"_",i2,".Rdata"))
+save(result,file=paste0("./simulation/EM_algorithm_evaluation/result/simu_result_high_",i1,"_",i2,".Rdata"))

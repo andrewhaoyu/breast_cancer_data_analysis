@@ -35,3 +35,7 @@ write.table(assoc,file="/data/zhangh24/BCAC/impute_plink_onco/LD_assoc",col.name
 
 #library(data.table)
 #data <- fread("/data/zhangh24/BCAC/impute_plink_onco/LD_assoc")
+#idx <- which(data$SNP=="rs56305903:52041531:T:C")
+#data[idx,]
+#idx <- which(whole_genome$SNP.ONCO=="rs56305903:52041531:T:C")
+#whole_genome[idx,]

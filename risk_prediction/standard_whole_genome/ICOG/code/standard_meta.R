@@ -16,7 +16,7 @@ onco_score_infor <- onco_result_shared_1p[,11:(11+second.num+second.num^2-1)]
 
 icog_onco_score_infor <- cbind(icog_score_infor,onco_score_infor)
 n <- nrow(icog_onco_score_infor)
-rm(icog_result_shared_1p)
+rm(icog_result_shared_1p) 
 rm(onco_result_shared_1p)
 gc()
 # 

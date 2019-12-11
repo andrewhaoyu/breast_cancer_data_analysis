@@ -219,61 +219,6 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   return(result)
 }
   
-  # temp <-  Generatesubtypes(y.pheno.com[,2],y.pheno.com[,3],y.pheno.com[,4],y.pheno.com[,5])
-  # if(length(temp[[1]])<=2){
-  #   p_poly = 1
-  # }else{
-  #   subtypes <- temp[[1]]
-  #   idx.remove <- temp[[2]]
-  #   if(length(idx.remove)!=0){
-  #     x.covar.poly <- x.covar.com[-idx.remove]
-  #     G.poly <- G.com[-idx.remove]
-  #     
-  #   }else{
-  #     x.covar.poly <- x.covar.com
-  #     G.poly <- G.com
-  #     
-  #   }
-  #   poly.model <- multinom(subtypes~G.poly+x.covar.poly,maxit = 1000)
-  #   
-  #   if(poly.model$convergence==0){
-  #     tryCatch({
-  #       poly.model.coef <- coef(poly.model)
-  #       M <- nrow(poly.model.coef)
-  #       p.covariate <- ncol(poly.model.coef)
-  #       snp.cov <- vcov(poly.model)[2+p.covariate*(0:(M-1)),2+p.covariate*(0:(M-1))]
-  #       snp.coef <- poly.model.coef[,2]
-  #       
-  #       result_temp <- DisplaySecondStageTestResult(snp.coef,snp.cov)  
-  #       p_poly <- result_temp[length(result_temp)-1]
-  #     },
-  #     error = function(e){
-  #       p_poly<- 1
-  #     }
-  #     
-  #     )
-  #     
-  #     
-  #   }else{
-  #     p_poly = 1
-  #   }
-  #   
-    
-    
- # }
-  
-  
- 
-
-
-# GenerateComplete <- function(y.pheno.mis,x_covar){
-#   idx.mis <- which(y.pheno.mis[,2]==888|y.pheno.mis[,3]==888|
-#                      y.pheno.mis[,4]==888|y.pheno.mis[,5]==888)
-#   y.pheno.complete <- y.pheno.mis[-idx.mis,]
-#   x.covar.complete <- x_covar[-idx.mis,]
-#   return(list(y.pheno.complete,x.covar.complete))
-# }
-
 
 
 args = commandArgs(trailingOnly = T)

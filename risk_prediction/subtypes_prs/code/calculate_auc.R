@@ -97,7 +97,7 @@ for(j in 1:length(select.names)){
     #the prs files contain all the subjects in the genotyped data
     #the genotype data is larger than the phenotype data
     #we need to select the subset for testdata
-    prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out.profile"),header=T))
+    prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out_121019.profile"),header=T))
 #prs[,4] <- prs.la.temp
       temp <- j%%5
     if(temp==0){temp=5}
@@ -195,9 +195,9 @@ for(j in 1:length(select.names)){
     p[ind] <- pthres[i]
     #read in SNP file information to calculate PRS
     
-    code <- paste0("wc -l /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file")
+    code <- paste0("wc -l /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_121019.file")
     temp.out <- system(code,intern = T)
-    n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,".file"),"",temp.out))
+    n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_121019.file"),"",temp.out))
     
     ind = ind + 1
     

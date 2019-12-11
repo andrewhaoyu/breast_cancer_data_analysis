@@ -72,3 +72,4 @@ load("./intrinsic_subtypes_whole_genome/ICOG/result/whole_gonome.rdata")
 
 idx.order <- order(whole_genome$p.min)
 whole_genome_order <- whole_genome[idx.order,]
+idx <- which(meta_stan$rs_id=="rs75514019:114515219:G:A")

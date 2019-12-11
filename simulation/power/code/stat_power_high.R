@@ -150,7 +150,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
       M <- nrow(z.standard)
       K <- ncol(z.standard)+1
       odds <- model1[[1]][M+(1:(K))]
-      sigma <-  (model1[[2]][M+(1:K),M+(1:K)])
+      sigma <-  diag(model1[[2]][M+(1:K),M+(1:K)])
       fixed.result <- DisplaySecondStageTestResult(odds,sigma)
       p_global <- fixed.result[length(fixed.result)-1]
       
