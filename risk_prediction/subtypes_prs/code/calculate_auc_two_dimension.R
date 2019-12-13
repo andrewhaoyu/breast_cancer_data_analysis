@@ -99,7 +99,7 @@ for(j in 1:length(select.names)){
       #the prs files contain all the subjects in the genotyped data
       #the genotype data is larger than the phenotype data
       #we need to select the subset for testdata
-      prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out_121019.profile"),header=T))
+      prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_",k,"_out_121019.profile"),header=T))
       #prs[,4] <- prs.la.temp
       temp <- j%%5
       if(temp==0){temp=5}
