@@ -54,4 +54,6 @@ library(dplyr)
              PR!=888&HER2!=888&
              Grade!=888)
   cor(y.pheno.complete[,2:5])
+
+  
   

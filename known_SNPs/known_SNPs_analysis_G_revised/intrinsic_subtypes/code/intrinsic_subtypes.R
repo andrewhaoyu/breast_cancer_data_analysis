@@ -16,13 +16,14 @@ i1 = as.numeric(args[[1]])
 setwd("/data/zhangh24/breast_cancer_data_analysis")
 library(readr)
 library(devtools)
+library(data.table)
 #library(bc2,lib.loc ='/Users/zhangh24/Library/R/3.4/library')
-library(bc2)
-library(bcutility)
+library(bcutility,lib.loc = "/spin1/home/linux/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 z.design <- matrix(c(
-  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0),
+  c(0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0),
   c(0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1),
-  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0),
+  c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0),
   c(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0),
   c(1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0)
 ),ncol=5)
@@ -36,7 +37,7 @@ colnames(z.design) <- c("Luminial A","Luminal B",
 
 if(i1<=177){
   ##analysis for Icog
-  data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
+  data1 <- as.data.frame(fread("./data/iCOGS_euro_v10_10232017.csv",header=T))
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,data1$Grade1)
   # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,
   #data1$ER_status1,data1$HER2_status1)
@@ -49,9 +50,16 @@ if(i1<=177){
   #y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1,Grade1.fake)
   # y.pheno.mis1 <- cbind(data1$Behaviour1,data1$PR_status1,data1$ER_status1,data1$HER2_status1)
   
-  x.test.all.mis1 <- data1[,c(27:206)]
+  x.test.all.mis1 <- data1[,c(27:203)]
   
   x.covar.mis1 <- data1[,5:14]
+  idx.control <- which(y.pheno.mis1[,1]==0)
+  maf <- sum(x.test.all.mis1[idx.control,i1])/(2*length(idx.control))
+  if(maf>=0.5){
+    x.test.all.mis1[,i1] < 2 - x.test.all.mis1[,i1]
+  }
+  
+  
   x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
   
@@ -68,16 +76,16 @@ if(i1<=177){
   
   #analysis for Onco Array
   #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
-  data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
-  names1 = colnames(data1)[27:206]
+  data2 <- as.data.frame(fread("./data/Onco_euro_v10_10232017.csv",header=T))
+  names1 = colnames(data1)[c(27:203)]
   rm(data1)
-  names2 = colnames(data2)[27:212]
+  names2 = colnames(data2)[27:205]
   
   idxi1 = which(names2==names1[i1])
   y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1,data2$Grade1)
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   
-  x.test.all.mis2 <- data2[,c(27:212)]
+  x.test.all.mis2 <- data2[,c(27:205)]
   x.covar.mis2 <- data2[,5:14]
   x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,idxi1],x.covar.mis2))
   

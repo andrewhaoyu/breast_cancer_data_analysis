@@ -144,8 +144,8 @@ return(result)
 
 
 
-# args = commandArgs(trailingOnly = T)
-# i1 = as.numeric(args[[1]])
+ args = commandArgs(trailingOnly = T)
+ i1 = as.numeric(args[[1]])
 
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
 library(bc2)
@@ -166,7 +166,6 @@ theta_covar <- c(0.05,0,0,0,0)
 delta_ini = c(beta_intercept,theta_test,beta_covar)
 
 result.list <- foreach(job.i = 1:2)%dopar%{
-  set.seed(2*i1-job.i)
   s_times <- 2000
   p_global_result <- rep(0,3*s_times)
   p_heter_result <- rep(0,3*s_times)
