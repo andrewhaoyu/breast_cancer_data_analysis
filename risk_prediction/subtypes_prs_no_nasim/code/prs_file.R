@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------
-# Update Date: 01/21/2020
+# Update Date: 11/25/2018
 # Create Date: 11/22/2018
 # Goal: prepare different different prs files for plink
 # Author: Haoyu Zhang
@@ -33,16 +33,6 @@ colnames(clump.snp) <- c("SNP.ONCO")
 idx <- which(duplicated(clump.snp$SNP.ONCO)==T)
 length(idx)
 whole_genome_clump <- left_join(clump.snp,whole_genome)
-#load in 313 SNPs
-setwd('/data/zhangh24/breast_cancer_data_analysis')
-snp <- read.csv("./data/Nasim_313_SNPs_infor.csv",header=T)
-library(dplyr)
-snp = snp %>% mutate(chr.pos = paste0(CHR,":",position))
-#find out all the snps within 313 SNPs
-idx <- which(whole_genome_clump$var_name%in%
-               snp$SNPa)
-#put the 313 SNPs p-value as 0 into the list so it can be selected
-whole_genome_clump$p.min[idx] = 0
 #idx <- which(whole_genome_clump$SNP.ONCO=="chr1_121280613_A_G")
 #whole_genome_clump[idx,]
 #save(whole_genome_clump,file = "./EB_whole_genome/result/whole_genome_clump.rdata")

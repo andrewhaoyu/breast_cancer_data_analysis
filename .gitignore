@@ -1,3 +1,7 @@
+.Rhistory
+.gitignore
+/risk_prediction/subtypes_prs_no_nasim/result
+/risk_prediction/LD_clumping_no_nasim/result
 /known_SNPs/known_SNPs_analysis_G_revised/batch_effect_test/result
 /known_SNPs/known_SNPs_analysis_G_revised/complete_cases/result/
 /stractch/
