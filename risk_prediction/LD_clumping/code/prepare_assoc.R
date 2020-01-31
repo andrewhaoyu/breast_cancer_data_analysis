@@ -12,6 +12,36 @@ load("./intrinsic_subtypes_whole_genome/ICOG/result/whole_genome_threeadd.rdata"
 
 library(dplyr)
 n <- nrow(whole_genome)
+
+
+
+#take out all the SNPs that are within +-500kb of the 313 SNPs
+#load 313 Nasim SNPs
+setwd('/data/zhangh24/breast_cancer_data_analysis/')
+library(dplyr)
+load("./data/Nasim_313SNPs_complete_information.Rdata")
+remove.ind <- NULL
+#remove all the SNPs +-500kb of the 313 Nasim SNPs
+for(k in 1:nrow(snp.new)){
+  #find all the SNPs +-500kb in it and remove them
+  print(k)
+  ldx <- which(whole_genome$CHR==snp.new$Chromosome[k]&
+                 whole_genome$position>=snp.new$Positionb[k]-500000&
+                 whole_genome$position<=snp.new$Positionb[k]+500000&whole_genome$var_name%in%snp.new$var_name==F)
+  print(k)
+  remove.ind = c(remove.ind,ldx)
+}
+whole_genome <- whole_genome[-remove.ind,]
+#check whether the 313 SNPs are in the list
+head(snp.new)
+idx <- which(snp.new$var_name%in%
+               whole_genome$var_name==F)
+length(idx)
+
+
+
+n <- nrow(whole_genome)
+
 assoc <- whole_genome %>% mutate(p.min = p.min,
                         TEST = rep("ADD",n),
                         NMISS = rep(0,n),
@@ -42,7 +72,11 @@ length(idx)
 min(assoc$P)
 #find the 313 SNPs and put the p.value as 0 to make sure they stay in the LD_clumping procedure
 jdx <- which((assoc$var_name)%in%snp.new$var_name==T)
+length(jdx)
 assoc$P[jdx] = 0
+
+
+
 assoc <- assoc %>%
   select(CHR,
          SNP,

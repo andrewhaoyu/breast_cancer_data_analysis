@@ -62,8 +62,12 @@ for(i in 1:n){
 #select.names <- c(subtypes,paste0("eb_",subtypes))
 #select.names <- c(rep("standard",length(subtypes)),
                  # select.names)
-pthres <- c(5E-08,1E-07,5E-07,1E-06,5E-06,1E-05,5E-05,
-            1E-04,5E-04,1E-03,5E-03,1E-02)
+# pthres <- c(5E-08,1E-07,5E-07,1E-06,5E-06,1E-05,5E-05,
+#             1E-04,5E-04,1E-03,5E-03,1E-02)
+# pthres <- c(1E-30,1E-25,1E-20,1E-15,1E-10,1E-08,1E-07,1E-06,1E-05,
+#             1E-04,1E-03,1E-02)
+pthres <- c(1E-30,1E-10,5E-08,1E-07,5E-07,1E-06,5E-06,1E-05,5E-05,1E-04,1E-03,1E-02)
+
 #create the file for standard logisic regression
 n.pthres <- length(pthres)
 
@@ -82,7 +86,7 @@ for(j in 1:length(select.names)){
     #the prs files contain all the subjects in the genotyped data
     #the genotype data is larger than the phenotype data
     #we need to select the subset for testdata
-    prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out.profile"),header=T))
+    prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_out_121019.profile"),header=T))
 #prs[,4] <- prs.la.temp
       temp <- j%%5
     if(temp==0){temp=5}
@@ -136,7 +140,7 @@ for(j in 1:length(select.names)){
     
     code <- paste0("wc -l /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_121019.file")
     temp.out <- system(code,intern = T)
-    n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_121019.file"),"",temp.out))
+    n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_121019.file"),"",temp.out))-1
     
     ind = ind + 1
     
@@ -155,7 +159,18 @@ auc.result <- data.frame(auc,
                          p,
                          subtypes,
                          n.snp)
-write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.test.csv")
+
+
+
+
+
+
+
+
+
+write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.test_012620.csv")
+
+#write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.test_012620.csv")
 
 #get the results on the validation datasets
 

@@ -101,7 +101,7 @@ for(j in 1:length(select.names)){
       #the prs files contain all the subjects in the genotyped data
       #the genotype data is larger than the phenotype data
       #we need to select the subset for testdata
-      prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_",k,"_out_121019.profile"),header=T))
+      prs <- as.data.frame(fread(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_",i,"_",k,"_out_121019_eb.profile"),header=T))
       #prs[,4] <- prs.la.temp
       temp <- j%%5
       if(temp==0){temp=5}
@@ -149,9 +149,9 @@ for(j in 1:length(select.names)){
       p2[ind] <- pthres[k]
       #read in SNP file information to calculate PRS
       
-      code <- paste0("wc -l /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_",k,"_121019.file")
+      code <- paste0("wc -l /data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_",k,"_121019_eb.file")
       temp.out <- system(code,intern = T)
-      n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_",k,"_121019.file"),"",temp.out))-1
+      n.snp[ind] <- as.numeric(gsub(paste0("/data/zhangh24/breast_cancer_data_analysis/risk_prediction/subtypes_prs/result/",select.names[j],"_prs_pvaluecut_",i,"_",k,"_121019_eb.file"),"",temp.out))-1
       
       ind = ind + 1
       
@@ -166,7 +166,7 @@ auc.result <- data.frame(auc,
                          p2,
                          subtypes,
                          n.snp)
-write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.test.2d.csv")
+write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.test.2d_eb.csv")
 best.result <- NULL
 for(l in 1:length(names.subtypes)){
   ldx <- which(auc.result$subtypes==names.subtypes[l])

@@ -19,7 +19,7 @@ onco.data <- onco.data[,-1]
 idx <- which(onco.data[,1]==39177)
 library(tidyverse)
 y.pheno.mis2 <- select(onco.data,Behavior,ER,PR,HER2,Grade)
-############put onco array unknown cases as 1
+############put onco array unknown cases and in-situ cases as 1
 idx.insi.unknown.onco <- which(y.pheno.mis2[,1]==888|
                                  y.pheno.mis2[,1]==2) 
 y.pheno.mis2[idx.insi.unknown.onco,1] <- 1
@@ -72,6 +72,10 @@ for(i in 1:n){
 missing <- matrix(0,n,1)
 case <- onco.order.new[,2,drop=F]
 table(case)
+#put the unknown invasiveness cases as 1
+#put the in-situ people as NA
+case[case==888] = 1
+case[case==2] = NA
 #fam file have 6 different columns
 #first column is family ID
 #second colunn is individual ID
