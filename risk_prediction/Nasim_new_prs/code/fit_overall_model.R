@@ -9,12 +9,6 @@ setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
 #subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt.gz"
 subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/icogs_order.txt"
-rowSums(z.design)
-
-colnames(z.design) <- c("Luminial A","Luminal B",
-                        "Luminal B HER2Neg",
-                        "HER2 Enriched",
-                        "Triple Negative")
 load(paste0("./risk_prediction/result/split.id.rdata"))
 icog.train.id <- split.id[[1]]
 onco.train.id <- split.id[[2]]
