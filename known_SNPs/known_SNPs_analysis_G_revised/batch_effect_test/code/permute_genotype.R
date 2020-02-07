@@ -21,6 +21,16 @@ if(i1<=177){
   ##analysis for Icog
   data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
   data1 <- as.data.frame(data1)
+  
+  study <- names(table(data1$study))
+  for(k in 1:length(study)){
+    temp.study = study[k]
+    idx <- which(data1$study==temp.study)
+    idx.order <- sample(idx,size=length(idx), replace=FALSE )
+    #only reorder pc, gneoytpes
+    data1[idx,c(27:203)] <- data1[idx.order,c(27:203)]
+  }
+  
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
   colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
   # Grade1.fake <- data1$Grade1
@@ -44,12 +54,11 @@ if(i1<=177){
   if(maf>=0.5){
     x.test.all.mis1[,i1] < 2 - x.test.all.mis1[,i1]
   }
-  n <- nrow(y.pheno.mis1)
-  temp <- c(1:n)
-  idx <- sample(temp,size=n, replace=FALSE )
-  
+  # n <- nrow(y.pheno.mis1)
+  # temp = c(1:n)
+  # idx <- sample(temp,n,replace=F)
     
-  x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[idx,i1],x.covar.mis1))
+  x.all.mis1 <- as.matrix(cbind(x.test.all.mis1[,i1],x.covar.mis1))
   colnames(x.all.mis1)[1] <- "gene"
   
   Heter.result.Icog = TwoStageModel(y.pheno.mis1,baselineonly = NULL,additive = x.all.mis1[,1:11],pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
@@ -63,12 +72,23 @@ if(i1<=177){
   beta.icog <- z.additive.design%*%log.odds.icog
   beta.sigma.icog <- z.additive.design%*%sigma.log.odds.icog%*%t(z.additive.design)
   loglikelihood.icog <- Heter.result.Icog[[8]]
-  rm(Heter.result.Icog)
+  DisplaySecondStageTestResult(log.odds.icog,sigma.log.odds.icog)
+  #rm(Heter.result.Icog)
  
   #analysis for Onco Array
   #data2 <- read.csv("./V10/Onco_euro_v10_05242017.csv",header=T)
   data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
   data2 <- as.data.frame(data2)
+  study <- names(table(data2$study))
+  for(k in 1:length(study)){
+    temp.study = study[k]
+    idx <- which(data2$study==temp.study)
+    idx.order <- sample(idx,size=length(idx), replace=FALSE )
+    #only reorder  gneoytpes
+    data2[idx,c(27:203,205)] <- data2[idx.order,c(27:203,205)]
+  }
+  
+  
   y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   colnames(y.pheno.mis2) = c("Behaviour","ER",
@@ -81,12 +101,9 @@ if(i1<=177){
   if(maf>=0.5){
     x.test.all.mis2[,i1] <- 2-x.test.all.mis2[,i1]
   }
-  n <- nrow(y.pheno.mis2)
-  temp <- c(1:n)
-  idx <- sample(temp,size=n, replace=FALSE )
   
   
-  x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[idx,i1],x.covar.mis2))
+  x.all.mis2 <- as.matrix(cbind(x.test.all.mis2[,i1],x.covar.mis2))
   colnames(x.all.mis2)[1] = "gene"
   
   
@@ -100,7 +117,7 @@ if(i1<=177){
   sigma.log.odds.onco <- Heter.result.Onco[[2]][(M+1):(M+1+number.of.tumor),(M+1):(M+1+number.of.tumor)]
   loglikelihood.onco <- Heter.result.Onco[[8]]
   #rm(Heter.result.Onco)  
-  
+  DisplaySecondStageTestResult(log.odds.onco,sigma.log.odds.onco)
   
   meta.result <- LogoddsMetaAnalysis(log.odds.icog,
                                      sigma.log.odds.icog,
@@ -123,6 +140,14 @@ if(i1<=177){
   data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
   data2 <- as.data.frame(data2)
   names2 = colnames(data2)
+  study <- names(table(data2$study))
+  for(k in 1:length(study)){
+    temp.study = study[k]
+    idx <- which(data2$study==temp.study)
+    idx.order <- sample(idx,size=length(idx), replace=FALSE )
+    #only reorder pc, gneoytpes
+    data2[idx,c(27:203,205)] <- data2[idx.order,c(27:203,205)]
+  }
   y.pheno.mis2 <- cbind(data2$Behaviour1,data2$ER_status1,data2$PR_status1,data2$HER2_status1,data2$Grade1)
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   colnames(y.pheno.mis2) = c("Behaviour","ER",

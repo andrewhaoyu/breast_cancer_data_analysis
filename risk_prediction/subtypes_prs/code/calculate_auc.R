@@ -161,13 +161,6 @@ auc.result <- data.frame(auc,
                          n.snp)
 
 
-
-
-
-
-
-
-
 write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.test_012620.csv")
 
 #write.csv(auc.result,file = "/data/zhangh24/breast_cancer_data_analysis/risk_prediction/LD_clumping/result/auc.result.test_012620.csv")

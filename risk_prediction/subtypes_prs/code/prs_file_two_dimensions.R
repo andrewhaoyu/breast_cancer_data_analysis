@@ -23,13 +23,13 @@ idx <- which(duplicated(clump.snp$SNP.ONCO)==T)
 length(idx)
 whole_genome_clump <- left_join(clump.snp,whole_genome)
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
-load("./data/Nasim_313SNPs_complete_information.Rdata")
-#check whether the 313 SNPs are in the list
+load("./data/Nasim_330SNPs_complete_information.Rdata")
+#check whether the 330 SNPs are in the list
 head(snp.new)
 idx <- which(snp.new$var_name%in%
                whole_genome_clump$var_name==F)
 length(idx)
-#put the 313 SNPs stan_p as 0 for later filtering
+#put the 330 SNPs stan_p as 0 for later filtering
 head(snp.new)
 idx <- which(whole_genome_clump$var_name%in%snp.new$var_name==T)
 length(idx)
@@ -68,7 +68,7 @@ for(i in 1:n.pthres){
   for(k in 1:n.pthres){
     
     
-    #keep the 313 SNPs, then for all other SNPs, make sure only the top one within 500kb are kept
+    #keep the 330 SNPs, then for all other SNPs, make sure only the top one within 500kb are kept
     prs <-  whole_genome_clump_new %>%
       filter(stan_p<=pthres[i]|
                FTOP_result<=pthres[k]) 

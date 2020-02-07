@@ -23,7 +23,7 @@ idx <- which(duplicated(clump.snp$SNP.ONCO)==T)
 length(idx)
 whole_genome_clump <- left_join(clump.snp,whole_genome)
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
-load("./data/Nasim_313SNPs_complete_information.Rdata")
+load("./data/Nasim_330SNPs_complete_information.Rdata")
 #check whether the 313 SNPs are in the list
 head(snp.new)
 idx <- which(snp.new$var_name%in%

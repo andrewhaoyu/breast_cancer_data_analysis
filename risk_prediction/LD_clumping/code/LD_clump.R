@@ -93,9 +93,9 @@ for(i in 1:22){
   total <- total+temp
 }
 
-#check whether the 313 SNPs are within the LD clumping set
+#check whether the 330 SNPs are within the LD clumping set
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
-load("./data/Nasim_313SNPs_complete_information.Rdata")
+load("./data/Nasim_330SNPs_complete_information.Rdata")
 head(snp.new)
 #find the SNPs that are dropped by the LD-pruning procedure
 idx <- which(snp.new$SNP.ONCO%in%
@@ -121,7 +121,7 @@ for(k in 1:length(idx)){
   }
   SNP <- c(SNP,temp.SNP)
 }
-#check whether all the 313 SNPs are in the list
+#check whether all the 330 SNPs are in the list
 idx <- which(snp.new$SNP.ONCO%in%
                SNP!=T)
 length(idx)

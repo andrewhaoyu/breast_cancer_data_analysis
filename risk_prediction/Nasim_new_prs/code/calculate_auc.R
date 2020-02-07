@@ -50,7 +50,7 @@ library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 
 
 #merge 313 Nasim SNPs and new selected independent SNPs
-intrinsic_subtypes_result <- rbind(nasim_intrinsic_subtypes_result,dis_intrinsic_subtypes_result[idx,])
+intrinsic_subtypes_result <- rbind(nasim_intrinsic_subtypes_result,dis_intrinsic_subtypes_result[idx,c(1:3,6:10)])
 snpvalue.result <- cbind(onco.nasim.genotype,
                          onco.dis.genotype[,idx])
 

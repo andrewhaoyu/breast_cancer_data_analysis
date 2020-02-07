@@ -84,12 +84,19 @@ idx <- which(idx.cover==1)
 
 load(paste0("./risk_prediction/Nasim_prs/result/313_intrinsic_subtype_logodds_var.Rdata"))
 nasim_intrinsic_subtypes_result <- final_result
+load(paste0("./risk_prediction/Nasim_prs/result/313_overall_logodds_var.Rdata"))
+nasim_overall_result <- final_result
 load("./risk_prediction/Nasim_new_prs/result/32_intrinsic_subtype_logodds_var.Rdata")
 dis_intrinsic_subtypes_result <- final_result
-
-
+load("./risk_prediction/Nasim_new_prs/result/32_overall_logodds.Rdata")
+dis_overall_result <- final_result
 #merge 313 Nasim SNPs and new selected independent SNPs
-intrinsic_subtypes_result <- rbind(nasim_intrinsic_subtypes_result,dis_intrinsic_subtypes_result[idx,])
+intrinsic_subtypes_result <- rbind(
+  cbind(nasim_intrinsic_subtypes_result,
+        nasim_overall_result[,c(4:5)]),
+  cbind(dis_intrinsic_subtypes_result,
+        dis_overall_result[,c(4:5)]
+  )[idx,])
 
 
 
@@ -100,7 +107,7 @@ length(idx)
 #load the icog and onco summary level statistics to get freq_a1_icog，freq_a1_onco
 load("./risk_prediction/intrinsic_subtypes_whole_genome/ICOG/result/Icog_result_intrinsic_subtype.Rdata")
 load("./risk_prediction/intrinsic_subtypes_whole_genome/ONCO/result/onco_result_intrinsic_subtype.Rdata")
-icog_result <- as.data.frame(icog_result_casecase)
+icog_result <- icog_result_casecase
 onco_result <- onco_result_casecase
 library(dplyr)
 icog_result = icog_result %>% 
@@ -118,12 +125,19 @@ onco_result = onco_result %>%
          info_onco=info)
 snp.new <- left_join(snp.new,onco_result,
                      by="SNP.ONCO")
+library(tidyr)
+snp.new = snp.new %>% 
+  mutate(var_temp = var_name) %>% 
+  separate(var_temp,c("CHR","position",
+                      "ref_allele","eff_allele"))
+  
+  
 #create the information for three SNPs to save in whole_genome_analysis
 snp_id <- c("---",
             "---",
             "---")
 rs_id <- snp.new$SNP.ONCO[idx]
-position <- snp.new$Position[idx]
+position <- as.numeric(snp.new$position[idx])
 exp_freq_a1 <- snp.new$freq_a1_icog[idx]
 info <- snp.new$info_icog[idx]
 certainty <- rep(1,3)
@@ -131,7 +145,7 @@ type <- rep(0,3)
 info_type0 <- rep(-1,3)
 concord_type0 <- rep(-1,3)
 r2_type0 <- rep(-1,3)
-CHR <- snp.new$Chromosome[idx]
+CHR <- as.numeric(snp.new$CHR[idx])
 var_name <- snp.new$var_name[idx]
 SNP.ICOGS <-snp.new$SNP.ICOGS[idx]
 SNP.ONCO <- snp.new$SNP.ONCO[idx]
@@ -139,10 +153,10 @@ stan_logodds <- snp.new$logodds_overall[idx]
 stan_var <- snp.new$var_overall[idx]
 stan_p <- rep(0,3)
 FTOP_rsult <- rep(0,3)
-intrinsic_log_var = snp.new[idx,16:45]
+intrinsic_log_var = snp.new[idx,9:33]
 in_p <- rep(0,3)
-reference_allele = snp.new$Reference.Allele[idx]
-effect_allele = snp.new$Effect.Allele[idx]
+reference_allele = snp.new$ref_allele[idx]
+effect_allele = snp.new$eff_allele[idx]
 p.min <- rep(0,3)
 freq_a1_icog = snp.new$freq_a1_icog[idx]
 info_icog = snp.new$info_icog[idx]
@@ -178,13 +192,14 @@ three.snps <- data.frame(snp_id,
 colnames(three.snps) = colnames(whole_genome)
 whole_genome = rbind(whole_genome,three.snps)
 setwd('/data/zhangh24/breast_cancer_data_analysis/risk_prediction/')
-#put the 313 SNPs as p.value 0 to ensure LD clumping
+#put the 33- SNPs as p.value 0 to ensure LD clumping
 idx <- which(whole_genome$var_name%in%snp.new$var_name)
 whole_genome$p.min[idx] <- 0
 save(whole_genome,file = "./intrinsic_subtypes_whole_genome/ICOG/result/whole_genome_threeadd.rdata")
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
-
-save(snp.new, file = "./data/Nasim_313SNPs_complete_information.Rdata")
+snp.new$position = as.numeric(snp.new$position)
+snp.new$CHR = as.numeric(snp.new$CHR)
+save(snp.new, file = "./data/Nasim_330SNPs_complete_information.Rdata")
 #load whole genome information to get the SNP id in OncoArray and iCOGs
 
 

@@ -15,24 +15,24 @@ n <- nrow(whole_genome)
 
 
 
-#take out all the SNPs that are within +-500kb of the 313 SNPs
-#load 313 Nasim SNPs
+#take out all the SNPs that are within +-500kb of the 330 SNPs
+#load 330 Nasim SNPs
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
 library(dplyr)
-load("./data/Nasim_313SNPs_complete_information.Rdata")
+load("./data/Nasim_330SNPs_complete_information.Rdata")
 remove.ind <- NULL
-#remove all the SNPs +-500kb of the 313 Nasim SNPs
+#remove all the SNPs +-500kb of the 330 Nasim SNPs
 for(k in 1:nrow(snp.new)){
   #find all the SNPs +-500kb in it and remove them
   print(k)
-  ldx <- which(whole_genome$CHR==snp.new$Chromosome[k]&
-                 whole_genome$position>=snp.new$Positionb[k]-500000&
-                 whole_genome$position<=snp.new$Positionb[k]+500000&whole_genome$var_name%in%snp.new$var_name==F)
+  ldx <- which(whole_genome$CHR==snp.new$CHR[k]&
+                 whole_genome$position>=snp.new$position[k]-500000&
+                 whole_genome$position<=snp.new$position[k]+500000&whole_genome$var_name%in%snp.new$var_name==F)
   print(k)
   remove.ind = c(remove.ind,ldx)
 }
 whole_genome <- whole_genome[-remove.ind,]
-#check whether the 313 SNPs are in the list
+#check whether the 330 SNPs are in the list
 head(snp.new)
 idx <- which(snp.new$var_name%in%
                whole_genome$var_name==F)
@@ -47,7 +47,7 @@ assoc <- whole_genome %>% mutate(p.min = p.min,
                         NMISS = rep(0,n),
                         OR = exp(stan_logodds),
                         STAT = rnorm(n)) %>%
-                        select(CHR,SNP.ONCO,position,
+                        dplyr::select(CHR,SNP.ONCO,position,
                                effect_allele,
                                TEST,NMISS,
                                OR,STAT,p.min,
@@ -63,14 +63,14 @@ colnames(assoc) <- c("CHR",
                      "STAT",
                      "P",
                      "var_name")
-#load 313 Nasim SNPs
+#load 330 Nasim SNPs
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
 library(dplyr)
-load("./data/Nasim_313SNPs_complete_information.Rdata")
+load("./data/Nasim_330SNPs_complete_information.Rdata")
 idx <- which((snp.new$var_name%in%assoc$var_name)==T)
 length(idx)
 min(assoc$P)
-#find the 313 SNPs and put the p.value as 0 to make sure they stay in the LD_clumping procedure
+#find the 330 SNPs and put the p.value as 0 to make sure they stay in the LD_clumping procedure
 jdx <- which((assoc$var_name)%in%snp.new$var_name==T)
 length(jdx)
 assoc$P[jdx] = 0
@@ -78,7 +78,7 @@ assoc$P[jdx] = 0
 
 
 assoc <- assoc %>%
-  select(CHR,
+  dplyr::select(CHR,
          SNP,
          BP,
          A1,
