@@ -128,3 +128,7 @@ idx <- which(names2%in%names1==F)
 idx.match <- match(names1,names2)
 
 
+#post-data cleaning
+#SNP rs34052812:156535958:AT:A, rs6677545:200342046:A:C, rs6860806:131640536:A:G  are filtered out due to conditonal anlaysis not significant
+
+

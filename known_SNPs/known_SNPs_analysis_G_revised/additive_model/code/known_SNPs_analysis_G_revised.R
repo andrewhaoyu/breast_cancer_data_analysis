@@ -23,6 +23,10 @@ if(i1<=177){
   data1 <- as.data.frame(data1)
   y.pheno.mis1 <- cbind(data1$Behaviour1,data1$ER_status1,data1$PR_status1,data1$HER2_status1,data1$Grade1)
   colnames(y.pheno.mis1) = c("Behavior","ER","PR","HER2","Grade")
+  age1 = data1$age
+  y1 = data1$Behaviour1
+  
+  
   # Grade1.fake <- data1$Grade1
   # Grade1.fake[data1$Grade1==2|data1$Grade1==3] <- 1
   # Grade1.fake[data1$Grade1==1] <- 0
@@ -191,7 +195,19 @@ if(i1<=177){
   #y.pheno.mis2 <- cbind(data2$Behaviour1,data2$PR_status1,data2$ER_status1,data2$HER2_status1)
   colnames(y.pheno.mis2) = c("Behaviour","ER",
                              "PR","HER2","Grade")
+  age2 = data2$age
+  y2 = data2$Behaviour1
   
+  age = c(age1,age2)
+  y = c(y1,y2)
+  median(age[age!=888])  
+  
+  idx.control = which(y==0&age!=888)
+  median(age[idx.control])  
+  quantile(age[idx.control])  
+  idx.case = which(y==1&age!=888)
+  median(age[idx.case])  
+  quantile(age[idx.case]) 
   x.test.all.mis2 <- data2[,c(27:203)]
   #x.test.all.mis2 <- 2-x.test.all.mis2
   x.covar.mis2 <- data2[,c(5:14)]
@@ -655,4 +671,13 @@ if(i1<=177){
 }
 
 
-
+library(dplyr)
+y.pheno.mis = as.data.frame(rbind(y.pheno.mis1,y.pheno.mis2))
+y.pheno.mis.complete = y.pheno.mis %>% 
+  filter(Behavior==1&
+           ER!=888&
+           PR!=888&
+           HER2!=888&
+           Grade!=888)
+dim(y.pheno.mis.complete)
+cor(y.pheno.mis.complete[,2:5])

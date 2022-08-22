@@ -19,7 +19,7 @@ library(R.utils)
 library(data.table)
 setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
-subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
+subject.file <- "/data/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
 setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
@@ -43,29 +43,28 @@ rm(data2)
 gc()
 
 
-
-idx.fil <- onco.order[,1]%in%Onc_ID
-n <- length(idx.fil)
+n <- length(onco.order[,1])
 snpvalue <- rep(0,n)
+idx.fil <- onco.order[,1]%in%Onc_ID
 idx.match <- match(Onc_ID,onco.order[idx.fil,1])
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+library(bc2, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/4.2/")
 load("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/score.test.support.onco.ERPRHER2Grade.Rdata")
 
 
 
 
 
-Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_imputed"
+Filesdir <- "/data/NC_BW/icogs_onco/genotype/imputed2/onco_imputed"
 Files <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.",full.names=T)
-Filesex <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.chr23",full.names=T)
-idx.sex <- Files%in%Filesex
+#Filesex <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.chr23",full.names=T)
+#idx.sex <- Files%in%Filesex
 library(gtools)
-Files <- Files[!idx.sex]
+#Files <- Files[!idx.sex]
 Files <- mixedsort(Files)
 geno.file <- Files[i1]
 
-    num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
+num <- as.integer(system(paste0("zcat ",geno.file,"| wc -l"),intern=T))
 
 
 
@@ -74,7 +73,13 @@ geno.file <- Files[i1]
     n.sub <- nrow(y.pheno.mis2)
     idx.control <- which(y.pheno.mis2[,1]==0)
     n.control <- length(idx.control)
-    
+    z.design.list = GenerateZDesignCombination(y.pheno.mis1)
+    z.additive = z.design.list[[1]]
+    z.interaction = z.design.list[[2]]
+    z.saturated = z.design.list[[3]]
+    #number of second stage parameters
+    #if use additive model
+    n.second = ncol(z.additive)
     library(doParallel)
     library(foreach)
     
@@ -87,8 +92,8 @@ geno.file <- Files[i1]
       start <- start.end[1]
       end <- start.end[2]
       inner.num <- end-start+1
-      score_result <- matrix(0,inner.num,num.of.tumor+1)
-      infor_result <- matrix(0,inner.num,(num.of.tumor+1)^2)
+      score_result <- matrix(0,n.second)
+      infor_result <- matrix(0,inner.num,(n.second)^2)
       snpid_result <- rep("c",inner.num)
       freq.all <- rep(0,inner.num)
       temp <- 0
@@ -160,8 +165,8 @@ geno.file <- Files[i1]
     
     
     
-    score_result <- matrix(0,num,num.of.tumor+1)
-    infor_result <- matrix(0,num,(num.of.tumor+1)^2)
+    score_result <- matrix(0,num,n.second)
+    infor_result <- matrix(0,num,(n.second)^2)
     snpid_result <- rep("c",num)
     freq.all <- rep(0,num)
     

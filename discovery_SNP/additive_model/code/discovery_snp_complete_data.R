@@ -103,7 +103,6 @@ colnames(x.all.mis2)[1] = "gene"
 
 snpvalue = x.all.mis2[,1,drop=F]
 
-
 subtypes.onco <- GenerateIntrinsicmis(y.pheno.mis2[,2],
                                       y.pheno.mis2[,3],
                                       y.pheno.mis2[,4],

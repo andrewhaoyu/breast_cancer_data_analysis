@@ -92,6 +92,9 @@ colnames(bcac_result) <- c("snpid",
                            "N")
 write.table(bcac_result,file="/data/zhangh24/ldsc/bcac_result.txt",col.names = T,quote=F)
 
+bcac_result = fread("/data/zhangh24/ldsc/bcac_result.txt")
+write.table(bcac_result_temp,file="/data/zhangh24/ldsc/bcac_result.txt",col.names = T,quote=F)
+
 conda env create --file environment.yml
 source activate ldsc
 ./munge_sumstats.py --sumstats bcac_result.txt --out bcac --merge-alleles w_hm3.snplist --signed-sumstats Z,0 --info-min 0.3 --maf-min 0.01

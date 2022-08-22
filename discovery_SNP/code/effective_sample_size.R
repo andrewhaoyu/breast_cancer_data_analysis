@@ -23,7 +23,6 @@ result[i] <- mean(temp)
 names(result) <- colnames(BCAC_subtypes_result)[idx]
 
 
-
 IntrinsicSampleSize <- function(y.pheno.tumor1){
   idx.1 <- which((y.pheno.tumor1[,1]==1|y.pheno.tumor1[,2]==1)
                  &y.pheno.tumor1[,3]==0
@@ -55,7 +54,7 @@ IntrinsicSampleSize <- function(y.pheno.tumor1){
 
 
 
-
+library(data.table)
 
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)
@@ -85,3 +84,4 @@ IntrinsicSampleSize(y.pheno.tumor2)+IntrinsicSampleSize(y.pheno.tumor1)
 
 
 IntrinsicSampleSize(y.pheno.tumor2)+IntrinsicSampleSize(y.pheno.tumor1)
+

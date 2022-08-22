@@ -1,7 +1,7 @@
 
 setwd("/data/zhangh24/breast_cancer_data_analysis/")
 
-subject.file <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
+subject.file <- "/data/NC_BW/icogs_onco/genotype/imputed2/onco_order.txt.gz"
 onco.order <- read.table(gzfile(subject.file))
 
 library(data.table)
@@ -9,19 +9,23 @@ data2 <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 data2 <- as.data.frame(data2)
 
 #Icog.order.match <- Icog.order[idx.fil,1][idx.match]
-library(bc2)
+#library(bc2)
 #load("./whole_genome/ONCO/ERPRHER2_fixed/result/score.test.support.onco.ERPRHER2.Rdata")
+
+
+######### you need to modify this section#############################
+#########load data_clean_select_sig in the investigate results code
 load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
-
-#extract.list <- extract.list[-c(1721,1722,1724,1726,1727,1728),]
-#save(extract.list,file="/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/extract_list.Rdata")
-
+#########snp.onco.extract.id is the column SNP.ONCO
+#find the corresponding column for SNP.ICOG in data_clean_select_sig
+#your outcome format is different with the old version, you can just do snp.onco.extract.id = data_clean_select_sig$SNP.ONCO
 snp.onco.extract.id <- extract.list[,(ncol(extract.list)-1),drop=F]
+########change the directory to your local directory
 write.table(snp.onco.extract.id,file = paste0("./whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/result/extract_id_onco.txt"),quote = F,row.names=F)
+######################################################################
 
-
-
-Filesdir <- "/gpfs/gsfs4/users/NC_BW/icogs_onco/genotype/imputed2/onco_imputed"
+#we don't need CHR 23 during extrac steps since there is no significant SNPs
+Filesdir <- "/data/NC_BW/icogs_onco/genotype/imputed2/onco_imputed"
 Files <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.",full.names=T)
 Filesex <- dir(Filesdir,pattern="OncoArray_european_merged_b1_15.chr23",full.names=T)
 idx.sex <- Files%in%Filesex
@@ -29,7 +33,7 @@ Files <- Files[!idx.sex]
 library(gtools)
 Files <- mixedsort(Files)
 
-
+#for onco array, the 1-567 files are for auto chromosomes
 qctool.command <- rep("c",567)
 qctool.command <- data.frame(qctool.command,stringsAsFactors=F)
 
@@ -41,8 +45,10 @@ for(i in 1:567){
   
 }
 
-
+#change the directory to your local directory
 write.table(qctool.command,file = paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/ERPRHER2GRADE_fixed_baseline/code/qc_extract_snp.sh"),col.names = F,row.names = F,quote=F)
+#write qctool.command to a .sh file to submit to biowulf for running
+#you can do swarm -f qc_extract_snp.sh -g 20 --time 4:00:00
 
 
 

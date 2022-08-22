@@ -4,29 +4,31 @@ library(devtools)
 ############install the development R package bc2
 ############the repository is called bc3, but the package is called bc2
 #install_github("andrewhaoyu/bc3")
-
+library(withr)
+with_libpaths(new = "/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/", install_github('andrewhaoyu/bc3'))
+library(bc3, lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.6/")
 library(data.table)
-library(bc3)
+#library(bc3)
 #data <- fread("./data/dataset_montse_20180522.txt")
 #setwd('/dcl01/chatterj/data/hzhang1/breast_cancer_data_analysis')
 setwd('/data/zhangh24/breast_cancer_data_analysis/')
 data <- as.data.frame(fread("./data/Dataset_Montse_20190322.txt"))
-idx <- which(data1$parity==0)
+
 
 ##############we only focus on the invasive breast cancer cases
 ##############collapse breastmost_cat 0 agefftp 0 and lastchildage 0 as 1, otherwise there will be collinearity issue with parity. Since women with no children will also fall into these categoriess
 data$status[data$status==2|data$status==3] <- 1
 data$breastmos_cat[data$breastmos_cat==0] <- 1
 data$agefftp_cat[data$agefftp_cat==0] <- 1
-data$lastchildage_cat[data$lastchildage_cat==0] <- table(data1$ageFFTP[idx])
+data$lastchildage_cat[data$lastchildage_cat==0] <- 1
 
 
 ##############only focus on population based study
 
 
 library(dplyr)
-data1 = data %>% filter(design_cat==0)
-
+#data1 = data %>% filter(design_cat==0)
+#idx <- which(data1$parity==0)
 #############put the missing tumor characteristics as 888
 idx.ER.mis <- which(data1$status==1&is.na(data1$ER_status1))
 data1$ER_status1[idx.ER.mis] <- 888

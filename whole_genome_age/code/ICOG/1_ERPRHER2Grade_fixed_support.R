@@ -1,8 +1,9 @@
-i1 = 1
 library(devtools)
 library(data.table)
 #install_github("andrewhaoyu/bc2", ref = "development",args = c('--library="/home/zhangh24/R/x86_64-pc-linux-gnu-library/3.4"'))
-library(bc2)
+library(bc2, 
+        lib.loc ="/home/zhangh24/R/x86_64-pc-linux-gnu-library/4.2/")
+
 setwd("/data/zhangh24/breast_cancer_data_analysis/")
 data1 <- fread("./data/iCOGS_euro_v10_10232017.csv",header=T)
 data1 <- as.data.frame(data1)

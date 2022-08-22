@@ -18,3 +18,5 @@ snp_id = left_join(snp,data,
   select(var_name,SNP.ICOGS,SNP.ONCO)
 idx <- which(is.na(snp_id$SNP.ONCO))
 save(snp_id,file = paste0("./risk_prediction/Nasim_prs/result/nasim_snp_id.rdata"))
+
+load("/data/zhangh24/icog_onco_information_data.rdata")

@@ -42,6 +42,7 @@ if(i1 ==1){
   
   fine_mapping <- read.csv("./data/filter_regions_standard.csv",header= T)
   gwas_result_filter <- FilterSNP(gwas_result,fine_mapping) 
+
   # dim(gwas_result)
   #idx <- sample(c(1:10760767),100000)
   if(i2==1){
@@ -70,6 +71,8 @@ if(i1 ==1){
   meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_fixed_baseline/result/meta_result_shared_1p_fixed.txt",header=T))
   ftop <- meta_result_shared_1p
   ftop.p <- ftop$p.value
+  ftop[idx,]
+
   #load("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p.Rdata")
   meta_result_shared_1p <- as.data.frame(fread("./whole_genome_age/ICOG/ERPRHER2GRADE_casecase/result/meta_result_shared_1p_mixed.txt",header=T))
   mtop <- meta_result_shared_1p
@@ -87,7 +90,11 @@ if(i1 ==1){
                                       "P")
   fine_mapping <- read.csv("./data/filter_regions_subtypes.csv",header= T)
   subtypes_gwas_result_filter <- FilterSNP(subtypes_gwas_result,fine_mapping) 
-  
+  idx <- which(subtypes_gwas_result_filter$SNP=="rs6677545:200342046:A:C")
+  ftop[idx,]
+  subtypes_gwas_result_filter <- FilterSNP(subtypes_gwas_result,fine_mapping) 
+  idx <- which(subtypes_gwas_result_filter$SNP=="rs6677545:200342046:A:C")
+  subtypes_gwas_result_filter[idx,]
   if(i2==1){
     png(paste0("./discovery_SNP/result/manhattan_plot/man_subtypes.png"),width = 7.635,height =4.7175,units = "in",res = 300,type="cairo")
     manhattan(subtypes_gwas_result, col= c("blue4", "orange3"),

@@ -39,7 +39,7 @@ for(k in 1:32){
 }
 
 idx <- which(idx.cover==1)
-
+save(idx,file = "./risk_prediction/Nasim_prs/result/independent_SNPs_idx_in_32_novel_SNP.rdata")
 
 load(paste0("./risk_prediction/Nasim_prs/result/313_intrinsic_subtype_logodds.Rdata"))
 nasim_intrinsic_subtypes_result <- final_result
