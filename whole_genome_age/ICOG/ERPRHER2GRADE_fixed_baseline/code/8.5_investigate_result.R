@@ -1,4 +1,4 @@
-setwd("/data/NC_BW/HZ_SF/")
+load("/data/NC_BW/HZ_SF/data3.rdata")
 #load("data.rdata")
 #p.value.x is the MTOP pairwise p-value
 #p.value.y is the MTOP saturated p-value
@@ -64,3 +64,10 @@ data[idx,]
  # load("data_clean_select_sig_best_p5.rdata")
  # data_clean_select_sig_best3 = data_clean_select_sig_best
  # 
+ 
+#        position = as.numeric(position)) %>% 
+  # filter(CHR==22&(position-28195386)<=500000&(position-28195386)>=-500000)
+CHR = data_select$CHR
+position= data_select$position
+idx <- which(CHR==22&(position-28195386)<=500000&(position-28195386)>=-500000)
+
