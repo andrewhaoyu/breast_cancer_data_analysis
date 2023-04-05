@@ -1,6 +1,9 @@
 #meta-analysis for icogs and oncoarray result
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
+library(Rcpp)
+library(RcppArmadillo)
+sourceCpp("/gpfs/gsfs11/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/code/ICOG/Saddle.cpp")
 
 #MetaPfunction can perform the meta-analysis for icogs and oncoarray 
 MetaPfunction <- function(icog_onco_score_infor_one, second.num){
@@ -109,6 +112,55 @@ ScoreMixedGlobalTestForHeter <- function(score.casecase,infor.casecase){
   
 }
 
+
+ScoreMixedGlobalTestForHeterUpdate <- function(score.casecase,infor.casecase){
+  
+  
+  GTH.stat <- as.numeric(score.casecase%*%t(score.casecase)) #score*t(score)
+  lambda <- eigen(infor.casecase)$values #the eigen value of information matrix
+  
+  p.value.GTH <- Saddle(GTH.stat,lambda) #p-value for linear combination of chi-square
+  
+  if(p.value.GTH==2){
+    acc = 1e-09
+    lim = 2000000
+    
+    #davies method is a numerical algorithm
+    #lim is the number of monte carol runs
+    #acc is the accuracy
+    #you can increase the lim number and decrease the acc level if the function speed is really fast
+    result <- davies(GTH.stat,lambda,lim = lim,acc=acc)
+    p.value.GTH <- result[[3]]
+    
+    if(result[[2]]!=0){
+      #if result[[2]] is not 0
+      #davies method didn't converge. 
+      #I noticed this problem happens for 6_102485159_G_A and 1_87277974_G_A;
+      #These two SNPs are oncoarray only SNPs with allele frequency around 0.01
+      #just put the p-value as 1 for these SNPs
+      print("chisq p value accuracy could't be reached")
+      p.value.GTH = 1
+    }
+    
+    if(p.value.GTH <0){
+      #davies method is a numerical algorithm
+      #when p-value is really small, the value can be negative
+      #if it happens, just put the p-value as 1e-09 which is the accuracy for the function
+      p.value.GTH <- acc
+    }
+    #places <- 3
+    #power.number <- floor(-log10(p.value.GTH))+places
+    #p.value.GTH <- round(p.value.GTH*10^power.number)/(10^power.number)
+    
+    
+   
+  }
+  
+  return(p.value.GTH)
+  
+  
+  
+}
 #install R package
 #bc2 is a development version of TOP package
 #I used bc2 in my previous analyses

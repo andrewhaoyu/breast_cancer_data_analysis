@@ -28,8 +28,23 @@ MetaPfunction <- function(icog_onco_score_infor_one, second.num){
   #we can use function ScoreGlobalTestForAssoc(score, infor)
   #to perform random-effect test using mixture chi-square test
   #we can use function ScoreMixedGlobalTestForHeter(score, infor)
-  p.value = ScoreGlobalTestForAssoc(score.meta, infor.meta)
+  p.value = ScoreMixedGlobalTestForHeter(score.meta, infor.meta)
   return(p.value)
+}
+
+ScoreMixedGlobalTestForHeter = function(score.casecase,infor.casecase){
+  
+  
+  GTH.stat <- as.numeric(score.casecase%*%t(score.casecase))
+  lambda <- eigen(infor.casecase)$values
+  
+  p.value.GTH <- Saddle(GTH.stat,lambda)
+  
+  
+  return(p.value.GTH)
+  
+  
+  
 }
 
 ScoreGlobalTestForAssoc <- function(score,infor){

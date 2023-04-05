@@ -1,8 +1,30 @@
 #goal:calculate population based studies proportion
 library(data.table)
-
-data1_known = as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/iCOGS_euro_v10_10232017.csv",header=T))
 setwd("/data/zhangh24/breast_cancer_data_analysis/")
+study_design_table = read.csv("./data/BCAC_study_design_simple.csv",header=T)
+
+pop_study_cate = c("Population-based case-control study",
+                   "Prospective cohort study: nested case-control",
+                   "Population-based case-control",
+                   "Nested case-control study",
+                   "Case-control study, nested in a prospective cohort study",
+                   "Population-based study of women <50 years",
+                   "Cohort  study",
+                   "Population-based",
+                   "Population-based cohort study",
+                   "Prospective cohort study: nested case-control study",
+                   "Population-based prospective cohort study",
+                   "Prospective Cohort Study (2003-2006) of women ages 35+ receiving screening mammography at Mayo Clinic and living in MN, IA, WI; nested case-control",
+                   "Prospective cohort",
+                   "Population-based case-control study, cohort study",
+                   "Nested case control study from a population-based cohort",
+                   "Nested case-control study of incident and prevalent cases within prospective cohort study",
+                   "Population -based case-control study using prevalent cases with controls matched to cases on year of birth")
+idx <- which(study_design_table$study_design%in%pop_study_cate)
+pop_studies = study_design_table[idx,1]
+write.table(pop_studies,file = "./data/pop_studies_defination.txt",quote = F, row.names = F, col.names = F)
+data1_known = as.data.frame(fread("/data/zhangh24/breast_cancer_data_analysis/data/iCOGS_euro_v10_10232017.csv",header=T))
+
 data2_known <- fread("./data/Onco_euro_v10_10232017.csv",header=T)
 library(dplyr)
 data1_select = data1_known %>% 
@@ -15,9 +37,7 @@ data2_select = data2_known %>%
 data_com = rbind(data1_select, data2_select) %>% 
   filter(age!=888)
 
-pop_studies = c("ABCFS", "BCEES", "BCINIS", "BREOGAN", "CAMA", "CBCS","CECILE","CGPS","ESTHER","GENICA",
-                "KOHBRA","LAABC","LIFEPOOL","MASTOS","MISS","MTLGEBCS","NBHS","PBCS","PROCAS",
-                "SASBAC","SBCGS","SEARCH","UCIBCS","US3SS","USRT")
+
 n_case = length(which(data_com$Behaviour1==1))
 n_control = length(which(data_com$Behaviour1==0))
 data_pop = data_com %>% 

@@ -218,7 +218,7 @@ PowerCompare <- function(y.pheno.mis,G,x_covar,theta_intercept,theta_test,theta_
   result <- list(p_global,p_mglobal,p_standard,p_global_complete)  
   return(result)
 }
-  
+
 
 
 args = commandArgs(trailingOnly = T)
@@ -296,7 +296,7 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         p_mglobal_result[temp] <- as.numeric(model.result[[2]])
         p_standard[temp] <- as.numeric(model.result[[3]])
         p_global_complete[temp] <- as.numeric(model.result[[4]])
-       # p_poly[temp] <- as.numeric(model.result[[5]])
+        # p_poly[temp] <- as.numeric(model.result[[5]])
         temp = temp+1
         
       }
@@ -312,4 +312,3 @@ result.list <- foreach(job.i = 1:2)%dopar%{
 
 stopImplicitCluster()
 save(result.list,file=paste0("./simulation/power/result/simu_result_0.25_",i1,".Rdata"))
-
