@@ -143,9 +143,11 @@ setwd("/data/zhangh24/breast_cancer_data_analysis/")
 library(Rcpp)
 library(RcppArmadillo)
 sourceCpp("./simulation/type_one_error/code/Saddle.cpp")
-library(bc2, lib.loc ="/home/shengf2/R/4.1/library/")
+library(devtools)
+#install_github("andrewhaoyu/bc2")
+library(bc2, lib.loc ="/home/zhangh24/R/4.2/library/")
 library(CompQuadForm)
-library(ACAT, lib.loc = '/home/shengf2/R/4.1/library/')
+library(ACAT, lib.loc = '/home/zhangh24/R/4.2/library/')
 beta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
                     -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
                     -6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.60, -5.85,-1.20,-3.50, -4.51, -2.39, -4.46, -3.53, -5.95,-4.00, -3.62,-2.14,-5.14, -2.65, -3.88,-2.91,
@@ -154,7 +156,7 @@ beta_intercept <- c(-6.51, -3.64, -3.71, -3.93, -4.74, -3.43, -4.45, -2.40, -3.6
 
 beta_covar <- rep(0.05,96)
 # s_times = 10000
-s_times = 2000
+s_times = 10
 #simulate data under three different sample sizes
 # size <- c(5000,50000,100000)
 size <- c(100000)
@@ -173,6 +175,7 @@ for(k in 1:length(size)){
   y.pheno.mis <- SimulateData(beta_intercept,beta_covar,x_covar,n)
   y <- y.pheno.mis
   print("simulation")
+
   
   #get the three different z design matrix
   z.design.list = GenerateZDesignCombination(y.pheno.mis)
@@ -278,8 +281,10 @@ for(k in 1:length(size)){
 }
 
 #save the results to your folder
-save(p_ftop,file=paste0("./result_six3/result1/ftop_",i1,".Rdata"))
-save(p_mtop1,file=paste0("./result_six3/result2/mtop1_",i1,".Rdata"))
-save(p_mtop2,file=paste0("./result_six3/result3/mtop2_",i1,".Rdata"))
-save(p_acat,file=paste0("./result_six3/result/acat",i1,".Rdata"))
+result = cbind(p_ftop,p_mtop1,p_mtop2,p_acat)
+save(result,file = paste0("./simulation/type_one_error/result/topo_result/topo_result_",i1,".rdata"))
+# save(p_ftop,file=paste0("./result_six3/result1/ftop_",i1,".Rdata"))
+# save(p_mtop1,file=paste0("./result_six3/result2/mtop1_",i1,".Rdata"))
+# save(p_mtop2,file=paste0("./result_six3/result3/mtop2_",i1,".Rdata"))
+# save(p_acat,file=paste0("./result_six3/result/acat",i1,".Rdata"))
 
