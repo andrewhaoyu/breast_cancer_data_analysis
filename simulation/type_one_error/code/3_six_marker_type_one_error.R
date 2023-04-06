@@ -134,7 +134,7 @@ ScoreMixedGlobalTestForHeter <- function(score.casecase,infor.casecase){
 
 #i1 controls the simulation seed
 args = commandArgs(trailingOnly = T)
-i1 = as.numeric(args[[1]])
+i1 = as.numeric(args[[1]]) + 10^6
 set.seed(i1)
 print(i1)
 #change to your own data directory
