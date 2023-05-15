@@ -162,11 +162,9 @@ beta_covar <- rep(0.05,96)
 s_times = 10
 #simulate data under three different sample sizes
 size <- c(50000)
-
-
-p_global_result_ftop <- matrix(0, s_times, length(size))
-p_global_result_mtop1 <- matrix(0, s_times, length(size))
-p_global_result_mtop2 <- matrix(0, s_times, length(size))
+p_ftop <- matrix(0, s_times, length(size))
+p_mtop1 <- matrix(0, s_times, length(size))
+p_mtop2 <- matrix(0, s_times, length(size))
 p_acat <- matrix(0, s_times, length(size))
 
 
@@ -252,9 +250,9 @@ for(k in 1:length(size)){
     pvalue2 = ScoreMixedGlobalTestForHeter(score_result2, infor_result2)
     pvalue3 = ScoreMixedGlobalTestForHeter(score_result3, infor_result3)
     
-    p_global_result_ftop[i,k] <- as.numeric(pvalue1)
-    p_global_result_mtop1[i,k] <- as.numeric(pvalue2)
-    p_global_result_mtop2[i,k] <- as.numeric(pvalue3)
+    p_ftop[i,k] <- as.numeric(pvalue1)
+    p_mtop1[i,k] <- as.numeric(pvalue2)
+    p_mtop2[i,k] <- as.numeric(pvalue3)
     
     
     ##ACAT combination to generate a global pvalue
