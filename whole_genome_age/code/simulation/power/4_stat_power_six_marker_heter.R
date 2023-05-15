@@ -420,6 +420,9 @@ for(i in 1:s_times){
       z.saturated = z.design.list[[3]]
       M = nrow(z.additive)
       
+      #keep the parameter for baseline effect estimated from the model
+      z.design.support <- matrix(rep(1,M),M,ncol=1)
+      
       score.test.heter.support <- ScoreTestSupportMixedModelSelfDesign(
         y.pheno.mis,
         x.self.design  = G,
