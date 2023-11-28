@@ -173,7 +173,14 @@ result.list <- foreach(job.i = 1:2)%dopar%{
         score_result[temp,] <- 0
         infor_result[temp,] <- as.vector(diag(5))
       }else{
-        Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,x.self.design = snpvalue,z.design=z.design,baselineonly = NULL,additive = x.covar.mis1,pairwise.interaction = NULL,saturated = NULL,missingTumorIndicator = 888)
+        Heter.result.Icog = EMmvpolySelfDesign(y.pheno.mis1,
+                                               x.self.design = snpvalue,
+                                               z.design=z.design,
+                                               baselineonly = NULL,
+                                               additive = x.covar.mis1,
+                                               pairwise.interaction = NULL,
+                                               saturated = NULL,
+                                               missingTumorIndicator = 888)
         z.standard <- Heter.result.Icog[[12]]
         M <- nrow(z.standard)
         number.of.tumor <- ncol(z.standard)
