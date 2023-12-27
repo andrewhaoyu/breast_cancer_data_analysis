@@ -14,11 +14,11 @@ num = nrow(meta_result_shared_1p)
 start_end_result = startend(num,size,i1)
 start = start_end_result[1]
 end = start_end_result[2]
-C = matrix(c(rep(1,5),
-             c(0,-1,0,0,0),
-             c(0,0,-1,0,0),
-             c(0,0,0,-1,0),
-             c(0,0,0,0,-1)),5,5)
+C = matrix(c(rep(1,4),
+             c(-1,0,0,0),
+             c(0,-1,0,0),
+             c(0,0,-1,0),
+             c(0,0,0,-1)),4,5)
 p_sub = rep(0,end-start+1)
 temp = 1
 for(k in start:end){
