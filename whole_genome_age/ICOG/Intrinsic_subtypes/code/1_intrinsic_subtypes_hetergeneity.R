@@ -19,7 +19,9 @@ C = matrix(c(rep(1,4),
              c(0,-1,0,0),
              c(0,0,-1,0),
              c(0,0,0,-1)),4,5)
+C2 = matrix(c(1,-1),1,2)
 p_sub = rep(0,end-start+1)
+p_sub2 = rep(0,end-start+1)
 temp = 1
 for(k in start:end){
   beta = as.numeric(meta_result_shared_1p[k,16:20])
@@ -28,6 +30,14 @@ for(k in start:end){
   cov_heter = C%*%beta_cov%*%t(C)
   chi_test = t(beta_heter)%*%solve(cov_heter)%*%beta_heter
   p_sub[temp] = pchisq(chi_test,length(beta_heter),lower.tail = T)
+  
+  beta_sub = beta[c(1,5)]
+  beta_cov_sub = beta_cov[c(1,5),c(1,5)]
+  beta_heter = C2%*%beta_sub
+  cov_heter = C2%*%beta_cov_sub%*%t(C2)
+  chi_test = t(beta_heter)%*%solve(cov_heter)%*%beta_heter
+  p_sub2[temp] = pchisq(chi_test,length(beta_heter),lower.tail = T)
   temp = temp + 1
 }
-save(p_sub, file = paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/p_heter_sub_",i1,".rdata"))
+p_list = list(p_sub, p_sub2)
+save(p_list, file = paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/p_heter_sub_",i1,".rdata"))
