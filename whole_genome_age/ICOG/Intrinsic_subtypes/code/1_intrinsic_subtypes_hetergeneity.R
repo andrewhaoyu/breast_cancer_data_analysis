@@ -24,7 +24,7 @@ p_sub = rep(0,end-start+1)
 p_sub2 = rep(0,end-start+1)
 temp = 1
 
-idx <- which(meta_result_shared_1p$var_name=="19_17354586_C_A")
+
 
 for(k in start:end){
   beta = as.numeric(meta_result_shared_1p[k,16:20])
@@ -44,3 +44,4 @@ for(k in start:end){
 }
 p_list = list(p_sub, p_sub2)
 save(p_list, file = paste0("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/p_heter_sub_",i1,".rdata"))
+p_list[[1]][3947]

@@ -18,3 +18,4 @@ twas_heter_result = left_join(snp_list, heter_result)
 colnames(twas_heter_result)[2:3] = c("p_heter_global","p_heter_LAtoTN")
 write.table(twas_heter_result, file = "/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/SNP_TWAS_GENES_heter.txt",
             row.names = F, col.names = T, quote = F)
+twas_heter_result %>% filter(var_name == "19_17354586_C_A")
