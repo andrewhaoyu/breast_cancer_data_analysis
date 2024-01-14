@@ -23,20 +23,23 @@ C2 = matrix(c(1,-1),1,2)
 p_sub = rep(0,end-start+1)
 p_sub2 = rep(0,end-start+1)
 temp = 1
+
+idx <- which(meta_result_shared_1p$var_name=="19_17354586_C_A")
+
 for(k in start:end){
   beta = as.numeric(meta_result_shared_1p[k,16:20])
   beta_cov = matrix(as.numeric(meta_result_shared_1p[k,21:45]),5,5)
   beta_heter = C%*%beta
   cov_heter = C%*%beta_cov%*%t(C)
   chi_test = t(beta_heter)%*%solve(cov_heter)%*%beta_heter
-  p_sub[temp] = pchisq(chi_test,length(beta_heter),lower.tail = T)
+  p_sub[temp] = pchisq(chi_test,length(beta_heter), lower.tail = F)
   
   beta_sub = beta[c(1,5)]
   beta_cov_sub = beta_cov[c(1,5),c(1,5)]
   beta_heter = C2%*%beta_sub
   cov_heter = C2%*%beta_cov_sub%*%t(C2)
   chi_test = t(beta_heter)%*%solve(cov_heter)%*%beta_heter
-  p_sub2[temp] = pchisq(chi_test,length(beta_heter),lower.tail = T)
+  p_sub2[temp] = pchisq(chi_test,length(beta_heter), lower.tail = F)
   temp = temp + 1
 }
 p_list = list(p_sub, p_sub2)
