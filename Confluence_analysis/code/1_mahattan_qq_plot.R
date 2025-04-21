@@ -1,27 +1,42 @@
 source("/data/zhangh24/multi_ethnic/code/stratch/theme_publication.R")
 library(data.table)
-library(qqman)
 library(dplyr)
+
+
+# Load Regenie output
 data <- fread("/data/DCEG_Confluence/JW/nextflow_GSA/results/Outcome.regenie.gz")
 
-data = data %>% 
-  mutate(CHR = as.integer(CHR),
-         BP = as.integer(POS_b37),
-         FREQ_A1 = as.numeric(A1_FREQ_1000G),
-         P = as.numeric(P),
-         rsid = rsID,
-         N = as.integer(N)) %>% 
-  mutate(P = ifelse(P==0,1E-300,P)) %>% 
-  select(rsid,CHR,BP,FREQ_A1,P,N)
+# Clean and format columns for plotting
+data <- data %>%
+  rename(
+    CHR = CHROM,
+    BP = GENPOS,
+    rsid = ID,
+    FREQ_A1 = A1FREQ,
+    P = PVAL
+  ) %>%
+  mutate(
+    CHR = as.integer(CHR),
+    BP = as.integer(BP),
+    FREQ_A1 = as.numeric(FREQ_A1),
+    INFO = as.numeric(INFO),
+    P = as.numeric(P),
+    P = ifelse(P == 0, 1E-300, P),
+    N = as.integer(N),
+    MAF = ifelse(FREQ_A1 <= 0.5, FREQ_A1, 1 - FREQ_A1)
+  ) %>%
+  filter(
+    !is.na(CHR) & !is.na(BP) & !is.na(FREQ_A1) & !is.na(P) & !is.na(INFO),
+    INFO > 0.2,
+    MAF >= 0.1
+  ) %>%
+  select(rsid, CHR, BP, FREQ_A1, MAF, INFO, P, N, GENE_NAME)
 
 
-
-dat = data %>% 
-  mutate(MAF = ifelse(FREQ_A1<=0.5,FREQ_A1,1-FREQ_A1)) %>% 
-  select(rsid,CHR,BP,P,MAF) %>% 
+dat = data %>%
+  mutate(MAF = ifelse(FREQ_A1 <= 0.5, FREQ_A1, 1 - FREQ_A1)) %>%
+  select(rsid, CHR, BP, P, MAF) %>%
   rename(SNP = rsid)
-
-
 library(readr)
 library(dplyr)
 x = dat$P
@@ -46,55 +61,65 @@ convert.qval.pval = function(qvalues) {
 p.pwas <- 5E-08
 #q.pwas <- convert.qval.pval(c(tmp, 0.05))[(nrow(dat)+1)]
 
-nCHR <- length(unique(dat$CHR))
-dat$BPcum <- NA
+# Compute cumulative base pair position
+nCHR <- length(unique(data$CHR))
 s <- 0
 nbp <- c()
-for (i in unique(dat$CHR)){
-  nbp[i] <- max(dat[dat$CHR == i,]$BP)
-  dat$BPcum[dat$CHR == i] <- dat$BP[dat$CHR == i] + s
+data$BPcum <- NA
+for (i in sort(unique(data$CHR))) {
+  nbp[i] <- max(data[data$CHR == i,]$BP)
+  data$BPcum[data$CHR == i] <- data$BP[data$CHR == i] + s
   s <- s + nbp[i]
 }
-library(dplyr)
-axis.set <- dat %>% 
-  group_by(CHR) %>% 
-  summarize(center = (max(BPcum) + min(BPcum)) / 2)
-ylim <- abs(floor(log10(min(dat$P)))) + 2 
-sig1 <- p.pwas
-#sig2 <- q.pwas
 
-#sigline <- data.frame(sig=c(-log10(sig1),-log10(sig2)),val=c(paste0("P=",signif(sig1,2)),"FDR=0.05"))
-sigline <- data.frame(sig=c(-log10(sig1)),val=c(paste0("P=",signif(sig1,2))))
-library(ggplot2)
-manhplot <- ggplot(dat, aes(x = BPcum, y = -log10(P), 
-                            color = as.factor(CHR), size = -log10(P))) +
-  geom_point(alpha = 0.8, size=0.8) + 
+# Prepare axis labels
+axis.set <- data %>%
+  group_by(CHR) %>%
+  summarize(center = (max(BPcum) + min(BPcum)) / 2)
+
+# Define plotting limits
+ylim <- abs(floor(log10(min(data$P)))) + 2
+
+# Genome-wide significance line
+sigline <- data.frame(sig = -log10(p.pwas), val = paste0("P=", signif(p.pwas, 2)))
+
+# Identify top hits for annotation
+top_hits <- data %>%
+  filter(P < p.pwas) %>%
+  group_by(CHR, GENE_NAME) %>%
+  slice_min(order_by = P, n = 1) %>%
+  ungroup() %>%
+  mutate(logP = -log10(P)) %>%
+  filter(!is.na(GENE_NAME)) %>%
+  select(CHR, BPcum, logP, GENE_NAME)
+
+# Manhattan plot
+manhplot <- ggplot(data, aes(x = BPcum, y = -log10(P), color = as.factor(CHR), size = -log10(P))) +
+  geom_point(alpha = 0.8, size = 0.8) +
   scale_x_continuous(label = axis.set$CHR, breaks = axis.set$center) +
-  scale_y_continuous(expand = c(0,0), limits = c(0, ylim)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, ylim)) +
   scale_color_manual(values = rep(c("#08306b", "#4292c6"), nCHR)) +
-  scale_size_continuous(range = c(0.5,3)) +
-  geom_hline(data = sigline, aes(yintercept = sig), color= "red", linetype="dashed") +
-  guides(color = F) + 
-  labs(x = NULL, 
-       y = "-log10(p)", 
-       linetype = "",
-       title = paste0(trait_name[i2]," for ",eth_name[i1]))+
-  #subtitle = "A2: Critically ill COVID19+ vs. population controls;\nB1: Hospitalized COVID19+ vs non-hospitalized COVID19+;\nB2: Hospitalized COVID19+ vs. population controls;\nC2: Reported SARS-CoV-2 infection vs. population controls") + 
-  theme_Publication()+
+  scale_size_continuous(range = c(0.5, 3)) +
+  geom_hline(data = sigline, aes(yintercept = sig), color = "red", linetype = "dashed") +
+  geom_text(data = top_hits, aes(x = BPcum, y = logP + 1.5, label = GENE_NAME),
+            size = 2.5, vjust = 0, check_overlap = TRUE, fontface = "bold") +
+  guides(color = FALSE) +
+  labs(x = NULL, y = "-log10(p)", title = paste0(trait_name_str, " for ", eth_name_str)) +
+  theme_Publication() +
   theme(
     legend.position = "top",
     panel.border = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     axis.text.x = element_text(angle = 0, size = 9, vjust = 0.5),
-    plot.title = element_text(size = 12, face = "bold"),
-    plot.subtitle = element_text(size = 8)
+    plot.title = element_text(size = 12, face = "bold")
   )
 
-outpath <-"/data/zhangh24/multi_ethnic/result/GLGC/summary_plot/"  
+
+outpath <-"/data/zhangh24/breast_cancer_data_analysis/Confluence_analysis/result/"  
 
 
-ggsave(filename=paste0("man_",eth[i1],"_",trait[i2],".png"),
+ggsave(filename=paste0("man_gsa.png"),
        plot=manhplot, device="png",
        path=outpath,
        width=9, height=4, units="in", dpi=300)
@@ -218,7 +243,7 @@ opt =  list(break.top = 15,
             top.size = 0.125)
 
 
-png(filename = paste0(outpath,"/QQ_",eth[i1],"_",trait[i2],".png"), width = 8, height = 8, units = "in",res=300)
+png(filename = paste0(outpath,"/QQ_gsa.png"), width = 8, height = 8, units = "in",res=300)
 xlim <- c(0,max(fx,na.rm=T))
 ylim <- c(0,max(fy,na.rm=T))
 maxY <- max(fy,na.rm=T)
@@ -283,6 +308,6 @@ dev.off()
 # plot(1,1)
 # text(1,0.8,expression(paste(lambda[1000]," = ",buquote(.(lambda_1000)))),cex = 1.5)
 
-lambda_vec = c(lambda,lambda_1000)
-save(lambda_vec,file = paste0("/data/zhangh24/multi_ethnic/result/GLGC/lambda_value/lambda_vec_",i1,"_",i2,".rdata"))
+# lambda_vec = c(lambda,lambda_1000)
+# save(lambda_vec,file = paste0("/data/zhangh24/multi_ethnic/result/GLGC/lambda_value/lambda_vec_",i1,"_",i2,".rdata"))
 
