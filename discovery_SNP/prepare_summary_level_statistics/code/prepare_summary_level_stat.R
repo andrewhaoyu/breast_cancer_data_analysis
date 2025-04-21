@@ -28,14 +28,16 @@ onco_result_sex = onco_result_shared_1p
 colnames(onco_result_sex) = colnames(onco_result)
 onco_result = rbind(onco_result,onco_result_sex)
 #load meta-analysis result
-load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata")
-
+# load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata")
+# meta_result = meta_result_shared_1p
 #load meta-analysis result for sex chromosome
-load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_final.Rdata")
-meta_result_sex = meta_result_shared_1p
-colnames(meta_result_sex) = colnames(meta_result)
-meta_result = rbind(meta_result,meta_result_sex)
+# meta_result_sex = meta_result_shared_1p
+# colnames(meta_result_sex) = colnames(meta_result)
+# meta_result = rbind(meta_result,meta_result_sex)
 
+#load meta-analysis result
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_final.Rdata")
+meta_result = meta_result_shared_1p
 
 #load FTOP result
 load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_final.Rdata")

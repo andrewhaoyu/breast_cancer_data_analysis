@@ -40,6 +40,7 @@ meta_result_shared_1p <- cbind(meta_result_shared_1p_no_pvalue,p.value,log.odds,
 save(meta_result_shared_1p,file=paste0("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata"))
 
 
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/meta_result_shared_1p_082119.Rdata")
 
 
 

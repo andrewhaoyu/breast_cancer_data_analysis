@@ -1,11 +1,11 @@
 args = commandArgs(trailingOnly = T)
 i1 = as.numeric(args[[1]])
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_shared_1p_082119.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_shared_1p_082119.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_shared_1p_082119.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_shared_1p_082119.Rdata")
 #load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_shared.Rdata")
 #load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_shared.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_only_shared_1p_082119.Rdata")
-load("/spin1/users/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_only_shared_1p_082119.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ICOG/Intrinsic_subtypes/result/icog_result_only_shared_1p_082119.Rdata")
+load("/data/zhangh24/breast_cancer_data_analysis/whole_genome_age/ONCO/intrinsic_subtypes/result/onco_result_only_shared_1p_082119.Rdata")
 
 second.num <- 5
 
@@ -81,6 +81,57 @@ size <- 1000
 #pvalue.list <- foreach(i=1:size)%dopar%
 #{
 #print(i)
+startend <- function(num,size,ind){
+  split.all <- split(1:num,cut(1:num,size))
+  temp <- split.all[[ind]]
+  start <- temp[1]
+  end <- temp[length(temp)]
+  return(c(start,end))
+}
+MetaMixedPfunction_temp <- function(icog_onco_score_infor_one,icog_onco_score_infor_casecase_one,fixed.second.num,random.second.num){
+  score.icog <- as.numeric(icog_onco_score_infor_one[1:(fixed.second.num)])
+  infor.icog <- matrix(as.numeric(icog_onco_score_infor_one[(fixed.second.num+1):
+                                                              (fixed.second.num+fixed.second.num^2) ]),
+                       ncol = fixed.second.num)
+  start <- fixed.second.num+fixed.second.num^2
+  score.onco <- as.numeric(icog_onco_score_infor_one[(1+start):
+                                                       (fixed.second.num+start)])
+  infor.onco <- matrix(as.numeric(icog_onco_score_infor_one[(fixed.second.num+1+start):
+                                                              (fixed.second.num+fixed.second.num^2+start) ]),ncol=fixed.second.num)
+  
+  meta.result.fixed <- ScoreMetaAnalysis(score.icog,infor.icog,
+                                         score.onco,infor.onco)
+  
+  
+  score.meta.fixed <- t(meta.result.fixed[[1]])
+  infor.meta.fixed <- meta.result.fixed[[2]]
+  
+  
+  
+  
+  score.icog <- rep(0,random.second.num)
+  #score.icog <- rep(0,temp.n)
+  
+  infor.icog <- matrix(0,nrow= random.second.num,
+                       ncol = random.second.num)
+  start <- random.second.num+random.second.num^2
+  score.onco <- as.numeric(icog_onco_score_infor_casecase_one[(1+start):
+                                                                (random.second.num+start)])
+  infor.onco <- matrix(as.numeric(icog_onco_score_infor_casecase_one[(random.second.num+1+start):
+                                                                       (random.second.num+random.second.num^2+start) ]),ncol=random.second.num)
+  
+  meta.result.random <- ScoreMetaAnalysis(score.icog,infor.icog,
+                                          score.onco,infor.onco)
+  score.meta.random <- t(meta.result.random[[1]])
+  infor.meta.random <- meta.result.random[[2]]
+  
+  
+  result <-   DisplayMixedScoreTestResult(score.meta.fixed,
+                                          infor.meta.fixed,
+                                          score.meta.random,
+                                          infor.meta.random)
+  return(result[1])
+}
 start.end <- startend(n,size,i1)
 start <- start.end[1]
 end <- start.end[2]
