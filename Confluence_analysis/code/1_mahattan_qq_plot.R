@@ -7,7 +7,7 @@ library(dplyr)
 data <- fread("/data/DCEG_Confluence/JW/nextflow_GSA/results/Outcome.regenie.gz")
 
 # Clean and format columns for plotting
-dat <- data %>%
+data <- data %>%
   rename(
     CHR = CHROM,
     BP = GENPOS,
@@ -32,7 +32,7 @@ dat <- data %>%
   select(rsid, CHR, BP, FREQ_A1, MAF, INFO, P, N, GENE_NAME)
 
 
-dat = dat %>%
+dat = data %>%
   mutate(MAF = ifelse(FREQ_A1 <= 0.5, FREQ_A1, 1 - FREQ_A1)) %>%
   select(rsid, CHR, BP, P, MAF) %>%
   rename(SNP = rsid)
