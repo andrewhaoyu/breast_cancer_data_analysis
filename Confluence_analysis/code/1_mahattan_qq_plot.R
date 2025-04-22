@@ -7,20 +7,21 @@ library(dplyr)
 data <- fread("/data/DCEG_Confluence/JW/nextflow_GSA/results/Outcome.regenie.gz")
 
 # Clean and format columns for plotting
-data <- data %>%
+dat <- data %>%
   rename(
     CHR = CHROM,
     BP = GENPOS,
     rsid = ID,
-    FREQ_A1 = A1FREQ,
-    P = PVAL
-  ) %>%
+    FREQ_A1 = A1FREQ
+  ) 
+
+dat  = data %>%
   mutate(
     CHR = as.integer(CHR),
     BP = as.integer(BP),
     FREQ_A1 = as.numeric(FREQ_A1),
     INFO = as.numeric(INFO),
-    P = as.numeric(P),
+    P = as.numeric(10^(-LOG10P)),
     P = ifelse(P == 0, 1E-300, P),
     N = as.integer(N),
     MAF = ifelse(FREQ_A1 <= 0.5, FREQ_A1, 1 - FREQ_A1)
@@ -28,17 +29,19 @@ data <- data %>%
   filter(
     !is.na(CHR) & !is.na(BP) & !is.na(FREQ_A1) & !is.na(P) & !is.na(INFO),
     INFO > 0.2,
-    MAF >= 0.1
+    MAF >= 0.01
   ) %>%
   select(rsid, CHR, BP, FREQ_A1, MAF, INFO, P, N, GENE_NAME)
 
 
-dat = data %>%
+dat = dat %>%
   mutate(MAF = ifelse(FREQ_A1 <= 0.5, FREQ_A1, 1 - FREQ_A1)) %>%
   select(rsid, CHR, BP, P, MAF) %>%
   rename(SNP = rsid)
+
 library(readr)
-library(dplyr)
+
+
 x = dat$P
 z = qnorm(x / 2)
 lambda = round(median(z^2) / qchisq(0.5,1), 3)
