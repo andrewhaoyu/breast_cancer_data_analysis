@@ -106,7 +106,7 @@ manhplot <- ggplot(data, aes(x = BPcum, y = -log10(P), color = as.factor(CHR), s
   geom_text(data = top_hits, aes(x = BPcum, y = logP + 1.5, label = GENE_NAME),
             size = 2.5, vjust = 0, check_overlap = TRUE, fontface = "bold") +
   guides(color = FALSE) +
-  labs(x = NULL, y = "-log10(p)", title = paste0(trait_name_str, " for ", eth_name_str)) +
+  labs(x = NULL, y = "-log10(p)") +
   theme_Publication() +
   theme(
     legend.position = "top",
@@ -304,7 +304,7 @@ legend("topleft",legend=legendtext,col=legendcol,pch=15,bty="n")
 text(5,1,expression(paste(lambda[1000]," = ")),cex = 1.5)
 text(5.7,1,paste(lambda_1000),cex = 1.5)
 
-title(paste0(trait_name[i2]," for ",eth_name[i1]))
+title(paste0("GSA QQ plot"))
 dev.off()
 
 # plot(1,1)
