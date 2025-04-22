@@ -103,8 +103,8 @@ manhplot <- ggplot(data, aes(x = BPcum, y = -log10(P), color = as.factor(CHR), s
   scale_color_manual(values = rep(c("#08306b", "#4292c6"), nCHR)) +
   scale_size_continuous(range = c(0.5, 3)) +
   geom_hline(data = sigline, aes(yintercept = sig), color = "red", linetype = "dashed") +
-  geom_text(data = top_hits, aes(x = BPcum, y = logP + 1.5, label = GENE_NAME),
-            size = 2.5, vjust = 0, check_overlap = TRUE, fontface = "bold") +
+  # geom_text(data = top_hits, aes(x = BPcum, y = logP + 1.5, label = GENE_NAME),
+  #           size = 2.5, vjust = 0, check_overlap = TRUE, fontface = "bold") +
   guides(color = FALSE) +
   labs(x = NULL, y = "-log10(p)") +
   theme_Publication() +
