@@ -1,9 +1,9 @@
-source("/data/zhangh24/multi_ethnic/code/stratch/theme_publication.R")
+source("/data/zhangh24//breast_cancer_data_analysis/Theme_publication_final/theme_publication_final.R")
 library(data.table)
 library(dplyr)
 library(ggplot2)
 library(RColorBrewer)
-
+library(ggrepel)
 # Load Regenie output
 data <- fread("/data/DCEG_Confluence/JW/nextflow_GSA/results/Outcome.regenie.gz")
 
@@ -23,12 +23,13 @@ data <- data %>%
     P = as.numeric(10^(-LOG10P)),
     P = ifelse(P == 0, 1E-300, P),
     N = as.integer(N),
-    MAF = ifelse(FREQ_A1 <= 0.5, FREQ_A1, 1 - FREQ_A1)
+    MAF = ifelse(FREQ_A1 <= 0.5, FREQ_A1, 1 - FREQ_A1),
+    MAC = MAF*N
   ) %>%
   filter(
     !is.na(CHR) & !is.na(BP) & !is.na(FREQ_A1) & !is.na(P) & !is.na(INFO),
     INFO > 0.2,
-    MAF >= 0.01
+    MAC >= 30
   ) %>%
   select(rsid, CHR, BP, FREQ_A1, MAF, INFO, P, N, GENE_NAME)
 
@@ -65,14 +66,17 @@ p.pwas <- 5E-08
 
 # Compute cumulative base pair position
 nCHR <- length(unique(data$CHR))
+offset <- 0  # space between chromosomes
 s <- 0
 nbp <- c()
-data$BPcum <- NA
+
 for (i in sort(unique(data$CHR))) {
-  nbp[i] <- max(data[data$CHR == i,]$BP)
+  max_bp <- max(data$BP[data$CHR == i])
+  nbp[i] <- max_bp
   data$BPcum[data$CHR == i] <- data$BP[data$CHR == i] + s
-  s <- s + nbp[i]
+  s <- s + max_bp + offset  # <-- add spacing here
 }
+
 
 # Prepare axis labels
 axis.set <- data %>%
@@ -85,15 +89,24 @@ ylim <- abs(floor(log10(min(data$P)))) + 2
 # Genome-wide significance line
 sigline <- data.frame(sig = -log10(p.pwas), val = paste0("P=", signif(p.pwas, 2)))
 
-# Identify top hits for annotation
+
+# Identify lead SNPs for annotation (1 per ~500kb per chromosome)
 top_hits <- data %>%
-  filter(P < p.pwas) %>%
-  group_by(CHR, GENE_NAME) %>%
-  slice_min(order_by = P, n = 1) %>%
+  filter(P < 1e-10) %>%
+  arrange(CHR, BP) %>%
+  group_by(CHR) %>%
+  mutate(index = floor(BP / 3e6)) %>%  # Bin by 3 Mb
+  group_by(CHR, index) %>%
+  slice_min(order_by = P, n = 1, with_ties = FALSE) %>%
   ungroup() %>%
   mutate(logP = -log10(P)) %>%
   filter(!is.na(GENE_NAME)) %>%
+  filter(!grepl("^AL|^RP|^LOC|^AC", GENE_NAME)) %>%  # remove generic names
   select(CHR, BPcum, logP, GENE_NAME)
+
+top_hits <- top_hits %>%
+  filter(!grepl("^AL|^RP|^LOC", GENE_NAME))  # optional cleanup
+
 
 # Manhattan plot
 manhplot <- ggplot(data, aes(x = BPcum, y = -log10(P), color = as.factor(CHR), size = -log10(P))) +
@@ -103,9 +116,23 @@ manhplot <- ggplot(data, aes(x = BPcum, y = -log10(P), color = as.factor(CHR), s
   scale_color_manual(values = rep(c("#08306b", "#4292c6"), nCHR)) +
   scale_size_continuous(range = c(0.5, 3)) +
   geom_hline(data = sigline, aes(yintercept = sig), color = "red", linetype = "dashed") +
+  geom_text_repel(
+    data = top_hits,
+    aes(x = BPcum, y = logP, label = GENE_NAME),
+    size = 2.3,
+    box.padding = 0.5,
+    point.padding = 0.3,
+    segment.size = 0.2,
+    max.overlaps = Inf,
+    nudge_y = 2,
+    force = 2,
+    min.segment.length = 0,
+    seed = 42,
+    show.legend = FALSE
+  )+
   # geom_text(data = top_hits, aes(x = BPcum, y = logP + 1.5, label = GENE_NAME),
   #           size = 2.5, vjust = 0, check_overlap = TRUE, fontface = "bold") +
-  guides(color = FALSE) +
+  guides(color = "none") +
   labs(x = NULL, y = "-log10(p)") +
   theme_Publication() +
   theme(
@@ -123,6 +150,38 @@ outpath <-"/data/zhangh24/breast_cancer_data_analysis/Confluence_analysis/result
 
 ggsave(filename=paste0("man_gsa.png"),
        plot=manhplot, device="png",
+       path=outpath,
+       width=9, height=4, units="in", dpi=300)
+
+
+# Manhattan plot
+manhplot_no_anno <- ggplot(data, aes(x = BPcum, y = -log10(P), color = as.factor(CHR), size = -log10(P))) +
+  geom_point(alpha = 0.8, size = 0.8) +
+  scale_x_continuous(label = axis.set$CHR, breaks = axis.set$center) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, ylim)) +
+  scale_color_manual(values = rep(c("#08306b", "#4292c6"), nCHR)) +
+  scale_size_continuous(range = c(0.5, 3)) +
+  geom_hline(data = sigline, aes(yintercept = sig), color = "red", linetype = "dashed") +
+  # geom_text(data = top_hits, aes(x = BPcum, y = logP + 1.5, label = GENE_NAME),
+  #           size = 2.5, vjust = 0, check_overlap = TRUE, fontface = "bold") +
+  guides(color = "none") +
+  labs(x = NULL, y = "-log10(p)") +
+  theme_Publication() +
+  theme(
+    legend.position = "top",
+    panel.border = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.text.x = element_text(angle = 0, size = 9, vjust = 0.5),
+    plot.title = element_text(size = 12, face = "bold")
+  )
+
+
+outpath <-"/data/zhangh24/breast_cancer_data_analysis/Confluence_analysis/result/"  
+
+
+ggsave(filename=paste0("man_gsa_no_anno.png"),
+       plot=manhplot_no_anno, device="png",
        path=outpath,
        width=9, height=4, units="in", dpi=300)
 
