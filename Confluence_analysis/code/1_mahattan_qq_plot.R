@@ -13,9 +13,7 @@ dat <- data %>%
     BP = GENPOS,
     rsid = ID,
     FREQ_A1 = A1FREQ
-  ) 
-
-dat  = data %>%
+  ) %>%
   mutate(
     CHR = as.integer(CHR),
     BP = as.integer(BP),
