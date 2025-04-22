@@ -1,7 +1,8 @@
 source("/data/zhangh24/multi_ethnic/code/stratch/theme_publication.R")
 library(data.table)
 library(dplyr)
-
+library(ggplot2)
+library(RColorBrewer)
 
 # Load Regenie output
 data <- fread("/data/DCEG_Confluence/JW/nextflow_GSA/results/Outcome.regenie.gz")
